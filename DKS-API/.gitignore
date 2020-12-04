@@ -1,0 +1,7 @@
+.vscode
+bin
+obj
+*.db
+*.dll
+*.pdb
+.API.pdb
