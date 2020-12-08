@@ -1,25 +1,64 @@
 <app-header
   [navbarBrandRouterLink]="['/dashboard']"
   [fixed]="true"
-  [navbarBrandFull]="{src: 'assets/img/brand/favicon.ico', width: 89, height: 25, alt: 'SSB Logo'}"
-  [navbarBrandMinimized]="{src: 'assets/img/brand/favicon.ico', width: 30, height: 30, alt: 'SSB Logo'}"
+  [navbarBrandFull]="{
+    src: 'assets/img/brand/favicon.ico',
+    width: 89,
+    height: 25,
+    alt: 'SSB Logo'
+  }"
+  [navbarBrandMinimized]="{
+    src: 'assets/img/brand/favicon.ico',
+    width: 30,
+    height: 30,
+    alt: 'SSB Logo'
+  }"
   [sidebarToggler]="'lg'"
-  [asideMenuToggler]="'lg'">
+  [asideMenuToggler]="'lg'"
+>
   <ul class="nav navbar-nav ml-auto">
-
     <li class="nav-item dropdown" dropdown placement="bottom right">
-      <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" dropdownToggle (click)="false">
-        <img src="assets/img/brand/favicon.ico" class="img-avatar" alt="admin@bootstrapmaster.com"/>
+      <a
+        class="nav-link"
+        data-toggle="dropdown"
+        href="#"
+        role="button"
+        aria-haspopup="true"
+        aria-expanded="false"
+        dropdownToggle
+        (click)="(false)"
+      >
+        <img
+          src="assets/img/brand/favicon.ico"
+          class="img-avatar"
+          alt="admin@bootstrapmaster.com"
+        />
       </a>
-      <div class="dropdown-menu dropdown-menu-right" *dropdownMenu aria-labelledby="simple-dropdown">
-        <a class="dropdown-item" href="#"><i class="fa fa-lock"></i> Logout</a>
+      <div
+        class="dropdown-menu dropdown-menu-right"
+        *dropdownMenu
+        aria-labelledby="simple-dropdown"
+      >
+        <a class="dropdown-item" (click)="logout()"
+          ><i class="fa fa-lock"></i> Logout</a
+        >
       </div>
     </li>
   </ul>
 </app-header>
 <div class="app-body">
-  <app-sidebar #appSidebar [fixed]="true" [display]="'lg'" [minimized]="sidebarMinimized" (minimizedChange)="toggleMinimize($event)">
-    <app-sidebar-nav [navItems]="navItems" [perfectScrollbar] [disabled]="appSidebar.minimized"></app-sidebar-nav>
+  <app-sidebar
+    #appSidebar
+    [fixed]="true"
+    [display]="'lg'"
+    [minimized]="sidebarMinimized"
+    (minimizedChange)="toggleMinimize($event)"
+  >
+    <app-sidebar-nav
+      [navItems]="navItems"
+      [perfectScrollbar]
+      [disabled]="appSidebar.minimized"
+    ></app-sidebar-nav>
     <app-sidebar-minimizer></app-sidebar-minimizer>
   </app-sidebar>
   <!-- Main content -->
@@ -28,26 +67,28 @@
     <!-- breaking change 'cui-breadcrumb' -->
     <cui-breadcrumb>
       <!-- Breadcrumb Menu-->
-
     </cui-breadcrumb>
     <!-- deprecation warning for 'app-breadcrumb' -->
     <!--<ol class="breadcrumb">-->
-      <!--<app-breadcrumb></app-breadcrumb>-->
-      <!--&lt;!&ndash; Breadcrumb Menu&ndash;&gt;-->
-      <!--<li class="breadcrumb-menu d-md-down-none">-->
-        <!--<div class="btn-group" role="group" aria-label="Button group with nested dropdown">-->
-          <!--<a class="btn" href="#"><i class="icon-speech"></i></a>-->
-          <!--<a class="btn" [routerLink]="['/dashboard']"><i class="icon-graph"></i> &nbsp;Dashboard</a>-->
-          <!--<a class="btn" href="#"><i class="icon-settings"></i> &nbsp;Settings</a>-->
-        <!--</div>-->
-      <!--</li>-->
+    <!--<app-breadcrumb></app-breadcrumb>-->
+    <!--&lt;!&ndash; Breadcrumb Menu&ndash;&gt;-->
+    <!--<li class="breadcrumb-menu d-md-down-none">-->
+    <!--<div class="btn-group" role="group" aria-label="Button group with nested dropdown">-->
+    <!--<a class="btn" href="#"><i class="icon-speech"></i></a>-->
+    <!--<a class="btn" [routerLink]="['/dashboard']"><i class="icon-graph"></i> &nbsp;Dashboard</a>-->
+    <!--<a class="btn" href="#"><i class="icon-settings"></i> &nbsp;Settings</a>-->
+    <!--</div>-->
+    <!--</li>-->
     <!--</ol>-->
     <div class="container-fluid">
       <router-outlet></router-outlet>
-    </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.container-fluid -->
   </main>
 </div>
 <app-footer>
   <span><a href="assets/img/brand/favicon.ico">SSB</a> &copy; 2020 SD</span>
-  <span class="ml-auto">Powered by <a href="assets/img/brand/favicon.ico">SSB</a></span>
+  <span class="ml-auto"
+    >Powered by <a href="assets/img/brand/favicon.ico">SSB</a></span
+  >
 </app-footer>
