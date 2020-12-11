@@ -1,5 +1,5 @@
 <app-header
-  [navbarBrandRouterLink]="['/dashboard']"
+  [navbarBrandRouterLink]="['']"
   [fixed]="true"
   [navbarBrandFull]="{
     src: 'assets/img/brand/favicon.ico',
@@ -45,6 +45,7 @@
       </div>
     </li>
   </ul>
+  <H2> Welcome {{ user | titlecase }}</H2>
 </app-header>
 <div class="app-body">
   <app-sidebar
@@ -65,9 +66,7 @@
   <main class="main">
     <!-- Breadcrumb -->
     <!-- breaking change 'cui-breadcrumb' -->
-    <cui-breadcrumb>
-      <!-- Breadcrumb Menu-->
-    </cui-breadcrumb>
+
     <!-- deprecation warning for 'app-breadcrumb' -->
     <!--<ol class="breadcrumb">-->
     <!--<app-breadcrumb></app-breadcrumb>-->

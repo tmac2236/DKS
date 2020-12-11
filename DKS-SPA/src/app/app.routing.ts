@@ -37,11 +37,6 @@ export const routes: Routes = [
     },
     children: [
       {
-        path: "base",
-        loadChildren: () =>
-          import("./views/base/base.module").then((m) => m.BaseModule),
-      },
-      {
         path: "excel",
         loadChildren: () =>
           import("./views/excel/excel.module").then((m) => m.ExcelModule),

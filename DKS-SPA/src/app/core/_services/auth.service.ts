@@ -12,8 +12,7 @@ import { environment } from '../../../environments/environment';
 export class AuthService {
   baseUrl = environment.apiUrl + 'auth/';
   jwtHelper = new JwtHelperService();
-  decodedToken: any; // keep the imformation from token
-  currentUser: User;
+  //decodedToken: any; // keep the imformation from token
   //photoUrl = new BehaviorSubject<string>('../../assets/user.png');
   //currentPhotoUrl = this.photoUrl.asObservable();
 
@@ -29,11 +28,9 @@ export class AuthService {
         const user = response;
         if (user) {
           localStorage.setItem('token', user.token);
-          localStorage.setItem('user', JSON.stringify(user.user));
-          this.currentUser = user.user;
-          this.decodedToken = this.jwtHelper.decodeToken(user.token);
-          console.log(this.decodedToken);
-          //this.changeMemberPhoto(this.currentUser.photoUrl);
+          //localStorage.setItem('user', JSON.stringify(user.user));
+          //this.decodedToken = this.jwtHelper.decodeToken(user.token);
+          
         }
       })
     );
