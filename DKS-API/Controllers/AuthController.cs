@@ -16,13 +16,13 @@ namespace DFPS.API.Controllers
     public class AuthController : ApiController
     {
         private readonly IUserDAO _authDAO;
-        private readonly IMesUserDAO _mesUserDAO;
+        private readonly IDKSSysUserDAO _dksSysUserDAO;
         private readonly IConfiguration _config;
-        public AuthController(IUserDAO authDAO, IConfiguration config, IMesUserDAO mesUserDAO)
+        public AuthController(IUserDAO authDAO, IConfiguration config, IDKSSysUserDAO dksSysUserDAO)
         {
             _config = config;
             _authDAO = authDAO;
-            _mesUserDAO = mesUserDAO;
+            _dksSysUserDAO = dksSysUserDAO;
         }
 
         [HttpPost("register")]
@@ -48,15 +48,15 @@ namespace DFPS.API.Controllers
         public async Task<IActionResult> Login(UserDto userForLoginDto)
         {
 
-            var userFromRepo = await _mesUserDAO.Login(userForLoginDto.Account, userForLoginDto.Password);
+            var userFromRepo = await _dksSysUserDAO.Login(userForLoginDto.Account);
 
             if (userFromRepo == null)
                 return Unauthorized();
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, userFromRepo.Factory_ID),
-                new Claim(ClaimTypes.Name, userFromRepo.User_ID)
+                new Claim(ClaimTypes.NameIdentifier, userFromRepo.USERID.ToString()),
+                new Claim(ClaimTypes.Name, userFromRepo.LOGIN)
                 };
             var tokenName = _config.GetSection("AppSettings:Token").Value;
             var key = new SymmetricSecurityKey(Encoding.UTF8

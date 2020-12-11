@@ -9,10 +9,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DFPS_API.Data.Repository
 {
-    public class MesCommonDAO<T> : ICommonDAO<T> where T : class
+    public class DKSSysCommonDAO<T> : ICommonDAO<T> where T : class
     {
-        protected readonly MesDataContext _context;
-        public MesCommonDAO(MesDataContext context)
+        protected readonly DKSSysDataContext _context;
+        public DKSSysCommonDAO(DKSSysDataContext context)
         {
             _context = context;
         }

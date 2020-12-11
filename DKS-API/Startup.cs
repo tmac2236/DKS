@@ -19,11 +19,6 @@ using DFPS_API.Data.Repository;
 using DFPS_API.Filters;
 using DFPS_API.Services.Implement;
 using DFPS_API.Data.Repository.Interfaces;
-using Quartz.Spi;
-using DFPS_API.Helpers;
-using Quartz;
-using Quartz.Impl;
-using DFPS_API.Quartz;
 
 namespace DFPS.API
 {
@@ -42,7 +37,7 @@ namespace DFPS.API
             //security
             services.AddCors();
             services.AddDbContext<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DFPSConnection")));
-            services.AddDbContext<MesDataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("MesConnection")));
+            services.AddDbContext<DKSSysDataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DKSSysConnection")));
             services.AddControllers();
             /*
             services.AddControllersWithViews()
@@ -61,7 +56,7 @@ namespace DFPS.API
             //DAO
             services.AddScoped<IUserDAO, UserDAO>();
             services.AddScoped<IReporDAO, ReporDAO>();
-            services.AddScoped<IMesUserDAO, MesUserDAO>();
+            services.AddScoped<IDKSSysUserDAO, DKSSysUserDAO>();
             services.AddScoped<ISPFactoryDAO, SPFactoryDAO>();
 
             //Service
