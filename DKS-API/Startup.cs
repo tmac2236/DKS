@@ -38,6 +38,8 @@ namespace DFPS.API
             services.AddCors();
             services.AddDbContext<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DFPSConnection")));
             services.AddDbContext<DKSSysDataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DKSSysConnection")));
+            services.AddDbContext<DKSContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DKSConnection")));
+
             services.AddControllers();
             /*
             services.AddControllersWithViews()
@@ -57,6 +59,7 @@ namespace DFPS.API
             services.AddScoped<IUserDAO, UserDAO>();
             services.AddScoped<IReporDAO, ReporDAO>();
             services.AddScoped<IDKSSysUserDAO, DKSSysUserDAO>();
+            services.AddScoped<IDKSDAO, DKSDAO>();
             services.AddScoped<ISPFactoryDAO, SPFactoryDAO>();
 
             //Service

@@ -3,10 +3,12 @@ import { Routes, RouterModule } from "@angular/router";
 
 // Import Containers
 import { DefaultLayoutComponent } from "./containers";
+import { DictionaryComponent } from "./views/dictionary/dictionary.component";
 
 import { P404Component } from "./views/error/404.component";
 import { P500Component } from "./views/error/500.component";
 import { HomePageComponent } from "./views/home-page/home-page.component";
+import { PictureComponent } from "./views/picture/picture.component";
 
 export const routes: Routes = [
   {
@@ -30,6 +32,20 @@ export const routes: Routes = [
     },
   },
   {
+    path: "picture",
+    component: PictureComponent,
+    data: {
+      title: "Picture",
+    },
+  },
+  {
+    path: "dictionary",
+    component: DictionaryComponent,
+    data: {
+      title: "dictionary",
+    },
+  },
+  {
     path: "",
     component: DefaultLayoutComponent,
     data: {
@@ -40,6 +56,11 @@ export const routes: Routes = [
         path: "excel",
         loadChildren: () =>
           import("./views/excel/excel.module").then((m) => m.ExcelModule),
+      },
+      {
+        path: "kanban",
+        loadChildren: () =>
+          import("./views/kanban/kanban.module").then((m) => m.KanbanModule),
       },
     ],
   },

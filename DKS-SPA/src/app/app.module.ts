@@ -4,7 +4,6 @@ import { LocationStrategy, HashLocationStrategy } from "@angular/common";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 import { PerfectScrollbarModule } from "ngx-perfect-scrollbar";
-import { PERFECT_SCROLLBAR_CONFIG } from "ngx-perfect-scrollbar";
 import { PerfectScrollbarConfigInterface } from "ngx-perfect-scrollbar";
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
@@ -18,6 +17,7 @@ import { DefaultLayoutComponent } from "./containers";
 
 import { P404Component } from "./views/error/404.component";
 import { P500Component } from "./views/error/500.component";
+import { PictureComponent } from "./views/picture/picture.component";
 
 import { AuthService } from "../../src/app/core/_services/auth.service";
 import { AlertifyService } from "../../src/app/core/_services/alertify.service";
@@ -43,8 +43,10 @@ import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { TabsModule } from "ngx-bootstrap/tabs";
 import { ChartsModule } from "ng2-charts";
 import { HttpClientModule } from "@angular/common/http";
-import { HomePageComponent } from './views/home-page/home-page.component';
-import { FormsModule } from '@angular/forms';
+import { HomePageComponent } from "./views/home-page/home-page.component";
+import { FormsModule } from "@angular/forms";
+import { NgImageSliderModule } from "ng-image-slider";
+import { DictionaryComponent } from "./views/dictionary/dictionary.component";
 
 @NgModule({
   imports: [
@@ -63,12 +65,15 @@ import { FormsModule } from '@angular/forms';
     BsDropdownModule.forRoot(),
     TabsModule.forRoot(),
     ChartsModule,
+    NgImageSliderModule,
   ],
   declarations: [
     AppComponent,
     ...APP_CONTAINERS,
     P404Component,
     P500Component,
+    PictureComponent,
+    DictionaryComponent,
     HomePageComponent,
   ],
   providers: [

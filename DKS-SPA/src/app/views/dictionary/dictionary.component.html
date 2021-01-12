@@ -1,0 +1,75 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <strong>查詢採購彙總單號起迄</strong>
+        </div>
+        <form class="form-horizontal" #addQueryReportDataForm="ngForm">
+          <div class="card-body">
+            <div class="form-group row">
+              <div class="col-md-12">
+                <div class="col">
+                  <label class="col-form-label mr-2">Season</label>
+                  <input
+                    class="col-form-label mr-2"
+                    type="text"
+                    placeholder="startNum"
+                    name="cDate"
+                    [(ngModel)]="season"
+                    required
+                  />
+                  <label class="col-form-label mr-2">Stage</label>
+                  <input
+                    class="col-form-label mr-2"
+                    type="text"
+                    placeholder="EndNum"
+                    name="cDateE"
+                    [(ngModel)]="stage"
+                    required
+                  />
+                  <button
+                    class="btn btn-primary mr-2"
+                    type="button"
+                    (click)="search()"
+                    [disabled]="!addQueryReportDataForm.valid"
+                  >
+                    Seacrch
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table
+              class="table text-center vertical-middle"
+              *ngIf="result.length > 0"
+            >
+              <thead>
+                <tr>
+                  <th>採購彙總單號起</th>
+                  <th>採購彙總單號迄</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ result[0] }}</td>
+                  <td>{{ result[1] }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ngx-spinner></ngx-spinner>
