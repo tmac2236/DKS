@@ -21,6 +21,7 @@ export class DictionaryComponent implements OnInit {
     this.route.queryParams.subscribe((params) => {
       this.season = params.season;
       this.stage = params.stage;
+
     });
   }
 

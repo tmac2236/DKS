@@ -21,9 +21,9 @@ namespace DFPS.API.Data.Repository
             return list;
         }
 
-        public async Task<Staccrth> SearchStaffByWorkNo(string workno)
+        public async Task<Staccrth> SearchStaffByLOGIN(string login)
         {
-            var staff = await _context.STACCRTH.FirstOrDefaultAsync(x => x.WORKPNO == workno.Trim());
+            var staff = await _context.STACCRTH.FirstOrDefaultAsync(x => x.LOGIN == login.Trim());
             return staff;
         }
         //新增一筆user log 資料

@@ -43,10 +43,11 @@ namespace DKS_API.Controllers
 
                     using (var stream = new FileStream(fullPath, FileMode.Create))
                     {
-                        var fileStream = System.IO.File.Create(birdUrl);
+                        var fileStream = System.IO.File.OpenRead(birdUrl);
                         fileStream.CopyTo(stream);
+                        fileStream.Close();
                     }
-                    var staff = _dksDao.SearchStaffByWorkNo(source.User);
+                    var staff = _dksDao.SearchStaffByLOGIN(source.User);
                     UserLog userlog = new UserLog();
                     userlog.PROGNAME = "F205";
                     userlog.LOGINNAME = staff.Result.LOGIN;
@@ -87,7 +88,7 @@ namespace DKS_API.Controllers
                     {
                         source.File.CopyTo(stream);
 
-                        var staff = _dksDao.SearchStaffByWorkNo(source.User);
+                        var staff = _dksDao.SearchStaffByLOGIN(source.User);
                         UserLog userlog = new UserLog();
                         userlog.PROGNAME = "F205";
                         userlog.LOGINNAME = staff.Result.LOGIN;
