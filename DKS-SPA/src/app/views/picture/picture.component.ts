@@ -10,7 +10,7 @@ import { DksService } from "../../core/_services/dks.service";
   styleUrls: ["./picture.component.scss"],
 })
 export class PictureComponent implements OnInit {
-  fakeArray = new Array<string>('1','2','3','4','5','6');
+  fakeArray = new Array<string>("1", "2", "3", "4", "5", "6");
 
   article = "";
   user: string;
@@ -42,6 +42,7 @@ export class PictureComponent implements OnInit {
     this.dksService.uploadPicByArticle(data).subscribe(
       () => {
         this.utility.alertify.success("Add succeed!");
+        this.loadpictures();
       },
       (error) => {
         this.utility.alertify.error("Add failed !!!!");
@@ -55,19 +56,25 @@ export class PictureComponent implements OnInit {
     formData.append("user", this.user);
     formData.append("file", null);
     formData.append("no", no);
-    this.utility.alertify.confirm("Are you sure to Delete this picture ?", () =>{
-      this.dksService.deletePicByArticle(formData).subscribe(
-        () => {
-          this.utility.alertify.success("Delete succeed!");
-        },
-        (error) => {
-          this.utility.alertify.error("Delete failed !!!!");
-        }
-      );
-    });
-}
+    this.utility.alertify.confirm(
+      "Are you sure to Delete this picture ?",
+      () => {
+        this.dksService.deletePicByArticle(formData).subscribe(
+          () => {
+            this.loadpictures();
+            this.utility.alertify.success("Delete succeed!");
+          },
+          (error) => {
+            this.utility.alertify.error("Delete failed !!!!");
+          }
+        );
+      }
+    );
+  }
 
   loadpictures() {
+    //先清空
+    this.imageObject = [];
     for (var i = 1; i <= 6; i++) {
       //六張圖
       var pic = new Picture();
@@ -84,5 +91,4 @@ export class PictureComponent implements OnInit {
       this.imageObject.push(pic);
     }
   }
-
 }

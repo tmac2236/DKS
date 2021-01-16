@@ -29,7 +29,8 @@ namespace DKS_API.Controllers
             try
             {
                 string rootdir = Directory.GetCurrentDirectory();
-                var pathToSave = rootdir + "\\src\\assets\\ArticlePics\\" + source.Article;
+                var localStr = _config.GetSection("AppSettings:ArticleUrl").Value;
+                var pathToSave = rootdir + localStr + source.Article;
                 pathToSave = pathToSave.Replace("DKS-API", "DKS-SPA");
 
                 var fileName = source.Article + "_" + source.No + ".jpg";
@@ -68,7 +69,8 @@ namespace DKS_API.Controllers
             {
 
                 string rootdir = Directory.GetCurrentDirectory();
-                var pathToSave = rootdir + "\\src\\" + "assets\\ArticlePics\\" + source.Article;
+                var localStr = _config.GetSection("AppSettings:ArticleUrl").Value;
+                var pathToSave = rootdir + localStr + source.Article;
                 pathToSave = pathToSave.Replace("DKS-API", "DKS-SPA");
                 if (source.File.Length > 0)
                 {
