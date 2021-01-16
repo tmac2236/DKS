@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace DFPS_API.Helpers
+namespace DKS_API.Helpers
 {
     public class PagedList<T> : List<T>
     {

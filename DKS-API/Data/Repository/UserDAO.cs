@@ -1,13 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using DFPS.API.Data.Interface;
-using DFPS.API.Models;
-using DFPS_API.Data.Interface;
-using DFPS_API.Data.Repository;
+using DKS.API.Models.DKSSys;
+using DKS_API.Data.Interface;
 using Microsoft.EntityFrameworkCore;
 
-namespace DFPS.API.Data.Repository
+namespace DKS_API.Data.Repository
 {
     public class UserDAO : CommonDAO<User>, IUserDAO
     {

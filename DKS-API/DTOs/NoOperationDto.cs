@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DFPS.API.DTOs
+namespace DKS_API.DTOs
 {
     public class NoOperationDto
     {

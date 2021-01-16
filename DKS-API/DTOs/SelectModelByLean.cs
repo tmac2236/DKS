@@ -1,6 +1,4 @@
-using System;
-
-namespace DFPS_API.DTOs
+namespace DKS_API.DTOs
 {
     public class SelectModelByLean
     {

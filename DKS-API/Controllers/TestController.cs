@@ -1,5 +1,6 @@
-using DFPS.API.Data;
-using DFPS.API.DTOs;
+using DKS_API.Controllers;
+using DKS_API.Data;
+using DKS_API.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

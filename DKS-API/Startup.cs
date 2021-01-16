@@ -1,6 +1,4 @@
 using System.Text;
-using DFPS.API.Data;
-using DFPS.API.Data.Interface;
 using DFPS.API.Data.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -13,14 +11,16 @@ using Microsoft.IdentityModel.Tokens;
 using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
-using DFPS.API.Helpers;
-using AutoMapper;
-using DFPS_API.Data.Repository;
-using DFPS_API.Filters;
-using DFPS_API.Services.Implement;
-using DFPS_API.Data.Repository.Interfaces;
 
-namespace DFPS.API
+using AutoMapper;
+using DKS_API.Data;
+using DKS_API.Data.Repository;
+using DKS_API.Data.Interface;
+using DKS_API.Services.Implement;
+using DKS_API.Filters;
+using DKS_API.Helpers;
+
+namespace DKS_API
 {
     public class Startup
     {

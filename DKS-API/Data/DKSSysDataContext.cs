@@ -2,7 +2,7 @@
 using DFPS.API.Models.DKSSys;
 using Microsoft.EntityFrameworkCore;
 
-namespace DFPS.API.Data
+namespace DKS_API.Data.Repository
 {
     public class DKSSysDataContext : DbContext
     {

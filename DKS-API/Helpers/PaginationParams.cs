@@ -1,4 +1,4 @@
-namespace DFPS_API.Helpers
+namespace DKS_API.Helpers
 {
     public class PaginationParams
     {

@@ -1,15 +1,12 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using DFPS.API.Data.Interface;
-using DFPS.API.DTOs;
-using DFPS.API.Models;
-using DFPS_API.Helpers;
+using DKS.API.Models.DKSSys;
+using DKS_API.Data.Interface;
+using DKS_API.Helpers;
 using Microsoft.EntityFrameworkCore;
 
-namespace DFPS_API.Services.Implement
+namespace DKS_API.Services.Implement
 {
     public class AuthService : IAuthService
     {

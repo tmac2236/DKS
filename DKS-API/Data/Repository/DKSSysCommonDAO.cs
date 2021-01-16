@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using DFPS.API.Data;
-using DFPS_API.Data.Interface;
+using DKS_API.Data.Interface;
 using Microsoft.EntityFrameworkCore;
 
-namespace DFPS_API.Data.Repository
+namespace DKS_API.Data.Repository
 {
     public class DKSSysCommonDAO<T> : ICommonDAO<T> where T : class
     {

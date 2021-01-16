@@ -1,9 +1,8 @@
-using System.Linq;
 using AutoMapper;
-using DFPS.API.DTOs;
-using DFPS.API.Models;
+using DKS.API.Models.DKSSys;
+using DKS_API.DTOs;
 
-namespace DFPS.API.Helpers
+namespace DKS_API.Helpers
 {
     public class AutoMapperProfiles : Profile
     {

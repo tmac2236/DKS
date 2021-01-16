@@ -1,10 +1,9 @@
 using System;
-using DFPS_API.Helpers;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace DFPS.API.Helpers
+namespace DKS_API.Helpers
 {
     public static class Extensions
     {

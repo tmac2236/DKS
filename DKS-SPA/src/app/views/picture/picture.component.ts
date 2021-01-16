@@ -1,5 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
+import { Utility } from "../../core/utility/utility";
+import { Picture } from "../../core/_models/picture";
+import { DksService } from "../../core/_services/dks.service";
 
 @Component({
   selector: "app-picture",
@@ -7,28 +10,79 @@ import { ActivatedRoute } from "@angular/router";
   styleUrls: ["./picture.component.scss"],
 })
 export class PictureComponent implements OnInit {
-  constructor(private route: ActivatedRoute) {
+  fakeArray = new Array<string>('1','2','3','4','5','6');
+
+  article = "";
+  user: string;
+  imageObject: Array<Picture> = new Array<Picture>();
+  constructor(
+    private route: ActivatedRoute,
+    private dksService: DksService,
+    private utility: Utility
+  ) {
     this.route.queryParams.subscribe((params) => {
-      this.start = params.start;
-      this.end = params.end;
+      this.article = params.article;
+      this.user = params.user;
     });
   }
 
   ngOnInit() {
-    console.log(this.start);
-    console.log(this.end);
+    this.loadpictures();
   }
 
-  start: string;
-  end: string;
-  imageObject: Array<object> = [
-    {
-      image: "../../../../../DKS-API/Resources/Pictures/ArticlePics/2.jpg",
-      thumbImage: "../../../../../DKS-API/Resources/Pictures/ArticlePics/2.jpg",
-    },
-    {
-      image: "../../../assets/favicon.ico", // Support base64 image
-      thumbImage: "../../../assets/favicon.ico", // Support base64 image
-    },
-  ];
+  handleFileInput(files: FileList, no: string) {
+    var formData = new FormData(); //共用請小心
+    formData.append("article", this.article);
+    formData.append("user", this.user);
+    formData.append("file", files.item(0));
+    formData.append("no", no);
+    this.save(formData);
+  }
+  save(data: FormData) {
+    this.dksService.uploadPicByArticle(data).subscribe(
+      () => {
+        this.utility.alertify.success("Add succeed!");
+      },
+      (error) => {
+        this.utility.alertify.error("Add failed !!!!");
+      }
+    );
+  }
+
+  remove(no: string) {
+    var formData = new FormData(); //共用請小心
+    formData.append("article", this.article);
+    formData.append("user", this.user);
+    formData.append("file", null);
+    formData.append("no", no);
+    this.utility.alertify.confirm("Are you sure to Delete this picture ?", () =>{
+      this.dksService.deletePicByArticle(formData).subscribe(
+        () => {
+          this.utility.alertify.success("Delete succeed!");
+        },
+        (error) => {
+          this.utility.alertify.error("Delete failed !!!!");
+        }
+      );
+    });
+}
+
+  loadpictures() {
+    for (var i = 1; i <= 6; i++) {
+      //六張圖
+      var pic = new Picture();
+      let imgurl =
+        "../../../assets/ArticlePics/" +
+        this.article +
+        "/" +
+        this.article +
+        "_" +
+        i +
+        ".jpg";
+      pic.image = imgurl;
+      pic.thumbImage = imgurl;
+      this.imageObject.push(pic);
+    }
+  }
+
 }

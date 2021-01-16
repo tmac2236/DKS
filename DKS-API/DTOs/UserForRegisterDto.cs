@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace DFPS.API.DTOs
+namespace DKS_API.DTOs
 {
     public class UserForRegisterDto
     {

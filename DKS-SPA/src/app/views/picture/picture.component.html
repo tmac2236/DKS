@@ -1,1 +1,28 @@
 <ng-image-slider [images]="imageObject" #nav></ng-image-slider>
+<div class="row" style="margin-bottom: 15px">
+  <div
+    style="width: 150px; margin-left: 55px"
+    *ngFor="let a of fakeArray; let index = index"
+  >
+    <label class="btn btn-success mr-2" for="fileUpload{{a}}">Upload</label>
+    <input
+      id="fileUpload{{a}}"
+      type="file"
+      style="display: none"
+      (change)="handleFileInput($event.target.files, a)"
+    />
+    <button
+      class="btn btn-danger mr-2"
+      type="button"
+      (click)="remove(a)"
+      [disabled]="!imageObject[a]"
+    >
+      Delete
+    </button>
+  </div>
+</div>
+<script>
+  $(document).ready(function () {
+    $("#input-b5").fileinput({ showCaption: false, dropZoneEnabled: false });
+  });
+</script>

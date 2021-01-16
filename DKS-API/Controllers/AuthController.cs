@@ -1,17 +1,17 @@
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using DFPS.API.Data.Interface;
-using DFPS.API.DTOs;
-using DFPS.API.Models;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
-using DFPS_API.Data.Repository.Interfaces;
+using DKS_API.Data.Interface;
+using DKS_API.DTOs;
+using DKS.API.Models.DKSSys;
 
-namespace DFPS.API.Controllers
+namespace DKS_API.Controllers
 {
     public class AuthController : ApiController
     {

@@ -2,19 +2,108 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using System.Collections.Generic;
-using Aspose.Cells;
 using System;
 using System.Threading.Tasks;
 using System.Drawing;
+using DKS.API.Models.DKS;
+using DKS_API.Data.Repository;
+using DKS_API.Data.Interface;
 
-namespace DFPS.API.Controllers
+namespace DKS_API.Controllers
 {
     public class PictureController : ApiController
     {
         private readonly IConfiguration _config;
-        public PictureController(IConfiguration config)
+        private readonly IDKSDAO _dksDao;
+
+        public PictureController(IConfiguration config, IDKSDAO dksDao)
+
         {
+            _dksDao = dksDao;
             _config = config;
+        }
+
+        [HttpPost("deletePicByArticle")]
+        public IActionResult DeletePicByArticle([FromForm] ArticlePic source)
+        {
+            try
+            {
+                string rootdir = Directory.GetCurrentDirectory();
+                var pathToSave = rootdir + "\\src\\assets\\ArticlePics\\" + source.Article;
+                pathToSave = pathToSave.Replace("DKS-API", "DKS-SPA");
+
+                var fileName = source.Article + "_" + source.No + ".jpg";
+                //新增檔名的全路徑
+                var fullPath = Path.Combine(pathToSave, fileName);
+                bool isExist = System.IO.File.Exists(fullPath);
+                if (isExist)
+                {
+                    string birdUrl = rootdir + "\\Resources\\article_null.jpg"; //讀取API的那張鳥圖
+
+                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    {
+                        var fileStream = System.IO.File.Create(birdUrl);
+                        fileStream.CopyTo(stream);
+                    }
+                    var staff = _dksDao.SearchStaffByWorkNo(source.User);
+                    UserLog userlog = new UserLog();
+                    userlog.PROGNAME = "F205";
+                    userlog.LOGINNAME = staff.Result.LOGIN;
+                    userlog.HISTORY = "Delete Picture " + fileName;
+                    userlog.UPDATETIME = DateTime.Now;
+                    _dksDao.AddUserLogAsync(userlog);
+
+                }
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+        }
+        [HttpPost("uploadPicByArticle")]
+        public IActionResult UploadPicByArticle([FromForm] ArticlePic source)
+        {
+            try
+            {
+
+                string rootdir = Directory.GetCurrentDirectory();
+                var pathToSave = rootdir + "\\src\\" + "assets\\ArticlePics\\" + source.Article;
+                pathToSave = pathToSave.Replace("DKS-API", "DKS-SPA");
+                if (source.File.Length > 0)
+                {
+                    //檔名含副檔名
+                    //var fileName = ContentDispositionHeaderValue.Parse(source.File.ContentDisposition).FileName.Trim('"');
+                    var fileName = source.Article + "_" + source.No + ".jpg";
+                    //新增檔名的全路徑
+                    var fullPath = Path.Combine(pathToSave, fileName);
+                    if (!Directory.Exists(pathToSave))
+                    {
+                        DirectoryInfo di = Directory.CreateDirectory(pathToSave);
+                    }
+                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    {
+                        source.File.CopyTo(stream);
+
+                        var staff = _dksDao.SearchStaffByWorkNo(source.User);
+                        UserLog userlog = new UserLog();
+                        userlog.PROGNAME = "F205";
+                        userlog.LOGINNAME = staff.Result.LOGIN;
+                        userlog.HISTORY = "Add Picture " + fileName;
+                        userlog.UPDATETIME = DateTime.Now;
+                        _dksDao.AddUserLogAsync(userlog);
+                    }
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
         }
         [HttpGet("getPicByArticle")]
         public async Task<IActionResult> GetPicByArticle(string article)

@@ -1,12 +1,12 @@
-using DFPS.API.Data.Interface;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using DKS_API.Data.Interface;
 
-namespace DFPS.API.Controllers
+namespace DKS_API.Controllers
 {
     public class DksController : ApiController
     {

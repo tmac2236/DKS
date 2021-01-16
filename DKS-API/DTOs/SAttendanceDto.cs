@@ -1,7 +1,7 @@
 using System;
-using DFPS_API.Helpers;
+using DKS_API.Helpers;
 
-namespace DFPS.API.DTOs
+namespace DKS_API.DTOs
 {
     public class SAttendanceDto : PaginationParams
     {

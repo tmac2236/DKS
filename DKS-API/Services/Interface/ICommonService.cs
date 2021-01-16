@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DFPS_API.Helpers;
+using DKS_API.Helpers;
 
-namespace DFPS_API.Services.Interface
+namespace DKS_API.Services.Interface
 {
     public interface ICommonService<T> where T : class
     {

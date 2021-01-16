@@ -1,16 +1,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DFPS.API.Data;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
-using DFPS.API.Data.Interface;
-using DFPS.API.DTOs;
-using DFPS_API.DTOs;
 using System;
-using DFPS_API.Helpers;
+using DKS_API.DTOs;
+using DKS_API.Helpers;
+using DKS_API.Data.Interface;
 
-namespace DFPS_API.Data.Repository
+namespace DKS_API.Data.Repository
 {
     public class ReporDAO : IReporDAO
     {

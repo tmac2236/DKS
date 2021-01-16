@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
-using DFPS.API.Data.Interface;
-using DFPS.API.DTOs;
-using DFPS_API.Services.Implement;
+using DKS_API.Controllers;
+using DKS_API.DTOs;
+using DKS_API.Services.Implement;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace DFPS.API.Controllers
 {

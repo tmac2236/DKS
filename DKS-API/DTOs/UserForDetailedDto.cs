@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
-using DFPS.API.Models;
 
-namespace DFPS.API.DTOs
+namespace DKS_API.DTOs
 {
     public class UserForDetailedDto
     {

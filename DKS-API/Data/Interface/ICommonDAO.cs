@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace DFPS_API.Data.Interface
+namespace DKS_API.Data.Interface 
 {
     public interface ICommonDAO<T> where T : class
     {

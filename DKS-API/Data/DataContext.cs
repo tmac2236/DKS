@@ -1,9 +1,9 @@
+using DKS.API.Models.DKSSys;
+using DKS_API.DTOs;
 using Microsoft.EntityFrameworkCore;
-using DFPS.API.Models;
-using DFPS.API.DTOs;
-using DFPS_API.DTOs;
 
-namespace DFPS.API.Data
+
+namespace DKS_API.Data
 {
     public class DataContext : DbContext
     {

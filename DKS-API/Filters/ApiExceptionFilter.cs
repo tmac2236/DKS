@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 
-namespace DFPS_API.Filters
+namespace DKS_API.Filters
 {
     public class ApiExceptionFilter : ExceptionFilterAttribute
     {

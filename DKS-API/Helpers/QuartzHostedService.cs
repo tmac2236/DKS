@@ -8,7 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Quartz;
 using Quartz.Spi;
 
-namespace DFPS_API.Helpers
+namespace DKS_API.Helpers
 {
     public class QuartzHostedService : IHostedService
     {

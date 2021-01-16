@@ -1,10 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DFPS.API.DTOs;
-using DFPS_API.DTOs;
-using DFPS_API.Helpers;
+using DKS_API.DTOs;
 
-namespace DFPS.API.Data.Interface
+namespace DKS_API.Data.Interface
 {
     public interface ISPFactoryDAO
     {

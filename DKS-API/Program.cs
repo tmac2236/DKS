@@ -1,7 +1,6 @@
 using System;
-
 using System.IO;
-using DKS_API.Helpers;
+using DKS_API;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;

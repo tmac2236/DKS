@@ -1,9 +1,7 @@
 using System.Threading.Tasks;
-using DFPS.API.Models;
-using System.Collections.Generic;
-using DFPS_API.Data.Interface;
+using DKS.API.Models.DKSSys;
 
-namespace DFPS.API.Data.Interface
+namespace DKS_API.Data.Interface
 {
     public interface IUserDAO : ICommonDAO<User>
     {

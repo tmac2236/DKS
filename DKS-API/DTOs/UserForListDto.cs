@@ -1,6 +1,6 @@
 using System;
 
-namespace DFPS.API.DTOs
+namespace DKS_API.DTOs
 {
     public class UserForListDto
     {

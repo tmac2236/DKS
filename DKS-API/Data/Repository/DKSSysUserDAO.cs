@@ -1,10 +1,9 @@
 using System.Threading.Tasks;
-using DFPS.API.Data;
 using DFPS.API.Models.DKSSys;
-using DFPS_API.Data.Repository.Interfaces;
+using DKS_API.Data.Interface;
 using Microsoft.EntityFrameworkCore;
 
-namespace DFPS_API.Data.Repository
+namespace DKS_API.Data.Repository
 {
     public class DKSSysUserDAO : DKSSysCommonDAO<SysUser>, IDKSSysUserDAO
     {

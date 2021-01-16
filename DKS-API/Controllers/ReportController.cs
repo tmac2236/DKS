@@ -1,8 +1,3 @@
-using DFPS.API.Data;
-using DFPS.API.Data.Interface;
-using DFPS.API.DTOs;
-using DFPS.API.Helpers;
-using DFPS_API.DTOs;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,9 +9,12 @@ using System.Threading.Tasks;
 using Aspose.Cells;
 using System.Drawing;
 using Microsoft.Extensions.Logging;
-using DFPS_API.Helpers;
+using DKS_API.Data;
+using DKS_API.Data.Interface;
+using DKS_API.DTOs;
+using DKS_API.Helpers;
 
-namespace DFPS.API.Controllers
+namespace DKS_API.Controllers
 {
     public class ReportController : ApiController
     {
@@ -138,13 +136,13 @@ namespace DFPS.API.Controllers
             if (cDate != "undefined") sReportDataPassDto.CDate = cDate;
             if (cDateE != "undefined") sReportDataPassDto.CDateE = cDateE;
             // query data from database  
-            var data = await _reporDAO.GetReportDataPass(sReportDataPassDto);
+            //var data = await _reporDAO.GetReportDataPass(sReportDataPassDto);
 
             var path = Path.Combine(_webHostEnvironment.ContentRootPath, "Resources\\Template\\GetReportDataPass.xlsx");
             WorkbookDesigner designer = new WorkbookDesigner();
             designer.Workbook = new Workbook(path);
             Worksheet ws = designer.Workbook.Worksheets[0];
-            designer.SetDataSource("result", data);
+            //designer.SetDataSource("result", data);
             designer.Process();
             MemoryStream stream = new MemoryStream();
             designer.Workbook.Save(stream, SaveFormat.Xlsx);

@@ -1,6 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-namespace DFPS.API.Models.DKSSys
+namespace DKS.API.Models.DKS
 {
     public class Ordsumoh
     {

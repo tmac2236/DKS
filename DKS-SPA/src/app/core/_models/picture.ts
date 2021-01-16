@@ -1,4 +1,4 @@
-export interface Picture {
+export class Picture {
   image: string;
   thumbImage: string;
   title: string;
