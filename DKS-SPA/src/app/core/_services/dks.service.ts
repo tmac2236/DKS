@@ -32,4 +32,19 @@ export class DksService {
       articlePic
     );
   }
+  checkF420Valid(excel: FormData) {
+    console.log("dks.service checkF420Valid :", excel);
+    return this.utility.http.post(
+      this.utility.baseUrl + "dks/checkF420Valid",
+      excel
+    );
+  }
+
+  uploadF420Excel(f420Excel: FormData) {
+    console.log("dks.service uploadF420Excel f420Excel:", f420Excel);
+    return this.utility.http.post(
+      this.utility.baseUrl + "f420/uploadF420Excel",
+      f420Excel
+    );
+  }
 }

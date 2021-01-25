@@ -5,6 +5,8 @@ using System.Linq;
 using DKS.API.Models.DKS;
 using DKS_API.Data.Repository;
 using DKS_API.Data.Interface;
+using DKS_API.DTOs;
+using Microsoft.Data.SqlClient;
 
 namespace DFPS.API.Data.Repository
 {
@@ -36,6 +38,18 @@ namespace DFPS.API.Data.Repository
         public async Task<bool> SaveAll()
         {
             return await _context.SaveChangesAsync() > 0;
+        }
+
+        public F418_F420Dto GetF420F418View(string f418No)
+        {
+            List<SqlParameter> pc = new List<SqlParameter>{
+                new SqlParameter("@Proordno",f418No.Trim())
+            };
+            var data = _context.GetF420F418View
+            .FromSqlRaw("EXECUTE dbo.GetF420NeedQty @Proordno", pc.ToArray()).ToList();
+
+            return data[0];
+
         }
     }
 }

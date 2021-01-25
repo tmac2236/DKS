@@ -22,7 +22,7 @@ export class PictureComponent implements OnInit {
   ) {
     this.route.queryParams.subscribe((params) => {
       this.article = params.article;
-      this.user = params.user;
+      this.user = params.A0Lfn93DlC;
     });
   }
 

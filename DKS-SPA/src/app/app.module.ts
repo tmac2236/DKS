@@ -18,6 +18,7 @@ import { DefaultLayoutComponent } from "./containers";
 import { P404Component } from "./views/error/404.component";
 import { P500Component } from "./views/error/500.component";
 import { PictureComponent } from "./views/picture/picture.component";
+import { F420Component } from "./views/dks/F420/F420.component";
 
 import { AuthService } from "../../src/app/core/_services/auth.service";
 import { AlertifyService } from "../../src/app/core/_services/alertify.service";
@@ -48,6 +49,7 @@ import { FormsModule } from "@angular/forms";
 import { NgImageSliderModule } from "ng-image-slider";
 import { DictionaryComponent } from "./views/dictionary/dictionary.component";
 
+
 @NgModule({
   imports: [
     NgxSpinnerModule,
@@ -73,6 +75,7 @@ import { DictionaryComponent } from "./views/dictionary/dictionary.component";
     P404Component,
     P500Component,
     PictureComponent,
+    F420Component,
     DictionaryComponent,
     HomePageComponent,
   ],
