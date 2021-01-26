@@ -20,6 +20,7 @@ namespace DKS_API.Data.Repository
 
         //DTO(Stored Procedure)
         public DbSet<F418_F420Dto> GetF420F418View { get; set; }
+        public DbSet<F340_ProcessDto> GetF340ProcessView{get;set;}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -33,6 +34,8 @@ namespace DKS_API.Data.Repository
 
             //DTO(Stored Procedure)
             modelBuilder.Entity<F418_F420Dto>()
+            .HasNoKey();
+            modelBuilder.Entity<F340_ProcessDto>()
             .HasNoKey();
 
         }

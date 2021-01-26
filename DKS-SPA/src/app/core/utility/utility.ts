@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -13,11 +14,13 @@ export class Utility {
   http = this.cHttp;
   alertify = this.cAlertify;
   spinner = this.cSpinner;
+  datepiper = this.datepipe;
 
   constructor(
     private cHttp: HttpClient,
     private cAlertify: AlertifyService,
-    private cSpinner: NgxSpinnerService
+    private cSpinner: NgxSpinnerService,
+    private datepipe: DatePipe
   ) {}
 
   getToDay() {

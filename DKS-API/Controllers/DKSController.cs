@@ -25,7 +25,19 @@ namespace DKS_API.Controllers
             _dksDao = dksDao;
             _config = config;
         }
-
+        [HttpGet("getF340_Process")]
+        public async Task<IActionResult> GetF340_Process(string startDate,string endDate)
+        {
+            try
+            {
+                var result = await _dksDao.GetF340ProcessView(startDate,endDate);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}.");
+            }
+        }
         [HttpPost("checkF420Valid")]
         public IActionResult CheckF420Valid([FromForm] ArticlePic excel)
         {

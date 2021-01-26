@@ -1,6 +1,6 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
-import { LocationStrategy, HashLocationStrategy } from "@angular/common";
+import { LocationStrategy, HashLocationStrategy, DatePipe } from "@angular/common";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 import { PerfectScrollbarModule } from "ngx-perfect-scrollbar";
@@ -48,6 +48,7 @@ import { HomePageComponent } from "./views/home-page/home-page.component";
 import { FormsModule } from "@angular/forms";
 import { NgImageSliderModule } from "ng-image-slider";
 import { DictionaryComponent } from "./views/dictionary/dictionary.component";
+import { F340Component } from "./views/dks/F340/F340.component";
 
 
 @NgModule({
@@ -76,6 +77,7 @@ import { DictionaryComponent } from "./views/dictionary/dictionary.component";
     P500Component,
     PictureComponent,
     F420Component,
+    F340Component,
     DictionaryComponent,
     HomePageComponent,
   ],
@@ -84,6 +86,7 @@ import { DictionaryComponent } from "./views/dictionary/dictionary.component";
     ErrorInterceptorProvider,
     AlertifyService,
     AuthGuard,
+    DatePipe,
     {
       provide: LocationStrategy,
       useClass: HashLocationStrategy,

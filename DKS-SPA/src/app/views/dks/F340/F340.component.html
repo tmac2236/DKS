@@ -1,0 +1,109 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <strong>F340 Schedule</strong>
+        </div>
+        <form class="form-horizontal" #addQueryReportDataForm="ngForm">
+          <div class="card-body">
+            <div class="form-group row">
+              <div class="col-md-12">
+                <div class="col">
+                  <label class="col-form-label mr-2">Create Date Start</label>
+                  <input
+                    class="col-form-label mr-2"
+                    type="date"
+                    placeholder="startDate"
+                    name="startDate"
+                    [(ngModel)]="startDate"
+                    required
+                  />
+                  <label class="col-form-label mr-2">Create Date End</label>
+                  <input
+                    class="col-form-label mr-2"
+                    type="date"
+                    placeholder="endDate"
+                    name="endDate"
+                    [(ngModel)]="endDate"
+                    required
+                  />
+                  <button
+                    class="btn btn-primary mr-2"
+                    type="button"
+                    (click)="search()"
+                    [disabled]="!addQueryReportDataForm.valid"
+                  >
+                    Seacrch
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="row" *ngIf="result">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table text-center table-striped">
+                    <thead>
+                      <tr class="table-info">
+                        <th>modelNo</th>
+                        <th>article</th>
+                        <th>sampleNo</th>
+                        <th>verNo</th>
+                        <th>releaseType</th>
+
+                        <th>cwaDate</th>
+                        <th>createDate</th>
+                        <th>pdmDate</th>
+                        <th>devUpperDate</th>
+                        <th>devBottomDate</th>
+
+                        <th>ttDate</th>
+                        <th>releaseDate</th>
+                        <th>ttRejectReason</th>
+                        <th>ttRejectDate</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container *ngFor="let item of result; let i = index">
+                        <tr>
+                          <td>{{ item["modelNo"] }}</td>
+                          <td>{{ item["article"] }}</td>
+                          <td>{{ item["sampleNo"] }}</td>
+                          <td>{{ item["verNo"] }}</td>
+                          <td>{{ item["releaseType"] }}</td>
+
+                          <td>{{ item["cwaDate"] }}</td>
+                          <td>{{ item["createDate"] }}</td>
+                          <td>{{ item["pdmDate"] }}</td>
+                          <td>{{ item["devUpperDate"] }}</td>
+                          <td>{{ item["devBottomDate"] }}</td>
+
+                          <td>{{ item["ttDate"] }}</td>
+                          <td>{{ item["releaseDate"] }}</td>
+                          <td>{{ item["ttRejectReason"] }}</td>
+                          <td>{{ item["ttRejectDate"] }}</td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ngx-spinner
+  bdColor="rgba(0, 0, 0, 0.8)"
+  size="large"
+  color="#fff"
+  type="square-jelly-box"
+  [fullScreen]="true"
+  ><p style="color: white">Loading F340 Shchdule...</p></ngx-spinner
+>

@@ -4,6 +4,7 @@ import { Routes, RouterModule } from "@angular/router";
 // Import Containers
 import { DefaultLayoutComponent } from "./containers";
 import { DictionaryComponent } from "./views/dictionary/dictionary.component";
+import { F340Component } from "./views/dks/F340/F340.component";
 import { F420Component } from "./views/dks/F420/F420.component";
 
 import { P404Component } from "./views/error/404.component";
@@ -44,6 +45,13 @@ export const routes: Routes = [
     component: F420Component,
     data: {
       title: "F420",
+    },
+  },
+  {
+    path: "F340",
+    component: F340Component,
+    data: {
+      title: "F340",
     },
   },
   {

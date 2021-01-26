@@ -12,5 +12,6 @@ namespace DKS_API.Data.Interface
         Task AddUserLogAsync(UserLog user);
         Task<bool> SaveAll();
         F418_F420Dto GetF420F418View(string f418No);
+        Task<IEnumerable<F340_ProcessDto>> GetF340ProcessView(string startDate,string endDate);
     }
 }
