@@ -9,6 +9,7 @@ namespace DKS_API.Data.Interface
     {
         Task<List<Ordsumoh>> SearchConvergence(string season, string stage);
         Task<Staccrth> SearchStaffByLOGIN(string login);
+        Task<Staccrth> SearchStaffByUserId(string userId);
         Task AddUserLogAsync(UserLog user);
         Task<bool> SaveAll();
         F418_F420Dto GetF420F418View(string f418No);

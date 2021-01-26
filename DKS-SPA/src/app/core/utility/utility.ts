@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { environment } from '../../../environments/environment';
 import { AlertifyService } from '../_services/alertify.service';
@@ -15,12 +16,15 @@ export class Utility {
   alertify = this.cAlertify;
   spinner = this.cSpinner;
   datepiper = this.datepipe;
-
+  activeRouter = this.acRouter;
+  router = this.route;
   constructor(
     private cHttp: HttpClient,
     private cAlertify: AlertifyService,
     private cSpinner: NgxSpinnerService,
-    private datepipe: DatePipe
+    private datepipe: DatePipe,
+    private acRouter: ActivatedRoute,
+    private route: Router,
   ) {}
 
   getToDay() {

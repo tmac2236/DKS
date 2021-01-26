@@ -3,7 +3,8 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-header">
-          <strong>F340 Schedule</strong>
+          <strong >F340 Schedule</strong>
+          <strong *ngIf="this.loginUser">  Hello  {{ this.loginUser }}</strong>
         </div>
         <form class="form-horizontal" #addQueryReportDataForm="ngForm">
           <div class="card-body">

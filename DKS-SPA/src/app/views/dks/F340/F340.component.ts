@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
 import { Utility } from "../../../core/utility/utility";
 import { DksService } from "../../../core/_services/dks.service";
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
   selector: "app-F340",
@@ -9,16 +9,21 @@ import { DksService } from "../../../core/_services/dks.service";
   styleUrls: ["./F340.component.scss"],
 })
 export class F340Component implements OnInit {
-  
+  loginUser: string;
   startDate: string;
   endDate: string;
   result: object[];
+  jwtHelper = new JwtHelperService();
   constructor(
     private utility: Utility,
     private dksService: DksService,
-  ) {}
+  ) {
+  }
 
   ngOnInit() {
+    const jwtTtoken  = localStorage.getItem('token');
+    this.loginUser = this.jwtHelper.decodeToken(jwtTtoken)['unique_name'];
+    
     const newDate = new Date();
     this.startDate = this.utility.datepiper.transform(
       newDate.setDate(newDate.getDate()-7),//前七天

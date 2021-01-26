@@ -7,6 +7,7 @@ using DKS_API.Data.Repository;
 using DKS_API.Data.Interface;
 using DKS_API.DTOs;
 using Microsoft.Data.SqlClient;
+using System;
 
 namespace DFPS.API.Data.Repository
 {
@@ -22,10 +23,16 @@ namespace DFPS.API.Data.Repository
             var list = await _context.ORDSUMOH.Where(x => x.SEASON == season && x.STAGE == stage).OrderBy(x => x.PRSUMNO).ToListAsync();
             return list;
         }
-
+        //依LOGIN查帳號
         public async Task<Staccrth> SearchStaffByLOGIN(string login)
         {
             var staff = await _context.STACCRTH.FirstOrDefaultAsync(x => x.LOGIN == login.Trim());
+            return staff;
+        }
+        //依UserID查帳號
+        public async Task<Staccrth> SearchStaffByUserId(string userId)
+        {
+            var staff = await _context.STACCRTH.FirstOrDefaultAsync(x => x.USERID == Decimal.Parse(userId.Trim()));
             return staff;
         }
         //新增一筆user log 資料
@@ -65,5 +72,6 @@ namespace DFPS.API.Data.Repository
                    .ToListAsync();
             return data;
         }
+
     }
 }

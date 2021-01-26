@@ -16,13 +16,13 @@ namespace DKS_API.Controllers
     public class AuthController : ApiController
     {
         private readonly IUserDAO _authDAO;
-        private readonly IDKSSysUserDAO _dksSysUserDAO;
+        private readonly IDKSDAO _dksDAO;
         private readonly IConfiguration _config;
-        public AuthController(IUserDAO authDAO, IConfiguration config, IDKSSysUserDAO dksSysUserDAO)
+        public AuthController(IUserDAO authDAO, IConfiguration config, IDKSDAO dksDAO)
         {
             _config = config;
             _authDAO = authDAO;
-            _dksSysUserDAO = dksSysUserDAO;
+            _dksDAO = dksDAO;
         }
 
         [HttpPost("register")]
@@ -44,14 +44,26 @@ namespace DKS_API.Controllers
 
             return StatusCode(201);
         }
-                [HttpPost("login")]
+        [HttpPost("login")]
         public async Task<IActionResult> Login(UserDto userForLoginDto)
         {
 
-            var userFromRepo = await _dksSysUserDAO.Login(userForLoginDto.Account);
+            var userFromRepo = await _dksDAO.SearchStaffByLOGIN(userForLoginDto.Account);
 
             if (userFromRepo == null)
-                return Unauthorized();
+            {
+                //試著用UserId找看看
+                try
+                {
+                    decimal userId = Decimal.Parse(userForLoginDto.Account);
+                    userFromRepo = await _dksDAO.SearchStaffByUserId(userForLoginDto.Account);
+                }
+                catch (Exception ex)
+                {
+                    return Unauthorized();
+                }
+            }
+
 
             var claims = new[]
             {
@@ -118,6 +130,6 @@ namespace DKS_API.Controllers
             });
 
         }
-        
+
     }
 }
