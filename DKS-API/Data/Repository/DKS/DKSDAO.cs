@@ -59,16 +59,16 @@ namespace DFPS.API.Data.Repository
 
         }
 
-        public async Task<IEnumerable<F340_ProcessDto>> GetF340ProcessView(string startDate, string endDate)
+        public async Task<List<F340_ProcessDto>> GetF340ProcessView(string season, string bpVer)
         {
 
             List<SqlParameter> pc = new List<SqlParameter>{
-                new SqlParameter("@SDate",startDate.Trim()),
-                new SqlParameter("@EDate",endDate.Trim())
+                new SqlParameter("@Season",season.Trim().ToUpper()),
+                new SqlParameter("@BuyPlanVer",bpVer != null ? Int32.Parse(bpVer.Trim()) : (object)DBNull.Value )
             };
 
             var data = await _context.GetF340ProcessView
-                   .FromSqlRaw("EXECUTE dbo.GetF340Process @SDate, @EDate", pc.ToArray())
+                   .FromSqlRaw("EXECUTE dbo.GetF340Process_BuyPlan @Season,@BuyPlanVer", pc.ToArray())
                    .ToListAsync();
             return data;
         }

@@ -1,3 +1,59 @@
-<p>
-  macro works!
-</p>
+<ng-container *ngFor="let item of resultFilter; let i = index">
+  <ng-template
+    #buttonTmpl
+    let-label="label"
+    let-className="className"
+    let-icon="icon"
+    let-asshole="asshole"
+  >
+    <div class="row">
+      <label class="col-form-label mr-2">Name</label>
+    </div>
+    <div class="row">
+    <input
+      class="col-form-label mr-2"
+      type="text"
+      placeholder="TeamID"
+      name="TeamID"
+      [(ngModel)]="resultFilter[i]"
+      required
+    />
+  </div>
+  <div class="row">
+    <button [ngClass]="['btn', className ? className : '']">
+      <i *ngIf="icon" class="fa {{ icon }}"></i>
+      {{ item }}
+    </button>
+  </div>
+  </ng-template>
+
+  <ng-container
+    [ngTemplateOutlet]="buttonTmpl"
+    [ngTemplateOutletContext]="{
+      label: 'Click here',
+      className: 'btn-primary',
+      icon: null
+    }"
+  >
+  </ng-container>
+
+  <ng-container
+    [ngTemplateOutlet]="buttonTmpl"
+    [ngTemplateOutletContext]="{
+      label: 'Remove',
+      className: 'btn-danger',
+      icon: 'fa-print'
+    }"
+  >
+  </ng-container>
+
+  <ng-container
+    [ngTemplateOutlet]="buttonTmpl"
+    [ngTemplateOutletContext]="{
+      label: 'Information',
+      className: 'btn-success',
+      icon: 'info-circle'
+    }"
+  >
+  </ng-container>
+</ng-container>

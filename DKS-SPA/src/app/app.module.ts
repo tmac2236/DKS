@@ -45,7 +45,7 @@ import { TabsModule } from "ngx-bootstrap/tabs";
 import { ChartsModule } from "ng2-charts";
 import { HttpClientModule } from "@angular/common/http";
 import { HomePageComponent } from "./views/home-page/home-page.component";
-import { FormsModule } from "@angular/forms";
+import { FormsModule,ReactiveFormsModule } from "@angular/forms";
 import { NgImageSliderModule } from "ng-image-slider";
 import { DictionaryComponent } from "./views/dictionary/dictionary.component";
 import { F340Component } from "./views/dks/F340/F340.component";
@@ -57,6 +57,7 @@ import { F340Component } from "./views/dks/F340/F340.component";
     BrowserModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     AppAsideModule,

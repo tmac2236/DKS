@@ -11,16 +11,16 @@ namespace DKS_API.Data.Repository
         //EF(SHCDEV3)
         public DbSet<Ordsumoh> ORDSUMOH { get; set; }
         public DbSet<UserLog> USER_LOG { get; set; }
-
         public DbSet<Staccrth> STACCRTH { get; set; }
         public DbSet<Pracdath> PRACDATH { get; set; }
         public DbSet<Pracdatb> PRACDATB { get; set; }
         public DbSet<Proporh> PROPORH { get; set; }
+        public DbSet<ModelDah> MODELDAH { get; set; }
 
 
         //DTO(Stored Procedure)
         public DbSet<F418_F420Dto> GetF420F418View { get; set; }
-        public DbSet<F340_ProcessDto> GetF340ProcessView{get;set;}
+        public DbSet<F340_ProcessDto> GetF340ProcessView { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -30,7 +30,8 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<Pracdath>().HasKey(x => new { x.PROACCNO });
             modelBuilder.Entity<Pracdatb>().HasKey(x => new { x.PKPRACBID, x.PROACCNO });
             modelBuilder.Entity<Proporh>().HasKey(x => new { x.PROORDNO });
-
+            modelBuilder.Entity<ModelDah>().HasKey(x => new { x.MODELNO });
+            modelBuilder.Entity<Articled>().HasKey(x => new { x.PKARTBID });
 
             //DTO(Stored Procedure)
             modelBuilder.Entity<F418_F420Dto>()

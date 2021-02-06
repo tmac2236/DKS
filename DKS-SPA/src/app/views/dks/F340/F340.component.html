@@ -11,31 +11,31 @@
             <div class="form-group row">
               <div class="col-md-12">
                 <div class="col">
-                  <label class="col-form-label mr-2">Create Date Start</label>
+                  <label class="col-form-label mr-1">Season</label>
                   <input
-                    class="col-form-label mr-2"
-                    type="date"
-                    placeholder="startDate"
-                    name="startDate"
-                    [(ngModel)]="startDate"
+                    class="col-form-label mr-1"
+                    type="text"
+                    name="season"
+                    [(ngModel)]="season"
                     required
                   />
-                  <label class="col-form-label mr-2">Create Date End</label>
+                  <label class="col-form-label mr-1">Buy Plan Version</label>
                   <input
-                    class="col-form-label mr-2"
-                    type="date"
-                    placeholder="endDate"
-                    name="endDate"
-                    [(ngModel)]="endDate"
-                    required
+                    class="col-form-label mr-1"
+                    type="text"
+                    name="bpVer"
+                    [(ngModel)]="bpVer"
                   />
                   <button
-                    class="btn btn-primary mr-2"
+                    class="btn btn-primary mr-1"
                     type="button"
                     (click)="search()"
                     [disabled]="!addQueryReportDataForm.valid"
                   >
                     Seacrch
+                  </button>
+                  <button class="btn btn-primary mr-1" type="button" (click)="export()" [disabled]="!addQueryReportDataForm.valid">
+                    Export
                   </button>
                 </div>
               </div>
@@ -50,19 +50,25 @@
                   <table class="table text-center table-striped">
                     <thead>
                       <tr class="table-info">
+                        <th>season</th>
+                        <th>stage</th>
+                        <th>modelName</th>
                         <th>modelNo</th>
                         <th>article</th>
-                        <th>sampleNo</th>
-                        <th>verNo</th>
-                        <th>releaseType</th>
 
-                        <th>cwaDate</th>
+                        <th>buyPlan</th>
+                        <th>versionNo</th>
+                        <th>cwaDeadline</th>
+                        <th>flag</th>
+                        <th>sampleNo</th>
+
                         <th>createDate</th>
                         <th>pdmDate</th>
-                        <th>devUpperDate</th>
-                        <th>devBottomDate</th>
+                        <th>devUpDate</th>
+                        <th>devBtmDate</th>
+                        <th>ttUpDate</th>
 
-                        <th>ttDate</th>
+                        <th>ttBtmDate</th>
                         <th>releaseDate</th>
                         <th>ttRejectReason</th>
                         <th>ttRejectDate</th>
@@ -71,19 +77,25 @@
                     <tbody>
                       <ng-container *ngFor="let item of result; let i = index">
                         <tr>
+                          <td>{{ item["season"] }}</td>
+                          <td>{{ item["stage"] }}</td>
+                          <td>{{ item["modelName"] }}</td>
                           <td>{{ item["modelNo"] }}</td>
                           <td>{{ item["article"] }}</td>
-                          <td>{{ item["sampleNo"] }}</td>
-                          <td>{{ item["verNo"] }}</td>
-                          <td>{{ item["releaseType"] }}</td>
 
-                          <td>{{ item["cwaDate"] }}</td>
+                          <td>{{ item["buyPlan"] }}</td>
+                          <td>{{ item["versionNo"] }}</td>
+                          <td>{{ item["cwaDeadline"] }}</td>
+                          <td>{{ item["flag"] }}</td>
+                          <td>{{ item["sampleNo"] }}</td>
+
                           <td>{{ item["createDate"] }}</td>
                           <td>{{ item["pdmDate"] }}</td>
-                          <td>{{ item["devUpperDate"] }}</td>
-                          <td>{{ item["devBottomDate"] }}</td>
+                          <td>{{ item["devUpDate"] }}</td>
+                          <td>{{ item["devBtmDate"] }}</td>
+                          <td>{{ item["ttUpDate"] }}</td>
 
-                          <td>{{ item["ttDate"] }}</td>
+                          <td>{{ item["ttBtmDate"] }}</td>
                           <td>{{ item["releaseDate"] }}</td>
                           <td>{{ item["ttRejectReason"] }}</td>
                           <td>{{ item["ttRejectDate"] }}</td>

@@ -24,7 +24,6 @@ const routes: Routes = [
       },
       {
         path: 'macro',
-        canActivate: [AuthGuard],
         component: MacroComponent,
         data: {
           title: 'Macro',

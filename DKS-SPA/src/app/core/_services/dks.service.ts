@@ -9,13 +9,11 @@ import { ArticlePic } from "../_models/article-pic";
 export class DksService {
   constructor(private utility: Utility) {}
 
-  searchF340Process(startDate: string, endDate: string) {
+  searchF340Process(season: string, bpVer: string) {
     return this.utility.http.get<object[]>(
       this.utility.baseUrl +
-        "dks/getF340_Process?startDate=" +
-        startDate +
-        "&endDate=" +
-        endDate
+        "dks/getF340_Process?season=" +
+        season + "&bpVer=" + bpVer
     );
   }
 

@@ -1,4 +1,5 @@
 //region 固定標題
+/*
 tbody {
   display: block;
   height: 500px;
@@ -7,15 +8,16 @@ tbody {
 thead,
 tbody tr {
   display: table;
-  width: 150%;
+  width: 100%;
   table-layout: fixed; /* even columns width , fix width of table too*/
-}
-td {
-  word-wrap: break-word;
-}
-thead {
-  width: calc(
-    100% - 1em
-  ); /* scrollbar is average 1em/16px width, remove it from thead width */
-}
+//}
+//td {
+//  word-wrap: break-word;
+//}
+//thead {
+// width: calc(
+//    100% - 1em
+//  ); /* scrollbar is average 1em/16px width, remove it from thead width */
+//}
 //endregion 固定標題
+

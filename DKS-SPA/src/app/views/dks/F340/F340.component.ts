@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Utility } from "../../../core/utility/utility";
 import { DksService } from "../../../core/_services/dks.service";
-import { JwtHelperService } from '@auth0/angular-jwt';
+import { JwtHelperService } from "@auth0/angular-jwt";
 
 @Component({
   selector: "app-F340",
@@ -10,34 +10,21 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 })
 export class F340Component implements OnInit {
   loginUser: string;
-  startDate: string;
-  endDate: string;
+  season: string;
+  bpVer = "";
   result: object[];
   jwtHelper = new JwtHelperService();
-  constructor(
-    private utility: Utility,
-    private dksService: DksService,
-  ) {
-  }
+  constructor(private utility: Utility, private dksService: DksService) {}
 
   ngOnInit() {
-    const jwtTtoken  = localStorage.getItem('token');
-    this.loginUser = this.jwtHelper.decodeToken(jwtTtoken)['unique_name'];
-    
-    const newDate = new Date();
-    this.startDate = this.utility.datepiper.transform(
-      newDate.setDate(newDate.getDate()-7),//前七天
-      'yyyy-MM-dd'
-    );
-    this.endDate = this.utility.datepiper.transform(
-      new Date(),
-      'yyyy-MM-dd'
-    );
-
+    const jwtTtoken = localStorage.getItem("token");
+    if (jwtTtoken) {
+      this.loginUser = this.jwtHelper.decodeToken(jwtTtoken)["unique_name"];
+    }
   }
   search() {
     this.utility.spinner.show();
-    this.dksService.searchF340Process(this.startDate, this.endDate).subscribe(
+    this.dksService.searchF340Process(this.season, this.bpVer).subscribe(
       (res) => {
         this.result = res;
         this.utility.spinner.hide();
@@ -47,5 +34,42 @@ export class F340Component implements OnInit {
         this.utility.alertify.error(error);
       }
     );
+  }
+  export() {
+    this.utility.spinner.show();
+    this.utility.http
+      .get(
+        this.utility.baseUrl +
+          "dks/exportF340_Process?season=" +
+          this.season +
+          "&bpVer=" +
+          this.bpVer,
+        { responseType: "blob" }
+      )
+      .subscribe((result: Blob) => {
+        if (result.type !== "application/xlsx") {
+          alert(result.type);
+          this.utility.spinner.hide();
+        }
+        const blob = new Blob([result]);
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        const currentTime = new Date();
+        const filename =
+          "F340_Schedule" +
+          currentTime.getFullYear().toString() +
+          (currentTime.getMonth() + 1) +
+          currentTime.getDate() +
+          currentTime
+            .toLocaleTimeString()
+            .replace(/[ ]|[,]|[:]/g, "")
+            .trim() +
+          ".xlsx";
+        link.href = url;
+        link.setAttribute("download", filename);
+        document.body.appendChild(link);
+        link.click();
+        this.utility.spinner.hide();
+      });
   }
 }
