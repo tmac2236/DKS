@@ -1,1 +1,10 @@
 // Here you can add other styles
+ .zoom-in {
+   cursor: url('../assets/systemImg/down.png'), default;
+ }
+ .zoom-out {
+    cursor: url('../assets/systemImg/up.png'), default;
+  }
+thead > tr > th{
+    //cursor: pointer;
+}

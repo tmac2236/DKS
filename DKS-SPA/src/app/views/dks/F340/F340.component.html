@@ -58,7 +58,7 @@
 
                         <th>buyPlan</th>
                         <th>versionNo</th>
-                        <th>cwaDeadline</th>
+                        <th [ngClass]="this.cwaDeadlineS ? 'zoom-in' : 'zoom-out' " (click)="this.sort($event)">cwaDeadline</th>
                         <th>flag</th>
                         <th>sampleNo</th>
 

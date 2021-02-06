@@ -9,6 +9,9 @@ import { JwtHelperService } from "@auth0/angular-jwt";
   styleUrls: ["./F340.component.scss"],
 })
 export class F340Component implements OnInit {
+  //for sorting ; ASC DESC
+  cwaDeadlineS = true;
+  //
   loginUser: string;
   season: string;
   bpVer = "";
@@ -34,6 +37,27 @@ export class F340Component implements OnInit {
         this.utility.alertify.error(error);
       }
     );
+  }
+  sort(e) {
+    //console.log(e);
+    let headStr = e.target.innerHTML;
+
+    switch (headStr) {
+      case "cwaDeadline":
+        if(this.cwaDeadlineS){
+          //ASC
+          this.result = this.result.sort((a,b) => a["cwaDeadline"].localeCompare(b["cwaDeadline"]));
+        }else{
+          //DESC
+          this.result = this.result.sort((a,b) => b["cwaDeadline"].localeCompare(a["cwaDeadline"]));
+        }
+        this.cwaDeadlineS = !this.cwaDeadlineS;
+        break;
+      default:
+        alert("Hello Default");
+        break;
+    }
+    //type = type =="ASC"?"DESC":"ASC";
   }
   export() {
     this.utility.spinner.show();
