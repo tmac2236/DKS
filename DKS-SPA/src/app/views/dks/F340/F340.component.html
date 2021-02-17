@@ -3,8 +3,17 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-header">
-          <strong >F340 Schedule</strong>
-          <strong *ngIf="this.loginUser">  Hello  {{ this.loginUser }}</strong>
+          <div class="row">
+            <div class="col-10">
+              <strong>{{ 'F340.title' | translate }}</strong>
+            </div>
+            <div class="col-2">
+              <strong *ngIf="this.loginUser">{{ 'Common.hello' | translate }} {{ this.loginUser }}</strong>
+              <img src="../assets/systemImg/taiwan.png" width="25" height="25"  (click)="useLanguage('zh')"/>
+              <img src="../assets/systemImg/united-states.png" width="25" height="25"  (click)="useLanguage('en')"/>
+              <!--<img src="../assets/systemImg/vietnam.png" width="25" height="25" />-->
+           </div>
+          </div>
         </div>
         <form class="form-horizontal" #addQueryReportDataForm="ngForm">
           <div class="card-body">
@@ -32,10 +41,15 @@
                     (click)="search()"
                     [disabled]="!addQueryReportDataForm.valid"
                   >
-                    Seacrch
+                  {{ 'Common.btnList.search' | translate }}
                   </button>
-                  <button class="btn btn-primary mr-1" type="button" (click)="export()" [disabled]="!addQueryReportDataForm.valid">
-                    Export
+                  <button
+                    class="btn btn-primary mr-1"
+                    type="button"
+                    (click)="export()"
+                    [disabled]="!addQueryReportDataForm.valid"
+                  >
+                  {{ 'Common.btnList.export' | translate }}
                   </button>
                 </div>
               </div>
@@ -58,7 +72,12 @@
 
                         <th>buyPlan</th>
                         <th>versionNo</th>
-                        <th [ngClass]="this.cwaDeadlineS ? 'zoom-in' : 'zoom-out' " (click)="this.sort($event)">cwaDeadline</th>
+                        <th
+                          [ngClass]="this.cwaDeadlineS ? 'zoom-in' : 'zoom-out'"
+                          (click)="this.sort($event)"
+                        >
+                          cwaDeadline
+                        </th>
                         <th>flag</th>
                         <th>sampleNo</th>
 

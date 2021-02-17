@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { environment } from '../../../environments/environment';
 import { AlertifyService } from '../_services/alertify.service';
+import { LanguageService } from '../_services/language.service';
 
 @Injectable({
   providedIn: 'root',
@@ -25,6 +26,7 @@ export class Utility {
     private datepipe: DatePipe,
     private acRouter: ActivatedRoute,
     private route: Router,
+    public languageService:LanguageService,
   ) {}
 
   getToDay() {

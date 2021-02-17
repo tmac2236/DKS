@@ -44,12 +44,16 @@ export class F340Component implements OnInit {
 
     switch (headStr) {
       case "cwaDeadline":
-        if(this.cwaDeadlineS){
+        if (this.cwaDeadlineS) {
           //ASC
-          this.result = this.result.sort((a,b) => a["cwaDeadline"].localeCompare(b["cwaDeadline"]));
-        }else{
+          this.result = this.result.sort((a, b) =>
+            a["cwaDeadline"].localeCompare(b["cwaDeadline"])
+          );
+        } else {
           //DESC
-          this.result = this.result.sort((a,b) => b["cwaDeadline"].localeCompare(a["cwaDeadline"]));
+          this.result = this.result.sort((a, b) =>
+            b["cwaDeadline"].localeCompare(a["cwaDeadline"])
+          );
         }
         this.cwaDeadlineS = !this.cwaDeadlineS;
         break;
@@ -95,5 +99,8 @@ export class F340Component implements OnInit {
         link.click();
         this.utility.spinner.hide();
       });
+  }
+  useLanguage(language: string) {
+    this.utility.languageService.setLang(language);
   }
 }

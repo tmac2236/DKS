@@ -1,0 +1,12 @@
+{   "Common":{
+    "currentLang":"English",
+    "hello":"Hello",
+    "btnList": {
+            "search": "Search",
+            "export": "Export"
+    }
+    },
+    "F340": {
+        "title": "F340 Schedule"
+    }
+}

@@ -1,0 +1,12 @@
+{   "Common":{
+    "currentLang":"繁體中文",
+    "hello":"您好",
+    "btnList": {
+            "search": "搜尋",
+            "export": "匯出"
+    }
+    },
+    "F340": {
+        "title": "F340 進度表"
+    }
+}

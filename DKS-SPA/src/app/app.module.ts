@@ -1,6 +1,10 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
-import { LocationStrategy, HashLocationStrategy, DatePipe } from "@angular/common";
+import {
+  LocationStrategy,
+  HashLocationStrategy,
+  DatePipe,
+} from "@angular/common";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 import { PerfectScrollbarModule } from "ngx-perfect-scrollbar";
@@ -43,19 +47,31 @@ import { AppRoutingModule } from "./app.routing";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { TabsModule } from "ngx-bootstrap/tabs";
 import { ChartsModule } from "ng2-charts";
-import { HttpClientModule } from "@angular/common/http";
+import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { HomePageComponent } from "./views/home-page/home-page.component";
-import { FormsModule,ReactiveFormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { NgImageSliderModule } from "ng-image-slider";
 import { DictionaryComponent } from "./views/dictionary/dictionary.component";
 import { F340Component } from "./views/dks/F340/F340.component";
+import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
+import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 
-
+//載入 "/assets/i18n/[lang].json" 語系檔
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
+}
 @NgModule({
   imports: [
     NgxSpinnerModule,
     BrowserModule,
     HttpClientModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: createTranslateLoader,
+        deps: [HttpClient],
+      },
+    }),
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
