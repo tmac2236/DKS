@@ -64,22 +64,24 @@
                   <table class="table text-center table-striped">
                     <thead>
                       <tr class="table-info">
-                        <th>season</th>
-                        <th>stage</th>
-                        <th>modelName</th>
-                        <th>modelNo</th>
-                        <th>article</th>
-
-                        <th>buyPlan</th>
+                        <th>buyPlanSeason</th>
                         <th>versionNo</th>
-                        <th
-                          [ngClass]="this.cwaDeadlineS ? 'zoom-in' : 'zoom-out'"
-                          (click)="this.sort($event)"
-                        >
-                          cwaDeadline
-                        </th>
-                        <th>flag</th>
+                        <th>devSeason</th>
+                        <th>article</th>
+                        <th [ngClass]="this.cwaDeadlineS ? 'zoom-in' : 'zoom-out'"
+                        (click)="this.sort($event)">cwaDeadline</th>
+
+                        <th>modelNo</th>
+                        <th>modelName</th>
+                        <th>bomStage</th>
                         <th>sampleNo</th>
+                        <th>devStatus</th>
+
+                        <th>dropDate</th>
+                        <th>hpFlag</th>
+                        <th>hpSampleNo</th>
+                        <th>f340SampleNo</th>
+                        <th>releaseType</th>
 
                         <th>createDate</th>
                         <th>pdmDate</th>
@@ -88,34 +90,38 @@
                         <th>ttUpDate</th>
 
                         <th>ttBtmDate</th>
-                        <th>releaseDate</th>
                         <th>ttRejectReason</th>
-                        <th>ttRejectDate</th>
+                        <th>ttRejectDate</th>                        
                       </tr>
                     </thead>
                     <tbody>
                       <ng-container *ngFor="let item of result; let i = index">
                         <tr>
-                          <td>{{ item["season"] }}</td>
-                          <td>{{ item["stage"] }}</td>
-                          <td>{{ item["modelName"] }}</td>
-                          <td>{{ item["modelNo"] }}</td>
-                          <td>{{ item["article"] }}</td>
-
-                          <td>{{ item["buyPlan"] }}</td>
+                          <td>{{ item["buyPlanSeason"] }}</td>
                           <td>{{ item["versionNo"] }}</td>
+                          <td>{{ item["devSeason"] }}</td>
+                          <td>{{ item["article"] }}</td>
                           <td>{{ item["cwaDeadline"] }}</td>
-                          <td>{{ item["flag"] }}</td>
+
+                          <td>{{ item["modelNo"] }}</td>
+                          <td>{{ item["modelName"] }}</td>
+                          <td>{{ item["bomStage"] }}</td>
                           <td>{{ item["sampleNo"] }}</td>
+                          <td>{{ item["devStatus"] }}</td>
+
+                          <td>{{ item["dropDate"] }}</td>
+                          <td>{{ item["hpFlag"] }}</td>
+                          <td>{{ item["hpSampleNo"] }}</td>
+                          <td>{{ item["f340SampleNo"] }}</td>
+                          <td>{{ item["releaseType"] }}</td>             
 
                           <td>{{ item["createDate"] }}</td>
                           <td>{{ item["pdmDate"] }}</td>
                           <td>{{ item["devUpDate"] }}</td>
                           <td>{{ item["devBtmDate"] }}</td>
                           <td>{{ item["ttUpDate"] }}</td>
-
+      
                           <td>{{ item["ttBtmDate"] }}</td>
-                          <td>{{ item["releaseDate"] }}</td>
                           <td>{{ item["ttRejectReason"] }}</td>
                           <td>{{ item["ttRejectDate"] }}</td>
                         </tr>

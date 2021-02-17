@@ -71,16 +71,16 @@ namespace DKS_API.Controllers
             int row = 1;
             foreach (F340_ProcessDto item in data)
             {
-                ws.Cells[row, 0].Value = item.Season;
-                ws.Cells[row, 1].Value = item.Stage;
+                //ws.Cells[row, 0].Value = item.Season;
+                //ws.Cells[row, 1].Value = item.Stage;
                 ws.Cells[row, 2].Value = item.ModelName;
                 ws.Cells[row, 3].Value = item.ModelNo;
                 ws.Cells[row, 4].Value = item.Article;
 
-                ws.Cells[row, 5].Value = item.BuyPlan;
+                //ws.Cells[row, 5].Value = item.BuyPlan;
                 ws.Cells[row, 6].Value = item.VersionNo;
                 ws.Cells[row, 7].Value = item.CwaDeadline;
-                ws.Cells[row, 8].Value = item.Flag;
+                //ws.Cells[row, 8].Value = item.Flag;
                 ws.Cells[row, 9].Value = item.SampleNo;
 
                 ws.Cells[row, 10].Value = item.CreateDate;
@@ -90,7 +90,7 @@ namespace DKS_API.Controllers
                 ws.Cells[row, 14].Value = item.TTUpDate;
 
                 ws.Cells[row, 15].Value = item.TTBtmDate;
-                ws.Cells[row, 16].Value = item.ReleaseDate;
+                //ws.Cells[row, 16].Value = item.ReleaseDate;
                 ws.Cells[row, 17].Value = item.TTRejectReason;
                 ws.Cells[row, 18].Value = item.TTRejectDate;
                 row += 1;
