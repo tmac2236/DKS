@@ -11,6 +11,7 @@ using DKS_API.Data.Interface;
 using Aspose.Cells;
 using System.Data;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace DKS_API.Controllers
 {
@@ -18,11 +19,13 @@ namespace DKS_API.Controllers
     {
         private readonly IConfiguration _config;
         private readonly IDKSDAO _dksDao;
-        public DKSController(IConfiguration config, IDKSDAO dksDao)
+        private readonly IDevBuyPlanDAO _devBuyPlanDAO;
+        public DKSController(IConfiguration config, IDKSDAO dksDao,IDevBuyPlanDAO devBuyPlanDAO)
 
         {
             _dksDao = dksDao;
             _config = config;
+            _devBuyPlanDAO = devBuyPlanDAO;
         }
         [HttpGet("exportF340_Process")]
         public async Task<IActionResult> ExportF340_Process(string season,string bpVer)
@@ -43,56 +46,66 @@ namespace DKS_API.Controllers
 
             Worksheet ws = designer.Workbook.Worksheets[0];
             //titile
-            ws.Cells[0, 0].Value = "season";
-            ws.Cells[0, 1].Value = "stage";
-            ws.Cells[0, 2].Value = "modelName";
-            ws.Cells[0, 3].Value = "modelNo";
-            ws.Cells[0, 4].Value = "article";
+            ws.Cells[0, 0].Value = "buyPlanSeason";
+            ws.Cells[0, 1].Value = "versionNo";
+            ws.Cells[0, 2].Value = "devSeason";
+            ws.Cells[0, 3].Value = "article";
+            ws.Cells[0, 4].Value = "cwaDeadline";
 
-            ws.Cells[0, 5].Value = "buyPlan";
-            ws.Cells[0, 6].Value = "versionNo";
-            ws.Cells[0, 7].Value = "cwaDeadline";
-            ws.Cells[0, 8].Value = "flag";
-            ws.Cells[0, 9].Value = "sampleNo";
+            ws.Cells[0, 5].Value = "modelNo";
+            ws.Cells[0, 6].Value = "modelName";
+            ws.Cells[0, 7].Value = "bomStage";
+            ws.Cells[0, 8].Value = "sampleNo";
+            ws.Cells[0, 9].Value = "devStatus";
 
-            ws.Cells[0, 10].Value = "createDate";
-            ws.Cells[0, 11].Value = "pdmDate";
-            ws.Cells[0, 12].Value = "devUpDate";
-            ws.Cells[0, 13].Value = "devBtmDate";
-            ws.Cells[0, 14].Value = "ttUpDate";
+            ws.Cells[0, 10].Value = "dropDate";
+            ws.Cells[0, 11].Value = "hpFlag";
+            ws.Cells[0, 12].Value = "hpSampleNo";
+            ws.Cells[0, 13].Value = "f340SampleNo";
+            ws.Cells[0, 14].Value = "releaseType";
 
-            ws.Cells[0, 15].Value = "ttBtmDate";
-            ws.Cells[0, 16].Value = "releaseDate";
-            ws.Cells[0, 17].Value = "ttRejectReason";
-            ws.Cells[0, 18].Value = "ttRejectDate";
+            ws.Cells[0, 15].Value = "createDate";
+            ws.Cells[0, 16].Value = "pdmDate";
+            ws.Cells[0, 17].Value = "devUpDate";
+            ws.Cells[0, 18].Value = "devBtmDate";
+            ws.Cells[0, 19].Value = "ttUpDate";
+
+            ws.Cells[0, 20].Value = "ttBtmDate";
+            ws.Cells[0, 21].Value = "ttRejectReason";
+            ws.Cells[0, 22].Value = "ttRejectDate";
 
             ws.Cells.Rows[0].ApplyStyle(titleStyle, titleFlag);//第一列套上顏色
             ws.FreezePanes(1, 1, 1, 1);
             int row = 1;
             foreach (F340_ProcessDto item in data)
             {
-                //ws.Cells[row, 0].Value = item.Season;
-                //ws.Cells[row, 1].Value = item.Stage;
-                ws.Cells[row, 2].Value = item.ModelName;
-                ws.Cells[row, 3].Value = item.ModelNo;
-                ws.Cells[row, 4].Value = item.Article;
+                ws.Cells[row, 0].Value = item.BuyPlanSeason;
+                ws.Cells[row, 1].Value = item.VersionNo;
+                ws.Cells[row, 2].Value = item.DevSeason;
+                ws.Cells[row, 3].Value = item.Article;
+                ws.Cells[row, 4].Value = item.CwaDeadline;
 
-                //ws.Cells[row, 5].Value = item.BuyPlan;
-                ws.Cells[row, 6].Value = item.VersionNo;
-                ws.Cells[row, 7].Value = item.CwaDeadline;
-                //ws.Cells[row, 8].Value = item.Flag;
-                ws.Cells[row, 9].Value = item.SampleNo;
+                ws.Cells[row, 5].Value = item.ModelNo;
+                ws.Cells[row, 6].Value = item.ModelName;
+                ws.Cells[row, 7].Value = item.BomStage;
+                ws.Cells[row, 8].Value = item.SampleNo;
+                ws.Cells[row, 9].Value = item.DevStatus;
 
-                ws.Cells[row, 10].Value = item.CreateDate;
-                ws.Cells[row, 11].Value = item.PdmDate;
-                ws.Cells[row, 12].Value = item.DevUpDate;
-                ws.Cells[row, 13].Value = item.DevBtmDate;
-                ws.Cells[row, 14].Value = item.TTUpDate;
+                ws.Cells[row, 10].Value = item.DropDate;
+                ws.Cells[row, 11].Value = item.HpFlag;
+                ws.Cells[row, 12].Value = item.HpSampleNo;
+                ws.Cells[row, 13].Value = item.F340SampleNo;
+                ws.Cells[row, 14].Value = item.ReleaseType;
 
-                ws.Cells[row, 15].Value = item.TTBtmDate;
-                //ws.Cells[row, 16].Value = item.ReleaseDate;
-                ws.Cells[row, 17].Value = item.TTRejectReason;
-                ws.Cells[row, 18].Value = item.TTRejectDate;
+                ws.Cells[row, 15].Value = item.CreateDate;
+                ws.Cells[row, 16].Value = item.PdmDate;
+                ws.Cells[row, 17].Value = item.DevUpDate;
+                ws.Cells[row, 18].Value = item.DevBtmDate;
+                ws.Cells[row, 19].Value = item.TTUpDate;
+
+                ws.Cells[row, 20].Value = item.TTBtmDate;
+                ws.Cells[row, 21].Value = item.TTRejectReason;
+                ws.Cells[row, 22].Value = item.TTRejectDate; 
                 row += 1;
             }
             ws.AutoFitColumns();
@@ -112,6 +125,30 @@ namespace DKS_API.Controllers
 
                 var result = await _dksDao.GetF340ProcessView(season,bpVer);
                 return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}.");
+            }
+        }
+        [HttpGet("getBPVersionBySeason")]
+        public async Task<IActionResult> GetBPVersionBySeason(string season)
+        {
+            try
+            {
+
+                var result = await _devBuyPlanDAO.FindAll(x => x.SEASON.Trim() == season.ToUpper().Trim())
+                                        .Select(x => new
+                                        {
+                                            VERN = x.VERN
+                                        }).Distinct()
+                                        .ToListAsync();
+                List<string> bpVern = new List<string>();
+                foreach(var r in result){
+                    bpVern.Add(r.VERN.ToString());
+                }
+                
+                return Ok(bpVern);
             }
             catch (Exception ex)
             {

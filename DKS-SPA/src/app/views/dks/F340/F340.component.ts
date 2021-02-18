@@ -16,6 +16,8 @@ export class F340Component implements OnInit {
   season: string;
   bpVer = "";
   result: object[];
+  bpVerList: string[];
+
   jwtHelper = new JwtHelperService();
   constructor(private utility: Utility, private dksService: DksService) {}
 
@@ -42,25 +44,19 @@ export class F340Component implements OnInit {
     //console.log(e);
     let headStr = e.target.innerHTML;
 
-    switch (headStr) {
-      case "cwaDeadline":
-        if (this.cwaDeadlineS) {
-          //ASC
-          this.result = this.result.sort((a, b) =>
-            a["cwaDeadline"].localeCompare(b["cwaDeadline"])
-          );
-        } else {
-          //DESC
-          this.result = this.result.sort((a, b) =>
-            b["cwaDeadline"].localeCompare(a["cwaDeadline"])
-          );
-        }
-        this.cwaDeadlineS = !this.cwaDeadlineS;
-        break;
-      default:
-        alert("Hello Default");
-        break;
+    if (this.cwaDeadlineS) {
+      //ASC
+      this.result = this.result.sort((a, b) =>
+        a[headStr].localeCompare(b[headStr])
+      );
+    } else {
+      //DESC
+      this.result = this.result.sort((a, b) =>
+        b[headStr].localeCompare(a[headStr])
+      );
     }
+    this.cwaDeadlineS = !this.cwaDeadlineS;
+
     //type = type =="ASC"?"DESC":"ASC";
   }
   export() {
@@ -100,6 +96,17 @@ export class F340Component implements OnInit {
         this.utility.spinner.hide();
       });
   }
+  changeBPVerList(){
+    this.dksService.searchBPVerList(this.season).subscribe(
+      (res) => {
+        this.bpVerList = res;
+      },
+      (error) => {
+        this.utility.alertify.error(error);
+      }
+    );
+  }
+  ///
   useLanguage(language: string) {
     this.utility.languageService.setLang(language);
   }

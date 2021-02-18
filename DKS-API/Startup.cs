@@ -63,7 +63,7 @@ namespace DKS_API
             services.AddScoped<ISPFactoryDAO, SPFactoryDAO>();
             services.AddScoped<IModelDahDAO, ModelDahDAO>();
             services.AddScoped<IArticledDAO, ArticledDAO>();
-
+            services.AddScoped<IDevBuyPlanDAO, DevBuyPlanDAO>();
             //Service
             services.AddScoped<IAuthService, AuthService>();
 

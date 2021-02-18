@@ -16,7 +16,8 @@ namespace DKS_API.Data.Repository
         public DbSet<Pracdatb> PRACDATB { get; set; }
         public DbSet<Proporh> PROPORH { get; set; }
         public DbSet<ModelDah> MODELDAH { get; set; }
-
+        public DbSet<Articled> ARTICLED { get; set; }
+        public DbSet<DevBuyPlan> DEV_BUYPLAN { get; set; }
 
         //DTO(Stored Procedure)
         public DbSet<F418_F420Dto> GetF420F418View { get; set; }
@@ -32,6 +33,7 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<Proporh>().HasKey(x => new { x.PROORDNO });
             modelBuilder.Entity<ModelDah>().HasKey(x => new { x.MODELNO });
             modelBuilder.Entity<Articled>().HasKey(x => new { x.PKARTBID });
+            modelBuilder.Entity<DevBuyPlan>().HasKey(x => new { x.SEASON, x.MODELNO, x.SCOLOR, x.ARTICLE, x.VERN});
 
             //DTO(Stored Procedure)
             modelBuilder.Entity<F418_F420Dto>()

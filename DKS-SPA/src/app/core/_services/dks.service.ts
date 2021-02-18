@@ -56,4 +56,11 @@ export class DksService {
       f420Excel
     );
   }
+  searchBPVerList(season : string){
+    return this.utility.http.get<string[]>(
+      this.utility.baseUrl +
+        "dks/getBPVersionBySeason?season=" +
+        season
+    );
+  }
 }

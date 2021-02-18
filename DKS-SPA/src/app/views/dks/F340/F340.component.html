@@ -27,14 +27,21 @@
                     name="season"
                     [(ngModel)]="season"
                     required
+                    (change)="changeBPVerList()"
                   />
                   <label class="col-form-label mr-1">Buy Plan Version</label>
-                  <input
-                    class="col-form-label mr-1"
-                    type="text"
-                    name="bpVer"
-                    [(ngModel)]="bpVer"
-                  />
+                  <select
+                  class="col-form-label mr-1"
+                  name="bpVer"
+                  [(ngModel)]="bpVer"
+                >
+                  <option
+                    *ngFor="let bpVer of bpVerList"
+                    value="{{ bpVer }}"
+                  >
+                    {{ bpVer }}
+                  </option>
+                </select>
                   <button
                     class="btn btn-primary mr-1"
                     type="button"
