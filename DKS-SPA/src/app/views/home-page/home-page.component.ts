@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { BsDropdownConfig } from "ngx-bootstrap/dropdown";
+import { NgxSpinnerService } from "ngx-spinner";
 import { AlertifyService } from "../../core/_services/alertify.service";
 import { AuthService } from "../../core/_services/auth.service";
 
@@ -25,7 +26,8 @@ export class HomePageComponent implements OnInit {
     public authService: AuthService,
     private alertify: AlertifyService,
     private router: Router,
-    private activeRouter: ActivatedRoute
+    private activeRouter: ActivatedRoute,
+    private spinner: NgxSpinnerService,
   ) {
     this.activeRouter.queryParams.subscribe((params) => {
 
@@ -45,26 +47,33 @@ export class HomePageComponent implements OnInit {
   }
 
   loginSystem() {
+    this.spinner.show();
     this.authService.login(this.loginModel).subscribe(
       (next) => {
+        this.spinner.hide();
         this.alertify.success("Logined in sucessed");
         this.router.navigate(["excel/compare"]);
       },
       (error) => {
+        this.spinner.hide();
         this.alertify.error(error);
         this.router.navigate([""]);
       }
     );
   }
   loginByDKS(userID: string, path: string) {
+
+    this.spinner.show();
     this.loginModel.account = userID;
     this.authService.login(this.loginModel).subscribe(
       (next) => {
+        this.spinner.hide();
         let PathCode = '/' + path;
         //this.alertify.success(PathCode);
         this.router.navigate([PathCode]);
       },
       (error) => {
+        this.spinner.hide();
         this.alertify.error(error);
         this.router.navigate([""]);
       }
