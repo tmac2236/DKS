@@ -7,6 +7,34 @@
     }
     },
     "F340": {
-        "title": "F340 Schedule"
+        "title": "F340 Schedule",
+        "titleList":{
+                "buyPlanSeason":"buyPlanSeason",
+                "versionNo":"versionNo",
+                "devSeason":"devSeason",
+                "article":"article",
+                "cwaDeadline":"cwaDeadline",
+                "modelNo":"modelNo",
+                "modelName":"modelName",
+                "bomStage":"bomStage",
+                "sampleNo":"sampleNo",
+                "devStatus":"devStatus",
+    
+                "dropDate":"dropDate",
+                "hpFlag":"hpFlag",
+                "hpSampleNo":"hpSampleNo",
+                "f340SampleNo":"f340SampleNo",
+                "releaseType":"releaseType",
+    
+                "createDate":"createDate",
+                "pdmDate":"pdmDate",
+                "devUpDate":"devUpDate",
+                "devBtmDate":"devBtmDate",
+                "ttUpDate":"ttUpDate",
+    
+                "ttBtmDate":"ttBtmDate",
+                "ttRejectReason":"ttRejectReason",
+                "ttRejectDate":"ttRejectDate"
+        }
     }
 }

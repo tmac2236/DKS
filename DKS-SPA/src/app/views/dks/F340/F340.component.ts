@@ -26,6 +26,11 @@ export class F340Component implements OnInit {
     if (jwtTtoken) {
       this.loginUser = this.jwtHelper.decodeToken(jwtTtoken)["unique_name"];
     }
+    //init javascript start
+    (function hello() {
+      console.log('Hello Init hello() !!!');
+    })()
+    //init javascript start
   }
   search() {
     this.utility.spinner.show();

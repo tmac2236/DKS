@@ -46,6 +46,8 @@ import { AppRoutingModule } from "./app.routing";
 // Import 3rd party components
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { TabsModule } from "ngx-bootstrap/tabs";
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+
 import { ChartsModule } from "ng2-charts";
 import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { HomePageComponent } from "./views/home-page/home-page.component";
@@ -55,6 +57,7 @@ import { DictionaryComponent } from "./views/dictionary/dictionary.component";
 import { F340Component } from "./views/dks/F340/F340.component";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
+import { DataTablesModule } from "angular-datatables";
 
 //載入 "/assets/i18n/[lang].json" 語系檔
 export function createTranslateLoader(http: HttpClient) {
@@ -72,6 +75,7 @@ export function createTranslateLoader(http: HttpClient) {
         deps: [HttpClient],
       },
     }),
+    DataTablesModule,
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
@@ -82,10 +86,12 @@ export function createTranslateLoader(http: HttpClient) {
     AppHeaderModule,
     AppSidebarModule,
     PerfectScrollbarModule,
-    BsDropdownModule.forRoot(),
-    TabsModule.forRoot(),
+    BsDropdownModule.forRoot(),//ngx-bootsrap
+    TabsModule.forRoot(),      //ngx-bootsrap
+    TooltipModule.forRoot(),   //ngx-bootsrap
     ChartsModule,
     NgImageSliderModule,
+    TooltipModule.forRoot(),
   ],
   declarations: [
     AppComponent,

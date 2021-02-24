@@ -20,7 +20,7 @@ namespace DKS_API.Controllers
         private readonly IConfiguration _config;
         private readonly IDKSDAO _dksDao;
         private readonly IDevBuyPlanDAO _devBuyPlanDAO;
-        public DKSController(IConfiguration config, IDKSDAO dksDao,IDevBuyPlanDAO devBuyPlanDAO)
+        public DKSController(IConfiguration config, IDKSDAO dksDao, IDevBuyPlanDAO devBuyPlanDAO)
 
         {
             _dksDao = dksDao;
@@ -28,7 +28,7 @@ namespace DKS_API.Controllers
             _devBuyPlanDAO = devBuyPlanDAO;
         }
         [HttpGet("exportF340_Process")]
-        public async Task<IActionResult> ExportF340_Process(string season,string bpVer)
+        public async Task<IActionResult> ExportF340_Process(string season, string bpVer)
         {
             // query data from database  
             var data = await _dksDao.GetF340ProcessView(season, bpVer);
@@ -36,47 +36,110 @@ namespace DKS_API.Controllers
             WorkbookDesigner designer = new WorkbookDesigner();
             #region style設計
             //Create style object(標題用)
-            Style titleStyle = designer.Workbook.CreateStyle();
-            titleStyle.Pattern = BackgroundType.Solid;
-            titleStyle.ForegroundColor = Color.LightGreen;
-            //Create style flag(標題用)
-            StyleFlag titleFlag = new StyleFlag();
-            titleFlag.CellShading = true;
+            Style hpStyle = designer.Workbook.CreateStyle();
+            hpStyle.Pattern = BackgroundType.Solid;
+            hpStyle.ForegroundColor = System.Drawing.ColorTranslator.FromHtml("#FF7F50");//背景顏色
+            hpStyle.Font.Size = 12;                                 //字體大小
+            hpStyle.HorizontalAlignment = TextAlignmentType.Center; //水平置中
+            hpStyle.VerticalAlignment = TextAlignmentType.Center;   //垂直置中
+            Style f204Style = designer.Workbook.CreateStyle();
+            f204Style.Pattern = BackgroundType.Solid;
+            f204Style.ForegroundColor = System.Drawing.ColorTranslator.FromHtml("#76DAFF");
+            f204Style.Font.Size = 12;
+            f204Style.HorizontalAlignment = TextAlignmentType.Center; //水平置中
+            f204Style.VerticalAlignment = TextAlignmentType.Center;   //垂直置中
+            Style f340Style = designer.Workbook.CreateStyle();
+            f340Style.Pattern = BackgroundType.Solid;
+            f340Style.ForegroundColor = System.Drawing.ColorTranslator.FromHtml("#23D954");
+            f340Style.Font.Size = 12;
+            f340Style.HorizontalAlignment = TextAlignmentType.Center; //水平置中
+            f340Style.VerticalAlignment = TextAlignmentType.Center;   //垂直置中
+            Style f240Style_Yellow = designer.Workbook.CreateStyle();
+            f240Style_Yellow.Pattern = BackgroundType.Solid;
+            f240Style_Yellow.ForegroundColor = System.Drawing.ColorTranslator.FromHtml("#EDD818");
+            f240Style_Yellow.Font.Size = 12;
+            f240Style_Yellow.HorizontalAlignment = TextAlignmentType.Center; //水平置中
+            f240Style_Yellow.VerticalAlignment = TextAlignmentType.Center;   //垂直置中
             #endregion style設計
 
             Worksheet ws = designer.Workbook.Worksheets[0];
             //titile
-            ws.Cells[0, 0].Value = "buyPlanSeason";
-            ws.Cells[0, 1].Value = "versionNo";
-            ws.Cells[0, 2].Value = "devSeason";
-            ws.Cells[0, 3].Value = "article";
-            ws.Cells[0, 4].Value = "cwaDeadline";
+            int row0 = 0;
+            #region 第一列套上名稱及顏色 
 
-            ws.Cells[0, 5].Value = "modelNo";
-            ws.Cells[0, 6].Value = "modelName";
-            ws.Cells[0, 7].Value = "bomStage";
-            ws.Cells[0, 8].Value = "sampleNo";
-            ws.Cells[0, 9].Value = "devStatus";
+            ws.Cells[row0, 0].Value = "HP系統";
+            ws.Cells[row0, 3].Value = "開發系統F204/F205";
+            ws.Cells[row0, 12].Value = "HP系統";
+            ws.Cells[row0, 14].Value = "開發系統F340";
+            ws.Cells[row0, 0].SetStyle(hpStyle);
+            ws.Cells[row0, 3].SetStyle(f204Style);
+            ws.Cells[row0, 12].SetStyle(hpStyle);
+            ws.Cells[row0, 14].SetStyle(f340Style);
+            ws.Cells.Merge(0, 0, 1, 2);
+            ws.Cells.Merge(0, 2, 1, 9);
+            ws.Cells.Merge(0, 11, 1, 2);
+            ws.Cells.Merge(0, 13, 1, 10);
+            #endregion 第一列套上名稱及顏色
+            int row1 = 1;
 
-            ws.Cells[0, 10].Value = "dropDate";
-            ws.Cells[0, 11].Value = "hpFlag";
-            ws.Cells[0, 12].Value = "hpSampleNo";
-            ws.Cells[0, 13].Value = "f340SampleNo";
-            ws.Cells[0, 14].Value = "releaseType";
+            ws.Cells[row1, 0].Value = "BUYPLAN季節";//"buyPlanSeason";
+            ws.Cells[row1, 1].Value = "版本號";//"versionNo";
+            ws.Cells[row1, 2].Value = "開發季節";//"devSeason";
+            ws.Cells[row1, 3].Value = "ARTICLE";//"article";
+            ws.Cells[row1, 4].Value = "CWADEADL";//"cwaDeadline";
 
-            ws.Cells[0, 15].Value = "createDate";
-            ws.Cells[0, 16].Value = "pdmDate";
-            ws.Cells[0, 17].Value = "devUpDate";
-            ws.Cells[0, 18].Value = "devBtmDate";
-            ws.Cells[0, 19].Value = "ttUpDate";
+            ws.Cells[row1, 5].Value = "MODELNO";//"modelNo";
+            ws.Cells[row1, 6].Value = "MODELNAME";//"modelName";
+            ws.Cells[row1, 7].Value = "BOMSTAGE";//"bomStage";
+            ws.Cells[row1, 8].Value = "最新樣品單號";//"sampleNo";
+            ws.Cells[row1, 9].Value = "狀態碼";//"devStatus";
 
-            ws.Cells[0, 20].Value = "ttBtmDate";
-            ws.Cells[0, 21].Value = "ttRejectReason";
-            ws.Cells[0, 22].Value = "ttRejectDate";
+            ws.Cells[row1, 10].Value = "DROPDATE";//"dropDate";
+            ws.Cells[row1, 11].Value = "HP_FLAG";//"hpFlag";
+            ws.Cells[row1, 12].Value = "HP_SAMPLENO";//"hpSampleNo";
+            ws.Cells[row1, 13].Value = "F340樣品單號";//"f340SampleNo";
+            ws.Cells[row1, 14].Value = "資料型態";//"releaseType";
 
-            ws.Cells.Rows[0].ApplyStyle(titleStyle, titleFlag);//第一列套上顏色
-            ws.FreezePanes(1, 1, 1, 1);
-            int row = 1;
+            ws.Cells[row1, 15].Value = "開單日期";//"createDate";
+            ws.Cells[row1, 16].Value = "PDM維護日";//"pdmDate";
+            ws.Cells[row1, 17].Value = "開發面部維護日";//"devUpDate";
+            ws.Cells[row1, 18].Value = "開發底部維護日";//"devBtmDate";
+            ws.Cells[row1, 19].Value = "技轉面部維護日";//"ttUpDate";
+
+            ws.Cells[row1, 20].Value = "技轉底部維護日";//"ttBtmDate";
+            ws.Cells[row1, 21].Value = "技轉退回原因";//"ttRejectReason";
+            ws.Cells[row1, 22].Value = "技轉退回時間";//"ttRejectDate";
+
+            ws.Cells[row1, 0].SetStyle(hpStyle);
+            ws.Cells[row1, 1].SetStyle(hpStyle);
+            ws.Cells[row1, 2].SetStyle(f204Style);
+            ws.Cells[row1, 3].SetStyle(f204Style);
+            ws.Cells[row1, 4].SetStyle(f204Style);
+            ws.Cells[row1, 5].SetStyle(f204Style);
+            ws.Cells[row1, 6].SetStyle(f204Style);
+            ws.Cells[row1, 7].SetStyle(f204Style);
+            ws.Cells[row1, 8].SetStyle(f204Style);
+            ws.Cells[row1, 9].SetStyle(f240Style_Yellow);
+            ws.Cells[row1, 10].SetStyle(f240Style_Yellow);
+            ws.Cells[row1, 11].SetStyle(hpStyle);
+            ws.Cells[row1, 12].SetStyle(hpStyle);
+
+            ws.Cells[row1, 13].SetStyle(f340Style);
+            ws.Cells[row1, 14].SetStyle(f340Style);
+            ws.Cells[row1, 15].SetStyle(f340Style);
+            ws.Cells[row1, 16].SetStyle(f340Style);
+            ws.Cells[row1, 17].SetStyle(f340Style);
+            ws.Cells[row1, 18].SetStyle(f340Style);
+            ws.Cells[row1, 19].SetStyle(f340Style);
+            ws.Cells[row1, 20].SetStyle(f340Style);
+            ws.Cells[row1, 21].SetStyle(f340Style);
+            ws.Cells[row1, 22].SetStyle(f340Style);
+            #region 第二列套上名稱及顏色 
+
+            #endregion 第二列套上名稱及顏色
+            ws.FreezePanes(2, 2, 2, 2); //固定第一、二列
+
+            int row = 2;
             foreach (F340_ProcessDto item in data)
             {
                 ws.Cells[row, 0].Value = item.BuyPlanSeason;
@@ -105,7 +168,7 @@ namespace DKS_API.Controllers
 
                 ws.Cells[row, 20].Value = item.TTBtmDate;
                 ws.Cells[row, 21].Value = item.TTRejectReason;
-                ws.Cells[row, 22].Value = item.TTRejectDate; 
+                ws.Cells[row, 22].Value = item.TTRejectDate;
                 row += 1;
             }
             ws.AutoFitColumns();
@@ -123,7 +186,8 @@ namespace DKS_API.Controllers
             try
             {
 
-                var result = await _dksDao.GetF340ProcessView(season,bpVer);
+                var result = await _dksDao.GetF340ProcessView(season, bpVer);
+                int sizes = result.ToString().Length;
                 return Ok(result);
             }
             catch (Exception ex)
@@ -144,10 +208,11 @@ namespace DKS_API.Controllers
                                         }).Distinct()
                                         .ToListAsync();
                 List<string> bpVern = new List<string>();
-                foreach(var r in result){
+                foreach (var r in result)
+                {
                     bpVern.Add(r.VERN.ToString());
                 }
-                
+
                 return Ok(bpVern);
             }
             catch (Exception ex)

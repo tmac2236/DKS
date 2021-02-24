@@ -7,6 +7,34 @@
     }
     },
     "F340": {
-        "title": "F340 進度表"
+        "title": "F340 進度表",
+        "titleList":{
+                "buyPlanSeason":"BUYPLAN季節",
+                "versionNo":"版本號",
+                "devSeason":"開發季節",
+                "article":"ARTICLE",
+                "cwaDeadline":"CWADEADL",
+                "modelNo":"MODELNO",
+                "modelName":"MODELNAME",
+                "bomStage":"BOMSTAGE",
+                "sampleNo":"最新樣品單號",
+                "devStatus":"狀態碼",
+    
+                "dropDate":"DROPDATE",
+                "hpFlag":"HP_FLAG",
+                "hpSampleNo":"HP_SAMPLENO",
+                "f340SampleNo":"F340樣品單號",
+                "releaseType":"資料型態",
+    
+                "createDate":"開單日期",
+                "pdmDate":"PDM維護日",
+                "devUpDate":"開發面部維護日",
+                "devBtmDate":"開發底部維護日",
+                "ttUpDate":"技轉面部維護日",
+    
+                "ttBtmDate":"技轉底部維護日",
+                "ttRejectReason":"技轉退回原因",
+                "ttRejectDate":"技轉退回時間"
+        }
     }
 }

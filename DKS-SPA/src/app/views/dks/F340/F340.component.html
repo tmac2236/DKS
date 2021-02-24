@@ -69,37 +69,38 @@
             <div class="card">
               <div class="card-body">
                 <div class="table-responsive">
-                  <table class="table text-center table-striped">
+                  <table class="table text-center text-nowrap table-striped"><!--text-nowrap不換行-->
+                  <!--套版分頁<table datatable id="f340Sche" class="table text-center table-striped">-->
                     <thead>
                       <tr class="table-info">
-                        <th>buyPlanSeason</th>
-                        <th>versionNo</th>
-                        <th>devSeason</th>
-                        <th>article</th>
-                        <th [ngClass]="this.cwaDeadlineS ? 'zoom-in' : 'zoom-out'"
-                        (click)="this.sort($event)">cwaDeadline</th>
+                        <th style="background-color:#FF7F50;" tooltip="From HP" placement="bottom">{{ 'F340.titleList.buyPlanSeason' | translate }}</th>
+                        <th style="background-color:#FF7F50;" tooltip="From HP" placement="bottom">{{ 'F340.titleList.versionNo' | translate }}</th>
+                        <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.devSeason' | translate }}</th>
+                        <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.article' | translate }}</th>
+                        <!--<th [ngClass]="this.cwaDeadlineS ? 'zoom-in' : 'zoom-out'"
+                        (click)="this.sort($event)">cwaDeadline</th>-->
+                        <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.cwaDeadline' | translate }}</th>
+                        <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.modelNo' | translate }}</th>
+                        <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.modelName' | translate }}</th>
+                        <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.bomStage' | translate }}</th>
+                        <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.sampleNo' | translate }}</th>
+                        <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.devStatus' | translate }}</th>
 
-                        <th>modelNo</th>
-                        <th>modelName</th>
-                        <th>bomStage</th>
-                        <th>sampleNo</th>
-                        <th>devStatus</th>
+                        <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.dropDate' | translate }}</th>
+                        <th style="background-color:#FF7F50;" tooltip="From HP" placement="bottom">{{ 'F340.titleList.hpFlag' | translate }}</th>
+                        <th style="background-color:#FF7F50;" tooltip="From HP" placement="bottom">{{ 'F340.titleList.hpSampleNo' | translate }}</th>
+                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.f340SampleNo' | translate }}</th>
+                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.releaseType' | translate }}</th>
 
-                        <th>dropDate</th>
-                        <th>hpFlag</th>
-                        <th>hpSampleNo</th>
-                        <th>f340SampleNo</th>
-                        <th>releaseType</th>
+                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.createDate' | translate }}</th>
+                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.pdmDate' | translate }}</th>
+                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.devUpDate' | translate }}</th>
+                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.devBtmDate' | translate }}</th>
+                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.ttUpDate' | translate }}</th>
 
-                        <th>createDate</th>
-                        <th>pdmDate</th>
-                        <th>devUpDate</th>
-                        <th>devBtmDate</th>
-                        <th>ttUpDate</th>
-
-                        <th>ttBtmDate</th>
-                        <th>ttRejectReason</th>
-                        <th>ttRejectDate</th>                        
+                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.ttBtmDate' | translate }}</th>
+                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.ttRejectReason' | translate }}</th>
+                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.ttRejectDate' | translate }}</th>                        
                       </tr>
                     </thead>
                     <tbody>
