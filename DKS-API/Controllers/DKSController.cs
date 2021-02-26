@@ -12,6 +12,7 @@ using Aspose.Cells;
 using System.Data;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using DKS_API.Helpers;
 
 namespace DKS_API.Controllers
 {
@@ -181,13 +182,14 @@ namespace DKS_API.Controllers
         }
 
         [HttpGet("getF340_Process")]
-        public async Task<IActionResult> GetF340_Process(string season, string bpVer)
+        public IActionResult GetF340_Process([FromQuery] SF340Schedule sF340Schedule)
         {
             try
             {
+                var result =  _dksDao.GetF340ProcessView(sF340Schedule);
 
-                var result = await _dksDao.GetF340ProcessView(season, bpVer);
-                int sizes = result.ToString().Length;
+                 Response.AddPagination(result.CurrentPage, result.PageSize,
+                 result.TotalCount, result.TotalPages);                
                 return Ok(result);
             }
             catch (Exception ex)

@@ -10,11 +10,11 @@ export class Pagination {
    */
   constructor() {
     (this.currentPage = 1),
-      (this.itemsPerPage = 10),
+      (this.itemsPerPage = 10),//設定頁數
       (this.totalItems = 0),
       (this.totalPages = 0);
     this.orderBy = null;
-    this.isPaging = false;
+    this.isPaging = false;//開啟分頁與否
   }
 }
 

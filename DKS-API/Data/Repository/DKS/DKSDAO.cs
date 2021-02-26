@@ -8,6 +8,7 @@ using DKS_API.Data.Interface;
 using DKS_API.DTOs;
 using Microsoft.Data.SqlClient;
 using System;
+using DKS_API.Helpers;
 
 namespace DFPS.API.Data.Repository
 {
@@ -72,6 +73,20 @@ namespace DFPS.API.Data.Repository
                    .ToListAsync();
             return data;
         }
+        public PagedList<F340_ProcessDto> GetF340ProcessView(SF340Schedule sF340Schedule)
+        {
 
+            List<SqlParameter> pc = new List<SqlParameter>{
+                new SqlParameter("@Season",sF340Schedule.season.Trim().ToUpper()),
+                new SqlParameter("@BuyPlanVer",sF340Schedule.bpVer != null ? Int32.Parse(sF340Schedule.bpVer.Trim()) : (object)DBNull.Value )
+            };
+
+            var data =  _context.GetF340ProcessView
+                   .FromSqlRaw("EXECUTE dbo.GetF340Process_BuyPlan @Season,@BuyPlanVer", pc.ToArray())
+                   .ToList();
+
+                 return PagedList<F340_ProcessDto>
+                .Create(data, sF340Schedule.PageNumber, sF340Schedule.PageSize, sF340Schedule.IsPaging);
+        }
     }
 }

@@ -25,7 +25,7 @@
                     class="col-form-label mr-1"
                     type="text"
                     name="season"
-                    [(ngModel)]="season"
+                    [(ngModel)]="sF340Schedule.season"
                     required
                     (change)="changeBPVerList()"
                   />
@@ -33,7 +33,7 @@
                   <select
                   class="col-form-label mr-1"
                   name="bpVer"
-                  [(ngModel)]="bpVer"
+                  [(ngModel)]="sF340Schedule.bpVer"
                 >
                   <option value = "">All</option>
                   <option
@@ -106,37 +106,48 @@
                     <tbody>
                       <ng-container *ngFor="let item of result; let i = index">
                         <tr>
-                          <td>{{ item["buyPlanSeason"] }}</td>
-                          <td>{{ item["versionNo"] }}</td>
-                          <td>{{ item["devSeason"] }}</td>
-                          <td>{{ item["article"] }}</td>
-                          <td>{{ item["cwaDeadline"] }}</td>
+                          <td>{{ item.buyPlanSeason }}</td>
+                          <td>{{ item.versionNo }}</td>
+                          <td>{{ item.devSeason }}</td>
+                          <td>{{ item.article }}</td>
+                          <td>{{ item.cwaDeadline }}</td>
 
-                          <td>{{ item["modelNo"] }}</td>
-                          <td>{{ item["modelName"] }}</td>
-                          <td>{{ item["bomStage"] }}</td>
-                          <td>{{ item["sampleNo"] }}</td>
-                          <td>{{ item["devStatus"] }}</td>
+                          <td>{{ item.modelNo }}</td>
+                          <td>{{ item.modelName }}</td>
+                          <td>{{ item.bomStage }}</td>
+                          <td>{{ item.sampleNo }}</td>
+                          <td>{{ item.devStatus }}</td>
 
-                          <td>{{ item["dropDate"] }}</td>
-                          <td>{{ item["hpFlag"] }}</td>
-                          <td>{{ item["hpSampleNo"] }}</td>
-                          <td>{{ item["f340SampleNo"] }}</td>
-                          <td>{{ item["releaseType"] }}</td>             
+                          <td>{{ item.dropDate }}</td>
+                          <td>{{ item.hpFlag }}</td>
+                          <td>{{ item.hpSampleNo }}</td>
+                          <td>{{ item.f340SampleNo }}</td>
+                          <td>{{ item.releaseType }}</td>             
 
-                          <td>{{ item["createDate"] }}</td>
-                          <td>{{ item["pdmDate"] }}</td>
-                          <td>{{ item["devUpDate"] }}</td>
-                          <td>{{ item["devBtmDate"] }}</td>
-                          <td>{{ item["ttUpDate"] }}</td>
+                          <td>{{ item.createDate }}</td>
+                          <td>{{ item.pdmDate }}</td>
+                          <td>{{ item.devUpDate }}</td>
+                          <td>{{ item.devBtmDate }}</td>
+                          <td>{{ item.ttUpDate }}</td>
       
-                          <td>{{ item["ttBtmDate"] }}</td>
-                          <td>{{ item["ttRejectReason"] }}</td>
-                          <td>{{ item["ttRejectDate"] }}</td>
+                          <td>{{ item.ttBtmDate }}</td>
+                          <td>{{ item.ttRejectReason }}</td>
+                          <td>{{ item.ttRejectDate }}</td>
                         </tr>
                       </ng-container>
                     </tbody>
                   </table>
+                  <div class ="d-flex justify-content-start">
+                    <pagination *ngIf="this.sF340Schedule.isPaging" 
+                      [boundaryLinks]="true" 
+                      [totalItems]="sF340Schedule.totalItems"
+                      [maxSize]="100"
+                      [itemsPerPage]="sF340Schedule.itemsPerPage"
+                      [(ngModel)]="sF340Schedule.currentPage"
+                      (pageChanged) = "pageChangeds($event)"
+                      previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+                    </pagination>
+                  </div>                  
                 </div>
               </div>
             </div>

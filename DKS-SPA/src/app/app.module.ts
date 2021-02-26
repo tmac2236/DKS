@@ -58,6 +58,7 @@ import { F340Component } from "./views/dks/F340/F340.component";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { DataTablesModule } from "angular-datatables";
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 //載入 "/assets/i18n/[lang].json" 語系檔
 export function createTranslateLoader(http: HttpClient) {
@@ -92,6 +93,7 @@ export function createTranslateLoader(http: HttpClient) {
     ChartsModule,
     NgImageSliderModule,
     TooltipModule.forRoot(),
+    PaginationModule.forRoot(), //分頁用
   ],
   declarations: [
     AppComponent,

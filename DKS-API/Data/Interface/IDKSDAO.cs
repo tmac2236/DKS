@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using DKS.API.Models.DKS;
 using DKS_API.DTOs;
+using DKS_API.Helpers;
 
 namespace DKS_API.Data.Interface
 {
@@ -13,6 +14,7 @@ namespace DKS_API.Data.Interface
         Task AddUserLogAsync(UserLog user);
         Task<bool> SaveAll();
         F418_F420Dto GetF420F418View(string f418No);
+        PagedList<F340_ProcessDto> GetF340ProcessView(SF340Schedule sF340Schedule);
         Task<List<F340_ProcessDto>> GetF340ProcessView(string season, string bpVer);
     }
 }

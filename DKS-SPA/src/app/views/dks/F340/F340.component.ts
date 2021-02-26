@@ -2,6 +2,9 @@ import { Component, OnInit } from "@angular/core";
 import { Utility } from "../../../core/utility/utility";
 import { DksService } from "../../../core/_services/dks.service";
 import { JwtHelperService } from "@auth0/angular-jwt";
+import { F340Schedule } from "../../../core/_models/f340-schedule.ts";
+import { SF340Schedule } from "../../../core/_models/s_f340-schedule";
+import { PaginatedResult } from "../../../core/_models/pagination";
 
 @Component({
   selector: "app-F340",
@@ -13,9 +16,9 @@ export class F340Component implements OnInit {
   cwaDeadlineS = true;
   //
   loginUser: string;
-  season: string;
-  bpVer = "";
-  result: object[];
+  
+  sF340Schedule: SF340Schedule = new SF340Schedule();
+  result: F340Schedule[];
   bpVerList: string[];
 
   jwtHelper = new JwtHelperService();
@@ -34,9 +37,10 @@ export class F340Component implements OnInit {
   }
   search() {
     this.utility.spinner.show();
-    this.dksService.searchF340Process(this.season, this.bpVer).subscribe(
-      (res) => {
-        this.result = res;
+    this.dksService.searchF340Processs(this.sF340Schedule).subscribe(
+      (res: PaginatedResult<F340Schedule[]>) => {
+        this.result = res.result;
+        this.sF340Schedule.setPagination(res.pagination);
         this.utility.spinner.hide();
       },
       (error) => {
@@ -45,6 +49,12 @@ export class F340Component implements OnInit {
       }
     );
   }
+  //分頁按鈕
+  pageChangeds(event: any): void {
+    this.sF340Schedule.currentPage = event.page;
+    this.search();
+  }
+  //排序按鈕
   sort(e) {
     //console.log(e);
     let headStr = e.target.innerHTML;
@@ -64,15 +74,16 @@ export class F340Component implements OnInit {
 
     //type = type =="ASC"?"DESC":"ASC";
   }
+  //匯出
   export() {
     this.utility.spinner.show();
     this.utility.http
       .get(
         this.utility.baseUrl +
           "dks/exportF340_Process?season=" +
-          this.season +
+          this.sF340Schedule.season +
           "&bpVer=" +
-          this.bpVer,
+          this.sF340Schedule.bpVer,
         { responseType: "blob" }
       )
       .subscribe((result: Blob) => {
@@ -101,8 +112,9 @@ export class F340Component implements OnInit {
         this.utility.spinner.hide();
       });
   }
+  //下拉選單帶出版本
   changeBPVerList(){
-    this.dksService.searchBPVerList(this.season).subscribe(
+    this.dksService.searchBPVerList(this.sF340Schedule.season).subscribe(
       (res) => {
         this.bpVerList = res;
       },
@@ -111,7 +123,7 @@ export class F340Component implements OnInit {
       }
     );
   }
-  ///
+  //設定語言
   useLanguage(language: string) {
     this.utility.languageService.setLang(language);
   }

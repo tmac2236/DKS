@@ -1,7 +1,11 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
+import { map } from 'rxjs/operators';
 import { Utility } from "../utility/utility";
-import { ArticlePic } from "../_models/article-pic";
+import { F340Schedule } from "../_models/f340-schedule.ts";
+import { PaginatedResult } from "../_models/pagination";
+import { SF340Schedule } from "../_models/s_f340-schedule";
 
 @Injectable({
   providedIn: "root",
@@ -10,13 +14,41 @@ export class DksService {
   constructor(private utility: Utility) {}
 
   searchF340Process(season: string, bpVer: string) {
-    return this.utility.http.get<object[]>(
+    return this.utility.http.get<F340Schedule[]>(
       this.utility.baseUrl +
         "dks/getF340_Process?season=" +
         season + "&bpVer=" + bpVer
     );
   }
+  searchF340Processs(sF340Schedule: SF340Schedule): Observable<PaginatedResult<F340Schedule[]>> {
+    
+    const paginatedResult: PaginatedResult<F340Schedule[]> = new PaginatedResult<F340Schedule[]>();
 
+    let params = new HttpParams();
+    params = params.append('IsPaging', sF340Schedule.isPaging.toString());
+    if (sF340Schedule.currentPage != null && sF340Schedule.itemsPerPage != null) {
+      params = params.append('pageNumber', sF340Schedule.currentPage.toString());
+      params = params.append('pageSize', sF340Schedule.itemsPerPage.toString());
+      //params = params.append('orderBy', sAttendance.orderBy);
+    }
+    return this.utility.http
+      .get<F340Schedule[]>(this.utility.baseUrl + 'dks/getF340_Process?season='+
+      sF340Schedule.season + "&bpVer=" + sF340Schedule.bpVer, {
+        observe: 'response',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          paginatedResult.result = response.body;
+          if (response.headers.get('Pagination') != null) {
+            paginatedResult.pagination = JSON.parse(
+              response.headers.get('Pagination')
+            );
+          }
+          return paginatedResult;
+        })
+      );
+  }
 
   searchConvergence(season: string, stage: string) {
     return this.utility.http.get<string[]>(
