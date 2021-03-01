@@ -13,14 +13,7 @@ import { SF340Schedule } from "../_models/s_f340-schedule";
 export class DksService {
   constructor(private utility: Utility) {}
 
-  searchF340Process(season: string, bpVer: string) {
-    return this.utility.http.get<F340Schedule[]>(
-      this.utility.baseUrl +
-        "dks/getF340_Process?season=" +
-        season + "&bpVer=" + bpVer
-    );
-  }
-  searchF340Processs(sF340Schedule: SF340Schedule): Observable<PaginatedResult<F340Schedule[]>> {
+  searchF340Process(sF340Schedule: SF340Schedule): Observable<PaginatedResult<F340Schedule[]>> {
     
     const paginatedResult: PaginatedResult<F340Schedule[]> = new PaginatedResult<F340Schedule[]>();
 
@@ -31,9 +24,12 @@ export class DksService {
       params = params.append('pageSize', sF340Schedule.itemsPerPage.toString());
       //params = params.append('orderBy', sAttendance.orderBy);
     }
+    params = params.append('season', sF340Schedule.season.toString());
+    params = params.append('bpVer', sF340Schedule.bpVer.toString());
+    params = params.append('cwaDate', sF340Schedule.cwaDate.toString());
+
     return this.utility.http
-      .get<F340Schedule[]>(this.utility.baseUrl + 'dks/getF340_Process?season='+
-      sF340Schedule.season + "&bpVer=" + sF340Schedule.bpVer, {
+      .get<F340Schedule[]>(this.utility.baseUrl + 'dks/getF340_Process' , {
         observe: 'response',
         params,
       })

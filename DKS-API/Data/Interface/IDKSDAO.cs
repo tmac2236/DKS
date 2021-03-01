@@ -15,6 +15,6 @@ namespace DKS_API.Data.Interface
         Task<bool> SaveAll();
         F418_F420Dto GetF420F418View(string f418No);
         PagedList<F340_ProcessDto> GetF340ProcessView(SF340Schedule sF340Schedule);
-        Task<List<F340_ProcessDto>> GetF340ProcessView(string season, string bpVer);
+        Task<List<F340_ProcessDto>> GetF340ProcessView4Excel(SF340Schedule sF340Schedule);
     }
 }

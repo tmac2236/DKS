@@ -6,6 +6,7 @@ import { DefaultLayoutComponent } from "./containers";
 import { DictionaryComponent } from "./views/dictionary/dictionary.component";
 import { F340Component } from "./views/dks/F340/F340.component";
 import { F420Component } from "./views/dks/F420/F420.component";
+import { F428Component } from "./views/dks/F428/F428.component";
 
 import { P404Component } from "./views/error/404.component";
 import { P500Component } from "./views/error/500.component";
@@ -41,6 +42,13 @@ export const routes: Routes = [
     },
   },
   {
+    path: "F340",
+    component: F340Component,
+    data: {
+      title: "F340",
+    },
+  },
+  {
     path: "F420",
     component: F420Component,
     data: {
@@ -48,10 +56,10 @@ export const routes: Routes = [
     },
   },
   {
-    path: "F340",
-    component: F340Component,
+    path: "F428",
+    component: F428Component,
     data: {
-      title: "F340",
+      title: "F428",
     },
   },
   {

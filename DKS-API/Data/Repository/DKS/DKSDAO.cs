@@ -60,16 +60,17 @@ namespace DFPS.API.Data.Repository
 
         }
 
-        public async Task<List<F340_ProcessDto>> GetF340ProcessView(string season, string bpVer)
+        public async Task<List<F340_ProcessDto>> GetF340ProcessView4Excel(SF340Schedule sF340Schedule)
         {
 
             List<SqlParameter> pc = new List<SqlParameter>{
-                new SqlParameter("@Season",season.Trim().ToUpper()),
-                new SqlParameter("@BuyPlanVer",bpVer != null ? Int32.Parse(bpVer.Trim()) : (object)DBNull.Value )
+                new SqlParameter("@Season",sF340Schedule.season.Trim().ToUpper()),
+                new SqlParameter("@BuyPlanVer",sF340Schedule.bpVer != null ? sF340Schedule.bpVer.Trim() : (object)DBNull.Value ),
+                new SqlParameter("@CwaDate",sF340Schedule.cwaDate.Trim())
             };
 
             var data = await _context.GetF340ProcessView
-                   .FromSqlRaw("EXECUTE dbo.GetF340Process_BuyPlan @Season,@BuyPlanVer", pc.ToArray())
+                   .FromSqlRaw("EXECUTE dbo.GetF340Process_BuyPlan @Season,@BuyPlanVer,@CwaDate", pc.ToArray())
                    .ToListAsync();
             return data;
         }
@@ -78,11 +79,12 @@ namespace DFPS.API.Data.Repository
 
             List<SqlParameter> pc = new List<SqlParameter>{
                 new SqlParameter("@Season",sF340Schedule.season.Trim().ToUpper()),
-                new SqlParameter("@BuyPlanVer",sF340Schedule.bpVer != null ? Int32.Parse(sF340Schedule.bpVer.Trim()) : (object)DBNull.Value )
+                new SqlParameter("@BuyPlanVer",sF340Schedule.bpVer != null ? sF340Schedule.bpVer.Trim() : (object)DBNull.Value ),
+                new SqlParameter("@CwaDate",sF340Schedule.cwaDate != null ? sF340Schedule.cwaDate.Trim() : (object)DBNull.Value )
             };
 
             var data =  _context.GetF340ProcessView
-                   .FromSqlRaw("EXECUTE dbo.GetF340Process_BuyPlan @Season,@BuyPlanVer", pc.ToArray())
+                   .FromSqlRaw("EXECUTE dbo.GetF340Process_BuyPlan @Season,@BuyPlanVer,@CwaDate", pc.ToArray())
                    .ToList();
 
                  return PagedList<F340_ProcessDto>

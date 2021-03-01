@@ -2,28 +2,32 @@ export interface F340Schedule {
   buyPlanSeason: string;
   versionNo: string;
   devSeason: string;
+  devTeam: string;
   article: string;
-  cwaDeadline: string;
 
+  cwaDeadline: string;
   modelNo: string;
   modelName: string;
-  bomStage: string;
+  orderStag: string;
   sampleNo: string;
-  devStatus: string;
 
+  devStatus: string;
   dropDate: string;
   hpFlag: string;
   hpSampleNo: string;
   f340SampleNo: string;
-  releaseType: string;
 
+  releaseType: string;
   createDate: string;
   pdmDate: string;
   devUpDate: string;
   devBtmDate: string;
-  ttUpDate: string;
 
+  ttUpDate: string;
   ttBtmDate: string;
+  releaseDate: string;
   ttRejectReason: string;
   ttRejectDate: string;
+
+  ttRejectCount: string;
 }

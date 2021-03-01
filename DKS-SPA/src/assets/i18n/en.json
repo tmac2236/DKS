@@ -16,7 +16,7 @@
                 "cwaDeadline":"cwaDeadline",
                 "modelNo":"modelNo",
                 "modelName":"modelName",
-                "bomStage":"bomStage",
+                "orderStag":"orderStag",
                 "sampleNo":"sampleNo",
                 "devStatus":"devStatus",
     
@@ -34,7 +34,15 @@
     
                 "ttBtmDate":"ttBtmDate",
                 "ttRejectReason":"ttRejectReason",
-                "ttRejectDate":"ttRejectDate"
+                "ttRejectDate":"ttRejectDate",
+                "devTeam":"devTeam",
+                "releaseDate":"releaseDate",
+                "ttRejectCount":"ttRejectCount"
         }
+    },"F428": {
+        "title": "F428 ",
+        "titleList":{
+            "sampleNo":"sampleNo"
+        }        
     }
 }

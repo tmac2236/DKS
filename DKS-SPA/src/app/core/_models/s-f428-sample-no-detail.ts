@@ -1,18 +1,13 @@
 import { Pagination } from "./pagination";
 
-export class SF340Schedule extends Pagination {
-  season: string;
-  bpVer: string;
-  cwaDate : string;
+export class SF428SampleNoDetail extends Pagination {
+  sampleNo: string;
   /**
    *default set of searching parameters
    */
   constructor() {
     super();
-    this.season = "";
-    this.bpVer = "";
-    this.cwaDate ="";
-    this.isPaging = true; //開分頁
+    this.sampleNo = "";
   }
 
   public setPagination(pagination: Pagination) {

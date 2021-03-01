@@ -23,6 +23,8 @@ import { P404Component } from "./views/error/404.component";
 import { P500Component } from "./views/error/500.component";
 import { PictureComponent } from "./views/picture/picture.component";
 import { F420Component } from "./views/dks/F420/F420.component";
+import { F340Component } from "./views/dks/F340/F340.component";
+import { F428Component } from "./views/dks/F428/F428.component";
 
 import { AuthService } from "../../src/app/core/_services/auth.service";
 import { AlertifyService } from "../../src/app/core/_services/alertify.service";
@@ -54,11 +56,11 @@ import { HomePageComponent } from "./views/home-page/home-page.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { NgImageSliderModule } from "ng-image-slider";
 import { DictionaryComponent } from "./views/dictionary/dictionary.component";
-import { F340Component } from "./views/dks/F340/F340.component";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { DataTablesModule } from "angular-datatables";
 import { PaginationModule } from 'ngx-bootstrap/pagination';
+
 
 //載入 "/assets/i18n/[lang].json" 語系檔
 export function createTranslateLoader(http: HttpClient) {
@@ -92,7 +94,7 @@ export function createTranslateLoader(http: HttpClient) {
     TooltipModule.forRoot(),   //ngx-bootsrap
     ChartsModule,
     NgImageSliderModule,
-    TooltipModule.forRoot(),
+    TooltipModule.forRoot(),    //table tr td 用
     PaginationModule.forRoot(), //分頁用
   ],
   declarations: [
@@ -101,8 +103,9 @@ export function createTranslateLoader(http: HttpClient) {
     P404Component,
     P500Component,
     PictureComponent,
-    F420Component,
     F340Component,
+    F420Component,
+    F428Component,
     DictionaryComponent,
     HomePageComponent,
   ],

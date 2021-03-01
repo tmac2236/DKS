@@ -43,6 +43,13 @@
                     {{ bpVer }}
                   </option>
                 </select>
+                <label class="col-form-label mr-1">CWA Date</label>
+                <input
+                  class="col-form-label mr-1"
+                  type="date"
+                  name="cwaDate"
+                  [(ngModel)]="sF340Schedule.cwaDate"
+                />
                   <button
                     class="btn btn-primary mr-1"
                     type="button"
@@ -76,31 +83,35 @@
                         <th style="background-color:#FF7F50;" tooltip="From HP" placement="bottom">{{ 'F340.titleList.buyPlanSeason' | translate }}</th>
                         <th style="background-color:#FF7F50;" tooltip="From HP" placement="bottom">{{ 'F340.titleList.versionNo' | translate }}</th>
                         <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.devSeason' | translate }}</th>
+                        <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.devTeam' | translate }}</th>
                         <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.article' | translate }}</th>
+                        
                         <!--<th [ngClass]="this.cwaDeadlineS ? 'zoom-in' : 'zoom-out'"
                         (click)="this.sort($event)">cwaDeadline</th>-->
                         <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.cwaDeadline' | translate }}</th>
                         <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.modelNo' | translate }}</th>
                         <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.modelName' | translate }}</th>
-                        <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.bomStage' | translate }}</th>
+                        <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.orderStag' | translate }}</th>
                         <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.sampleNo' | translate }}</th>
-                        <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.devStatus' | translate }}</th>
 
+                        <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.devStatus' | translate }}</th>
                         <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.dropDate' | translate }}</th>
                         <th style="background-color:#FF7F50;" tooltip="From HP" placement="bottom">{{ 'F340.titleList.hpFlag' | translate }}</th>
                         <th style="background-color:#FF7F50;" tooltip="From HP" placement="bottom">{{ 'F340.titleList.hpSampleNo' | translate }}</th>
                         <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.f340SampleNo' | translate }}</th>
-                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.releaseType' | translate }}</th>
 
+                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.releaseType' | translate }}</th>
                         <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.createDate' | translate }}</th>
                         <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.pdmDate' | translate }}</th>
                         <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.devUpDate' | translate }}</th>
                         <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.devBtmDate' | translate }}</th>
-                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.ttUpDate' | translate }}</th>
 
+                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.ttUpDate' | translate }}</th>
                         <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.ttBtmDate' | translate }}</th>
+                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.releaseDate' | translate }}</th>
                         <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.ttRejectReason' | translate }}</th>
                         <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.ttRejectDate' | translate }}</th>                        
+                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.ttRejectCount' | translate }}</th> 
                       </tr>
                     </thead>
                     <tbody>
@@ -109,30 +120,34 @@
                           <td>{{ item.buyPlanSeason }}</td>
                           <td>{{ item.versionNo }}</td>
                           <td>{{ item.devSeason }}</td>
+                          <td>{{ item.devTeam }}</td>
                           <td>{{ item.article }}</td>
-                          <td>{{ item.cwaDeadline }}</td>
 
+                          <td>{{ item.cwaDeadline }}</td>
                           <td>{{ item.modelNo }}</td>
                           <td>{{ item.modelName }}</td>
-                          <td>{{ item.bomStage }}</td>
+                          <td>{{ item.orderStag }}</td>
                           <td>{{ item.sampleNo }}</td>
-                          <td>{{ item.devStatus }}</td>
 
+                          <td>{{ item.devStatus }}</td>
                           <td>{{ item.dropDate }}</td>
                           <td>{{ item.hpFlag }}</td>
                           <td>{{ item.hpSampleNo }}</td>
                           <td>{{ item.f340SampleNo }}</td>
-                          <td>{{ item.releaseType }}</td>             
 
+                          <td>{{ item.releaseType }}</td>             
                           <td>{{ item.createDate }}</td>
                           <td>{{ item.pdmDate }}</td>
                           <td>{{ item.devUpDate }}</td>
                           <td>{{ item.devBtmDate }}</td>
+
                           <td>{{ item.ttUpDate }}</td>
-      
                           <td>{{ item.ttBtmDate }}</td>
+                          <td>{{ item.releaseDate }}</td>
                           <td>{{ item.ttRejectReason }}</td>
                           <td>{{ item.ttRejectDate }}</td>
+
+                          <td>{{ item.ttRejectCount }}</td>
                         </tr>
                       </ng-container>
                     </tbody>

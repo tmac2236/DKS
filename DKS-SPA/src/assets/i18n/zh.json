@@ -16,7 +16,7 @@
                 "cwaDeadline":"CWADEADL",
                 "modelNo":"MODELNO",
                 "modelName":"MODELNAME",
-                "bomStage":"BOMSTAGE",
+                "orderStag":"ORDERSTAG",
                 "sampleNo":"最新樣品單號",
                 "devStatus":"狀態碼",
     
@@ -34,7 +34,15 @@
     
                 "ttBtmDate":"技轉底部維護日",
                 "ttRejectReason":"技轉退回原因",
-                "ttRejectDate":"技轉退回時間"
+                "ttRejectDate":"技轉退回時間",
+                "devTeam":"DEV TEAM",
+                "releaseDate":"Release Date",
+                "ttRejectCount":"技轉退回次數"
+        }
+    },"F428": {
+        "title": "F428 ",
+        "titleList":{
+            "sampleNo":"sampleNo"
         }
     }
 }

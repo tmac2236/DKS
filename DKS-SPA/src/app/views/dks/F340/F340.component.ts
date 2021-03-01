@@ -5,6 +5,8 @@ import { JwtHelperService } from "@auth0/angular-jwt";
 import { F340Schedule } from "../../../core/_models/f340-schedule.ts";
 import { SF340Schedule } from "../../../core/_models/s_f340-schedule";
 import { PaginatedResult } from "../../../core/_models/pagination";
+import { DatePipe } from "@angular/common";
+import { HttpParams } from "@angular/common/http";
 
 @Component({
   selector: "app-F340",
@@ -12,42 +14,37 @@ import { PaginatedResult } from "../../../core/_models/pagination";
   styleUrls: ["./F340.component.scss"],
 })
 export class F340Component implements OnInit {
+  //getUserName
+  jwtHelper = new JwtHelperService();
+  loginUser: string;
   //for sorting ; ASC DESC
   cwaDeadlineS = true;
-  //
-  loginUser: string;
-  
+
+
   sF340Schedule: SF340Schedule = new SF340Schedule();
   result: F340Schedule[];
   bpVerList: string[];
-
-  jwtHelper = new JwtHelperService();
-  constructor(private utility: Utility, private dksService: DksService) {}
+  constructor(private utility: Utility, private dksService: DksService,private datepipe: DatePipe) {}
 
   ngOnInit() {
+    this.setAccount();
+    this.sF340Schedule.cwaDate = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
+    //init javascript start
+    (function hello() {
+      console.log("Hello Init hello() !!!");
+    })();
+    //init javascript start
+  }
+  //取得登入帳號
+  setAccount(){
     const jwtTtoken = localStorage.getItem("token");
     if (jwtTtoken) {
       this.loginUser = this.jwtHelper.decodeToken(jwtTtoken)["unique_name"];
     }
-    //init javascript start
-    (function hello() {
-      console.log('Hello Init hello() !!!');
-    })()
-    //init javascript start
   }
-  search() {
-    this.utility.spinner.show();
-    this.dksService.searchF340Processs(this.sF340Schedule).subscribe(
-      (res: PaginatedResult<F340Schedule[]>) => {
-        this.result = res.result;
-        this.sF340Schedule.setPagination(res.pagination);
-        this.utility.spinner.hide();
-      },
-      (error) => {
-        this.utility.spinner.hide();
-        this.utility.alertify.error(error);
-      }
-    );
+  //設定語言
+  useLanguage(language: string) {
+    this.utility.languageService.setLang(language);
   }
   //分頁按鈕
   pageChangeds(event: any): void {
@@ -74,46 +71,31 @@ export class F340Component implements OnInit {
 
     //type = type =="ASC"?"DESC":"ASC";
   }
-  //匯出
-  export() {
+  //搜尋
+  search() {
     this.utility.spinner.show();
-    this.utility.http
-      .get(
-        this.utility.baseUrl +
-          "dks/exportF340_Process?season=" +
-          this.sF340Schedule.season +
-          "&bpVer=" +
-          this.sF340Schedule.bpVer,
-        { responseType: "blob" }
-      )
-      .subscribe((result: Blob) => {
-        if (result.type !== "application/xlsx") {
-          alert(result.type);
-          this.utility.spinner.hide();
-        }
-        const blob = new Blob([result]);
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        const currentTime = new Date();
-        const filename =
-          "F340_Schedule" +
-          currentTime.getFullYear().toString() +
-          (currentTime.getMonth() + 1) +
-          currentTime.getDate() +
-          currentTime
-            .toLocaleTimeString()
-            .replace(/[ ]|[,]|[:]/g, "")
-            .trim() +
-          ".xlsx";
-        link.href = url;
-        link.setAttribute("download", filename);
-        document.body.appendChild(link);
-        link.click();
+    this.dksService.searchF340Process(this.sF340Schedule).subscribe(
+      (res: PaginatedResult<F340Schedule[]>) => {
+        this.result = res.result;
+        this.sF340Schedule.setPagination(res.pagination);
         this.utility.spinner.hide();
-      });
+      },
+      (error) => {
+        this.utility.spinner.hide();
+        this.utility.alertify.error(error);
+      }
+    );
   }
+  export(){
+    const url =this.utility.baseUrl +"dks/exportF340_Process"
+    //this.sF340Schedule.season +
+    //"&bpVer=" +this.sF340Schedule.bpVer
+    //+ "&cwaDate" + this.sF340Schedule.cwaDate;
+    this.utility.exportFactory(url,"F340_Schedule",this.sF340Schedule);
+  }
+
   //下拉選單帶出版本
-  changeBPVerList(){
+  changeBPVerList() {
     this.dksService.searchBPVerList(this.sF340Schedule.season).subscribe(
       (res) => {
         this.bpVerList = res;
@@ -122,9 +104,5 @@ export class F340Component implements OnInit {
         this.utility.alertify.error(error);
       }
     );
-  }
-  //設定語言
-  useLanguage(language: string) {
-    this.utility.languageService.setLang(language);
   }
 }

@@ -28,11 +28,11 @@ namespace DKS_API.Controllers
             _config = config;
             _devBuyPlanDAO = devBuyPlanDAO;
         }
-        [HttpGet("exportF340_Process")]
-        public async Task<IActionResult> ExportF340_Process(string season, string bpVer)
+        [HttpPost("exportF340_Process")]
+        public async Task<IActionResult> ExportF340_Process(SF340Schedule sF340Schedule)
         {
             // query data from database  
-            var data = await _dksDao.GetF340ProcessView(season, bpVer);
+            var data = await _dksDao.GetF340ProcessView4Excel(sF340Schedule);
 
             WorkbookDesigner designer = new WorkbookDesigner();
             #region style設計
@@ -77,39 +77,43 @@ namespace DKS_API.Controllers
             ws.Cells[row0, 12].SetStyle(hpStyle);
             ws.Cells[row0, 14].SetStyle(f340Style);
             ws.Cells.Merge(0, 0, 1, 2);
-            ws.Cells.Merge(0, 2, 1, 9);
-            ws.Cells.Merge(0, 11, 1, 2);
-            ws.Cells.Merge(0, 13, 1, 10);
+            ws.Cells.Merge(0, 2, 1, 10);
+            ws.Cells.Merge(0, 12, 1, 2);
+            ws.Cells.Merge(0, 14, 1, 12);
             #endregion 第一列套上名稱及顏色
             int row1 = 1;
 
             ws.Cells[row1, 0].Value = "BUYPLAN季節";//"buyPlanSeason";
             ws.Cells[row1, 1].Value = "版本號";//"versionNo";
             ws.Cells[row1, 2].Value = "開發季節";//"devSeason";
-            ws.Cells[row1, 3].Value = "ARTICLE";//"article";
-            ws.Cells[row1, 4].Value = "CWADEADL";//"cwaDeadline";
+            ws.Cells[row1, 3].Value = "DEV TEAM";//"devSeason";
+            ws.Cells[row1, 4].Value = "ARTICLE";//"article";
 
-            ws.Cells[row1, 5].Value = "MODELNO";//"modelNo";
-            ws.Cells[row1, 6].Value = "MODELNAME";//"modelName";
-            ws.Cells[row1, 7].Value = "BOMSTAGE";//"bomStage";
-            ws.Cells[row1, 8].Value = "最新樣品單號";//"sampleNo";
-            ws.Cells[row1, 9].Value = "狀態碼";//"devStatus";
+            ws.Cells[row1, 5].Value = "CWADEADL";//"cwaDeadline";
+            ws.Cells[row1, 6].Value = "MODELNO";//"modelNo";
+            ws.Cells[row1, 7].Value = "MODELNAME";//"modelName";
+            ws.Cells[row1, 8].Value = "ORDERSTAG";//"OrderStag";
+            ws.Cells[row1, 9].Value = "最新樣品單號";//"sampleNo";
 
-            ws.Cells[row1, 10].Value = "DROPDATE";//"dropDate";
-            ws.Cells[row1, 11].Value = "HP_FLAG";//"hpFlag";
-            ws.Cells[row1, 12].Value = "HP_SAMPLENO";//"hpSampleNo";
-            ws.Cells[row1, 13].Value = "F340樣品單號";//"f340SampleNo";
-            ws.Cells[row1, 14].Value = "資料型態";//"releaseType";
+            ws.Cells[row1, 10].Value = "狀態碼";//"devStatus";
+            ws.Cells[row1, 11].Value = "DROPDATE";//"dropDate";
+            ws.Cells[row1, 12].Value = "HP_FLAG";//"hpFlag";
+            ws.Cells[row1, 13].Value = "HP_SAMPLENO";//"hpSampleNo";
+            ws.Cells[row1, 14].Value = "F340樣品單號";//"f340SampleNo";
 
-            ws.Cells[row1, 15].Value = "開單日期";//"createDate";
-            ws.Cells[row1, 16].Value = "PDM維護日";//"pdmDate";
-            ws.Cells[row1, 17].Value = "開發面部維護日";//"devUpDate";
-            ws.Cells[row1, 18].Value = "開發底部維護日";//"devBtmDate";
-            ws.Cells[row1, 19].Value = "技轉面部維護日";//"ttUpDate";
+            ws.Cells[row1, 15].Value = "資料型態";//"releaseType";
+            ws.Cells[row1, 16].Value = "開單日期";//"createDate";
+            ws.Cells[row1, 17].Value = "PDM維護日";//"pdmDate";
+            ws.Cells[row1, 18].Value = "開發面部維護日";//"devUpDate";
+            ws.Cells[row1, 19].Value = "開發底部維護日";//"devBtmDate";
 
-            ws.Cells[row1, 20].Value = "技轉底部維護日";//"ttBtmDate";
-            ws.Cells[row1, 21].Value = "技轉退回原因";//"ttRejectReason";
-            ws.Cells[row1, 22].Value = "技轉退回時間";//"ttRejectDate";
+            ws.Cells[row1, 20].Value = "技轉面部維護日";//"ttUpDate";
+            ws.Cells[row1, 21].Value = "技轉底部維護日";//"ttBtmDate";
+            ws.Cells[row1, 22].Value = "Rlease Date";//"ttBtmDate";
+            ws.Cells[row1, 23].Value = "技轉退回原因";//"ttRejectReason";
+            ws.Cells[row1, 24].Value = "技轉退回時間";//"ttRejectDate";
+
+            ws.Cells[row1, 25].Value = "技轉退回次數";//"TTRejectCount";
 
             ws.Cells[row1, 0].SetStyle(hpStyle);
             ws.Cells[row1, 1].SetStyle(hpStyle);
@@ -120,12 +124,11 @@ namespace DKS_API.Controllers
             ws.Cells[row1, 6].SetStyle(f204Style);
             ws.Cells[row1, 7].SetStyle(f204Style);
             ws.Cells[row1, 8].SetStyle(f204Style);
-            ws.Cells[row1, 9].SetStyle(f240Style_Yellow);
+            ws.Cells[row1, 9].SetStyle(f204Style);
             ws.Cells[row1, 10].SetStyle(f240Style_Yellow);
-            ws.Cells[row1, 11].SetStyle(hpStyle);
+            ws.Cells[row1, 11].SetStyle(f240Style_Yellow);
             ws.Cells[row1, 12].SetStyle(hpStyle);
-
-            ws.Cells[row1, 13].SetStyle(f340Style);
+            ws.Cells[row1, 13].SetStyle(hpStyle);
             ws.Cells[row1, 14].SetStyle(f340Style);
             ws.Cells[row1, 15].SetStyle(f340Style);
             ws.Cells[row1, 16].SetStyle(f340Style);
@@ -135,6 +138,9 @@ namespace DKS_API.Controllers
             ws.Cells[row1, 20].SetStyle(f340Style);
             ws.Cells[row1, 21].SetStyle(f340Style);
             ws.Cells[row1, 22].SetStyle(f340Style);
+            ws.Cells[row1, 23].SetStyle(f340Style);
+            ws.Cells[row1, 24].SetStyle(f340Style);
+            ws.Cells[row1, 25].SetStyle(f340Style);
             #region 第二列套上名稱及顏色 
 
             #endregion 第二列套上名稱及顏色
@@ -151,7 +157,7 @@ namespace DKS_API.Controllers
 
                 ws.Cells[row, 5].Value = item.ModelNo;
                 ws.Cells[row, 6].Value = item.ModelName;
-                ws.Cells[row, 7].Value = item.BomStage;
+                ws.Cells[row, 7].Value = item.OrderStag;
                 ws.Cells[row, 8].Value = item.SampleNo;
                 ws.Cells[row, 9].Value = item.DevStatus;
 
@@ -170,6 +176,10 @@ namespace DKS_API.Controllers
                 ws.Cells[row, 20].Value = item.TTBtmDate;
                 ws.Cells[row, 21].Value = item.TTRejectReason;
                 ws.Cells[row, 22].Value = item.TTRejectDate;
+                ws.Cells[row, 23].Value = item.DevTeam;
+                ws.Cells[row, 24].Value = item.ReleaseDate;
+
+                ws.Cells[row, 25].Value = item.TTRejectCount;
                 row += 1;
             }
             ws.AutoFitColumns();
@@ -186,10 +196,10 @@ namespace DKS_API.Controllers
         {
             try
             {
-                var result =  _dksDao.GetF340ProcessView(sF340Schedule);
+                var result = _dksDao.GetF340ProcessView(sF340Schedule);
 
-                 Response.AddPagination(result.CurrentPage, result.PageSize,
-                 result.TotalCount, result.TotalPages);                
+                Response.AddPagination(result.CurrentPage, result.PageSize,
+                result.TotalCount, result.TotalPages);
                 return Ok(result);
             }
             catch (Exception ex)
