@@ -88,9 +88,6 @@ export class F340Component implements OnInit {
   }
   export(){
     const url =this.utility.baseUrl +"dks/exportF340_Process"
-    //this.sF340Schedule.season +
-    //"&bpVer=" +this.sF340Schedule.bpVer
-    //+ "&cwaDate" + this.sF340Schedule.cwaDate;
     this.utility.exportFactory(url,"F340_Schedule",this.sF340Schedule);
   }
 

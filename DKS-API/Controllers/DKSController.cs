@@ -152,32 +152,32 @@ namespace DKS_API.Controllers
                 ws.Cells[row, 0].Value = item.BuyPlanSeason;
                 ws.Cells[row, 1].Value = item.VersionNo;
                 ws.Cells[row, 2].Value = item.DevSeason;
-                ws.Cells[row, 3].Value = item.Article;
-                ws.Cells[row, 4].Value = item.CwaDeadline;
+                ws.Cells[row, 3].Value = item.DevTeam;
+                ws.Cells[row, 4].Value = item.Article;
 
-                ws.Cells[row, 5].Value = item.ModelNo;
-                ws.Cells[row, 6].Value = item.ModelName;
-                ws.Cells[row, 7].Value = item.OrderStag;
-                ws.Cells[row, 8].Value = item.SampleNo;
-                ws.Cells[row, 9].Value = item.DevStatus;
+                ws.Cells[row, 5].Value = item.CwaDeadline;
+                ws.Cells[row, 6].Value = item.ModelNo;
+                ws.Cells[row, 7].Value = item.ModelName;
+                ws.Cells[row, 8].Value = item.OrderStag;
+                ws.Cells[row, 9].Value = item.SampleNo;
 
-                ws.Cells[row, 10].Value = item.DropDate;
-                ws.Cells[row, 11].Value = item.HpFlag;
-                ws.Cells[row, 12].Value = item.HpSampleNo;
-                ws.Cells[row, 13].Value = item.F340SampleNo;
-                ws.Cells[row, 14].Value = item.ReleaseType;
+                ws.Cells[row, 10].Value = item.DevStatus;
+                ws.Cells[row, 11].Value = item.DropDate;
+                ws.Cells[row, 12].Value = item.HpFlag;
+                ws.Cells[row, 13].Value = item.HpSampleNo;
+                ws.Cells[row, 14].Value = item.F340SampleNo;
 
-                ws.Cells[row, 15].Value = item.CreateDate;
-                ws.Cells[row, 16].Value = item.PdmDate;
-                ws.Cells[row, 17].Value = item.DevUpDate;
-                ws.Cells[row, 18].Value = item.DevBtmDate;
-                ws.Cells[row, 19].Value = item.TTUpDate;
+                ws.Cells[row, 15].Value = item.ReleaseType;
+                ws.Cells[row, 16].Value = item.CreateDate;
+                ws.Cells[row, 17].Value = item.PdmDate;
+                ws.Cells[row, 18].Value = item.DevUpDate;
+                ws.Cells[row, 19].Value = item.DevBtmDate;
 
-                ws.Cells[row, 20].Value = item.TTBtmDate;
-                ws.Cells[row, 21].Value = item.TTRejectReason;
-                ws.Cells[row, 22].Value = item.TTRejectDate;
-                ws.Cells[row, 23].Value = item.DevTeam;
-                ws.Cells[row, 24].Value = item.ReleaseDate;
+                ws.Cells[row, 20].Value = item.TTUpDate;
+                ws.Cells[row, 21].Value = item.TTBtmDate;
+                ws.Cells[row, 22].Value = item.ReleaseDate;
+                ws.Cells[row, 23].Value = item.TTRejectReason;
+                ws.Cells[row, 24].Value = item.TTRejectDate;
 
                 ws.Cells[row, 25].Value = item.TTRejectCount;
                 row += 1;
