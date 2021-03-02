@@ -36,12 +36,14 @@ export class F420Component implements OnInit {
           }
           //alert(str);
           this.utility.alertify.confirm(
+            "Sweet Alert",
             "The Qty of these Order# exceed the required qty, Please check your excel then upload again .\r\n" +
               str,
             () => {} //doNothing
           );
         }else{
           this.utility.alertify.confirm(
+            "Sweet Alert",
             "You can upload this file to DKS Sysyem !\r\n",
             () => {} //doNothing
           );

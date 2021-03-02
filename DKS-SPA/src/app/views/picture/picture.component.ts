@@ -33,6 +33,7 @@ export class PictureComponent implements OnInit {
   handleFileInput(files: FileList, no: string) {
     if (!this.checkFileFormat(files.item(0))){
       this.utility.alertify.confirm(
+        "Sweet Alert",
         "Please upload jpg file and size cannot over 1 Mb.",
         () => {});
       
@@ -71,6 +72,7 @@ export class PictureComponent implements OnInit {
     formData.append("file", null);
     formData.append("no", no);
     this.utility.alertify.confirm(
+      "Sweet Alert",
       "Are you sure to Delete this picture ?",
       () => {
         this.dksService.deletePicByArticle(formData).subscribe(
