@@ -6,7 +6,6 @@ import { F340Schedule } from "../../../core/_models/f340-schedule.ts";
 import { SF340Schedule } from "../../../core/_models/s_f340-schedule";
 import { PaginatedResult } from "../../../core/_models/pagination";
 import { DatePipe } from "@angular/common";
-import { HttpParams } from "@angular/common/http";
 
 @Component({
   selector: "app-F340",
@@ -24,7 +23,7 @@ export class F340Component implements OnInit {
   sF340Schedule: SF340Schedule = new SF340Schedule();
   result: F340Schedule[];
   bpVerList: string[];
-  constructor(private utility: Utility, private dksService: DksService,private datepipe: DatePipe) {}
+  constructor(public utility: Utility, private dksService: DksService,private datepipe: DatePipe) {}
 
   ngOnInit() {
     this.setAccount();
@@ -41,10 +40,6 @@ export class F340Component implements OnInit {
     if (jwtTtoken) {
       this.loginUser = this.jwtHelper.decodeToken(jwtTtoken)["unique_name"];
     }
-  }
-  //設定語言
-  useLanguage(language: string) {
-    this.utility.languageService.setLang(language);
   }
   //分頁按鈕
   pageChangeds(event: any): void {

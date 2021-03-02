@@ -13,12 +13,6 @@ import { LanguageService } from "../_services/language.service";
 })
 export class Utility {
   baseUrl = environment.apiUrl;
-  //http = this.cHttp;
-  //alertify = this.cAlertify;
-  //spinner = this.cSpinner;
-  //datepiper = this.datepipe;
-  //activeRouter = this.acRouter;
-  //router = this.route;
   constructor(
     public http: HttpClient,
     public alertify: AlertifyService,
@@ -62,7 +56,24 @@ export class Utility {
           this.spinner.hide();
         });
     }
-
+  //取得目前語言
+  getCurrentLang(){
+    return this.languageService.translate.currentLang ;
+  }
+  //設定語言
+  useLanguage(language: string) {
+    this.languageService.setLang(language);
+  }
+    //設定是否分頁
+  setPagination(bo:boolean, objS : Pagination){
+      objS.isPaging = bo;
+      let powerStr = 'on';
+      if (!bo) powerStr ='off';
+      this.alertify.confirm(
+        "You just turned "+ powerStr + " the pagination mode.",
+        () => {});
+      
+  }
   getToDay() {
     const toDay =
       new Date().getFullYear().toString() +

@@ -1,6 +1,6 @@
 {   "Common":{
     "currentLang":"English",
-    "hello":"Hello",
+    "hello":"Dear ",
     "btnList": {
             "search": "Search",
             "export": "Export"

@@ -19,7 +19,7 @@ export class F428Component implements OnInit {
   sF428SampleNoDetail: SF428SampleNoDetail = new SF428SampleNoDetail();
   result: F428SampleNoDetail[];
 
-  constructor(private utility: Utility, private dksService: DksService) {}
+  constructor(public utility: Utility, private dksService: DksService) {}
 
   ngOnInit() {
     this.setAccount();

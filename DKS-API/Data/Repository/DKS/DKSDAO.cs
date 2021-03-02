@@ -65,8 +65,8 @@ namespace DFPS.API.Data.Repository
 
             List<SqlParameter> pc = new List<SqlParameter>{
                 new SqlParameter("@Season",sF340Schedule.season.Trim().ToUpper()),
-                new SqlParameter("@BuyPlanVer",sF340Schedule.bpVer != null ? sF340Schedule.bpVer.Trim() : (object)DBNull.Value ),
-                new SqlParameter("@CwaDate",sF340Schedule.cwaDate.Trim())
+                new SqlParameter("@BuyPlanVer",sF340Schedule.bpVer != "" ? sF340Schedule.bpVer.Trim() : (object)DBNull.Value ),
+                new SqlParameter("@CwaDate",sF340Schedule.cwaDate  != "" ? sF340Schedule.cwaDate.Trim() : (object)DBNull.Value )
             };
 
             var data = await _context.GetF340ProcessView

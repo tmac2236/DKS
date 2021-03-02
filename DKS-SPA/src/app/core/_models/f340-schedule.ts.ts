@@ -1,4 +1,6 @@
-export interface F340Schedule {
+import { ModelInterface } from "./interface/model-interface";
+
+export class F340Schedule implements ModelInterface {
   buyPlanSeason: string;
   versionNo: string;
   devSeason: string;
