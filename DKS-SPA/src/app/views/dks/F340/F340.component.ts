@@ -23,11 +23,11 @@ export class F340Component implements OnInit {
   sF340Schedule: SF340Schedule = new SF340Schedule();
   result: F340Schedule[];
   bpVerList: string[];
-  constructor(public utility: Utility, private dksService: DksService,private datepipe: DatePipe) {}
+  constructor(public utility: Utility, private dksService: DksService) {}
 
   ngOnInit() {
     this.setAccount();
-    this.sF340Schedule.cwaDate = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
+    this.sF340Schedule.cwaDate = this.utility.datepiper.transform(new Date(), 'yyyy-MM-dd');
     //init javascript start
     (function hello() {
       console.log("Hello Init hello() !!!");
@@ -46,7 +46,7 @@ export class F340Component implements OnInit {
     this.sF340Schedule.currentPage = event.page;
     this.search();
   }
-  //排序按鈕
+  //排序按鈕 pending......
   sort(e) {
     //console.log(e);
     let headStr = e.target.innerHTML;

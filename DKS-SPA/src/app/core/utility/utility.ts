@@ -65,15 +65,16 @@ export class Utility {
     this.languageService.setLang(language);
   }
     //設定是否分頁
-  setPagination(bo:boolean, objS : Pagination){
+    setPagination(bo:boolean, objS : Pagination){
       objS.isPaging = bo;
       let powerStr = 'on';
       if (!bo) powerStr ='off';
       this.alertify.confirm(
+        "Sweet Alert",
         "You just turned "+ powerStr + " the pagination mode.",
         () => {});
       
-  }
+    }
   getToDay() {
     const toDay =
       new Date().getFullYear().toString() +

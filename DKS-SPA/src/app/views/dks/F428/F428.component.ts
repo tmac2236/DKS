@@ -31,10 +31,7 @@ export class F428Component implements OnInit {
       this.loginUser = this.jwtHelper.decodeToken(jwtTtoken)["unique_name"];
     }
   }
-  //設定語言
-  useLanguage(language: string) {
-    this.utility.languageService.setLang(language);
-  }
+  //分頁按鈕
   pageChangeds(event: any): void {
     this.sF428SampleNoDetail.currentPage = event.page;
     this.search();
