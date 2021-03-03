@@ -45,13 +45,20 @@
                     {{ bpVer }}
                   </option>
                 </select>
-                <label class="col-form-label mr-1">CWA Date</label>
+                <label class="col-form-label mr-1">CWA Date Start</label>
                 <input
                   class="col-form-label mr-1"
                   type="date"
-                  name="cwaDate"
-                  [(ngModel)]="sF340Schedule.cwaDate"
+                  name="cwaDateS"
+                  [(ngModel)]="sF340Schedule.cwaDateS"
                 />
+                <label class="col-form-label mr-1">CWA Date End</label>
+                <input
+                  class="col-form-label mr-1"
+                  type="date"
+                  name="cwaDateE"
+                  [(ngModel)]="sF340Schedule.cwaDateE"
+                />                
                   <button
                     class="btn btn-primary mr-1"
                     type="button"

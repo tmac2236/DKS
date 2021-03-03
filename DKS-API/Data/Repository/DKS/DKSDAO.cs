@@ -66,11 +66,12 @@ namespace DFPS.API.Data.Repository
             List<SqlParameter> pc = new List<SqlParameter>{
                 new SqlParameter("@Season",sF340Schedule.season.Trim().ToUpper()),
                 new SqlParameter("@BuyPlanVer",sF340Schedule.bpVer != "" ? sF340Schedule.bpVer.Trim() : (object)DBNull.Value ),
-                new SqlParameter("@CwaDate",sF340Schedule.cwaDate  != "" ? sF340Schedule.cwaDate.Trim() : (object)DBNull.Value )
+                new SqlParameter("@CwaDateS",sF340Schedule.cwaDateS),
+                new SqlParameter("@CwaDateE",sF340Schedule.cwaDateE)
             };
 
             var data = await _context.GetF340ProcessView
-                   .FromSqlRaw("EXECUTE dbo.GetF340Process_BuyPlan @Season,@BuyPlanVer,@CwaDate", pc.ToArray())
+                   .FromSqlRaw("EXECUTE dbo.GetF340Process_BuyPlan @Season,@BuyPlanVer,@CwaDateS,@CwaDateE", pc.ToArray())
                    .ToListAsync();
             return data;
         }
@@ -80,11 +81,12 @@ namespace DFPS.API.Data.Repository
             List<SqlParameter> pc = new List<SqlParameter>{
                 new SqlParameter("@Season",sF340Schedule.season.Trim().ToUpper()),
                 new SqlParameter("@BuyPlanVer",sF340Schedule.bpVer != null ? sF340Schedule.bpVer.Trim() : (object)DBNull.Value ),
-                new SqlParameter("@CwaDate",sF340Schedule.cwaDate != null ? sF340Schedule.cwaDate.Trim() : (object)DBNull.Value )
+                new SqlParameter("@CwaDateS",sF340Schedule.cwaDateS),
+                new SqlParameter("@CwaDateE",sF340Schedule.cwaDateE)
             };
 
             var data =  _context.GetF340ProcessView
-                   .FromSqlRaw("EXECUTE dbo.GetF340Process_BuyPlan @Season,@BuyPlanVer,@CwaDate", pc.ToArray())
+                   .FromSqlRaw("EXECUTE dbo.GetF340Process_BuyPlan @Season,@BuyPlanVer,@CwaDateS,@CwaDateE", pc.ToArray())
                    .ToList();
 
                  return PagedList<F340_ProcessDto>

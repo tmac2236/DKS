@@ -31,6 +31,9 @@ namespace DKS_API.Controllers
         [HttpPost("exportF340_Process")]
         public async Task<IActionResult> ExportF340_Process(SF340Schedule sF340Schedule)
         {
+
+            if (sF340Schedule.cwaDateS == "" || sF340Schedule.cwaDateS == null) sF340Schedule.cwaDateS = _config.GetSection("LogicSettings:MinDate").Value;
+            if (sF340Schedule.cwaDateE == "" || sF340Schedule.cwaDateE == null) sF340Schedule.cwaDateE = _config.GetSection("LogicSettings:MaxDate").Value;
             // query data from database  
             var data = await _dksDao.GetF340ProcessView4Excel(sF340Schedule);
 
@@ -196,8 +199,10 @@ namespace DKS_API.Controllers
         {
             try
             {
-                var result = _dksDao.GetF340ProcessView(sF340Schedule);
+                if (sF340Schedule.cwaDateS == "" || sF340Schedule.cwaDateS == null) sF340Schedule.cwaDateS = _config.GetSection("LogicSettings:MinDate").Value;
+                if (sF340Schedule.cwaDateE == "" || sF340Schedule.cwaDateE == null) sF340Schedule.cwaDateE = _config.GetSection("LogicSettings:MaxDate").Value;
 
+                var result = _dksDao.GetF340ProcessView(sF340Schedule);
                 Response.AddPagination(result.CurrentPage, result.PageSize,
                 result.TotalCount, result.TotalPages);
                 return Ok(result);

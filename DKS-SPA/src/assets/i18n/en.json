@@ -42,7 +42,23 @@
     },"F428": {
         "title": "F428 ",
         "titleList":{
-            "sampleNo":"sampleNo"
+            "partNo":"PartNo",
+            "partName":"PartName",
+            "materialName":"MaterialName",
+            "MaterialNo":"MaterialNo",
+            "sSBMatPID":"SSBMatPID",
+
+            "supName":"SupName",
+            "colorName":"ColorName",
+            "colorCode":"ColorCode",
+            "uOM":"UOM",
+            "cons":"Cons",
+
+            "total":"Total",
+            "status":"Status",
+            "checkStockNo":"CheckStockNo",
+            "checkUser":"CheckUser",
+            "checkTime":"CheckTime"
         }        
     }
 }

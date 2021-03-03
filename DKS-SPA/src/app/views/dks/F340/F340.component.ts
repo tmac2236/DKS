@@ -27,7 +27,7 @@ export class F340Component implements OnInit {
 
   ngOnInit() {
     this.setAccount();
-    this.sF340Schedule.cwaDate = this.utility.datepiper.transform(new Date(), 'yyyy-MM-dd');
+    //this.sF340Schedule.cwaDateS = this.utility.datepiper.transform(new Date(), 'yyyy-MM-dd');
     //init javascript start
     (function hello() {
       console.log("Hello Init hello() !!!");

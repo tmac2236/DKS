@@ -3,7 +3,8 @@ import { Pagination } from "./pagination";
 export class SF340Schedule extends Pagination {
   season: string;
   bpVer: string;
-  cwaDate : string;
+  cwaDateS : string;
+  cwaDateE : string;
   /**
    *default set of searching parameters
    */
@@ -11,7 +12,8 @@ export class SF340Schedule extends Pagination {
     super();
     this.season = "";
     this.bpVer = "";
-    this.cwaDate ="";
+    this.cwaDateS ="";
+    this.cwaDateE ="";
     this.isPaging = true; //開分頁
   }
 

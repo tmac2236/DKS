@@ -26,7 +26,8 @@ export class DksService {
     }
     params = params.append('season', sF340Schedule.season.toString());
     params = params.append('bpVer', sF340Schedule.bpVer.toString());
-    params = params.append('cwaDate', sF340Schedule.cwaDate.toString());
+    params = params.append('cwaDateS', sF340Schedule.cwaDateS.toString());
+    params = params.append('cwaDateE', sF340Schedule.cwaDateE.toString());
 
     return this.utility.http
       .get<F340Schedule[]>(this.utility.baseUrl + 'dks/getF340_Process' , {

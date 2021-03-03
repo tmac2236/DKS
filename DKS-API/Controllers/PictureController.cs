@@ -6,7 +6,6 @@ using System;
 using System.Threading.Tasks;
 using System.Drawing;
 using DKS.API.Models.DKS;
-using DKS_API.Data.Repository;
 using DKS_API.Data.Interface;
 
 namespace DKS_API.Controllers
