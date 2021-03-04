@@ -52,7 +52,4 @@ export class F428Component implements OnInit {
       }
     );
   }
-  export(){
-    alert('export');
-  }
 }
