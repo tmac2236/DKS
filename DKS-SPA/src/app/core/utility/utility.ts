@@ -18,11 +18,13 @@ export class Utility {
     public alertify: AlertifyService,
     public spinner: NgxSpinnerService,
     public datepiper: DatePipe,
-    public activeRouter: ActivatedRoute,
-    public route: Router,
     public languageService: LanguageService
   ) {}
 
+  logout() {
+    localStorage.removeItem("token");
+    this.alertify.message("logged out");
+  }
     //匯出
     exportFactory(url: string, nameParam: string, params: Pagination) {
       this.spinner.show();

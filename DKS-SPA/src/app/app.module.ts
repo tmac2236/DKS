@@ -24,7 +24,6 @@ import { P500Component } from "./views/error/500.component";
 import { PictureComponent } from "./views/picture/picture.component";
 import { F420Component } from "./views/dks/F420/F420.component";
 import { F340Component } from "./views/dks/F340/F340.component";
-import { F428Component } from "./views/dks/F428/F428.component";
 
 import { AuthService } from "../../src/app/core/_services/auth.service";
 import { AlertifyService } from "../../src/app/core/_services/alertify.service";
@@ -60,6 +59,8 @@ import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { DataTablesModule } from "angular-datatables";
 import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { F428Component } from "./views/dks/F428/F428.component";
+import { F428EditComponent } from "./views/dks/F428/F428-edit/F428-edit.component";
 
 
 //載入 "/assets/i18n/[lang].json" 語系檔
@@ -99,13 +100,14 @@ export function createTranslateLoader(http: HttpClient) {
   ],
   declarations: [
     AppComponent,
-    ...APP_CONTAINERS,
+    APP_CONTAINERS,
     P404Component,
     P500Component,
     PictureComponent,
     F340Component,
     F420Component,
     F428Component,
+    F428EditComponent,
     DictionaryComponent,
     HomePageComponent,
   ],

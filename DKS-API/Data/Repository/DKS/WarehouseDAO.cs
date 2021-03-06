@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using DKS.API.Models.DKS;
 using DKS_API.Data.Repository;
 using DKS_API.Data.Interface;
 using DKS_API.DTOs;
@@ -37,6 +36,19 @@ namespace DFPS.API.Data.Repository
         public Task<List<F428SampleNoDetail>> GetMaterialNoBySampleNoForWarehouse4Excel(SF428SampleNoDetail sMaterialDetailBySampleNo)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<List<StockDetailByMaterialNo>> GetStockDetailByMaterialNo(SF428SampleNoDetail sF428SampleNoDetail)
+        {
+            List<SqlParameter> pc = new List<SqlParameter>{
+                new SqlParameter("@SampleNo",sF428SampleNoDetail.SampleNo.Trim()),
+                new SqlParameter("@MaterialNo",sF428SampleNoDetail.MaterialNo.Trim())
+            };
+
+            var data = await  _context.GetStockDetailByMaterialNoView
+                   .FromSqlRaw("EXECUTE dbo.GetStockDetailByMaterialNo @SampleNo,@MaterialNo", pc.ToArray())
+                   .ToListAsync();
+            return data;
         }
 
         public Task<bool> SaveAll()

@@ -23,6 +23,8 @@ namespace DKS_API.Data.Repository
         public DbSet<F418_F420Dto> GetF420F418View { get; set; }
         public DbSet<F340_ProcessDto> GetF340ProcessView { get; set; }
         public DbSet<F428SampleNoDetail> GetMaterialNoBySampleNoForWarehouseView { get; set; }
+        public DbSet<StockDetailByMaterialNo> GetStockDetailByMaterialNoView { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Ordsumoh>().HasKey(x => new { x.PRSUMNO });
@@ -41,6 +43,8 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<F340_ProcessDto>()
             .HasNoKey();
             modelBuilder.Entity<F428SampleNoDetail>()
+            .HasNoKey();
+            modelBuilder.Entity<StockDetailByMaterialNo>()
             .HasNoKey();
 
         }

@@ -9,15 +9,16 @@
             </div>
             <div class="col-2">
               <strong *ngIf="this.loginUser">{{ 'Common.hello' | translate }} {{ this.loginUser }}</strong>
-              <img src="../assets/systemImg/taiwan.png" tooltip="{{ this.loginUser }} Prefers Mandarin" width="25" height="25"  (click)="this.utility.useLanguage('zh')"/>
-              <img src="../assets/systemImg/united-states.png" tooltip="{{ this.loginUser }} Prefers English" width="25" height="25"  (click)="this.utility.useLanguage('en')"/>
-              <!--<img *ngIf="sF428SampleNoDetail.isPaging === true" tooltip="pagination on" src="../assets/systemImg/pagination.png" width="25" height="25"  (click)="this.utility.setPagination(false,this.sF428SampleNoDetail)"/>
-              <img *ngIf="sF428SampleNoDetail.isPaging === false" tooltip="pagination off" src="../assets/systemImg/no-pagination.png" width="25" height="25"  (click)="this.utility.setPagination(true,this.sF428SampleNoDetail)"/>
-              <img src="../assets/systemImg/vietnam.png" width="25" height="25" />-->
+              <img src="../assets/systemImg/taiwan.png" tooltip="{{ this.loginUser }} Prefers Mandarin" placement="bottom" width="25" height="25"  (click)="this.utility.useLanguage('zh')"/>
+              <img src="../assets/systemImg/united-states.png" tooltip="{{ this.loginUser }} Prefers English" placement="bottom" width="25" height="25"  (click)="this.utility.useLanguage('en')"/>
+              <!--<img *ngIf="sF428SampleNoDetail.isPaging === true" tooltip="pagination on" placement="bottom" src="../assets/systemImg/pagination.png" width="25" height="25"  (click)="this.utility.setPagination(false,this.sF428SampleNoDetail)"/>
+              <img *ngIf="sF428SampleNoDetail.isPaging === false" tooltip="pagination off" placement="bottom" src="../assets/systemImg/no-pagination.png" width="25" height="25"  (click)="this.utility.setPagination(true,this.sF428SampleNoDetail)"/>
+              -->
+              <img src="../assets/systemImg/exit.png" tooltip="Logout" placement="bottom" width="25" height="25" (click)="this.utility.logout()"/>
            </div>
           </div>
         </div>
-        <form class="form-horizontal" #addQueryReportDataForm="ngForm">
+        <form class="form-horizontal" #F428DataForm="ngForm">
           <div class="card-body">
             <div class="form-group row">
               <div class="col-md-12">
@@ -35,7 +36,7 @@
                     class="btn btn-primary mr-1"
                     type="button"
                     (click)="search()"
-                    [disabled]="!addQueryReportDataForm.valid"
+                    [disabled]="!F428DataForm.valid"
                   >
                   {{ 'Common.btnList.search' | translate }}
                   </button>
@@ -43,7 +44,7 @@
                     class="btn btn-primary mr-1"
                     type="button"
                     (click)="export()"
-                    [disabled]="!addQueryReportDataForm.valid"
+                    [disabled]="!F428DataForm.valid"
                   >
                   {{ 'Common.btnList.export' | translate }}
                   </button>!-->
@@ -61,6 +62,7 @@
                     <thead>
                       <tr class="table-info">
                         <th style="background-color:#76DAFF;" >Serial No.</th>
+                        <th style="background-color:#76DAFF;" >Edit</th>
                         <th style="background-color:#76DAFF;" >{{ 'F428.titleList.partNo' | translate }}</th>
                         <th style="background-color:#76DAFF;" >{{ 'F428.titleList.partName' | translate }}</th>
                         <th style="background-color:#76DAFF;" >{{ 'F428.titleList.materialName' | translate }}</th>
@@ -84,6 +86,7 @@
                       <ng-container *ngFor="let item of result; let i = index">
                         <tr>
                           <td>{{i+1}}</td>
+                          <td> <div [hidden]="!item.materialNo"><img src="../assets/systemImg/edit.png" width="25" height="25"  (click)="this.edit(item.materialNo)"/></div></td>
                           <td>{{ item.partNo }}</td>
                           <td>{{ item.partName }}</td>
                           <td>{{ item.materialName }}</td>
@@ -131,5 +134,5 @@
   color="#fff"
   type="square-jelly-box"
   [fullScreen]="true"
-  ><p style="color: white">Loading F340 Shchdule...</p></ngx-spinner
+  ><p style="color: white">Loading {{ 'F428.title' | translate }} ...</p></ngx-spinner
 >

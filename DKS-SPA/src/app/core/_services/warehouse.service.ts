@@ -6,6 +6,7 @@ import { Utility } from "../utility/utility";
 import { F428SampleNoDetail } from "../_models/f428-sample-no-detail";
 import { PaginatedResult } from "../_models/pagination";
 import { SF428SampleNoDetail } from "../_models/s-f428-sample-no-detail";
+import { StockDetailByMaterialNo } from "../_models/stock-detail-by-material-no";
 
 @Injectable({
   providedIn: "root",
@@ -44,5 +45,12 @@ export class WarehouseService {
       );
   }
 
+
+  getStockDetailByMaterialNo(sF428SampleNoDetail: SF428SampleNoDetail) {
+    return this.utility.http.post<StockDetailByMaterialNo[]>(
+      this.utility.baseUrl + 'wareHouse/getStockDetailByMaterialNo',
+      sF428SampleNoDetail
+    );
+  }
 
 }

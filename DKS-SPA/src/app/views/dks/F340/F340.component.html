@@ -9,11 +9,12 @@
             </div>
             <div class="col-2">
               <strong *ngIf="this.loginUser">{{ 'Common.hello' | translate }} {{ this.loginUser }}</strong>
-              <img src="../assets/systemImg/taiwan.png" tooltip="{{ this.loginUser }} Prefers Mandarin" width="25" height="25"  (click)="this.utility.useLanguage('zh')"/>
-              <img src="../assets/systemImg/united-states.png" tooltip="{{ this.loginUser }} Prefers English" width="25" height="25"  (click)="this.utility.useLanguage('en')"/>
-              <img *ngIf="sF340Schedule.isPaging === true" tooltip="pagination on" src="../assets/systemImg/pagination.png" width="25" height="25"  (click)="this.utility.setPagination(false,this.sF340Schedule)"/>
-              <img *ngIf="sF340Schedule.isPaging === false" tooltip="pagination off" src="../assets/systemImg/no-pagination.png" width="25" height="25"  (click)="this.utility.setPagination(true,this.sF340Schedule)"/>
+              <img src="../assets/systemImg/taiwan.png" tooltip="{{ this.loginUser }} Prefers Mandarin" placement="bottom" width="25" height="25"  (click)="this.utility.useLanguage('zh')"/>
+              <img src="../assets/systemImg/united-states.png" tooltip="{{ this.loginUser }} Prefers English" placement="bottom" width="25" height="25"  (click)="this.utility.useLanguage('en')"/>
+              <img *ngIf="sF340Schedule.isPaging === true" tooltip="pagination on" placement="bottom" src="../assets/systemImg/pagination.png" placement="bottom" width="25" height="25"  (click)="this.utility.setPagination(false,this.sF340Schedule)"/>
+              <img *ngIf="sF340Schedule.isPaging === false" tooltip="pagination off" placement="bottom" src="../assets/systemImg/no-pagination.png" placement="bottom" width="25" height="25"  (click)="this.utility.setPagination(true,this.sF340Schedule)"/>
               <!--<img src="../assets/systemImg/vietnam.png" width="25" height="25" />-->
+              <img src="../assets/systemImg/exit.png" tooltip="Logout" width="25" height="25" (click)="this.utility.logout()"/>
            </div>
           </div>
         </div>

@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using DKS_API.Data.Interface;
 using DKS_API.DTOs;
 using DKS_API.Helpers;
@@ -34,6 +35,13 @@ namespace DKS_API.Controllers
             {
                 return StatusCode(500, $"Internal server error: {ex}.");
             }
+        }
+        [HttpPost("getStockDetailByMaterialNo")]
+        public async Task<IActionResult> GetStockDetailByMaterialNo(SF428SampleNoDetail sF428SampleNoDetail)
+        {
+            var data = await _warehouseDao.GetStockDetailByMaterialNo(sF428SampleNoDetail);
+            return Ok(data);
+
         }
     }
 }
