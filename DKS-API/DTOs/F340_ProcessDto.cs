@@ -37,6 +37,7 @@ namespace DKS_API.DTOs
         public string TTRejectDate { get; set; }
 
         public string TTRejectCount { get; set; }
+        public string Factory { get; set; }
 
     }
 }

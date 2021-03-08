@@ -23,6 +23,18 @@
             <div class="form-group row">
               <div class="col-md-12">
                 <div class="col">
+                  <label class="col-form-label mr-1">Factory</label>
+                  <select
+                  class="col-form-label mr-1"
+                  name="factory"
+                  [(ngModel)]="sF340Schedule.factory"
+                >
+                  <option value = "" selected>All</option>
+                  <option value = "C" selected>SHC</option>
+                  <option value = "U" selected>TSH</option>
+                  <option value = "E" selected>CB</option>
+                  <option value = "D" selected>SPC</option>
+                </select>               
                   <label class="col-form-label mr-1">Season</label>
                   <input
                     class="col-form-label mr-1"
@@ -90,6 +102,7 @@
                   <!--套版分頁<table datatable id="f340Sche" class="table text-center table-striped">-->
                     <thead>
                       <tr class="table-info">
+                        <th style="background-color:#FF7F50;" tooltip="From HP" placement="bottom">{{ 'F340.titleList.factory' | translate }}</th>
                         <th style="background-color:#FF7F50;" tooltip="From HP" placement="bottom">{{ 'F340.titleList.buyPlanSeason' | translate }}</th>
                         <th style="background-color:#FF7F50;" tooltip="From HP" placement="bottom">{{ 'F340.titleList.versionNo' | translate }}</th>
                         <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.devSeason' | translate }}</th>
@@ -127,6 +140,7 @@
                     <tbody>
                       <ng-container *ngFor="let item of result; let i = index">
                         <tr>
+                          <td>{{ item.factory }}</td>
                           <td>{{ item.buyPlanSeason }}</td>
                           <td>{{ item.versionNo }}</td>
                           <td>{{ item.devSeason }}</td>

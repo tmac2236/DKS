@@ -32,4 +32,5 @@ export class F340Schedule implements ModelInterface {
   ttRejectDate: string;
 
   ttRejectCount: string;
+  factory: string;
 }

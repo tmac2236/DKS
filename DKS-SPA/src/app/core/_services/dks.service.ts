@@ -24,6 +24,7 @@ export class DksService {
       params = params.append('pageSize', sF340Schedule.itemsPerPage.toString());
       //params = params.append('orderBy', sAttendance.orderBy);
     }
+    params = params.append('factory', sF340Schedule.factory.toString());
     params = params.append('season', sF340Schedule.season.toString());
     params = params.append('bpVer', sF340Schedule.bpVer.toString());
     params = params.append('cwaDateS', sF340Schedule.cwaDateS.toString());

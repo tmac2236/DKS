@@ -9,6 +9,7 @@
     "F340": {
         "title": "F340 進度表",
         "titleList":{
+                "factory":"廠別",
                 "buyPlanSeason":"BUYPLAN季節",
                 "versionNo":"版本號",
                 "devSeason":"開發季節",

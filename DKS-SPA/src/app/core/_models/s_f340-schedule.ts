@@ -1,6 +1,7 @@
 import { Pagination } from "./pagination";
 
 export class SF340Schedule extends Pagination {
+  factory: string;
   season: string;
   bpVer: string;
   cwaDateS : string;
@@ -10,6 +11,7 @@ export class SF340Schedule extends Pagination {
    */
   constructor() {
     super();
+    this.factory = "";
     this.season = "";
     this.bpVer = "";
     this.cwaDateS ="";

@@ -5,6 +5,7 @@ namespace DKS_API.DTOs
 {
     public class SF340Schedule : PaginationParams
     {
+        public string factory { get; set; }
         public string season { get; set; }
         public string bpVer { get; set; }
         public string cwaDateS { get; set; }

@@ -5,7 +5,6 @@ import { JwtHelperService } from "@auth0/angular-jwt";
 import { F340Schedule } from "../../../core/_models/f340-schedule.ts";
 import { SF340Schedule } from "../../../core/_models/s_f340-schedule";
 import { PaginatedResult } from "../../../core/_models/pagination";
-import { DatePipe } from "@angular/common";
 
 @Component({
   selector: "app-F340",
