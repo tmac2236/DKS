@@ -117,6 +117,6 @@ export class F340Component implements OnInit {
   }
   cleanBP(){
     this.bpVerList = [];
-    this.sF340Schedule.bpVer = "";
+    this.sF340Schedule.bpVer = "All";
   }
 }

@@ -13,7 +13,7 @@ export class SF340Schedule extends Pagination {
     super();
     this.factory = "C";//預設翔鴻程
     this.season = "";
-    this.bpVer = "";
+    this.bpVer = "All";
     this.cwaDateS ="";
     this.cwaDateE ="";
     this.isPaging = true; //開分頁

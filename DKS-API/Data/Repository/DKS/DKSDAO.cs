@@ -66,7 +66,7 @@ namespace DFPS.API.Data.Repository
             List<SqlParameter> pc = new List<SqlParameter>{
                 new SqlParameter("@FactoryId",sF340Schedule.factory != "" ?sF340Schedule.factory.Trim().ToUpper() : (object)DBNull.Value),
                 new SqlParameter("@Season",sF340Schedule.season.Trim().ToUpper()),
-                new SqlParameter("@BuyPlanVer",sF340Schedule.bpVer != "" ? sF340Schedule.bpVer.Trim() : (object)DBNull.Value ),
+                new SqlParameter("@BuyPlanVer",sF340Schedule.bpVer != "All" ? sF340Schedule.bpVer.Trim() : (object)DBNull.Value ),
                 new SqlParameter("@CwaDateS",sF340Schedule.cwaDateS),
                 new SqlParameter("@CwaDateE",sF340Schedule.cwaDateE)
             };
@@ -82,7 +82,7 @@ namespace DFPS.API.Data.Repository
             List<SqlParameter> pc = new List<SqlParameter>{
                 new SqlParameter("@FactoryId",sF340Schedule.factory != null ?sF340Schedule.factory.Trim().ToUpper() : (object)DBNull.Value),
                 new SqlParameter("@Season",sF340Schedule.season.Trim().ToUpper()),
-                new SqlParameter("@BuyPlanVer",sF340Schedule.bpVer != null ? sF340Schedule.bpVer.Trim() : (object)DBNull.Value ),
+                new SqlParameter("@BuyPlanVer",sF340Schedule.bpVer != "All" ? sF340Schedule.bpVer.Trim() : (object)DBNull.Value ),
                 new SqlParameter("@CwaDateS",sF340Schedule.cwaDateS),
                 new SqlParameter("@CwaDateE",sF340Schedule.cwaDateE)
             };
