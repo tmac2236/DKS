@@ -19,7 +19,7 @@ export class F428Component implements OnInit {
   loginUser: string;
 
   sF428SampleNoDetail: SF428SampleNoDetail = new SF428SampleNoDetail();
-  result: F428SampleNoDetail[];
+  result: F428SampleNoDetail[]=[];
 
   //params
   urlParams: F428Commuter;
@@ -66,6 +66,12 @@ export class F428Component implements OnInit {
           this.result = res.result;
           this.sF428SampleNoDetail.setPagination(res.pagination);
           this.utility.spinner.hide();
+          if(res.result.length < 1){
+            this.utility.alertify.confirm(
+              "Sweet Alert",
+              "No Data in these conditions of search, please try again.",
+              () => {});
+          }
         },
         (error) => {
           this.utility.spinner.hide();

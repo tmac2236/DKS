@@ -20,7 +20,7 @@ export class F340Component implements OnInit {
 
 
   sF340Schedule: SF340Schedule = new SF340Schedule();
-  result: F340Schedule[];
+  result: F340Schedule[] = [];
   bpVerList: string[];
   constructor(public utility: Utility, private dksService: DksService) {}
 
@@ -73,27 +73,50 @@ export class F340Component implements OnInit {
         this.result = res.result;
         this.sF340Schedule.setPagination(res.pagination);
         this.utility.spinner.hide();
+        if (res.result.length < 1) {
+          this.utility.alertify.confirm(
+            "Sweet Alert",
+            "No Data in these conditions of search, please try again.",
+            () => {}
+          );
+        }
       },
       (error) => {
         this.utility.spinner.hide();
-        this.utility.alertify.error(error);
+        this.utility.alertify.confirm(
+          "System Notice",
+          "Syetem is busy, please try later.",
+          () => {}
+        );
       }
     );
   }
   export(){
-    const url =this.utility.baseUrl +"dks/exportF340_Process"
+    const url =this.utility.baseUrl +"dks/exportF340_Process";
     this.utility.exportFactory(url,"F340_Schedule",this.sF340Schedule);
   }
 
   //下拉選單帶出版本
   changeBPVerList() {
-    this.dksService.searchBPVerList(this.sF340Schedule.season).subscribe(
+    if(this.sF340Schedule.season ==="") return;
+    this.utility.spinner.show();
+    this.dksService.searchBPVerList(this.sF340Schedule.season,this.sF340Schedule.factory).subscribe(
       (res) => {
+        this.utility.spinner.hide();
         this.bpVerList = res;
       },
       (error) => {
-        this.utility.alertify.error(error);
+        this.utility.spinner.hide();
+        this.utility.alertify.confirm(
+          "System Notice",
+          "Syetem is busy, please try later.",
+          () => {}
+        );
       }
     );
+  }
+  cleanBP(){
+    this.bpVerList = [];
+    this.sF340Schedule.bpVer = "";
   }
 }

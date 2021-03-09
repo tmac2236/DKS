@@ -28,8 +28,8 @@
                   class="col-form-label mr-1"
                   name="factory"
                   [(ngModel)]="sF340Schedule.factory"
+                  (change)="cleanBP()"
                 >
-                  <option value = "" selected>All</option>
                   <option value = "C" selected>SHC</option>
                   <option value = "U" selected>TSH</option>
                   <option value = "E" selected>CB</option>
@@ -42,15 +42,16 @@
                     name="season"
                     [(ngModel)]="sF340Schedule.season"
                     required
-                    (change)="changeBPVerList()"
+                    (change)="cleanBP()"
                   />
                   <label class="col-form-label mr-1">Buy Plan Version</label>
                   <select
                   class="col-form-label mr-1"
                   name="bpVer"
                   [(ngModel)]="sF340Schedule.bpVer"
+                  (focus)="changeBPVerList()"
+                  required
                 >
-                  <option value = "">All</option>
                   <option
                     *ngFor="let bpVer of bpVerList"
                     value="{{ bpVer }}"
@@ -93,7 +94,7 @@
             </div>
           </div>
         </form>
-        <div class="row" *ngIf="result">
+        <div class="row" *ngIf="result.length > 0">
           <div class="col-lg-12">
             <div class="card">
               <div class="card-body">

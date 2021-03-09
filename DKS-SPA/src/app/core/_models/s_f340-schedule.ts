@@ -11,7 +11,7 @@ export class SF340Schedule extends Pagination {
    */
   constructor() {
     super();
-    this.factory = "";
+    this.factory = "C";//預設翔鴻程
     this.season = "";
     this.bpVer = "";
     this.cwaDateS ="";

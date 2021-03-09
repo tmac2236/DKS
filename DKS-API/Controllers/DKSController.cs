@@ -216,12 +216,13 @@ namespace DKS_API.Controllers
             }
         }
         [HttpGet("getBPVersionBySeason")]
-        public async Task<IActionResult> GetBPVersionBySeason(string season)
+        public async Task<IActionResult> GetBPVersionBySeason(string season, string factory)
         {
             try
             {
 
-                var result = await _devBuyPlanDAO.FindAll(x => x.SEASON.Trim() == season.ToUpper().Trim())
+                var result = await _devBuyPlanDAO.FindAll(x => x.SEASON.Trim() == season.ToUpper().Trim()
+                                                        && x.MANUF.Trim() == factory.ToUpper().Trim())
                                         .Select(x => new
                                         {
                                             VERN = x.VERN

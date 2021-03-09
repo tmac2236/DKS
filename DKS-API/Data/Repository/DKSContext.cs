@@ -35,7 +35,7 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<Proporh>().HasKey(x => new { x.PROORDNO });
             modelBuilder.Entity<ModelDah>().HasKey(x => new { x.MODELNO });
             modelBuilder.Entity<Articled>().HasKey(x => new { x.PKARTBID });
-            modelBuilder.Entity<DevBuyPlan>().HasKey(x => new { x.SEASON, x.MODELNO, x.SCOLOR, x.ARTICLE, x.VERN});
+            modelBuilder.Entity<DevBuyPlan>().HasKey(x => new { x.MANUF,x.SEASON, x.MODELNO, x.SCOLOR, x.ARTICLE, x.VERN});
 
             //DTO(Stored Procedure)
             modelBuilder.Entity<F418_F420Dto>()

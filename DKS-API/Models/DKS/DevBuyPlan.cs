@@ -8,16 +8,20 @@ namespace DKS.API.Models.DKS
     {
         [Key]
         [Column(Order = 0)]
+        [StringLength(1)]
+        public string MANUF { get; set; }
+
+        [Key]
+        [Column(Order = 1)]
         [StringLength(5)]
         public string SEASON { get; set; }
 
         [Key]
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         [StringLength(15)]
         public string MODELNO { get; set; }
 
-        [Key]
-        [Column(Order = 2)]
+        [Required]
         [StringLength(2)]
         public string SCOLOR { get; set; }
 
@@ -41,5 +45,10 @@ namespace DKS.API.Models.DKS
         public string UPUSR { get; set; }
 
         public DateTime? UPTIME { get; set; }
+
+        [StringLength(50)]
+        public string UPDATE_BY { get; set; }
+
+        public DateTime? UPDATE_TIME { get; set; }
     }
 }
