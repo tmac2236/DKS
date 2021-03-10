@@ -38,7 +38,7 @@ export class HomePageComponent implements OnInit {
 
   ngOnInit() {
     if (typeof this.param1 !== "undefined") {
-      this.loginByDKS(this.param1,"F340");
+      this.loginByDKS(this.param1,this.param2);
     }
     //this.router.navigate(["/F340"], {
     //  queryParams: { param1: this.param1 },

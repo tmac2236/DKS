@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { Utility } from "../../../core/utility/utility";
+import { utilityConfig } from "../../../core/utility/utility-config";
 import { DksService } from "../../../core/_services/dks.service";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { F340Schedule } from "../../../core/_models/f340-schedule.ts";
@@ -117,6 +118,6 @@ export class F340Component implements OnInit {
   }
   cleanBP(){
     this.bpVerList = [];
-    this.sF340Schedule.bpVer = "All";
+    this.sF340Schedule.bpVer = utilityConfig.conditionAll;
   }
 }
