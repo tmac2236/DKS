@@ -68,13 +68,15 @@ export class Utility {
   }
     //設定是否分頁
     setPagination(bo:boolean, objS : Pagination){
-      objS.isPaging = bo;
+
       let powerStr = 'on';
       if (!bo) powerStr ='off';
       this.alertify.confirm(
         "Sweet Alert",
         "You just turned "+ powerStr + " the pagination mode.",
-        () => {});
+        () => {
+          objS.isPaging = bo;
+        });
       
     }
   getToDay() {

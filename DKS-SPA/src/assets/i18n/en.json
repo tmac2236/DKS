@@ -60,6 +60,13 @@
             "checkStockNo":"CheckStockNo",
             "checkUser":"CheckUser",
             "checkTime":"CheckTime"
+        },
+        "optionList":{
+            "1":"No yet check",
+            "2":"Out of Stock",
+            "3":"Availible",
+            "4":"Availible but useless",
+            "5":"Availilbe but short"
         }        
     }
 }

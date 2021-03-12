@@ -60,6 +60,13 @@
             "checkStockNo":"CheckStockNo",
             "checkUser":"CheckUser",
             "checkTime":"CheckTime"
+        },
+        "optionList":{
+            "1":"沒操作",
+            "2":"完全沒料",
+            "3":"有料",
+            "4":"有料但不能用",
+            "5":"有料但料不夠用"
         }
     }
 }

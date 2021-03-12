@@ -72,7 +72,7 @@ export function createTranslateLoader(http: HttpClient) {
     NgxSpinnerModule,
     BrowserModule,
     HttpClientModule,
-    TranslateModule.forRoot({
+    TranslateModule.forRoot({  // I18N
       loader: {
         provide: TranslateLoader,
         useFactory: createTranslateLoader,

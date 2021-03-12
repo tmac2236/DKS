@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { JwtHelperService } from "@auth0/angular-jwt";
+import { TranslateService } from "@ngx-translate/core";
 import { Utility } from "../../../../core/utility/utility";
 import { SF428SampleNoDetail } from "../../../../core/_models/s-f428-sample-no-detail";
 import { StockDetailByMaterialNo } from "../../../../core/_models/stock-detail-by-material-no";
@@ -20,15 +21,20 @@ export class F428EditComponent implements OnInit {
     result: StockDetailByMaterialNo[];
     //params
     urlParams:F428Commuter;
-
+    optionMap: Map<string,string>;
+    
   constructor(public utility: Utility, private warehouseService: WarehouseService,private activeRouter: ActivatedRoute,
-    private route: Router) { 
+    private route: Router,private translate: TranslateService) { 
     
     this.activeRouter.queryParams.subscribe((params) => {
       
     this.urlParams = new F428Commuter(params.sampleNo,params.materialNo,params.actionCode);
   });}
   ngOnInit() {
+    //get optionList
+     this.translate.get('F428.optionList').subscribe((data:Map<string,string>)=> {
+      this.optionMap = data ;
+     });
 
     if(this.urlParams.actionCode =='Edit'){
       this.sF428SampleNoDetail.sampleNo  = this.urlParams.sampleNo;
@@ -70,6 +76,14 @@ export class F428EditComponent implements OnInit {
       skipLocationChange: true,
     };
     this.route.navigate([navigateTo], navigationExtras);
+  }
 
+  changeCheck(e, number) {
+    //console.log(e);
+    //let headStr = e.target.innerHTML;
+    this.utility.alertify.confirm(
+      "Sweet Alert",
+      "No Data in these conditions of search, please try again.",
+      () => { alert("click Ok")});
   }
 }

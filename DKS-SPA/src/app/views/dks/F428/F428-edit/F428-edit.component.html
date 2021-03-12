@@ -48,7 +48,7 @@
             <div class="card">
               <div class="card-body">
                 <!--place icon -->
-                <div>
+                <div class="mb-3">
                   <img
                     src="../assets/systemImg/back-arrow.png"
                     tooltip="Go Back to Previous Page"
@@ -97,6 +97,19 @@
                       </ng-container>
                     </tbody>
                   </table>
+                </div>
+              </div>
+              <div class="card-footer">
+                <div>
+                  <label class="col-form-label mr-1">Check Status</label>
+                  <select class="col-form-label mr-1" name="status" [(ngModel)]="sF428SampleNoDetail.status">
+                    <option
+                      *ngFor="let option of optionMap | keyvalue"
+                      value="{{ option.key }}"
+                    >
+                      {{ option.value }}
+                    </option>
+                  </select>
                 </div>
               </div>
             </div>

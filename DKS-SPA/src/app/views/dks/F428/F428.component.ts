@@ -79,12 +79,12 @@ export class F428Component implements OnInit {
         }
       );
   }
-  edit(materialNo: string) {
+  edit(model: F428SampleNoDetail) {
     var navigateTo = "/F428-edit";
     var navigationExtras = {
       queryParams: {
         sampleNo: this.sF428SampleNoDetail.sampleNo,
-        materialNo: materialNo,
+        materialNo: model.materialNo,
         actionCode:"Edit"
       },
       skipLocationChange: true,

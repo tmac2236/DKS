@@ -88,7 +88,7 @@
                       <ng-container *ngFor="let item of result; let i = index">
                         <tr>
                           <td>{{i+1}}</td>
-                          <td> <div [hidden]="!item.materialNo"><img src="../assets/systemImg/edit.png" width="25" height="25"  (click)="this.edit(item.materialNo)"/></div></td>
+                          <td> <div [hidden]="!item.materialNo || item.cons==='0'" ><img src="../assets/systemImg/edit.png" width="25" height="25"  (click)="this.edit(item)"/></div></td>
                           <td>{{ item.partNo }}</td>
                           <td>{{ item.partName }}</td>
                           <td>{{ item.materialName }}</td>
