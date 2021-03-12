@@ -53,4 +53,11 @@ export class WarehouseService {
     );
   }
 
+  addStockDetailByMaterialNo(sF428SampleNoDetail: SF428SampleNoDetail) {
+    return this.utility.http.post<StockDetailByMaterialNo[]>(
+      this.utility.baseUrl + 'wareHouse/addStockDetailByMaterialNo',
+      sF428SampleNoDetail
+    );
+  }
+
 }

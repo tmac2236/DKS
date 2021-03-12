@@ -64,6 +64,7 @@
                     <!--text-nowrap不換行-->
                     <thead>
                       <tr class="table-info">
+                        <th style="background-color: #76daff">Check</th>
                         <th style="background-color: #76daff">Kind</th>
                         <th style="background-color: #76daff">Material No</th>
                         <th style="background-color: #76daff">Order Stage</th>
@@ -82,6 +83,7 @@
                     <tbody>
                       <ng-container *ngFor="let item of result; let i = index">
                         <tr>
+                          <td><input type="checkbox" class="form-check-input" (change)="checkElement($event,item.stockNo)"></td>
                           <td>{{ item.kind }}</td>
                           <td>{{ item.materiaNo }}</td>
                           <td>{{ item.orderStage }}</td>
@@ -110,6 +112,9 @@
                       {{ option.value }}
                     </option>
                   </select>
+                  <button class="btn btn-primary mr-1" type="button" (click)="save()">
+                    {{ 'Common.btnList.save' | translate }}
+                  </button>
                 </div>
               </div>
             </div>

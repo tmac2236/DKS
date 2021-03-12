@@ -3,7 +3,8 @@
     "hello":"Dear ",
     "btnList": {
             "search": "Search",
-            "export": "Export"
+            "export": "Export",
+            "save": "Save"
     }
     },
     "F340": {

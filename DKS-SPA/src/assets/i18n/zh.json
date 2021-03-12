@@ -3,7 +3,8 @@
     "hello":"親，",
     "btnList": {
             "search": "搜尋",
-            "export": "匯出"
+            "export": "匯出",
+            "save": "儲存"
     }
     },
     "F340": {

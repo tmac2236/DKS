@@ -5,6 +5,8 @@ using DKS_API.DTOs;
 using DKS_API.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
+using DKS.API.Models.DKS;
 
 namespace DKS_API.Controllers
 {
@@ -12,10 +14,12 @@ namespace DKS_API.Controllers
     {
         private readonly IConfiguration _config;
         private readonly IWarehouseDAO _warehouseDao;
-        public WareHouseController(IConfiguration config, IWarehouseDAO warehouseDao)
+        private readonly ISamPartBDAO _samPartBDAO;
+        public WareHouseController(IConfiguration config, IWarehouseDAO warehouseDao, ISamPartBDAO samPartBDAO)
 
         {
             _warehouseDao = warehouseDao;
+            _samPartBDAO = samPartBDAO;
             _config = config;
         }
         [HttpGet("getMaterialNoBySampleNoForWarehouse")]
@@ -41,6 +45,21 @@ namespace DKS_API.Controllers
         {
             var data = await _warehouseDao.GetStockDetailByMaterialNo(sF428SampleNoDetail);
             return Ok(data);
+
+        }
+        [HttpPost("addStockDetailByMaterialNo")]
+        public async Task<IActionResult> AddStockDetailByMaterialNo(SF428SampleNoDetail sF428SampleNoDetail)
+        {
+            SamPartB model = await _samPartBDAO.FindAll(x => x.SAMPLENO.Trim() == sF428SampleNoDetail.SampleNo.Trim() &&
+                                                 x.MATERIANO == sF428SampleNoDetail.MaterialNo.Trim()).FirstOrDefaultAsync();
+            if (model != null)
+            {
+                model.STATUS = sF428SampleNoDetail.Status;
+                model.CHKSTOCKNO = sF428SampleNoDetail.ChkStockNo;
+                _samPartBDAO.Update(model);
+            }
+            await _samPartBDAO.SaveAll();
+            return Ok();
 
         }
     }

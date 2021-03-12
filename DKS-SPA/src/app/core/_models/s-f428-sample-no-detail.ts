@@ -14,6 +14,8 @@ export class SF428SampleNoDetail extends Pagination {
     super();
     this.sampleNo = "";
     this.materialNo = "";
+    this.status = "";
+    this.chkStockNo = "";
   }
 
   public setPagination(pagination: Pagination) {

@@ -21,8 +21,10 @@ export class F428EditComponent implements OnInit {
     result: StockDetailByMaterialNo[];
     //params
     urlParams:F428Commuter;
+
     optionMap: Map<string,string>;
-    
+    stockNoList:Array<string> = [];
+
   constructor(public utility: Utility, private warehouseService: WarehouseService,private activeRouter: ActivatedRoute,
     private route: Router,private translate: TranslateService) { 
     
@@ -78,12 +80,49 @@ export class F428EditComponent implements OnInit {
     this.route.navigate([navigateTo], navigationExtras);
   }
 
-  changeCheck(e, number) {
-    //console.log(e);
+  checkElement(e, stockNo) {
+
+    if(e.target.checked){
+      this.stockNoList.push(stockNo);
+    }else{
+      const index = this.stockNoList.indexOf(stockNo, 0);
+      if(index > -1){
+        this.stockNoList.splice(index,1);
+      }
+
+    }
     //let headStr = e.target.innerHTML;
-    this.utility.alertify.confirm(
+    //this.utility.alertify.confirm(
+    //  "Sweet Alert",
+    //  "No Data in these conditions of search, please try again.",
+    //  () => { alert("click Ok")});
+  }
+  save(){
+    //一定要選狀態才能儲存
+    if(this.sF428SampleNoDetail.status == "" ){
+      this.utility.alertify.confirm(
       "Sweet Alert",
-      "No Data in these conditions of search, please try again.",
-      () => { alert("click Ok")});
+      "Please select Check Status !",
+      () => { });   
+       return ;
+    }
+    let stockNostring =this.stockNoList.toString();
+    stockNostring = stockNostring.replace(",","/");
+    //console.log(stockNostring);
+    this.sF428SampleNoDetail.chkStockNo = stockNostring;
+
+    this.warehouseService.addStockDetailByMaterialNo(this.sF428SampleNoDetail).subscribe(
+      (res) => {
+        this.utility.spinner.hide();
+        this.utility.alertify.confirm(
+          "Sweet Alert",
+          "Update Success !",
+          () => { });  
+      },
+      (error) => {
+        this.utility.spinner.hide();
+        this.utility.alertify.error(error);
+      }
+    );
   }
 }
