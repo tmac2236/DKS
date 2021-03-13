@@ -9,9 +9,9 @@
             </div>
             <div class="col-10">
               <div class="float-right">
-                <strong *ngIf="this.loginUser">{{ 'Common.hello' | translate }} {{ this.loginUser }}</strong>
-                <img src="../assets/systemImg/taiwan.png" tooltip="{{ this.loginUser }} Prefers Mandarin" placement="bottom" width="25" height="25"  (click)="this.utility.useLanguage('zh')"/>
-                <img src="../assets/systemImg/united-states.png" tooltip="{{ this.loginUser }} Prefers English" placement="bottom" width="25" height="25"  (click)="this.utility.useLanguage('en')"/>
+                <strong *ngIf="this.sF340Schedule.loginUser">{{ 'Common.hello' | translate }} {{ this.sF340Schedule.loginUser }}</strong>
+                <img src="../assets/systemImg/taiwan.png" tooltip="{{ this.sF340Schedule.loginUser }} Prefers Mandarin" placement="bottom" width="25" height="25"  (click)="this.utility.useLanguage('zh')"/>
+                <img src="../assets/systemImg/united-states.png" tooltip="{{ this.sF340Schedule.loginUser }} Prefers English" placement="bottom" width="25" height="25"  (click)="this.utility.useLanguage('en')"/>
                 <img *ngIf="sF340Schedule.isPaging === true" tooltip="pagination on" placement="bottom" src="../assets/systemImg/pagination.png" placement="bottom" width="25" height="25"  (click)="this.utility.setPagination(false,this.sF340Schedule)"/>
                 <img *ngIf="sF340Schedule.isPaging === false" tooltip="pagination off" placement="bottom" src="../assets/systemImg/no-pagination.png" placement="bottom" width="25" height="25"  (click)="this.utility.setPagination(true,this.sF340Schedule)"/>
                 <!--<img src="../assets/systemImg/vietnam.png" width="25" height="25" />-->

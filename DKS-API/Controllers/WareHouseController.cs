@@ -56,6 +56,8 @@ namespace DKS_API.Controllers
             {
                 model.STATUS = sF428SampleNoDetail.Status;
                 model.CHKSTOCKNO = sF428SampleNoDetail.ChkStockNo;
+                model.CHKUSR = sF428SampleNoDetail.loginUser;
+                model.CHKTIME = DateTime.Now;
                 _samPartBDAO.Update(model);
             }
             await _samPartBDAO.SaveAll();

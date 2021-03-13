@@ -14,7 +14,7 @@ export class SF428SampleNoDetail extends Pagination {
     super();
     this.sampleNo = "";
     this.materialNo = "";
-    this.status = "";
+    this.status = "0"; //預設沒操作
     this.chkStockNo = "";
   }
 

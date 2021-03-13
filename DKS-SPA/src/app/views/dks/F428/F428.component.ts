@@ -14,9 +14,6 @@ import { F428Commuter } from "./f428-commuter";
   styleUrls: ["./F428.component.scss"],
 })
 export class F428Component implements OnInit {
-  //getUserName
-  jwtHelper = new JwtHelperService();
-  loginUser: string;
 
   sF428SampleNoDetail: SF428SampleNoDetail = new SF428SampleNoDetail();
   result: F428SampleNoDetail[]=[];
@@ -42,14 +39,7 @@ export class F428Component implements OnInit {
       this.search();
     } 
     
-    this.setAccount();
-  }
-  //取得登入帳號
-  setAccount() {
-    const jwtTtoken = localStorage.getItem("token");
-    if (jwtTtoken) {
-      this.loginUser = this.jwtHelper.decodeToken(jwtTtoken)["unique_name"];
-    }
+    this.sF428SampleNoDetail.loginUser = this.utility.getAccount();
   }
   //分頁按鈕
   pageChangeds(event: any): void {

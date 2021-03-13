@@ -2,6 +2,7 @@ import { DatePipe } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
+import { JwtHelperService } from "@auth0/angular-jwt";
 import { NgxSpinnerService } from "ngx-spinner";
 import { environment } from "../../../environments/environment";
 import { Pagination } from "../_models/pagination";
@@ -13,6 +14,9 @@ import { LanguageService } from "../_services/language.service";
 })
 export class Utility {
   baseUrl = environment.apiUrl;
+  //getUserName
+  jwtHelper = new JwtHelperService();
+
   constructor(
     public http: HttpClient,
     public alertify: AlertifyService,
@@ -97,5 +101,13 @@ export class Utility {
       "/" +
       day.getDate().toString();
     return dateFormat;
+  }
+
+  getAccount() {
+    const jwtTtoken = localStorage.getItem("token");
+    if (jwtTtoken) {
+      return  this.jwtHelper.decodeToken(jwtTtoken)["unique_name"];
+    }
+    return "";
   }
 }

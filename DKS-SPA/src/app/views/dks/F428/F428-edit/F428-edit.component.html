@@ -9,12 +9,12 @@
             </div>
             <div class="col-10">
               <div class="float-right">
-                <strong *ngIf="this.loginUser"
-                  >{{ "Common.hello" | translate }} {{ this.loginUser }}</strong
+                <strong *ngIf="this.sF428SampleNoDetail.loginUser"
+                  >{{ "Common.hello" | translate }} {{ this.sF428SampleNoDetail.loginUser }}</strong
                 >
                 <img
                   src="../assets/systemImg/taiwan.png"
-                  tooltip="{{ this.loginUser }} Prefers Mandarin"
+                  tooltip="{{ this.sF428SampleNoDetail.loginUser }} Prefers Mandarin"
                   placement="bottom"
                   width="25"
                   height="25"
@@ -22,7 +22,7 @@
                 />
                 <img
                   src="../assets/systemImg/united-states.png"
-                  tooltip="{{ this.loginUser }} Prefers English"
+                  tooltip="{{ this.sF428SampleNoDetail.loginUser }} Prefers English"
                   placement="bottom"
                   width="25"
                   height="25"
@@ -83,7 +83,7 @@
                     <tbody>
                       <ng-container *ngFor="let item of result; let i = index">
                         <tr>
-                          <td><input type="checkbox" class="form-check-input" (change)="checkElement($event,item.stockNo)"></td>
+                          <td><input type="checkbox" class="larger" (change)="checkElement($event,item.stockNo)"></td>
                           <td>{{ item.kind }}</td>
                           <td>{{ item.materiaNo }}</td>
                           <td>{{ item.orderStage }}</td>

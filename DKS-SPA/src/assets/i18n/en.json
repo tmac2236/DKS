@@ -63,11 +63,12 @@
             "checkTime":"CheckTime"
         },
         "optionList":{
-            "1":"No yet check",
-            "2":"Out of Stock",
-            "3":"Availible",
-            "4":"Availible but useless",
-            "5":"Availilbe but short"
+            "0":"Not Yet Check",
+            "1":"None",
+            "2":"OK",
+            "3":"Lack",
+            "4":"Check",
+            "5":"Bad Material"
         }        
     }
 }

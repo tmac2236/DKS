@@ -5,6 +5,7 @@ export class Pagination {
   totalPages: number;
   orderBy: string;
   isPaging: boolean;
+  loginUser: string;
   /**
    * default setting of page
    */

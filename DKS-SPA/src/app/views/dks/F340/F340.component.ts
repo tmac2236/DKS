@@ -13,9 +13,7 @@ import { PaginatedResult } from "../../../core/_models/pagination";
   styleUrls: ["./F340.component.scss"],
 })
 export class F340Component implements OnInit {
-  //getUserName
-  jwtHelper = new JwtHelperService();
-  loginUser: string;
+
   //for sorting ; ASC DESC
   cwaDeadlineS = true;
 
@@ -26,20 +24,13 @@ export class F340Component implements OnInit {
   constructor(public utility: Utility, private dksService: DksService) {}
 
   ngOnInit() {
-    this.setAccount();
+    this.sF340Schedule.loginUser = this.utility.getAccount();
     //this.sF340Schedule.cwaDateS = this.utility.datepiper.transform(new Date(), 'yyyy-MM-dd');
     //init javascript start
     (function hello() {
       console.log("Hello Init hello() !!!");
     })();
     //init javascript start
-  }
-  //取得登入帳號
-  setAccount(){
-    const jwtTtoken = localStorage.getItem("token");
-    if (jwtTtoken) {
-      this.loginUser = this.jwtHelper.decodeToken(jwtTtoken)["unique_name"];
-    }
   }
   //分頁按鈕
   pageChangeds(event: any): void {

@@ -13,5 +13,6 @@ namespace DKS_API.Helpers
 
         public string OrderBy { get; set; }
         public bool IsPaging { get; set; }
+        public string loginUser { get; set; }
     }
 }

@@ -13,10 +13,7 @@ import { F428Commuter } from "../f428-commuter";
   styleUrls: ["./F428-edit.component.scss"],
 })
 export class F428EditComponent implements OnInit {
-    //getUserName
-    jwtHelper = new JwtHelperService();
-    loginUser: string;
-    
+
     sF428SampleNoDetail: SF428SampleNoDetail = new SF428SampleNoDetail();
     result: StockDetailByMaterialNo[];
     //params
@@ -44,15 +41,9 @@ export class F428EditComponent implements OnInit {
       this.search();
     } 
 
-    this.setAccount();
+    this.sF428SampleNoDetail.loginUser = this.utility.getAccount();
   }
-  //取得登入帳號
-  setAccount() {
-    const jwtTtoken = localStorage.getItem("token");
-    if (jwtTtoken) {
-      this.loginUser = this.jwtHelper.decodeToken(jwtTtoken)["unique_name"];
-    }
-  }
+
   search(){
     //alert(this.sF428SampleNoDetail.materialNo);
     this.utility.spinner.show();
@@ -91,15 +82,10 @@ export class F428EditComponent implements OnInit {
       }
 
     }
-    //let headStr = e.target.innerHTML;
-    //this.utility.alertify.confirm(
-    //  "Sweet Alert",
-    //  "No Data in these conditions of search, please try again.",
-    //  () => { alert("click Ok")});
   }
   save(){
     //一定要選狀態才能儲存
-    if(this.sF428SampleNoDetail.status == "" ){
+    if(this.sF428SampleNoDetail.status == "0" ){
       this.utility.alertify.confirm(
       "Sweet Alert",
       "Please select Check Status !",
