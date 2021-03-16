@@ -25,6 +25,7 @@ namespace DKS_API.Data.Repository
         public DbSet<F340_ProcessDto> GetF340ProcessView { get; set; }
         public DbSet<F428SampleNoDetail> GetMaterialNoBySampleNoForWarehouseView { get; set; }
         public DbSet<StockDetailByMaterialNo> GetStockDetailByMaterialNoView { get; set; }
+        public DbSet<F340_PpdDto> GetF340PpdView { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -37,7 +38,7 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<ModelDah>().HasKey(x => new { x.MODELNO });
             modelBuilder.Entity<Articled>().HasKey(x => new { x.PKARTBID });
             modelBuilder.Entity<DevBuyPlan>().HasKey(x => new { x.MANUF, x.SEASON, x.MODELNO, x.SCOLOR, x.ARTICLE, x.VERN });
-            modelBuilder.Entity<SamPartB>().HasKey(x => new { x.PARTNO, x.SAMPLENO});
+            modelBuilder.Entity<SamPartB>().HasKey(x => new { x.PARTNO, x.SAMPLENO });
 
             //DTO(Stored Procedure)
             modelBuilder.Entity<F418_F420Dto>()
@@ -48,6 +49,9 @@ namespace DKS_API.Data.Repository
             .HasNoKey();
             modelBuilder.Entity<StockDetailByMaterialNo>()
             .HasNoKey();
+            modelBuilder.Entity<F340_PpdDto>()
+            .HasNoKey();
+            
 
         }
     }

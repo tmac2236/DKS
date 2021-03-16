@@ -1,11 +1,11 @@
 {   "Common":{
-    "currentLang":"繁體中文",
-    "hello":"親，",
-    "btnList": {
+        "currentLang":"繁體中文",
+        "hello":"親，",
+        "btnList": {
             "search": "搜尋",
             "export": "匯出",
             "save": "儲存"
-    }
+        }
     },
     "F340": {
         "title": "F340 進度表",
@@ -69,6 +69,33 @@
             "3":"有料但不夠",
             "4":"有料但不是這個Article用的",
             "5":"材料不良"
+        }
+    },"F340-PPD":{
+        "title":"F340-PPD",
+        "titleList": {
+            "factory": "廠別",
+            "buyPlanSeason": "Season",
+            "versionNo": "Ver",
+            "devSeason": "Season",
+            "devTeam": "Team",
+
+            "article": "Article",
+            "cwaDeadline": "CWA DATE",
+            "modelNo": "Model No",
+            "modelName": "Model Name",
+            "confirmDate": "色卡確認",
+
+            "devStatus": "DevStatus",
+            "dropDate": "DropDate",
+            "releaseType": "ReleaseType",
+            "sampleNo": "Sample No",
+            "hpPartNo": "HpPart No",
+
+            "supsName": "Sup Name",
+            "treatMent": "TreatMent",
+            "partName": "Part Name",
+            "processDate": "跨單位作業流程",
+            "cardDate": "實物卡"
         }
     }
 }

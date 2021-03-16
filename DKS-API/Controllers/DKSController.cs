@@ -286,5 +286,163 @@ namespace DKS_API.Controllers
                 return StatusCode(500, $"Internal server error: {ex}. DKS_DEBUG: The row is {processIndex}");
             }
         }
+        [HttpGet("getF340_ProcessPpd")]
+        public IActionResult GetF340_ProcessPpd([FromQuery] SF340PPDSchedule sF340PPDSchedule)
+        {
+            try
+            {
+                if (sF340PPDSchedule.cwaDateS == "" || sF340PPDSchedule.cwaDateS == null) sF340PPDSchedule.cwaDateS = _config.GetSection("LogicSettings:MinDate").Value;
+                if (sF340PPDSchedule.cwaDateE == "" || sF340PPDSchedule.cwaDateE == null) sF340PPDSchedule.cwaDateE = _config.GetSection("LogicSettings:MaxDate").Value;
+
+                var result = _dksDao.GetF340PPDView(sF340PPDSchedule);
+                Response.AddPagination(result.CurrentPage, result.PageSize,
+                result.TotalCount, result.TotalPages);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}.");
+            }
+        }
+        [HttpPost("exportF340_ProcessPpd")]
+        public async Task<IActionResult> ExportF340_ProcessPpd(SF340PPDSchedule sF340PPDSchedule)
+        {
+
+            if (sF340PPDSchedule.cwaDateS == "" || sF340PPDSchedule.cwaDateS == null) sF340PPDSchedule.cwaDateS = _config.GetSection("LogicSettings:MinDate").Value;
+            if (sF340PPDSchedule.cwaDateE == "" || sF340PPDSchedule.cwaDateE == null) sF340PPDSchedule.cwaDateE = _config.GetSection("LogicSettings:MaxDate").Value;
+            // query data from database  
+            var data = await _dksDao.GetF340PPDView4Excel(sF340PPDSchedule);
+
+            WorkbookDesigner designer = new WorkbookDesigner();
+            #region style設計
+            //Create style object(標題用)
+            Style bpStyle = designer.Workbook.CreateStyle();
+            bpStyle.Pattern = BackgroundType.Solid;
+            bpStyle.ForegroundColor = System.Drawing.ColorTranslator.FromHtml("#FF7F50");//背景顏色
+            bpStyle.Font.Size = 12;                                 //字體大小
+            bpStyle.HorizontalAlignment = TextAlignmentType.Center; //水平置中
+            bpStyle.VerticalAlignment = TextAlignmentType.Center;   //垂直置中
+            Style devTeamStyle = designer.Workbook.CreateStyle();
+            devTeamStyle.Pattern = BackgroundType.Solid;
+            devTeamStyle.ForegroundColor = System.Drawing.ColorTranslator.FromHtml("#76DAFF");
+            devTeamStyle.Font.Size = 12;
+            devTeamStyle.HorizontalAlignment = TextAlignmentType.Center; //水平置中
+            devTeamStyle.VerticalAlignment = TextAlignmentType.Center;   //垂直置中
+            Style f340Style = designer.Workbook.CreateStyle();
+            f340Style.Pattern = BackgroundType.Solid;
+            f340Style.ForegroundColor = System.Drawing.ColorTranslator.FromHtml("#23D954");
+            f340Style.Font.Size = 12;
+            f340Style.HorizontalAlignment = TextAlignmentType.Center; //水平置中
+            f340Style.VerticalAlignment = TextAlignmentType.Center;   //垂直置中
+            #endregion style設計
+
+            Worksheet ws = designer.Workbook.Worksheets[0];
+            //titile
+            int row0 = 0;
+            #region 第一列套上名稱及顏色 
+
+            ws.Cells[row0, 0].Value = "Buy Plan";
+            ws.Cells[row0, 4].Value = "開發 Team";
+            ws.Cells[row0, 13].Value = "開發技術F340";
+            ws.Cells[row0, 19].Value = "開發系統";
+            ws.Cells[row0, 0].SetStyle(bpStyle);
+            ws.Cells[row0, 4].SetStyle(devTeamStyle);
+            ws.Cells[row0, 13].SetStyle(f340Style);
+            ws.Cells[row0, 19].SetStyle(f340Style);
+            ws.Cells.Merge(0, 0, 1, 3);
+            ws.Cells.Merge(0, 3, 1, 9);
+            ws.Cells.Merge(0, 12, 1, 6);
+            ws.Cells.Merge(0, 18, 1, 2);
+            #endregion 第一列套上名稱及顏色
+            int row1 = 1;
+
+            ws.Cells[row1, 0].Value = "廠別";
+            ws.Cells[row1, 1].Value = "Season";
+            ws.Cells[row1, 2].Value = "Ver";
+            ws.Cells[row1, 3].Value = "Season";
+            ws.Cells[row1, 4].Value = "Team";
+
+            ws.Cells[row1, 5].Value = "Article";
+            ws.Cells[row1, 6].Value = "CWA DATE";
+            ws.Cells[row1, 7].Value = "Model No";
+            ws.Cells[row1, 8].Value = "Model Name";
+            ws.Cells[row1, 9].Value = "色卡確認 (CWA 7日內提供)";
+
+            ws.Cells[row1, 10].Value = "DevStatus";
+            ws.Cells[row1, 11].Value = "DropDate";
+            ws.Cells[row1, 12].Value = "ReleaseType";
+            ws.Cells[row1, 13].Value = "Sample No";
+            ws.Cells[row1, 14].Value = "HpPart No";
+
+            ws.Cells[row1, 15].Value = "Sup Name";
+            ws.Cells[row1, 16].Value = "TreatMent";
+            ws.Cells[row1, 17].Value = "Part Name";
+            ws.Cells[row1, 18].Value = "跨單位作業流程 (CWA 7日內提供)";
+            ws.Cells[row1, 19].Value = "實物卡";
+
+            ws.Cells[row1, 0].SetStyle(bpStyle);
+            ws.Cells[row1, 1].SetStyle(bpStyle);
+            ws.Cells[row1, 2].SetStyle(bpStyle);
+            ws.Cells[row1, 3].SetStyle(devTeamStyle);
+            ws.Cells[row1, 4].SetStyle(devTeamStyle);
+            ws.Cells[row1, 5].SetStyle(devTeamStyle);
+            ws.Cells[row1, 6].SetStyle(devTeamStyle);
+            ws.Cells[row1, 7].SetStyle(devTeamStyle);
+            ws.Cells[row1, 8].SetStyle(devTeamStyle);
+            ws.Cells[row1, 9].SetStyle(devTeamStyle);
+            ws.Cells[row1, 10].SetStyle(devTeamStyle);
+            ws.Cells[row1, 11].SetStyle(devTeamStyle);
+            ws.Cells[row1, 12].SetStyle(f340Style);
+            ws.Cells[row1, 13].SetStyle(f340Style);
+            ws.Cells[row1, 14].SetStyle(f340Style);
+            ws.Cells[row1, 15].SetStyle(f340Style);
+            ws.Cells[row1, 16].SetStyle(f340Style);
+            ws.Cells[row1, 17].SetStyle(f340Style);
+            ws.Cells[row1, 18].SetStyle(f340Style);
+            ws.Cells[row1, 19].SetStyle(f340Style);
+
+            #region 第二列套上名稱及顏色 
+
+            #endregion 第二列套上名稱及顏色
+            ws.FreezePanes(2, 2, 2, 2); //固定第一、二列
+
+            int row = 2;
+            foreach (F340_PpdDto item in data)
+            {
+                ws.Cells[row, 0].Value = item.Factory;
+                ws.Cells[row, 1].Value = item.BuyPlanSeason;
+                ws.Cells[row, 2].Value = item.VersionNo;
+                ws.Cells[row, 3].Value = item.DevSeason;
+                ws.Cells[row, 4].Value = item.DevTeam;
+
+                ws.Cells[row, 5].Value = item.Article;
+                ws.Cells[row, 6].Value = item.CwaDeadline;
+                ws.Cells[row, 7].Value = item.ModelNo;
+                ws.Cells[row, 8].Value = item.ModelName;
+                ws.Cells[row, 9].Value = item.ConfirmDate ;
+
+                ws.Cells[row, 10].Value = item.DevStatus;
+                ws.Cells[row, 11].Value = item.DropDate;
+                ws.Cells[row, 12].Value = item.ReleaseType;
+                ws.Cells[row, 13].Value = item.SampleNo;
+                ws.Cells[row, 14].Value = item.HpPartNo;
+
+                ws.Cells[row, 15].Value = item.SupsName;
+                ws.Cells[row, 16].Value = item.TreatMent;
+                ws.Cells[row, 17].Value = item.PartName;
+                ws.Cells[row, 18].Value = item.ProcessDate;
+                ws.Cells[row, 19].Value = item.CardDate;
+
+                row += 1;
+            }
+            ws.AutoFitColumns();
+
+            MemoryStream stream = new MemoryStream();
+            designer.Workbook.Save(stream, SaveFormat.Xlsx);
+            byte[] result = stream.ToArray();
+
+            return File(result, "application/xlsx", "Excel" + DateTime.Now.ToString("dd_MM_yyyy_HH_mm_ss") + ".xlsx");
+        }
+        
     }
 }

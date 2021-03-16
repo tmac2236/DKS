@@ -1,6 +1,3 @@
-using System;
-using System.ComponentModel.DataAnnotations;
-
 namespace DKS_API.DTOs
 {
     public class F340_ProcessDto

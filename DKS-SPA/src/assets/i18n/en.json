@@ -1,11 +1,11 @@
 {   "Common":{
-    "currentLang":"English",
-    "hello":"Dear ",
-    "btnList": {
+        "currentLang":"English",
+        "hello":"Dear ",
+        "btnList": {
             "search": "Search",
             "export": "Export",
             "save": "Save"
-    }
+        }
     },
     "F340": {
         "title": "F340 Schedule",
@@ -70,5 +70,32 @@
             "4":"Check",
             "5":"Bad Material"
         }        
+    },"F340-PPD":{
+        "title":"F340-PPD",
+        "titleList": {
+            "factory": "Factory",
+            "buyPlanSeason": "BuyPlanSeason",
+            "versionNo": "VersionNo",
+            "devSeason": "DevSeason",
+            "devTeam": "DevTeam",
+
+            "article": "Article",
+            "cwaDeadline": "CwaDeadline",
+            "modelNo": "ModelNo",
+            "modelName": "ModelName",
+            "confirmDate": "ConfirmDate",
+
+            "devStatus": "DevStatus",
+            "dropDate": "DropDate",
+            "releaseType": "ReleaseType",
+            "sampleNo": "SampleNo",
+            "hpPartNo": "HpPartNo",
+
+            "supsName": "SupsName",
+            "treatMent": "TreatMent",
+            "partName": "PartName",
+            "processDate": "ProcessDate",
+            "cardDate": "CardDate"
+        }
     }
 }

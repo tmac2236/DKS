@@ -94,5 +94,39 @@ namespace DFPS.API.Data.Repository
                  return PagedList<F340_ProcessDto>
                 .Create(data, sF340Schedule.PageNumber, sF340Schedule.PageSize, sF340Schedule.IsPaging);
         }
+
+        public PagedList<F340_PpdDto> GetF340PPDView(SF340PPDSchedule sF340PPDSchedule)
+        {
+            List<SqlParameter> pc = new List<SqlParameter>{
+                new SqlParameter("@FactoryId",sF340PPDSchedule.factory != null ?sF340PPDSchedule.factory.Trim().ToUpper() : (object)DBNull.Value),
+                new SqlParameter("@Season",sF340PPDSchedule.season.Trim().ToUpper()),
+                new SqlParameter("@BuyPlanVer",sF340PPDSchedule.bpVer != "All" ? sF340PPDSchedule.bpVer.Trim() : (object)DBNull.Value ),
+                new SqlParameter("@CwaDateS",sF340PPDSchedule.cwaDateS),
+                new SqlParameter("@CwaDateE",sF340PPDSchedule.cwaDateE)
+            };
+
+            var data =  _context.GetF340PpdView
+                   .FromSqlRaw("EXECUTE dbo.GetF340_BuyPlan_PPD @FactoryId,@Season,@BuyPlanVer,@CwaDateS,@CwaDateE", pc.ToArray())
+                   .ToList();
+
+                 return PagedList<F340_PpdDto>
+                .Create(data, sF340PPDSchedule.PageNumber, sF340PPDSchedule.PageSize, sF340PPDSchedule.IsPaging);
+        }
+
+        public async Task<List<F340_PpdDto>> GetF340PPDView4Excel(SF340PPDSchedule sF340PPDSchedule)
+        {
+            List<SqlParameter> pc = new List<SqlParameter>{
+                new SqlParameter("@FactoryId",sF340PPDSchedule.factory != "" ?sF340PPDSchedule.factory.Trim().ToUpper() : (object)DBNull.Value),
+                new SqlParameter("@Season",sF340PPDSchedule.season.Trim().ToUpper()),
+                new SqlParameter("@BuyPlanVer",sF340PPDSchedule.bpVer != "All" ? sF340PPDSchedule.bpVer.Trim() : (object)DBNull.Value ),
+                new SqlParameter("@CwaDateS",sF340PPDSchedule.cwaDateS),
+                new SqlParameter("@CwaDateE",sF340PPDSchedule.cwaDateE)
+            };
+
+            var data = await _context.GetF340PpdView
+                   .FromSqlRaw("EXECUTE dbo.GetF340_BuyPlan_PPD @FactoryId,@Season,@BuyPlanVer,@CwaDateS,@CwaDateE", pc.ToArray())
+                   .ToListAsync();
+            return data;
+        }
     }
 }

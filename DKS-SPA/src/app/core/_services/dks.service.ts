@@ -3,8 +3,10 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { map } from 'rxjs/operators';
 import { Utility } from "../utility/utility";
+import { F340SchedulePpd } from "../_models/f340-schedule-ppd";
 import { F340Schedule } from "../_models/f340-schedule.ts";
 import { PaginatedResult } from "../_models/pagination";
+import { SF340PpdSchedule } from "../_models/s_f340-ppd-schedule";
 import { SF340Schedule } from "../_models/s_f340-schedule";
 
 @Injectable({
@@ -93,4 +95,40 @@ export class DksService {
         season +'&factory=' + factory
     );
   }
+
+  searchF340PpdProcess(sF340PpdSchedule: SF340PpdSchedule): Observable<PaginatedResult<F340SchedulePpd[]>> {
+    
+    const paginatedResult: PaginatedResult<F340SchedulePpd[]> = new PaginatedResult<F340SchedulePpd[]>();
+
+    let params = new HttpParams();
+    params = params.append('IsPaging', sF340PpdSchedule.isPaging.toString());
+    if (sF340PpdSchedule.currentPage != null && sF340PpdSchedule.itemsPerPage != null) {
+      params = params.append('pageNumber', sF340PpdSchedule.currentPage.toString());
+      params = params.append('pageSize', sF340PpdSchedule.itemsPerPage.toString());
+      //params = params.append('orderBy', sAttendance.orderBy);
+    }
+    params = params.append('factory', sF340PpdSchedule.factory.toString());
+    params = params.append('season', sF340PpdSchedule.season.toString());
+    params = params.append('bpVer', sF340PpdSchedule.bpVer.toString());
+    params = params.append('cwaDateS', sF340PpdSchedule.cwaDateS.toString());
+    params = params.append('cwaDateE', sF340PpdSchedule.cwaDateE.toString());
+
+    return this.utility.http
+      .get<F340SchedulePpd[]>(this.utility.baseUrl + 'dks/getF340_ProcessPpd' , {
+        observe: 'response',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          paginatedResult.result = response.body;
+          if (response.headers.get('Pagination') != null) {
+            paginatedResult.pagination = JSON.parse(
+              response.headers.get('Pagination')
+            );
+          }
+          return paginatedResult;
+        })
+      );
+  }
+  
 }

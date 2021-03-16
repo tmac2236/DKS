@@ -1,0 +1,193 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-2">
+              <strong>{{ 'F340-PPD.title' | translate }}</strong>
+            </div>
+            <div class="col-10">
+              <div class="float-right">
+                <strong *ngIf="this.sF340PpdSchedule.loginUser">{{ 'Common.hello' | translate }} {{ this.sF340PpdSchedule.loginUser }}</strong>
+                <img src="../assets/systemImg/taiwan.png" tooltip="{{ this.sF340PpdSchedule.loginUser }} Prefers Mandarin" placement="bottom" width="25" height="25"  (click)="this.utility.useLanguage('zh')"/>
+                <img src="../assets/systemImg/united-states.png" tooltip="{{ this.sF340PpdSchedule.loginUser }} Prefers English" placement="bottom" width="25" height="25"  (click)="this.utility.useLanguage('en')"/>
+                <img *ngIf="sF340PpdSchedule.isPaging === true" tooltip="pagination on" placement="bottom" src="../assets/systemImg/pagination.png" placement="bottom" width="25" height="25"  (click)="this.utility.setPagination(false,this.sF340PpdSchedule)"/>
+                <img *ngIf="sF340PpdSchedule.isPaging === false" tooltip="pagination off" placement="bottom" src="../assets/systemImg/no-pagination.png" placement="bottom" width="25" height="25"  (click)="this.utility.setPagination(true,this.sF340PpdSchedule)"/>
+                <!--<img src="../assets/systemImg/vietnam.png" width="25" height="25" />-->
+                <img src="../assets/systemImg/exit.png" tooltip="Logout" width="25" height="25" (click)="this.utility.logout()"/>
+              </div>    
+            </div>
+          </div>
+        </div>
+        <form class="form-horizontal" #addQueryReportDataForm="ngForm">
+          <div class="card-body">
+            <div class="form-group row">
+              <div class="col-md-12">
+                <div class="col">
+                  <label class="col-form-label mr-1">Factory</label>
+                  <select
+                  class="col-form-label mr-1"
+                  name="factory"
+                  [(ngModel)]="sF340PpdSchedule.factory"
+                  (change)="cleanBP()"
+                >
+                  <option value = "C" selected>SHC</option>
+                  <option value = "U" selected>TSH</option>
+                  <option value = "E" selected>CB</option>
+                  <option value = "D" selected>SPC</option>
+                </select>               
+                  <label class="col-form-label mr-1">Season</label>
+                  <input
+                    class="col-form-label mr-1"
+                    type="text"
+                    name="season"
+                    [(ngModel)]="sF340PpdSchedule.season"
+                    required
+                    (change)="cleanBP()"
+                  />
+                  <label class="col-form-label mr-1">Buy Plan Version</label>
+                  <select
+                  class="col-form-label mr-1"
+                  name="bpVer"
+                  [(ngModel)]="sF340PpdSchedule.bpVer"
+                  (focus)="changeBPVerList()"
+                  required
+                >
+                 <option value = "All"></option>
+                  <option
+                    *ngFor="let bpVer of bpVerList"
+                    value="{{ bpVer }}"
+                  >
+                    {{ bpVer }}
+                  </option>
+                </select>
+                <label class="col-form-label mr-1">CWA Date Start</label>
+                <input
+                  class="col-form-label mr-1"
+                  type="date"
+                  name="cwaDateS"
+                  [(ngModel)]="sF340PpdSchedule.cwaDateS"
+                />
+                <label class="col-form-label mr-1">CWA Date End</label>
+                <input
+                  class="col-form-label mr-1"
+                  type="date"
+                  name="cwaDateE"
+                  [(ngModel)]="sF340PpdSchedule.cwaDateE"
+                />                
+                  <button
+                    class="btn btn-primary mr-1"
+                    type="button"
+                    (click)="search()"
+                    [disabled]="!addQueryReportDataForm.valid"
+                  >
+                  {{ 'Common.btnList.search' | translate }}
+                  </button>
+                  <button
+                    class="btn btn-primary mr-1"
+                    type="button"
+                    (click)="export()"
+                    [disabled]="!addQueryReportDataForm.valid"
+                  >
+                  {{ 'Common.btnList.export' | translate }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="row" *ngIf="result.length > 0">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table text-center text-nowrap table-striped"><!--text-nowrap不換行-->
+                  <!--套版分頁<table datatable id="f340Sche" class="table text-center table-striped">-->
+                    <thead>
+                      <tr class="table-info">
+                        <th style="background-color:#FF7F50;" tooltip="Buy Plan" placement="bottom">{{ 'F340-PPD.titleList.factory' | translate }}</th>
+                        <th style="background-color:#FF7F50;" tooltip="Buy Plan" placement="bottom">{{ 'F340-PPD.titleList.buyPlanSeason' | translate }}</th>
+                        <th style="background-color:#FF7F50;" tooltip="Buy Plan" placement="bottom">{{ 'F340-PPD.titleList.versionNo' | translate }}</th>
+                        <th style="background-color:#76DAFF;" tooltip="開發Team" placement="bottom">{{ 'F340-PPD.titleList.devSeason' | translate }}</th>
+                        <th style="background-color:#76DAFF;" tooltip="開發Team" placement="bottom">{{ 'F340-PPD.titleList.devTeam' | translate }}</th>
+
+                        <th style="background-color:#76DAFF;" tooltip="開發Team" placement="bottom">{{ 'F340-PPD.titleList.article' | translate }}</th>
+                        <th style="background-color:#76DAFF;" tooltip="開發Team" placement="bottom">{{ 'F340-PPD.titleList.cwaDeadline' | translate }}</th>
+                        <th style="background-color:#76DAFF;" tooltip="開發Team" placement="bottom">{{ 'F340-PPD.titleList.modelNo' | translate }}</th>
+                        <th style="background-color:#76DAFF;" tooltip="開發Team" placement="bottom">{{ 'F340-PPD.titleList.modelName' | translate }}</th>
+                        <th style="background-color:#76DAFF;" tooltip="開發Team" placement="bottom">{{ 'F340-PPD.titleList.confirmDate' | translate }}</th>
+
+                        <th style="background-color:#76DAFF;" tooltip="開發Team" placement="bottom">{{ 'F340-PPD.titleList.devStatus' | translate }}</th>
+                        <th style="background-color:#76DAFF;" tooltip="開發Team" placement="bottom">{{ 'F340-PPD.titleList.dropDate' | translate }}</th>
+                        <th style="background-color:#23D954;" tooltip="開發技術F340" placement="bottom">{{ 'F340-PPD.titleList.releaseType' | translate }}</th>
+                        <th style="background-color:#23D954;" tooltip="開發技術F340" placement="bottom">{{ 'F340-PPD.titleList.sampleNo' | translate }}</th>
+                        <th style="background-color:#23D954;" tooltip="開發技術F340" placement="bottom">{{ 'F340-PPD.titleList.hpPartNo' | translate }}</th> 
+                        
+                        <th style="background-color:#23D954;" tooltip="開發技術F340" placement="bottom">{{ 'F340-PPD.titleList.supsName' | translate }}</th>
+                        <th style="background-color:#23D954;" tooltip="開發技術F340" placement="bottom">{{ 'F340-PPD.titleList.treatMent' | translate }}</th>
+                        <th style="background-color:#23D954;" tooltip="開發技術" placement="bottom">{{ 'F340-PPD.titleList.partName' | translate }}</th>
+                        <th style="background-color:#23D954;" tooltip="開發技術" placement="bottom">{{ 'F340-PPD.titleList.processDate' | translate }}</th>
+                        <th style="background-color:#23D954;" tooltip="開發技術" placement="bottom">{{ 'F340-PPD.titleList.cardDate' | translate }}</th>  
+
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container *ngFor="let item of result; let i = index">
+                        <tr>
+                          <td>{{ item.factory }}</td>
+                          <td>{{ item.buyPlanSeason }}</td>
+                          <td>{{ item.versionNo }}</td>
+                          <td>{{ item.devSeason }}</td>
+                          <td>{{ item.devTeam }}</td>
+
+                          <td>{{ item.article }}</td>
+                          <td>{{ item.cwaDeadline }}</td>
+                          <td>{{ item.modelNo }}</td>
+                          <td>{{ item.modelName }}</td>
+                          <td>{{ item.confirmDate }}</td>
+
+                          <td>{{ item.devStatus }}</td>
+                          <td>{{ item.dropDate }}</td>
+                          <td>{{ item.releaseType }}</td>
+                          <td>{{ item.sampleNo }}</td>
+                          <td>{{ item.hpPartNo }}</td>
+
+                          <td>{{ item.supsName }}</td>             
+                          <td>{{ item.treatMent }}</td>
+                          <td>{{ item.partName }}</td>
+                          <td>{{ item.processDate }}</td>
+                          <td>{{ item.cardDate }}</td>
+
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                  <div class ="d-flex justify-content-start">
+                    <pagination *ngIf="this.sF340PpdSchedule.isPaging" 
+                      [boundaryLinks]="true" 
+                      [totalItems]="sF340PpdSchedule.totalItems"
+                      [maxSize]="100"
+                      [itemsPerPage]="sF340PpdSchedule.itemsPerPage"
+                      [(ngModel)]="sF340PpdSchedule.currentPage"
+                      (pageChanged) = "pageChangeds($event)"
+                      previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+                    </pagination>
+                  </div>                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ngx-spinner
+  bdColor="rgba(0, 0, 0, 0.8)"
+  size="large"
+  color="#fff"
+  type="square-jelly-box"
+  [fullScreen]="true"
+  ><p style="color: white">Loading F340 Shchdule...</p></ngx-spinner
+>

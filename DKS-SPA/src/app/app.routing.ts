@@ -5,6 +5,7 @@ import { Routes, RouterModule } from "@angular/router";
 import { DefaultLayoutComponent } from "./containers";
 import { AuthGuard } from "./core/_guards/auth.guard";
 import { DictionaryComponent } from "./views/dictionary/dictionary.component";
+import { F340PpdComponent } from "./views/dks/F340/F340-ppd/F340-ppd.component";
 import { F340Component } from "./views/dks/F340/F340.component";
 import { F420Component } from "./views/dks/F420/F420.component";
 import { F428EditComponent } from "./views/dks/F428/F428-edit/F428-edit.component";
@@ -39,31 +40,23 @@ export const routes: Routes = [
   {
     path: "picture",
     component: PictureComponent,
-    data: {
-      title: "Picture",
-    },
   },
   {
     path: "F340",
     component: F340Component,
-    data: {
-      title: "F340",
-    },
+  },
+  {
+    path: "F340-PPD",
+    component: F340PpdComponent,
   },
   {
     path: "F420",
     component: F420Component,
-    data: {
-      title: "F420",
-    },
   },
   {
     path: "F428",
     canActivate: [AuthGuard],
     component: F428Component,
-    data: {
-      title: "F428",
-    },
   },
   {
     path: "F428-edit",
@@ -73,9 +66,6 @@ export const routes: Routes = [
   {
     path: "dictionary",
     component: DictionaryComponent,
-    data: {
-      title: "dictionary",
-    },
   },
   {
     path: "",
