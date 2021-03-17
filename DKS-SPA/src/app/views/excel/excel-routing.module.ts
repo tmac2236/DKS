@@ -1,6 +1,5 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
-import { AuthGuard } from "../../core/_guards/auth.guard";
 import { CompareComponent } from "./compare/compare.component";
 import { MacroComponent } from "./macro/macro.component";
 
