@@ -58,6 +58,14 @@ export class F340Component implements OnInit {
   }
   //搜尋
   search() {
+    if(this.sF340Schedule.dataType =="FHO"&&this.sF340Schedule.bpVer ==""){
+      this.utility.alertify.confirm(
+        "Sweet Alert",
+        "Please choose Buy Plan before click !",
+        () => {}
+      );
+      return;
+    }
     this.utility.spinner.show();
     this.dksService.searchF340Process(this.sF340Schedule).subscribe(
       (res: PaginatedResult<F340Schedule[]>) => {
@@ -83,6 +91,14 @@ export class F340Component implements OnInit {
     );
   }
   export(){
+    if(this.sF340Schedule.dataType =="FHO"&&this.sF340Schedule.bpVer ==""){
+      this.utility.alertify.confirm(
+        "Sweet Alert",
+        "Please choose Buy Plan before click !",
+        () => {}
+      );
+      return;
+    }
     const url =this.utility.baseUrl +"dks/exportF340_Process";
     this.utility.exportFactory(url,"F340_Schedule",this.sF340Schedule);
   }
@@ -108,6 +124,6 @@ export class F340Component implements OnInit {
   }
   cleanBP(){
     this.bpVerList = [];
-    this.sF340Schedule.bpVer = utilityConfig.conditionAll;
+    this.sF340Schedule.bpVer = "";
   }
 }

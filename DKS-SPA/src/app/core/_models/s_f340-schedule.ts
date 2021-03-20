@@ -2,6 +2,7 @@ import { Pagination } from "./pagination";
 import { utilityConfig } from "../..//core/utility/utility-config";
 
 export class SF340Schedule extends Pagination {
+  dataType:string;
   factory: string;
   season: string;
   bpVer: string;
@@ -12,9 +13,10 @@ export class SF340Schedule extends Pagination {
    */
   constructor() {
     super();
+    this.dataType = "DHO"; //預設DHO
     this.factory = utilityConfig.factory;//預設翔鴻程
     this.season = "";
-    this.bpVer = utilityConfig.conditionAll;
+    this.bpVer = "";
     this.cwaDateS ="";
     this.cwaDateE ="";
     this.isPaging = true; //開分頁

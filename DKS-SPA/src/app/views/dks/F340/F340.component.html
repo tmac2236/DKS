@@ -25,13 +25,24 @@
             <div class="form-group row">
               <div class="col-md-12">
                 <div class="col">
-                  <label class="col-form-label mr-1">Factory</label>
+                  <label class="col-form-label mr-1">Data Type</label>
                   <select
+                  class="col-form-label mr-1"
+                  name="dataType"
+                  [(ngModel)]="sF340Schedule.dataType"
+                  (change)="cleanBP()">
+                  <option value = "DHO" selected>DHO</option>
+                  <option value = "FHO" selected>FHO</option>
+                  <option value = "DEV" selected>DEV</option>
+                </select>
+                  <!--Data Type == DHO 才顯示 Factory-->                   
+                  <label class="col-form-label mr-1" *ngIf="this.sF340Schedule.dataType==='FHO'">Factory</label>
+                  <select
+                  *ngIf="this.sF340Schedule.dataType==='FHO'"
                   class="col-form-label mr-1"
                   name="factory"
                   [(ngModel)]="sF340Schedule.factory"
-                  (change)="cleanBP()"
-                >
+                  (change)="cleanBP()">
                   <option value = "C" selected>SHC</option>
                   <option value = "U" selected>TSH</option>
                   <option value = "E" selected>CB</option>
@@ -42,23 +53,21 @@
                     class="col-form-label mr-1"
                     type="text"
                     name="season"
+                    size="4"
                     [(ngModel)]="sF340Schedule.season"
                     required
-                    (change)="cleanBP()"
-                  />
-                  <label class="col-form-label mr-1">Buy Plan Version</label>
+                    (change)="cleanBP()"/>
+                  <!--Data Type == DHO 才顯示 Buy Plan Version-->  
+                  <label class="col-form-label mr-1" *ngIf="this.sF340Schedule.dataType==='FHO'">Buy Plan Version</label>
                   <select
+                  *ngIf="this.sF340Schedule.dataType==='FHO'"
                   class="col-form-label mr-1"
                   name="bpVer"
                   [(ngModel)]="sF340Schedule.bpVer"
-                  (focus)="changeBPVerList()"
-                  required
-                >
-                 <option value = "All"></option>
+                  (focus)="changeBPVerList()">
                   <option
                     *ngFor="let bpVer of bpVerList"
-                    value="{{ bpVer }}"
-                  >
+                    value="{{ bpVer }}">
                     {{ bpVer }}
                   </option>
                 </select>
@@ -67,29 +76,25 @@
                   class="col-form-label mr-1"
                   type="date"
                   name="cwaDateS"
-                  [(ngModel)]="sF340Schedule.cwaDateS"
-                />
+                  [(ngModel)]="sF340Schedule.cwaDateS"/>
                 <label class="col-form-label mr-1">CWA Date End</label>
                 <input
                   class="col-form-label mr-1"
                   type="date"
                   name="cwaDateE"
-                  [(ngModel)]="sF340Schedule.cwaDateE"
-                />                
+                  [(ngModel)]="sF340Schedule.cwaDateE"/>                
                   <button
                     class="btn btn-primary mr-1"
                     type="button"
                     (click)="search()"
-                    [disabled]="!addQueryReportDataForm.valid"
-                  >
+                    [disabled]="!addQueryReportDataForm.valid">
                   {{ 'Common.btnList.search' | translate }}
                   </button>
                   <button
                     class="btn btn-primary mr-1"
                     type="button"
                     (click)="export()"
-                    [disabled]="!addQueryReportDataForm.valid"
-                  >
+                    [disabled]="!addQueryReportDataForm.valid">
                   {{ 'Common.btnList.export' | translate }}
                   </button>
                 </div>

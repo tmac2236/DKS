@@ -96,7 +96,7 @@ export class F428EditComponent implements OnInit {
     stockNostring = stockNostring.replace(",","/");
     //console.log(stockNostring);
     this.sF428SampleNoDetail.chkStockNo = stockNostring;
-
+    this.utility.spinner.show();
     this.warehouseService.addStockDetailByMaterialNo(this.sF428SampleNoDetail).subscribe(
       (res) => {
         this.utility.spinner.hide();

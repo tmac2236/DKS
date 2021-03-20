@@ -81,4 +81,7 @@ export class F428Component implements OnInit {
     };
     this.route.navigate([navigateTo], navigationExtras);
   }
+  export(){
+    alert("Coding.... Not yet completed");
+  }
 }

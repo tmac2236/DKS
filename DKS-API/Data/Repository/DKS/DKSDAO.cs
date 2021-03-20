@@ -63,36 +63,57 @@ namespace DFPS.API.Data.Repository
         public async Task<List<F340_ProcessDto>> GetF340ProcessView4Excel(SF340Schedule sF340Schedule)
         {
 
+            //Stored Procedure A、B、C共用
             List<SqlParameter> pc = new List<SqlParameter>{
-                new SqlParameter("@FactoryId",sF340Schedule.factory != "" ?sF340Schedule.factory.Trim().ToUpper() : (object)DBNull.Value),
                 new SqlParameter("@Season",sF340Schedule.season.Trim().ToUpper()),
-                new SqlParameter("@BuyPlanVer",sF340Schedule.bpVer != "All" ? sF340Schedule.bpVer.Trim() : (object)DBNull.Value ),
                 new SqlParameter("@CwaDateS",sF340Schedule.cwaDateS),
                 new SqlParameter("@CwaDateE",sF340Schedule.cwaDateE)
             };
+            string SQL ="";
+            if(sF340Schedule.dataType =="DHO"){
+                SQL ="EXECUTE dbo.GetF340Process_BuyPlan_C @Season,@CwaDateS,@CwaDateE";
+            }else if(sF340Schedule.dataType =="FHO"){
+
+                pc.Add(new SqlParameter("@FactoryId", sF340Schedule.factory != null ? sF340Schedule.factory.Trim().ToUpper() : (object)DBNull.Value));
+                pc.Add(new SqlParameter("@BuyPlanVer", sF340Schedule.bpVer.Trim()));
+                SQL ="EXECUTE dbo.GetF340Process_BuyPlan_B @FactoryId,@Season,@BuyPlanVer,@CwaDateS,@CwaDateE";
+            }else if(sF340Schedule.dataType =="DEV"){
+
+                SQL ="EXECUTE dbo.GetF340Process_BuyPlan_A @Season,@CwaDateS,@CwaDateE";
+            }
 
             var data = await _context.GetF340ProcessView
-                   .FromSqlRaw("EXECUTE dbo.GetF340Process_BuyPlan1 @FactoryId,@Season,@BuyPlanVer,@CwaDateS,@CwaDateE", pc.ToArray())
+                   .FromSqlRaw(SQL, pc.ToArray())
                    .ToListAsync();
             return data;
         }
         public PagedList<F340_ProcessDto> GetF340ProcessView(SF340Schedule sF340Schedule)
         {
-
+            //Stored Procedure A、B、C共用
             List<SqlParameter> pc = new List<SqlParameter>{
-                new SqlParameter("@FactoryId",sF340Schedule.factory != null ?sF340Schedule.factory.Trim().ToUpper() : (object)DBNull.Value),
                 new SqlParameter("@Season",sF340Schedule.season.Trim().ToUpper()),
-                new SqlParameter("@BuyPlanVer",sF340Schedule.bpVer != "All" ? sF340Schedule.bpVer.Trim() : (object)DBNull.Value ),
                 new SqlParameter("@CwaDateS",sF340Schedule.cwaDateS),
                 new SqlParameter("@CwaDateE",sF340Schedule.cwaDateE)
             };
+            string SQL ="";
+            if(sF340Schedule.dataType =="DHO"){
+                SQL ="EXECUTE dbo.GetF340Process_BuyPlan_C @Season,@CwaDateS,@CwaDateE";
+            }else if(sF340Schedule.dataType =="FHO"){
 
-            var data =  _context.GetF340ProcessView
-                   .FromSqlRaw("EXECUTE dbo.GetF340Process_BuyPlan1 @FactoryId,@Season,@BuyPlanVer,@CwaDateS,@CwaDateE", pc.ToArray())
+                pc.Add(new SqlParameter("@FactoryId", sF340Schedule.factory != null ? sF340Schedule.factory.Trim().ToUpper() : (object)DBNull.Value));
+                pc.Add(new SqlParameter("@BuyPlanVer", sF340Schedule.bpVer.Trim()));
+                SQL ="EXECUTE dbo.GetF340Process_BuyPlan_B @FactoryId,@Season,@BuyPlanVer,@CwaDateS,@CwaDateE";
+            }else if(sF340Schedule.dataType =="DEV"){
+
+                SQL ="EXECUTE dbo.GetF340Process_BuyPlan_A @Season,@CwaDateS,@CwaDateE";
+            }
+
+            var data = _context.GetF340ProcessView
+                   .FromSqlRaw(SQL, pc.ToArray())
                    .ToList();
 
-                 return PagedList<F340_ProcessDto>
-                .Create(data, sF340Schedule.PageNumber, sF340Schedule.PageSize, sF340Schedule.IsPaging);
+            return PagedList<F340_ProcessDto>
+           .Create(data, sF340Schedule.PageNumber, sF340Schedule.PageSize, sF340Schedule.IsPaging);
         }
 
         public PagedList<F340_PpdDto> GetF340PPDView(SF340PPDSchedule sF340PPDSchedule)
@@ -105,12 +126,12 @@ namespace DFPS.API.Data.Repository
                 new SqlParameter("@CwaDateE",sF340PPDSchedule.cwaDateE)
             };
 
-            var data =  _context.GetF340PpdView
+            var data = _context.GetF340PpdView
                    .FromSqlRaw("EXECUTE dbo.GetF340_BuyPlan_PPD @FactoryId,@Season,@BuyPlanVer,@CwaDateS,@CwaDateE", pc.ToArray())
                    .ToList();
 
-                 return PagedList<F340_PpdDto>
-                .Create(data, sF340PPDSchedule.PageNumber, sF340PPDSchedule.PageSize, sF340PPDSchedule.IsPaging);
+            return PagedList<F340_PpdDto>
+           .Create(data, sF340PPDSchedule.PageNumber, sF340PPDSchedule.PageSize, sF340PPDSchedule.IsPaging);
         }
 
         public async Task<List<F340_PpdDto>> GetF340PPDView4Excel(SF340PPDSchedule sF340PPDSchedule)
