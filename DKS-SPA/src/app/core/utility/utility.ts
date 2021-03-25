@@ -4,10 +4,12 @@ import { Injectable } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { NgxSpinnerService } from "ngx-spinner";
+import { timeout } from "rxjs/operators";
 import { environment } from "../../../environments/environment";
 import { Pagination } from "../_models/pagination";
 import { AlertifyService } from "../_services/alertify.service";
 import { LanguageService } from "../_services/language.service";
+import { utilityConfig } from "./utility-config";
 
 @Injectable({
   providedIn: "root",
@@ -35,6 +37,9 @@ export class Utility {
       this.http
         .post( url,params,
           { responseType: "blob" }
+        )
+        .pipe( 
+          timeout(utilityConfig.httpTimeOut)
         )
         .subscribe((result: Blob) => {
           if (result.type !== "application/xlsx") {

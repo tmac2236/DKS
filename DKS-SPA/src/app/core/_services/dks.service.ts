@@ -1,8 +1,9 @@
 import { HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { map } from 'rxjs/operators';
+import { map, timeout } from 'rxjs/operators';
 import { Utility } from "../utility/utility";
+import { utilityConfig } from "../utility/utility-config";
 import { F340SchedulePpd } from "../_models/f340-schedule-ppd";
 import { F340Schedule } from "../_models/f340-schedule.ts";
 import { PaginatedResult } from "../_models/pagination";
@@ -39,6 +40,7 @@ export class DksService {
         params,
       })
       .pipe(
+        timeout(utilityConfig.httpTimeOut),
         map((response) => {
           paginatedResult.result = response.body;
           if (response.headers.get('Pagination') != null) {
