@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using DKS_API;
+using DKS_API.Helpers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -33,6 +34,7 @@ namespace DFPS.API
                 Log.Information("DFPS Application Starting.......................");
 
                 //Test t = new Test();
+                //CSharpLab.Test();
                 CreateHostBuilder(args).Build().Run();
 
 
