@@ -13,16 +13,18 @@ namespace DKS_API.Helpers
         public static void Test()
         {
 
-            var testStr = "SSB\\Stan.Chen";
+            var testStr = "CB\\dieu.hien";
             var testkey = "TalentPool";
             var testiv = "SSB";
+            //testStr = Uri.UnescapeDataString(testStr);
 
-            var e = encrypt(testStr, testkey, testiv);
-            string decodedUrl = Uri.UnescapeDataString(e);
-            string encodedUrl = Uri.EscapeDataString(decodedUrl);
+            testStr = encrypt(testStr, testkey, testiv);
+            testStr = Uri.EscapeDataString(testStr);
 
-            var d = decrypt(decodedUrl, testkey, testiv);
-            Console.WriteLine(d);
+            //string encodedUrl = Uri.EscapeDataString(decodedUrl);
+
+            //var d = decrypt(testStr, testkey, testiv);
+            //Console.WriteLine(d);
         }
 
         //加密

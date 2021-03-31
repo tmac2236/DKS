@@ -62,7 +62,7 @@ import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { DataTablesModule } from "angular-datatables";
 import { PaginationModule } from 'ngx-bootstrap/pagination';
-
+import { ModalModule } from "ngx-bootstrap/modal";
 
 
 //載入 "/assets/i18n/[lang].json" 語系檔
@@ -87,7 +87,7 @@ export function createTranslateLoader(http: HttpClient) {
     BrowserAnimationsModule,
     AppRoutingModule,
     AppAsideModule,
-    AppBreadcrumbModule.forRoot(),
+    AppBreadcrumbModule.forRoot(),//Add forRoot() if service is singleton.
     AppFooterModule,
     AppHeaderModule,
     AppSidebarModule,
@@ -95,9 +95,9 @@ export function createTranslateLoader(http: HttpClient) {
     BsDropdownModule.forRoot(),//ngx-bootsrap
     TabsModule.forRoot(),      //ngx-bootsrap
     TooltipModule.forRoot(),   //ngx-bootsrap
+    ModalModule,               //ngx-bootsrap
     ChartsModule,
     NgImageSliderModule,
-    TooltipModule.forRoot(),    //table tr td 用
     PaginationModule.forRoot(), //分頁用
   ],
   declarations: [

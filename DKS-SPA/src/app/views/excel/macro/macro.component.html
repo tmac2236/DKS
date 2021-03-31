@@ -1,4 +1,6 @@
 <ng-container *ngFor="let item of resultFilter; let i = index">
+  <!--start ng-template-->
+  <!-- #模板名稱-->
   <ng-template
     #buttonTmpl
     let-label="label"
@@ -6,54 +8,98 @@
     let-icon="icon"
     let-asshole="asshole"
   >
-    <div class="row">
-      <label class="col-form-label mr-2">Name</label>
-    </div>
-    <div class="row">
-    <input
-      class="col-form-label mr-2"
-      type="text"
-      placeholder="TeamID"
-      name="TeamID"
-      [(ngModel)]="resultFilter[i]"
-      required
-    />
-  </div>
-  <div class="row">
-    <button [ngClass]="['btn', className ? className : '']">
+    <button [ngClass]="['btn', className ? className : '']" tooltip="Save Title" (click)="ngBtn(item,asshole)">
       <i *ngIf="icon" class="fa {{ icon }}"></i>
-      {{ item }}
+      {{ asshole }} 
     </button>
-  </div>
   </ng-template>
-
-  <ng-container
-    [ngTemplateOutlet]="buttonTmpl"
-    [ngTemplateOutletContext]="{
-      label: 'Click here',
-      className: 'btn-primary',
-      icon: null
-    }"
-  >
-  </ng-container>
-
-  <ng-container
-    [ngTemplateOutlet]="buttonTmpl"
-    [ngTemplateOutletContext]="{
-      label: 'Remove',
-      className: 'btn-danger',
-      icon: 'fa-print'
-    }"
-  >
-  </ng-container>
-
-  <ng-container
-    [ngTemplateOutlet]="buttonTmpl"
-    [ngTemplateOutletContext]="{
-      label: 'Information',
-      className: 'btn-success',
-      icon: 'info-circle'
-    }"
-  >
-  </ng-container>
+  <!--end ng-template-->
+  <div class="row">
+    <div class="col-12">
+      <label class="col-form-label mr-2">Name</label>
+      <input
+        class="col-form-label mr-2"
+        type="text"
+        placeholder="TeamID"
+        name="TeamID"
+        [(ngModel)]="resultFilter[i]"
+        required
+      />
+      <!-- start #使用模板 ng-container 使用ngTemplateOutlet 指定模板名稱 ;ngTemplateOutletContext 帶入參數-->
+      <ng-container
+        [ngTemplateOutlet]="buttonTmpl"
+        [ngTemplateOutletContext]="{
+          label: 'Click here',
+          className: 'btn-primary',
+          icon: null,
+          asshole: 'save'
+        }"
+      >
+      </ng-container>
+      <ng-container
+        [ngTemplateOutlet]="buttonTmpl"
+        [ngTemplateOutletContext]="{
+          label: 'Remove',
+          className: 'btn-danger',
+          icon: 'fa-print',
+          asshole: 'edit'
+        }"
+      >
+      </ng-container>
+      <ng-container
+        [ngTemplateOutlet]="buttonTmpl"
+        [ngTemplateOutletContext]="{
+          label: 'Information',
+          className: 'btn-success',
+          icon: 'info-circle',
+          asshole: 'cancel'
+        }"
+      >
+      </ng-container>
+      <!-- end #使用模板 ng-container 使用ngTemplateOutlet 指定模板名稱 ;ngTemplateOutletContext 帶入參數-->
+    </div>
+  </div>
 </ng-container>
+<!-- 頁面切換 Modal -->
+ <div bsModal #infoModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-info" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Hello</h4>
+        <button type="button" class="close" (click)="infoModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" class="form-control" [(ngModel)]="macroModal.name" placeholder="Please key name">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label for="name">No</label>
+              <input type="text" class="form-control" [(ngModel)]="macroModal.no" placeholder="Please key no">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label for="name">Date</label>
+              <input type="text" class="form-control" [(ngModel)]="macroModal.date" placeholder="Please key date">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeNcleanModal()">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- 頁面切換 Modal -->

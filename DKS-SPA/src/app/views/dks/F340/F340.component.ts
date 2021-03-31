@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Utility } from "../../../core/utility/utility";
 import { utilityConfig } from "../../../core/utility/utility-config";
 import { DksService } from "../../../core/_services/dks.service";
@@ -11,7 +11,7 @@ import { PaginatedResult } from "../../../core/_models/pagination";
   templateUrl: "./F340.component.html",
   styleUrls: ["./F340.component.scss"],
 })
-export class F340Component implements OnInit {
+export class F340Component implements OnInit,OnDestroy   {
 
   //for sorting ; ASC DESC
   cwaDeadlineS = true;
@@ -23,13 +23,11 @@ export class F340Component implements OnInit {
   constructor(public utility: Utility, private dksService: DksService) {}
 
   ngOnInit() {
+    console.log((<HTMLInputElement>document.getElementById("idDataType")));
     this.sF340Schedule.loginUser = this.utility.getAccount();
     //this.sF340Schedule.cwaDateS = this.utility.datepiper.transform(new Date(), 'yyyy-MM-dd');
-    //init javascript start
-    (function hello() {
-      console.log("Hello Init hello() !!!");
-    })();
-    //init javascript start
+
+    console.log("Hello Init hello() !!!");
   }
   //分頁按鈕
   pageChangeds(event: any): void {
@@ -125,5 +123,8 @@ export class F340Component implements OnInit {
   cleanBP(){
     this.bpVerList = [];
     this.sF340Schedule.bpVer = "";
+  }
+  ngOnDestroy(): void {
+    
   }
 }
