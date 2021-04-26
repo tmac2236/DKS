@@ -7,7 +7,9 @@ using DKS_API.Controllers;
 using DKS_API.DTOs;
 using DKS_API.Services.Implement;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace DFPS.API.Controllers
 {
@@ -16,7 +18,8 @@ namespace DFPS.API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IAuthService _authService;
-        public UsersController(IAuthService authService, IMapper mapper)
+        public UsersController(IConfiguration config, IWebHostEnvironment webHostEnvironment,IAuthService authService, IMapper mapper)
+                 : base(config, webHostEnvironment)
         {
             _authService = authService;
             _mapper = mapper;

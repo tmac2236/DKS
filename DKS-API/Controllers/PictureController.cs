@@ -7,19 +7,18 @@ using System.Threading.Tasks;
 using System.Drawing;
 using DKS.API.Models.DKS;
 using DKS_API.Data.Interface;
+using Microsoft.AspNetCore.Hosting;
 
 namespace DKS_API.Controllers
 {
     public class PictureController : ApiController
     {
-        private readonly IConfiguration _config;
         private readonly IDKSDAO _dksDao;
 
-        public PictureController(IConfiguration config, IDKSDAO dksDao)
-
+        public PictureController(IConfiguration config, IWebHostEnvironment webHostEnvironment, IDKSDAO dksDao)
+                : base(config, webHostEnvironment)
         {
             _dksDao = dksDao;
-            _config = config;
         }
 
         [HttpPost("deletePicByArticle")]

@@ -2,8 +2,10 @@ using DKS_API.Controllers;
 using DKS_API.Data;
 using DKS_API.DTOs;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,7 +16,8 @@ namespace DFPS.API.Controllers
     public class TestController : ApiController
     {
         private readonly DataContext _context;
-        public TestController(DataContext context)
+        public TestController(IConfiguration config, IWebHostEnvironment webHostEnvironment,DataContext context)
+        : base(config, webHostEnvironment)
         {
             _context = context;
         }

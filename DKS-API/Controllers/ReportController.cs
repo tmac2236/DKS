@@ -13,6 +13,7 @@ using DKS_API.Data;
 using DKS_API.Data.Interface;
 using DKS_API.DTOs;
 using DKS_API.Helpers;
+using Microsoft.Extensions.Configuration;
 
 namespace DKS_API.Controllers
 {
@@ -21,13 +22,12 @@ namespace DKS_API.Controllers
         private readonly DataContext _context;
         private readonly IReporDAO _reporDAO;
         private readonly ISPFactoryDAO _sPFactoryDAO;
-        private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly ILogger<ReportController> _logger;
-        public ReportController(DataContext context, IReporDAO reporDAO, ISPFactoryDAO sPFactoryDAO, IWebHostEnvironment webHostEnvironment, ILogger<ReportController> logger)
+        public ReportController(IConfiguration config, IWebHostEnvironment webHostEnvironment,DataContext context, IReporDAO reporDAO, ISPFactoryDAO sPFactoryDAO , ILogger<ReportController> logger)
+                 : base(config, webHostEnvironment)
         {
             _context = context;
             _reporDAO = reporDAO;
-            _webHostEnvironment = webHostEnvironment;
             _logger = logger;
             _sPFactoryDAO = sPFactoryDAO;
         }

@@ -10,6 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using DKS_API.Data.Interface;
 using DKS_API.DTOs;
 using DKS.API.Models.DKSSys;
+using Microsoft.AspNetCore.Hosting;
 
 namespace DKS_API.Controllers
 {
@@ -17,10 +18,9 @@ namespace DKS_API.Controllers
     {
         private readonly IUserDAO _authDAO;
         private readonly IDKSDAO _dksDAO;
-        private readonly IConfiguration _config;
-        public AuthController(IUserDAO authDAO, IConfiguration config, IDKSDAO dksDAO)
+        public AuthController(IConfiguration config, IWebHostEnvironment webHostEnvironment,IUserDAO authDAO, IDKSDAO dksDAO)
+                 : base(config, webHostEnvironment)
         {
-            _config = config;
             _authDAO = authDAO;
             _dksDAO = dksDAO;
         }

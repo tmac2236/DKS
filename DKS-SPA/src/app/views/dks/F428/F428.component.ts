@@ -82,6 +82,7 @@ export class F428Component implements OnInit {
     this.route.navigate([navigateTo], navigationExtras);
   }
   export(){
-    alert("Coding.... Not yet completed");
+    const url =this.utility.baseUrl +"wareHouse/exportMaterialNoBySampleNoForWarehouse";
+    this.utility.exportFactory(url,"F428",this.sF428SampleNoDetail);
   }
 }

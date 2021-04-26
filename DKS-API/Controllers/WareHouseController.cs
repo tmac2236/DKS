@@ -7,20 +7,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using DKS.API.Models.DKS;
+using Microsoft.AspNetCore.Hosting;
 
 namespace DKS_API.Controllers
 {
     public class WareHouseController : ApiController
     {
-        private readonly IConfiguration _config;
         private readonly IWarehouseDAO _warehouseDao;
         private readonly ISamPartBDAO _samPartBDAO;
-        public WareHouseController(IConfiguration config, IWarehouseDAO warehouseDao, ISamPartBDAO samPartBDAO)
-
+        public WareHouseController(IConfiguration config, IWebHostEnvironment webHostEnvironment, IWarehouseDAO warehouseDao, ISamPartBDAO samPartBDAO)
+        : base(config, webHostEnvironment)
         {
             _warehouseDao = warehouseDao;
             _samPartBDAO = samPartBDAO;
-            _config = config;
         }
         [HttpGet("getMaterialNoBySampleNoForWarehouse")]
         public IActionResult GetMaterialNoBySampleNoForWarehouse([FromQuery] SF428SampleNoDetail sF428SampleNoDetail)
@@ -39,6 +38,18 @@ namespace DKS_API.Controllers
             {
                 return StatusCode(500, $"Internal server error: {ex}.");
             }
+        }
+
+        [HttpPost("exportMaterialNoBySampleNoForWarehouse")]
+        public  IActionResult ExportMaterialNoBySampleNoForWarehouse(SF428SampleNoDetail sF428SampleNoDetail)
+        {
+
+            // query data from database  
+            var data = _warehouseDao.GetMaterialNoBySampleNoForWarehouse(sF428SampleNoDetail);
+
+            byte[] result = CommonExportReport(data,"TempF428.xlsx");
+
+            return File(result, "application/xlsx");
         }
         [HttpPost("getStockDetailByMaterialNo")]
         public async Task<IActionResult> GetStockDetailByMaterialNo(SF428SampleNoDetail sF428SampleNoDetail)
