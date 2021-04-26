@@ -102,7 +102,7 @@
             </div>
           </div>
         </form>
-        <div class="row" *ngIf="result.length > 0">
+        <div class="row">
           <div class="col-lg-12">
             <div class="card">
               <div class="card-body">
@@ -120,7 +120,7 @@
                         
                         <!--<th [ngClass]="this.cwaDeadlineS ? 'zoom-in' : 'zoom-out'"
                         (click)="this.sort($event)">cwaDeadline</th>-->
-                        <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.cwaDeadline' | translate }}</th>
+                        <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.activationDate' | translate }}</th>
                         <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.modelNo' | translate }}</th>
                         <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.modelName' | translate }}</th>
                         <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.orderStag' | translate }}</th>
@@ -142,8 +142,11 @@
                         <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.ttBtmDate' | translate }}</th>
                         <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.releaseDate' | translate }}</th>
                         <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.ttRejectReason' | translate }}</th>
-                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.ttRejectDate' | translate }}</th>                        
-                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.ttRejectCount' | translate }}</th> 
+                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.ttRejectDate' | translate }}</th>   
+
+                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.ttRejectCount' | translate }}</th>
+                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.smsSampleNo' | translate }}</th>                        
+                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.memo' | translate }}</th> 
                       </tr>
                     </thead>
                     <tbody>
@@ -156,7 +159,7 @@
                           <td>{{ item.devTeam }}</td>
                           <td>{{ item.article }}</td>
 
-                          <td>{{ item.cwaDeadline }}</td>
+                          <td>{{ item.activationDate }}</td>
                           <td>{{ item.modelNo }}</td>
                           <td>{{ item.modelName }}</td>
                           <td>{{ item.orderStag }}</td>
@@ -181,11 +184,22 @@
                           <td>{{ item.ttRejectDate }}</td>
 
                           <td>{{ item.ttRejectCount }}</td>
+                          <td>{{ item.smsSampleNo }}</td>
+                          <td>{{ item.memo }}</td>
                         </tr>
                       </ng-container>
                     </tbody>
                   </table>
                   <div class ="d-flex justify-content-start">
+                    <select
+                    style="height:35px;width:45px;"
+                    name="itemsPerPage"
+                    [(ngModel)]="sF340Schedule.itemsPerPage">
+                    <option value = 10 selected>10</option>
+                    <option value = 25 selected>25</option>
+                    <option value = 50 selected>50</option>
+                    <option value = 100 selected>100</option>
+                    </select> 
                     <pagination *ngIf="this.sF340Schedule.isPaging" 
                       [boundaryLinks]="true" 
                       [totalItems]="sF340Schedule.totalItems"

@@ -9,15 +9,20 @@ using DKS_API.DTOs;
 using Microsoft.Data.SqlClient;
 using System;
 using DKS_API.Helpers;
+using Microsoft.Extensions.Configuration;
 
 namespace DFPS.API.Data.Repository
 {
     public class DKSDAO : IDKSDAO
     {
         private readonly DKSContext _context;
-        public DKSDAO(DKSContext context)
+        private readonly IConfiguration _config;
+        private readonly string spCode;
+        public DKSDAO(DKSContext context,IConfiguration config)
         {
             _context = context;
+            _config = config;
+            spCode = _config.GetSection("AppSettings:SpCode").Value;
         }
         public async Task<List<Ordsumoh>> SearchConvergence(string season, string stage)
         {
@@ -71,15 +76,15 @@ namespace DFPS.API.Data.Repository
             };
             string SQL ="";
             if(sF340Schedule.dataType =="DHO"){
-                SQL ="EXECUTE dbo.GetF340Process_BuyPlan_C @Season,@CwaDateS,@CwaDateE";
+                SQL = string.Format("EXECUTE dbo.GetF340Process_BuyPlan_C{0} @Season,@CwaDateS,@CwaDateE",spCode);
             }else if(sF340Schedule.dataType =="FHO"){
 
                 pc.Add(new SqlParameter("@FactoryId", sF340Schedule.factory != null ? sF340Schedule.factory.Trim().ToUpper() : (object)DBNull.Value));
                 pc.Add(new SqlParameter("@BuyPlanVer", sF340Schedule.bpVer.Trim()));
-                SQL ="EXECUTE dbo.GetF340Process_BuyPlan_B @FactoryId,@Season,@BuyPlanVer,@CwaDateS,@CwaDateE";
+                SQL = string.Format("EXECUTE dbo.GetF340Process_BuyPlan_B{0} @FactoryId,@Season,@BuyPlanVer,@CwaDateS,@CwaDateE",spCode);
             }else if(sF340Schedule.dataType =="DEV"){
 
-                SQL ="EXECUTE dbo.GetF340Process_BuyPlan_A @Season,@CwaDateS,@CwaDateE";
+                SQL =string.Format("EXECUTE dbo.GetF340Process_BuyPlan_A{0} @Season,@CwaDateS,@CwaDateE",spCode);
             }
 
             var data = await _context.GetF340ProcessView
@@ -97,15 +102,15 @@ namespace DFPS.API.Data.Repository
             };
             string SQL ="";
             if(sF340Schedule.dataType =="DHO"){
-                SQL ="EXECUTE dbo.GetF340Process_BuyPlan_C @Season,@CwaDateS,@CwaDateE";
+                SQL =string.Format("EXECUTE dbo.GetF340Process_BuyPlan_C{0} @Season,@CwaDateS,@CwaDateE",spCode);
             }else if(sF340Schedule.dataType =="FHO"){
 
                 pc.Add(new SqlParameter("@FactoryId", sF340Schedule.factory != null ? sF340Schedule.factory.Trim().ToUpper() : (object)DBNull.Value));
                 pc.Add(new SqlParameter("@BuyPlanVer", sF340Schedule.bpVer.Trim()));
-                SQL ="EXECUTE dbo.GetF340Process_BuyPlan_B @FactoryId,@Season,@BuyPlanVer,@CwaDateS,@CwaDateE";
+                SQL =string.Format("EXECUTE dbo.GetF340Process_BuyPlan_B{0} @FactoryId,@Season,@BuyPlanVer,@CwaDateS,@CwaDateE",spCode);
             }else if(sF340Schedule.dataType =="DEV"){
 
-                SQL ="EXECUTE dbo.GetF340Process_BuyPlan_A @Season,@CwaDateS,@CwaDateE";
+                SQL =string.Format("EXECUTE dbo.GetF340Process_BuyPlan_A{0} @Season,@CwaDateS,@CwaDateE",spCode);
             }
 
             var data = _context.GetF340ProcessView

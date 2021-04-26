@@ -82,7 +82,7 @@ namespace DKS_API.Controllers
             ws.Cells.Merge(0, 0, 1, 3);
             ws.Cells.Merge(0, 3, 1, 10);
             ws.Cells.Merge(0, 13, 1, 2);
-            ws.Cells.Merge(0, 15, 1, 12);
+            ws.Cells.Merge(0, 15, 1, 14);
             #endregion 第一列套上名稱及顏色
             int row1 = 1;
 
@@ -93,7 +93,7 @@ namespace DKS_API.Controllers
             ws.Cells[row1, 4].Value = "DEV TEAM";//"devSeason";
             ws.Cells[row1, 5].Value = "ARTICLE";//"article";
 
-            ws.Cells[row1, 6].Value = "CWADEADL";//"cwaDeadline";
+            ws.Cells[row1, 6].Value = "ActivationDate";//"activationDate";
             ws.Cells[row1, 7].Value = "MODELNO";//"modelNo";
             ws.Cells[row1, 8].Value = "MODELNAME";//"modelName";
             ws.Cells[row1, 9].Value = "ORDERSTAG";//"OrderStag";
@@ -118,7 +118,8 @@ namespace DKS_API.Controllers
             ws.Cells[row1, 25].Value = "技轉退回時間";//"ttRejectDate";
 
             ws.Cells[row1, 26].Value = "技轉退回次數";//"TTRejectCount";
-
+            ws.Cells[row1, 27].Value = "SMS SampleNo";//"SmsSampleNo";
+            ws.Cells[row1, 28].Value = "Memo";//"Memo";
             ws.Cells[row1, 0].SetStyle(hpStyle);
             ws.Cells[row1, 1].SetStyle(hpStyle);
             ws.Cells[row1, 2].SetStyle(hpStyle);
@@ -146,6 +147,8 @@ namespace DKS_API.Controllers
             ws.Cells[row1, 24].SetStyle(f340Style);
             ws.Cells[row1, 25].SetStyle(f340Style);
             ws.Cells[row1, 26].SetStyle(f340Style);
+            ws.Cells[row1, 27].SetStyle(f340Style);
+            ws.Cells[row1, 28].SetStyle(f340Style);
             #region 第二列套上名稱及顏色 
 
             #endregion 第二列套上名稱及顏色
@@ -161,7 +164,7 @@ namespace DKS_API.Controllers
                 ws.Cells[row, 4].Value = item.DevTeam;
                 ws.Cells[row, 5].Value = item.Article;
 
-                ws.Cells[row, 6].Value = item.CwaDeadline;
+                ws.Cells[row, 6].Value = item.ActivationDate;
                 ws.Cells[row, 7].Value = item.ModelNo;
                 ws.Cells[row, 8].Value = item.ModelName;
                 ws.Cells[row, 9].Value = item.OrderStag;
@@ -186,6 +189,8 @@ namespace DKS_API.Controllers
                 ws.Cells[row, 25].Value = item.TTRejectDate;
 
                 ws.Cells[row, 26].Value = item.TTRejectCount;
+                ws.Cells[row, 27].Value = item.SmsSampleNo;
+                ws.Cells[row, 28].Value = item.Memo;
                 row += 1;
             }
             ws.AutoFitColumns();
@@ -419,7 +424,7 @@ namespace DKS_API.Controllers
                 ws.Cells[row, 6].Value = item.CwaDeadline;
                 ws.Cells[row, 7].Value = item.ModelNo;
                 ws.Cells[row, 8].Value = item.ModelName;
-                ws.Cells[row, 9].Value = item.ConfirmDate ;
+                ws.Cells[row, 9].Value = item.ConfirmDate;
 
                 ws.Cells[row, 10].Value = item.DevStatus;
                 ws.Cells[row, 11].Value = item.DropDate;

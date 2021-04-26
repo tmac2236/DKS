@@ -97,7 +97,7 @@
             </div>
           </div>
         </form>
-        <div class="row" *ngIf="result.length > 0">
+        <div class="row">
           <div class="col-lg-12">
             <div class="card">
               <div class="card-body">
@@ -164,6 +164,15 @@
                     </tbody>
                   </table>
                   <div class ="d-flex justify-content-start">
+                    <select
+                    style="height:35px;width:45px;"
+                    name="itemsPerPage"
+                    [(ngModel)]="sF340PpdSchedule.itemsPerPage">
+                    <option value = 10 selected>10</option>
+                    <option value = 25 selected>25</option>
+                    <option value = 50 selected>50</option>
+                    <option value = 100 selected>100</option>
+                    </select> 
                     <pagination *ngIf="this.sF340PpdSchedule.isPaging" 
                       [boundaryLinks]="true" 
                       [totalItems]="sF340PpdSchedule.totalItems"

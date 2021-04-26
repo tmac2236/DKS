@@ -16,6 +16,7 @@
                 "devSeason":"開發季節",
                 "article":"ARTICLE",
                 "cwaDeadline":"CWADEADL",
+                "activationDate":"Activation Date",
                 "modelNo":"MODELNO",
                 "modelName":"MODELNAME",
                 "orderStag":"ORDERSTAG",
@@ -39,7 +40,9 @@
                 "ttRejectDate":"技轉退回時間",
                 "devTeam":"DEV TEAM",
                 "releaseDate":"Release Date",
-                "ttRejectCount":"技轉退回次數"
+                "ttRejectCount":"技轉退回次數",
+                "smsSampleNo":"SMS SampleNo",
+                "memo":"Memo"
         }
     },"F428": {
         "title": "F428 ",

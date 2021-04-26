@@ -16,6 +16,7 @@
                 "devSeason":"Dev Season",
                 "article":"Article",
                 "cwaDeadline":"CWA Deadline",
+                "activationDate":"Activation Date",
                 "modelNo":"Model No",
                 "modelName":"Model Name",
                 "orderStag":"Order Stage",
@@ -39,7 +40,9 @@
                 "ttRejectDate":"TT Reject Date",
                 "devTeam":"DEV Team",
                 "releaseDate":"Release Date",
-                "ttRejectCount":"TT Reject Count"
+                "ttRejectCount":"TT Reject Count",
+                "smsSampleNo":"SMS SampleNo",
+                "memo":"Memo"
         }
     },"F428": {
         "title": "F428 ",

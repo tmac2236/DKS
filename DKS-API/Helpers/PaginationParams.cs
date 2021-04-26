@@ -2,7 +2,7 @@ namespace DKS_API.Helpers
 {
     public class PaginationParams
     {
-        private const int MaxPageSize = 50;
+        private const int MaxPageSize = 100;
         public int PageNumber { get; set; } = 1; //d4 第一頁
         private int pageSize = 10;               //d4 一頁10個obj
         public int PageSize
