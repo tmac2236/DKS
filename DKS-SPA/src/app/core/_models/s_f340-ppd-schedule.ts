@@ -5,19 +5,25 @@ export class SF340PpdSchedule extends Pagination {
   factory: string;
   season: string;
   bpVer: string;
-  cwaDateS : string;
-  cwaDateE : string;
+  cwaDateS: string;
+  cwaDateE: string;
+  article: string;
+  modelNo: string;
+  modelName: string;
   /**
    *default set of searching parameters
    */
   constructor() {
     super();
-    this.factory = utilityConfig.factory;//預設翔鴻程
+    this.factory = utilityConfig.factory; //預設翔鴻程
     this.season = "";
     this.bpVer = utilityConfig.conditionAll;
-    this.cwaDateS ="";
-    this.cwaDateE ="";
+    this.cwaDateS = "";
+    this.cwaDateE = "";
     this.isPaging = true; //開分頁
+    this.article = "";
+    this.modelNo = "";
+    this.modelName = "";
   }
 
   public setPagination(pagination: Pagination) {

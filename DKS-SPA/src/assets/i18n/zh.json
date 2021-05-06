@@ -86,7 +86,7 @@
             "cwaDeadline": "CWA DATE",
             "modelNo": "Model No",
             "modelName": "Model Name",
-            "confirmDate": "色卡確認",
+            "confirmDate": "底部色卡",
 
             "devStatus": "DevStatus",
             "dropDate": "DropDate",
@@ -98,7 +98,7 @@
             "treatMent": "TreatMent",
             "partName": "Part Name",
             "processDate": "跨單位作業流程",
-            "cardDate": "實物卡"
+            "cardDate": "面部實物卡"
         }
     }
 }

@@ -132,14 +132,15 @@ namespace DKS_API.Controllers
             }
         }
         [HttpGet("getF340_ProcessPpd")]
-        public IActionResult GetF340_ProcessPpd([FromQuery] SF340PPDSchedule sF340PPDSchedule)
+        public async Task<IActionResult> GetF340_ProcessPpd([FromQuery] SF340PPDSchedule sF340PPDSchedule)
         {
             try
             {
                 if (sF340PPDSchedule.cwaDateS == "" || sF340PPDSchedule.cwaDateS == null) sF340PPDSchedule.cwaDateS = _config.GetSection("LogicSettings:MinDate").Value;
                 if (sF340PPDSchedule.cwaDateE == "" || sF340PPDSchedule.cwaDateE == null) sF340PPDSchedule.cwaDateE = _config.GetSection("LogicSettings:MaxDate").Value;
 
-                var result = _dksDao.GetF340PPDView(sF340PPDSchedule);
+                var data = await _dksDao.GetF340PPDView(sF340PPDSchedule);
+                PagedList<F340_PpdDto> result = PagedList<F340_PpdDto>.Create(data, sF340PPDSchedule.PageNumber, sF340PPDSchedule.PageSize, sF340PPDSchedule.IsPaging);
                 Response.AddPagination(result.CurrentPage, result.PageSize,
                 result.TotalCount, result.TotalPages);
                 return Ok(result);
@@ -156,9 +157,14 @@ namespace DKS_API.Controllers
             if (sF340PPDSchedule.cwaDateS == "" || sF340PPDSchedule.cwaDateS == null) sF340PPDSchedule.cwaDateS = _config.GetSection("LogicSettings:MinDate").Value;
             if (sF340PPDSchedule.cwaDateE == "" || sF340PPDSchedule.cwaDateE == null) sF340PPDSchedule.cwaDateE = _config.GetSection("LogicSettings:MaxDate").Value;
             // query data from database  
-            var data = await _dksDao.GetF340PPDView4Excel(sF340PPDSchedule);
-
-            byte[] result = CommonExportReport(data,"TempF340PPDProcess.xlsx");
+            var data = await _dksDao.GetF340PPDView(sF340PPDSchedule);
+            var bottom = data.Where(x =>x.HpPartNo =="2016").ToList();
+            var upper = data.Where(x =>x.HpPartNo !="2016").ToList();
+            List<object> dataList = new List<object>(){
+                bottom,
+                upper
+            };
+            byte[] result = CommonExportReportTabs(dataList,"TempF340PPDProcessTabs.xlsx");
 
             return File(result, "application/xlsx");
         }

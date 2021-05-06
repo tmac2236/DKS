@@ -115,6 +115,9 @@ export class DksService {
     params = params.append('bpVer', sF340PpdSchedule.bpVer.toString());
     params = params.append('cwaDateS', sF340PpdSchedule.cwaDateS.toString());
     params = params.append('cwaDateE', sF340PpdSchedule.cwaDateE.toString());
+    params = params.append('article', sF340PpdSchedule.article.toString());
+    params = params.append('modelNo', sF340PpdSchedule.modelNo.toString());
+    params = params.append('modelName', sF340PpdSchedule.modelName.toString());
 
     return this.utility.http
       .get<F340SchedulePpd[]>(this.utility.baseUrl + 'dks/getF340_ProcessPpd' , {

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 using DKS_API.Filters;
@@ -30,6 +31,26 @@ namespace DKS_API.Controllers
             designer.Workbook = new Workbook(path);
             Worksheet ws = designer.Workbook.Worksheets[0];
             designer.SetDataSource("result", data);
+            designer.Process();
+            MemoryStream stream = new MemoryStream();
+            designer.Workbook.Save(stream, SaveFormat.Xlsx);
+
+            return stream.ToArray(); ;
+        }
+        protected byte[] CommonExportReportTabs(List<object> dataList, string templateName)
+        {
+
+            string rootStr = _webHostEnvironment.ContentRootPath;
+            var path = Path.Combine(rootStr, "Resources\\Template\\" + templateName);
+            WorkbookDesigner designer = new WorkbookDesigner();
+            designer.Workbook = new Workbook(path);
+            int index = 0;
+            foreach (object data in dataList)
+            {
+                Worksheet ws = designer.Workbook.Worksheets[index];
+                designer.SetDataSource("result", data);
+                index ++;
+            }
             designer.Process();
             MemoryStream stream = new MemoryStream();
             designer.Workbook.Save(stream, SaveFormat.Xlsx);

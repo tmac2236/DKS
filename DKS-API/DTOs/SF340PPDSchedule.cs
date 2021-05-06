@@ -10,5 +10,10 @@ namespace DKS_API.DTOs
         public string bpVer { get; set; }
         public string cwaDateS { get; set; }
         public string cwaDateE { get; set; }
+        public string article { get; set; }
+        public string modelNo { get; set; }
+        public string modelName { get; set; }
+
+
     }
 }
