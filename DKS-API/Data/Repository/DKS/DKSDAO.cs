@@ -127,7 +127,7 @@ namespace DFPS.API.Data.Repository
             List<SqlParameter> pc = new List<SqlParameter>{
                 new SqlParameter("@FactoryId",sF340PPDSchedule.factory),
                 new SqlParameter("@Season",sF340PPDSchedule.season.Trim().ToUpper()),
-                new SqlParameter("@BuyPlanVer",sF340PPDSchedule.bpVer != "All" ? sF340PPDSchedule.bpVer.Trim() : (object)DBNull.Value ),
+                new SqlParameter("@BuyPlanVer",sF340PPDSchedule.bpVer == null || sF340PPDSchedule.bpVer == "" ? (object)DBNull.Value : sF340PPDSchedule.bpVer.Trim() ),
                 new SqlParameter("@CwaDateS",sF340PPDSchedule.cwaDateS),
                 new SqlParameter("@CwaDateE",sF340PPDSchedule.cwaDateE),
                 new SqlParameter("@ModelNo",(sF340PPDSchedule.modelNo == null || sF340PPDSchedule.modelNo == "" ) ? (object)DBNull.Value : sF340PPDSchedule.modelNo.Trim()),

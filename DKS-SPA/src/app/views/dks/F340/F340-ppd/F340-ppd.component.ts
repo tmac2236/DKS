@@ -82,6 +82,6 @@ export class F340PpdComponent implements OnInit {
   }
   cleanBP(){
     this.bpVerList = [];
-    this.sF340PpdSchedule.bpVer = utilityConfig.conditionAll;
+    this.sF340PpdSchedule.bpVer = "";
   }
 }

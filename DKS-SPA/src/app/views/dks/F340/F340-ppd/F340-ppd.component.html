@@ -105,7 +105,6 @@
                   name="bpVer"
                   [(ngModel)]="sF340PpdSchedule.bpVer"
                   (focus)="changeBPVerList()"
-                  required
                 >
                   <option value="All"></option>
                   <option *ngFor="let bpVer of bpVerList" value="{{ bpVer }}">

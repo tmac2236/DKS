@@ -17,7 +17,7 @@ export class SF340PpdSchedule extends Pagination {
     super();
     this.factory = utilityConfig.factory; //預設翔鴻程
     this.season = "";
-    this.bpVer = utilityConfig.conditionAll;
+    this.bpVer = "";
     this.cwaDateS = "";
     this.cwaDateE = "";
     this.isPaging = true; //開分頁
