@@ -14,12 +14,13 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using DKS_API.Helpers;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Primitives;
 
 namespace DKS_API.Controllers
 {
     public class DKSController : ApiController
     {
- 
+
         private readonly IDKSDAO _dksDao;
         private readonly IDevBuyPlanDAO _devBuyPlanDAO;
         public DKSController(IConfiguration config, IWebHostEnvironment webHostEnvironment, IDKSDAO dksDao, IDevBuyPlanDAO devBuyPlanDAO)
@@ -37,7 +38,7 @@ namespace DKS_API.Controllers
             // query data from database  
             var data = await _dksDao.GetF340ProcessView4Excel(sF340Schedule);
 
-            byte[] result = CommonExportReport(data,"TempF340Process.xlsx");
+            byte[] result = CommonExportReport(data, "TempF340Process.xlsx");
 
             return File(result, "application/xlsx");
         }
@@ -158,15 +159,45 @@ namespace DKS_API.Controllers
             if (sF340PPDSchedule.cwaDateE == "" || sF340PPDSchedule.cwaDateE == null) sF340PPDSchedule.cwaDateE = _config.GetSection("LogicSettings:MaxDate").Value;
             // query data from database  
             var data = await _dksDao.GetF340PPDView(sF340PPDSchedule);
-            var bottom = data.Where(x =>x.HpPartNo =="2016").ToList();
-            var upper = data.Where(x =>x.HpPartNo !="2016").ToList();
+            var bottom = data.Where(x => x.HpPartNo == "2016").ToList();
+            var upper = data.Where(x => x.HpPartNo != "2016").ToList();
             List<object> dataList = new List<object>(){
                 bottom,
                 upper
             };
-            byte[] result = CommonExportReportTabs(dataList,"TempF340PPDProcessTabs.xlsx");
+            byte[] result = CommonExportReportTabs(dataList, "TempF340PPDProcessTabs.xlsx");
 
             return File(result, "application/xlsx");
+        }
+
+        [HttpPost("editPicF340Ppd")]
+        public async Task<IActionResult> EditPicF340Ppd()
+        {
+            try
+            {
+                var sampleNo = HttpContext.Request.Form["sampleNo"].ToString();
+                var treatMent = HttpContext.Request.Form["treatMent"].ToString();
+                var partName = HttpContext.Request.Form["partName"].ToString();
+
+                if (HttpContext.Request.Form.Files.Count > 0)
+                {
+                    var file = HttpContext.Request.Form.Files[0];
+                    if (await SaveFiletoServer(file, "F340PpdPic", "test.jpg"))
+                    {
+                        //do CRUD-U here.
+
+                    }
+                }else{
+                        //do CRUD-D here.
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+            return Ok();
+
         }
 
     }

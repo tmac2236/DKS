@@ -12,10 +12,8 @@ import { F340SchedulePpd } from "../../../../core/_models/f340-schedule-ppd";
   styleUrls: ["./F340-ppd.component.scss"],
 })
 export class F340PpdComponent implements OnInit {
-
   //for sorting ; ASC DESC
   cwaDeadlineS = true;
-
 
   sF340PpdSchedule: SF340PpdSchedule = new SF340PpdSchedule();
   result: F340SchedulePpd[] = [];
@@ -56,32 +54,87 @@ export class F340PpdComponent implements OnInit {
       }
     );
   }
-  export(){
-    const url =this.utility.baseUrl +"dks/exportF340_ProcessPpd";
-    this.utility.exportFactory(url,"F340_PPD",this.sF340PpdSchedule);
+  export() {
+    const url = this.utility.baseUrl + "dks/exportF340_ProcessPpd";
+    this.utility.exportFactory(url, "F340_PPD", this.sF340PpdSchedule);
   }
 
   //下拉選單帶出版本
   changeBPVerList() {
-    if(this.sF340PpdSchedule.season ==="") return;
+    if (this.sF340PpdSchedule.season === "") return;
     this.utility.spinner.show();
-    this.dksService.searchBPVerList(this.sF340PpdSchedule.season,this.sF340PpdSchedule.factory).subscribe(
-      (res) => {
-        this.utility.spinner.hide();
-        this.bpVerList = res;
+    this.dksService
+      .searchBPVerList(
+        this.sF340PpdSchedule.season,
+        this.sF340PpdSchedule.factory
+      )
+      .subscribe(
+        (res) => {
+          this.utility.spinner.hide();
+          this.bpVerList = res;
+        },
+        (error) => {
+          this.utility.spinner.hide();
+          this.utility.alertify.confirm(
+            "System Notice",
+            "Syetem is busy, please try later.",
+            () => {}
+          );
+        }
+      );
+  }
+  cleanBP() {
+    this.bpVerList = [];
+    this.sF340PpdSchedule.bpVer = "";
+  }
+
+  uploadPicF340Ppd(files: FileList, model: F340SchedulePpd) {
+    console.log(model);
+    if (!this.utility.checkFileMaxFormat(files.item(0), 1128659)) {
+      this.utility.alertify.confirm(
+        "Sweet Alert",
+        "Please upload jpg file and size cannot over 1 Mb.",
+        () => {}
+      );
+      return; //exit function
+    }
+    var formData = new FormData();
+    formData.append("file", files.item(0));
+    formData.append("sampleNo",model.sampleNo);
+    formData.append("treatMent",model.treatMent);
+    formData.append("partName",model.partName);
+
+    this.dksService.editPicF340Ppd(formData).subscribe(
+      () => {
+        //找到該筆model 把資料回填
       },
       (error) => {
-        this.utility.spinner.hide();
-        this.utility.alertify.confirm(
-          "System Notice",
-          "Syetem is busy, please try later.",
-          () => {}
-        );
+        this.utility.alertify.error("Add failed !!!!");
+      },()=>{
+        alert("You add one picture !");
       }
     );
   }
-  cleanBP(){
-    this.bpVerList = [];
-    this.sF340PpdSchedule.bpVer = "";
+  removePicF340Ppd(model: F340SchedulePpd) {
+    var formData = new FormData(); 
+    formData.append("file", null);
+    formData.append("sampleNo",model.sampleNo);
+    formData.append("treatMent",model.treatMent);
+    formData.append("partName",model.partName);
+    this.utility.alertify.confirm(
+      "Sweet Alert",
+      "Are you sure to Delete this picture ?",
+      () => {
+        this.dksService.editPicF340Ppd(formData).subscribe(
+          () => {
+            location.reload();
+            this.utility.alertify.success("Delete succeed!");
+          },
+          (error) => {
+            this.utility.alertify.error("Delete failed !!!!");
+          }
+        );
+      }
+    );
   }
 }

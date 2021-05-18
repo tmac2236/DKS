@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using Aspose.Cells;
 using DKS_API.Filters;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
@@ -49,13 +52,50 @@ namespace DKS_API.Controllers
             {
                 Worksheet ws = designer.Workbook.Worksheets[index];
                 designer.SetDataSource("result", data);
-                index ++;
+                index++;
             }
             designer.Process();
             MemoryStream stream = new MemoryStream();
             designer.Workbook.Save(stream, SaveFormat.Xlsx);
 
             return stream.ToArray(); ;
+        }
+        //儲存檔案到Server
+        //file:檔案 
+        //settingNam: root資料夾名稱
+        //fileName: 檔案名稱
+        protected async Task<Boolean> SaveFiletoServer(IFormFile file, string settingNam, string fileName)
+        {
+            Boolean isSuccess = false;
+            try
+            {
+                string rootdir = Directory.GetCurrentDirectory();
+                var localStr = _config.GetSection("AppSettings:" + settingNam).Value;
+                var pjName = _config.GetSection("AppSettings:ProjectName").Value;
+                var pathToSave = rootdir + localStr;
+                pathToSave = pathToSave.Replace(pjName + "-API", pjName + "-SPA");
+                if (file.Length > 0)
+                {
+
+                    //新增檔名的全路徑
+                    var fullPath = Path.Combine(pathToSave, fileName);
+                    if (!Directory.Exists(pathToSave))
+                    {
+                        DirectoryInfo di = Directory.CreateDirectory(pathToSave);
+                    }
+                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+                    isSuccess = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                return isSuccess;
+            }
+
+            return isSuccess;
         }
     }
 }

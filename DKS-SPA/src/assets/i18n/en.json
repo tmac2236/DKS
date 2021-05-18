@@ -4,7 +4,9 @@
         "btnList": {
             "search": "Search",
             "export": "Export",
-            "save": "Save"
+            "save": "Save",
+            "upload":"Upload",
+            "delete":"Delete"
         }
     },
     "F340": {

@@ -137,4 +137,11 @@ export class DksService {
       );
   }
   
+  editPicF340Ppd(f340PpdPic: FormData) {
+    console.log("dks.service editPicF340Ppd:", f340PpdPic);
+    return this.utility.http.post(
+      this.utility.baseUrl + "dks/editPicF340Ppd",
+      f340PpdPic
+    );
+  }
 }

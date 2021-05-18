@@ -4,7 +4,9 @@
         "btnList": {
             "search": "搜尋",
             "export": "匯出",
-            "save": "儲存"
+            "save": "儲存",
+            "upload":"上傳",
+            "delete":"刪除"
         }
     },
     "F340": {

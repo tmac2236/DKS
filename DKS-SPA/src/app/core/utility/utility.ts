@@ -115,4 +115,12 @@ export class Utility {
     }
     return "";
   }
+  //check max file
+  //e.g  maxValue: 1128659 = 1MB
+  checkFileMaxFormat(file: File, maxVal:number) {
+    var isLegal = true;
+    if (file.type != "image/jpeg") isLegal = false;
+    if (file.size >= maxVal) isLegal = false; //最大上傳1MB
+    return isLegal;
+  }
 }

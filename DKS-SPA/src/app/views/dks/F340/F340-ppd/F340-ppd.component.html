@@ -328,6 +328,22 @@
                         >
                           {{ "F340-PPD.titleList.partName" | translate }}
                         </th>
+
+                        <th
+                        style="background-color: #23d954"
+                        tooltip="上傳圖片"
+                        placement="bottom"
+                        >
+                        {{ "Common.btnList.upload" | translate }}
+                        </th>
+                        <th
+                        style="background-color: #23d954"
+                        tooltip="刪除圖片"
+                        placement="bottom"
+                        >
+                        {{ "Common.btnList.delete" | translate }}
+                        </th>
+
                       </tr>
                     </thead>
                     <tbody>
@@ -356,6 +372,25 @@
                           <td>{{ item.supsName }}</td>
                           <td>{{ item.treatMent }}</td>
                           <td>{{ item.partName }}</td>
+                          <td><div> 
+                            <label class="btn btn-success mr-2" for="fileUpload{{i}}">Upload</label>   
+                            <input
+                            id="fileUpload{{i}}"
+                            type="file"
+                            style="display: none"
+                            accept=".jpg"
+                            (change)="uploadPicF340Ppd($event.target.files, item)"
+                            /> 
+                          </div></td>
+                          <td><div>
+                            <button
+                            class="btn btn-danger mr-2"
+                            type="button"
+                            (click)="removePicF340Ppd(item)"
+                            >
+                            Delete
+                            </button>  
+                          </div></td>
                         </tr>
                       </ng-container>
                     </tbody>
