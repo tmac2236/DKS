@@ -38,8 +38,8 @@ export class F428Component implements OnInit {
       this.sF428SampleNoDetail.sampleNo = this.urlParams.sampleNo;
       this.search();
     } 
-    
-    this.sF428SampleNoDetail.loginUser = this.utility.getAccount();
+    this.utility.initUserRole(this.sF428SampleNoDetail);
+    //this.sF428SampleNoDetail.loginUser = this.utility.getToken("unique_name");
   }
   //分頁按鈕
   pageChangeds(event: any): void {

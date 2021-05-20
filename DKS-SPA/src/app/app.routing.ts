@@ -47,6 +47,7 @@ export const routes: Routes = [
   },
   {
     path: "F340-PPD",
+    canActivate: [AuthGuard],
     component: F340PpdComponent,
   },
   {

@@ -23,8 +23,9 @@ export class F340Component implements OnInit,OnDestroy   {
   constructor(public utility: Utility, private dksService: DksService) {}
 
   ngOnInit() {
-    console.log((<HTMLInputElement>document.getElementById("idDataType")));
-    this.sF340Schedule.loginUser = this.utility.getAccount();
+    debugger;
+    this.utility.initUserRole(this.sF340Schedule);
+    //console.log((<HTMLInputElement>document.getElementById("idDataType")));
     //this.sF340Schedule.cwaDateS = this.utility.datepiper.transform(new Date(), 'yyyy-MM-dd');
 
     console.log("Hello Init hello() !!!");

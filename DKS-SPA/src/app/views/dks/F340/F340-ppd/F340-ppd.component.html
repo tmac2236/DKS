@@ -4,10 +4,10 @@
       <div class="card">
         <div class="card-header">
           <div class="row">
-            <div class="col-2">
-              <strong>{{ "F340-PPD.title" | translate }}</strong>
+            <div class="col-3">
+              <strong>{{ "F340-PPD.title" | translate }}(量產加工準備明細)</strong>
             </div>
-            <div class="col-10">
+            <div class="col-9">
               <div class="float-right">
                 <strong *ngIf="this.sF340PpdSchedule.loginUser"
                   >{{ "Common.hello" | translate }}
@@ -329,15 +329,15 @@
                           {{ "F340-PPD.titleList.partName" | translate }}
                         </th>
 
-                        <th
-                        style="background-color: #23d954"
+                        <th 
+                        style="background-color: #57705e; display: none; "
                         tooltip="上傳圖片"
                         placement="bottom"
                         >
                         {{ "Common.btnList.upload" | translate }}
                         </th>
                         <th
-                        style="background-color: #23d954"
+                        style="background-color: #23d954; display: none;"
                         tooltip="刪除圖片"
                         placement="bottom"
                         >
@@ -372,7 +372,7 @@
                           <td>{{ item.supsName }}</td>
                           <td>{{ item.treatMent }}</td>
                           <td>{{ item.partName }}</td>
-                          <td><div> 
+                          <td><div style="display: none;"> 
                             <label class="btn btn-success mr-2" for="fileUpload{{i}}">Upload</label>   
                             <input
                             id="fileUpload{{i}}"
@@ -382,7 +382,7 @@
                             (change)="uploadPicF340Ppd($event.target.files, item)"
                             /> 
                           </div></td>
-                          <td><div>
+                          <td><div style="display: none;">
                             <button
                             class="btn btn-danger mr-2"
                             type="button"

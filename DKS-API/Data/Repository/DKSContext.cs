@@ -26,6 +26,7 @@ namespace DKS_API.Data.Repository
         public DbSet<F428SampleNoDetail> GetMaterialNoBySampleNoForWarehouseView { get; set; }
         public DbSet<StockDetailByMaterialNo> GetStockDetailByMaterialNoView { get; set; }
         public DbSet<F340_PpdDto> GetF340PpdView { get; set; }
+        public DbSet<UserRoleDto> UserRoleDto { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -51,7 +52,8 @@ namespace DKS_API.Data.Repository
             .HasNoKey();
             modelBuilder.Entity<F340_PpdDto>()
             .HasNoKey();
-            
+            modelBuilder.Entity<UserRoleDto>()
+            .HasNoKey();
 
         }
     }

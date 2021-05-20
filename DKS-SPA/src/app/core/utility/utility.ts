@@ -108,10 +108,10 @@ export class Utility {
     return dateFormat;
   }
 
-  getAccount() {
+  getToken(key:string) {
     const jwtTtoken = localStorage.getItem("token");
     if (jwtTtoken) {
-      return  this.jwtHelper.decodeToken(jwtTtoken)["unique_name"];
+      return  this.jwtHelper.decodeToken(jwtTtoken)[key];
     }
     return "";
   }
@@ -122,5 +122,11 @@ export class Utility {
     if (file.type != "image/jpeg") isLegal = false;
     if (file.size >= maxVal) isLegal = false; //最大上傳1MB
     return isLegal;
+  }
+  initUserRole(s: Pagination){
+    s.loginUser = this.getToken("unique_name");
+    s.role = this.getToken("role");
+    s.userId = this.getToken("nameid");
+    return s;
   }
 }

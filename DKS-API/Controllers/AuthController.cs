@@ -11,6 +11,8 @@ using DKS_API.Data.Interface;
 using DKS_API.DTOs;
 using DKS.API.Models.DKSSys;
 using Microsoft.AspNetCore.Hosting;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DKS_API.Controllers
 {
@@ -18,7 +20,7 @@ namespace DKS_API.Controllers
     {
         private readonly IUserDAO _authDAO;
         private readonly IDKSDAO _dksDAO;
-        public AuthController(IConfiguration config, IWebHostEnvironment webHostEnvironment,IUserDAO authDAO, IDKSDAO dksDAO)
+        public AuthController(IConfiguration config, IWebHostEnvironment webHostEnvironment, IUserDAO authDAO, IDKSDAO dksDAO)
                  : base(config, webHostEnvironment)
         {
             _authDAO = authDAO;
@@ -48,27 +50,28 @@ namespace DKS_API.Controllers
         public async Task<IActionResult> Login(UserDto userForLoginDto)
         {
 
-            var userFromRepo = await _dksDAO.SearchStaffByLOGIN(userForLoginDto.Account);
+            //var userFromRepo = await _dksDAO.SearchStaffByLOGIN(userForLoginDto.Account);
 
-            if (userFromRepo == null)
+            //if (userFromRepo == null)
+            //{
+            //改成只能用UserId登入
+            decimal userId = Decimal.Parse(userForLoginDto.Account);
+            var userFromRepo = await _dksDAO.GetRolesByUserId(userForLoginDto.Account);
+            if (userFromRepo.Count < 1)
             {
-                //試著用UserId找看看
-                try
-                {
-                    decimal userId = Decimal.Parse(userForLoginDto.Account);
-                    userFromRepo = await _dksDAO.SearchStaffByUserId(userForLoginDto.Account);
-                }
-                catch (Exception ex)
-                {
-                    return Unauthorized();
-                }
+                return Unauthorized();
             }
+            //}
+            IEnumerable<string> onlyGroupNos = from u in userFromRepo 
+                                select u.GROUPNO ;
+            string roleArray = string.Join(".",onlyGroupNos);
 
-
+            var roles = _dksDAO.GetRolesByUserId(userFromRepo[0].USERID.ToString());
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, userFromRepo.USERID.ToString()),
-                new Claim(ClaimTypes.Name, userFromRepo.LOGIN)
+                new Claim(ClaimTypes.NameIdentifier, userFromRepo[0].USERID.ToString()),
+                new Claim(ClaimTypes.Name, userFromRepo[0].LOGIN),
+                new Claim(ClaimTypes.Role, roleArray)
                 };
             var tokenName = _config.GetSection("AppSettings:Token").Value;
             var key = new SymmetricSecurityKey(Encoding.UTF8
@@ -79,7 +82,7 @@ namespace DKS_API.Controllers
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(1),
+                Expires = DateTime.Now.AddDays(1),  // the expire time is one day.
                 SigningCredentials = creds
             };
 

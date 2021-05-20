@@ -40,8 +40,8 @@ export class F428EditComponent implements OnInit {
       this.sF428SampleNoDetail.materialNo = this.urlParams.materialNo;
       this.search();
     } 
-
-    this.sF428SampleNoDetail.loginUser = this.utility.getAccount();
+    this.utility.initUserRole(this.sF428SampleNoDetail);
+    //this.sF428SampleNoDetail.loginUser = this.utility.getToken("unique_name");
   }
 
   search(){

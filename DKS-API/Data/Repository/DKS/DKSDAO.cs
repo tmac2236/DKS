@@ -139,5 +139,22 @@ namespace DFPS.API.Data.Repository
                    .ToListAsync();
             return data;
         }
+
+        public async Task<List<UserRoleDto>> GetRolesByUserId(string userId)
+        {
+            string strWhere = "WHERE A.USERID=" + userId ;
+            string strSQL = string.Format(@"
+                                            SELECT  
+                                                   A.WORKPNO
+                                                  ,CONVERT(varchar,A.USERID) AS USERID
+                                                  ,A.LOGIN
+                                                  ,A.FACTORYID
+                                            	  ,B.GROUPNO
+                                              FROM STACCRTH AS A
+                                              LEFT JOIN UTL_PJOBINER AS B ON A.USERID = B.USERID ");
+            strSQL += strWhere;
+            var data = await _context.UserRoleDto.FromSqlRaw(strSQL).ToListAsync();
+            return data;
+        }
     }
 }

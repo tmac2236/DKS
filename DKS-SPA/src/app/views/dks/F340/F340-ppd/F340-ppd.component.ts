@@ -21,7 +21,8 @@ export class F340PpdComponent implements OnInit {
   constructor(public utility: Utility, private dksService: DksService) {}
 
   ngOnInit() {
-    this.sF340PpdSchedule.loginUser = this.utility.getAccount();
+    this.utility.initUserRole(this.sF340PpdSchedule);
+    //this.sF340PpdSchedule.loginUser = this.utility.getToken("unique_name");
   }
   //分頁按鈕
   pageChangeds(event: any): void {
