@@ -77,6 +77,8 @@
         }        
     },"F340-PPD":{
         "title":"F340-PPD",
+        "mantainPic":"Mantain",
+        "picture":"Picture",
         "titleList": {
             "factory": "Factory",
             "buyPlanSeason": "BuyPlanSeason",

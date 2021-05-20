@@ -77,6 +77,8 @@
         }
     },"F340-PPD":{
         "title":"F340-PPD",
+        "mantainPic":"維護",
+        "picture":"圖片",
         "titleList": {
             "factory": "廠別",
             "buyPlanSeason": "Season",

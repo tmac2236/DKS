@@ -90,6 +90,8 @@ export class F340PpdComponent implements OnInit {
   }
 
   uploadPicF340Ppd(files: FileList, model: F340SchedulePpd) {
+    alert("DEMO Add!");
+    return ;
     console.log(model);
     if (!this.utility.checkFileMaxFormat(files.item(0), 1128659)) {
       this.utility.alertify.confirm(
@@ -117,6 +119,8 @@ export class F340PpdComponent implements OnInit {
     );
   }
   removePicF340Ppd(model: F340SchedulePpd) {
+    alert("DEMO Delete!");
+    return ;
     var formData = new FormData(); 
     formData.append("file", null);
     formData.append("sampleNo",model.sampleNo);
@@ -137,5 +141,9 @@ export class F340PpdComponent implements OnInit {
         );
       }
     );
+  }
+  viewPic(model: F340SchedulePpd){
+    alert("DEMO click viewPic : " + model.article);
+    window.open('http://10.4.0.39:6970/assets/systemImg/exit.png');
   }
 }
