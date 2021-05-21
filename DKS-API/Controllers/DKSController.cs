@@ -35,8 +35,10 @@ namespace DKS_API.Controllers
 
             if (sF340Schedule.cwaDateS == "" || sF340Schedule.cwaDateS == null) sF340Schedule.cwaDateS = _config.GetSection("LogicSettings:MinDate").Value;
             if (sF340Schedule.cwaDateE == "" || sF340Schedule.cwaDateE == null) sF340Schedule.cwaDateE = _config.GetSection("LogicSettings:MaxDate").Value;
+            sF340Schedule.cwaDateS = sF340Schedule.cwaDateS.Replace("-", "/");
+            sF340Schedule.cwaDateE = sF340Schedule.cwaDateE.Replace("-", "/");
             // query data from database  
-            var data = await _dksDao.GetF340ProcessView4Excel(sF340Schedule);
+            var data = await _dksDao.GetF340ProcessView(sF340Schedule);
 
             byte[] result = CommonExportReport(data, "TempF340Process.xlsx");
 
@@ -44,14 +46,20 @@ namespace DKS_API.Controllers
         }
 
         [HttpGet("getF340_Process")]
-        public IActionResult GetF340_Process([FromQuery] SF340Schedule sF340Schedule)
+        public async Task<IActionResult> GetF340_Process([FromQuery] SF340Schedule sF340Schedule)
         {
             try
             {
                 if (sF340Schedule.cwaDateS == "" || sF340Schedule.cwaDateS == null) sF340Schedule.cwaDateS = _config.GetSection("LogicSettings:MinDate").Value;
                 if (sF340Schedule.cwaDateE == "" || sF340Schedule.cwaDateE == null) sF340Schedule.cwaDateE = _config.GetSection("LogicSettings:MaxDate").Value;
+                sF340Schedule.cwaDateS = sF340Schedule.cwaDateS.Replace("-", "/");
+                sF340Schedule.cwaDateE = sF340Schedule.cwaDateE.Replace("-", "/");
+                var data = await _dksDao.GetF340ProcessView(sF340Schedule);
+                //Response.AddPagination(result.CurrentPage, result.PageSize,
+                //result.TotalCount, result.TotalPages);
 
-                var result = _dksDao.GetF340ProcessView(sF340Schedule);
+
+                PagedList<F340_ProcessDto> result = PagedList<F340_ProcessDto>.Create(data, sF340Schedule.PageNumber, sF340Schedule.PageSize, sF340Schedule.IsPaging);
                 Response.AddPagination(result.CurrentPage, result.PageSize,
                 result.TotalCount, result.TotalPages);
                 return Ok(result);
@@ -139,7 +147,8 @@ namespace DKS_API.Controllers
             {
                 if (sF340PPDSchedule.cwaDateS == "" || sF340PPDSchedule.cwaDateS == null) sF340PPDSchedule.cwaDateS = _config.GetSection("LogicSettings:MinDate").Value;
                 if (sF340PPDSchedule.cwaDateE == "" || sF340PPDSchedule.cwaDateE == null) sF340PPDSchedule.cwaDateE = _config.GetSection("LogicSettings:MaxDate").Value;
-
+                sF340PPDSchedule.cwaDateS = sF340PPDSchedule.cwaDateS.Replace("-", "/");
+                sF340PPDSchedule.cwaDateE = sF340PPDSchedule.cwaDateE.Replace("-", "/");
                 var data = await _dksDao.GetF340PPDView(sF340PPDSchedule);
                 PagedList<F340_PpdDto> result = PagedList<F340_PpdDto>.Create(data, sF340PPDSchedule.PageNumber, sF340PPDSchedule.PageSize, sF340PPDSchedule.IsPaging);
                 Response.AddPagination(result.CurrentPage, result.PageSize,
@@ -157,6 +166,8 @@ namespace DKS_API.Controllers
 
             if (sF340PPDSchedule.cwaDateS == "" || sF340PPDSchedule.cwaDateS == null) sF340PPDSchedule.cwaDateS = _config.GetSection("LogicSettings:MinDate").Value;
             if (sF340PPDSchedule.cwaDateE == "" || sF340PPDSchedule.cwaDateE == null) sF340PPDSchedule.cwaDateE = _config.GetSection("LogicSettings:MaxDate").Value;
+            sF340PPDSchedule.cwaDateS = sF340PPDSchedule.cwaDateS.Replace("-", "/");
+            sF340PPDSchedule.cwaDateE = sF340PPDSchedule.cwaDateE.Replace("-", "/");
             // query data from database  
             var data = await _dksDao.GetF340PPDView(sF340PPDSchedule);
             var bottom = data.Where(x => x.HpPartNo == "2016").ToList();
@@ -187,8 +198,10 @@ namespace DKS_API.Controllers
                         //do CRUD-U here.
 
                     }
-                }else{
-                        //do CRUD-D here.
+                }
+                else
+                {
+                    //do CRUD-D here.
                 }
 
             }

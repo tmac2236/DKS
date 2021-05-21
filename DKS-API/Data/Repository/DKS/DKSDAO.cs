@@ -65,7 +65,7 @@ namespace DFPS.API.Data.Repository
 
         }
 
-        public async Task<List<F340_ProcessDto>> GetF340ProcessView4Excel(SF340Schedule sF340Schedule)
+        public async Task<List<F340_ProcessDto>> GetF340ProcessView(SF340Schedule sF340Schedule)
         {
 
             //Stored Procedure A、B、C共用
@@ -90,8 +90,15 @@ namespace DFPS.API.Data.Repository
             var data = await _context.GetF340ProcessView
                    .FromSqlRaw(SQL, pc.ToArray())
                    .ToListAsync();
+
+            //tranfer minDate to ''
+            string minDate = _config.GetSection("LogicSettings:MinDate").Value;
+            data.ForEach(m =>{
+                if(m.ActivationDate == minDate) m.ActivationDate = "";
+            });
             return data;
         }
+        /*
         public PagedList<F340_ProcessDto> GetF340ProcessView(SF340Schedule sF340Schedule)
         {
             //Stored Procedure A、B、C共用
@@ -120,6 +127,7 @@ namespace DFPS.API.Data.Repository
             return PagedList<F340_ProcessDto>
            .Create(data, sF340Schedule.PageNumber, sF340Schedule.PageSize, sF340Schedule.IsPaging);
         }
+        */
 
         public async Task<List<F340_PpdDto>> GetF340PPDView(SF340PPDSchedule sF340PPDSchedule)
         {
@@ -137,6 +145,11 @@ namespace DFPS.API.Data.Repository
             var data = await _context.GetF340PpdView
                    .FromSqlRaw(string.Format("EXECUTE dbo.GetF340_BuyPlan_PPD{0} @FactoryId,@Season,@BuyPlanVer,@CwaDateS,@CwaDateE,@ModelNo,@ModelName,@Article",spCode), pc.ToArray())
                    .ToListAsync();
+            //tranfer minDate to ''
+            string minDate = _config.GetSection("LogicSettings:MinDate").Value;
+            data.ForEach(m =>{
+                if(m.CwaDeadline == minDate) m.CwaDeadline = "";
+            });
             return data;
         }
 

@@ -102,7 +102,9 @@
             "treatMent": "TreatMent",
             "partName": "PartName",
             "processDate": "ProcessDate",
-            "cardDate": "CardDate"
+            "cardDate": "CardDate",
+            
+            "proStatusId": "ProStatusId"
         }
     }
 }

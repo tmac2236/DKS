@@ -16,8 +16,8 @@ namespace DKS_API.Data.Interface
         Task AddUserLogAsync(UserLog user);
         Task<bool> SaveAll();
         F418_F420Dto GetF420F418View(string f418No);
-        PagedList<F340_ProcessDto> GetF340ProcessView(SF340Schedule sF340Schedule);
-        Task<List<F340_ProcessDto>> GetF340ProcessView4Excel(SF340Schedule sF340Schedule);
+        Task<List<F340_ProcessDto>> GetF340ProcessView(SF340Schedule sF340Schedule);
+        //Task<List<F340_ProcessDto>> GetF340ProcessView4Excel(SF340Schedule sF340Schedule);
         Task<List<F340_PpdDto>> GetF340PPDView(SF340PPDSchedule sF340PPDSchedule);
     }
 }

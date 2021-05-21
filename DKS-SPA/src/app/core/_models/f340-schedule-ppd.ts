@@ -24,4 +24,6 @@ export class F340SchedulePpd implements ModelInterface {
   partName : string;
   processDate : string;
   cardDate : string;
+
+  proStatusId:string;
 }

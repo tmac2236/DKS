@@ -27,5 +27,7 @@ namespace DKS_API.DTOs
         public string ProcessDate { get; set; }
         public string CardDate { get; set; }
 
+        public string ProStatusId{get;set;}
+
     }
 }

@@ -102,7 +102,9 @@
             "treatMent": "TreatMent",
             "partName": "Part Name",
             "processDate": "跨單位作業流程",
-            "cardDate": "面部實物卡"
+            "cardDate": "面部實物卡",
+
+            "proStatusId":"ProStatusId"
         }
     }
 }

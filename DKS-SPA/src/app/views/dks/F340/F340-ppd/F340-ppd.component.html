@@ -108,7 +108,7 @@
                   [(ngModel)]="sF340PpdSchedule.bpVer"
                   (focus)="changeBPVerList()"
                 >
-                  <option value="All"></option>
+                  <option value=""></option>
                   <option *ngFor="let bpVer of bpVerList" value="{{ bpVer }}">
                     {{ bpVer }}
                   </option>
@@ -187,6 +187,7 @@
                     <!--套版分頁<table datatable id="f340Sche" class="table text-center table-striped">-->
                     <thead>
                       <tr class="table-info">
+                        <!--
                         <th
                           [hidden]="
                             !this.sF340PpdSchedule.role.includes('GM0000000038')
@@ -203,6 +204,7 @@
                         >
                           {{ "F340-PPD.picture" | translate }}
                         </th>
+                        -->
                         <th
                           style="background-color: #ff7f50"
                           tooltip="Buy Plan"
@@ -323,6 +325,13 @@
                           tooltip="開發技術F340"
                           placement="bottom"
                         >
+                          {{ "F340-PPD.titleList.proStatusId" | translate }}
+                        </th>
+                        <th
+                          style="background-color: #23d954"
+                          tooltip="開發技術F340"
+                          placement="bottom"
+                        >
                           {{ "F340-PPD.titleList.hpPartNo" | translate }}
                         </th>
                         <th
@@ -351,6 +360,7 @@
                     <tbody>
                       <ng-container *ngFor="let item of result; let i = index">
                         <tr>
+                          <!--
                           <td>
                             <img
                               src="../assets/systemImg/visible.png"
@@ -385,16 +395,9 @@
                                 height="35"
                                 (click)="removePicF340Ppd(item)"
                               />
-                              <!--
-                            <button
-                            class="btn btn-danger mr-2"
-                            type="button"
-                            (click)="removePicF340Ppd(item)"
-                            >
-                            Delete
-                            </button>
-                            --></td>
+                            </td>
                           </div>
+                          -->
                           <td>{{ item.factory }}</td>
                           <td>{{ item.buyPlanSeason }}</td>
                           <td>{{ item.versionNo }}</td>
@@ -414,9 +417,11 @@
                           <td>{{ item.releaseType }}</td>
 
                           <td>{{ item.sampleNo }}</td>
+                          <td>{{ item.proStatusId }}</td>
                           <td>{{ item.hpPartNo }}</td>
                           <td>{{ item.supsName }}</td>
                           <td>{{ item.treatMent }}</td>
+                          
                           <td>{{ item.partName }}</td>
                         </tr>
                       </ng-container>
