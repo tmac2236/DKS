@@ -44,4 +44,22 @@ export class AuthService {
     const token = localStorage.getItem('token');
     return !this.jwtHelper.isTokenExpired(token);
   }
+  checkIsThatGroup(groupNo:string){
+
+    let result = false;
+    const token = localStorage.getItem('token');
+    if (token) {
+      // token is expired?
+      let isExpired = this.jwtHelper.isTokenExpired(token);
+      console.log("Auth Service => Token is Expired? :" + isExpired);
+      if(isExpired) return false;
+      
+      let roleArray = this.jwtHelper.decodeToken(token)["role"];
+      console.log("Auth Service => the account role is :" + roleArray);
+      result = roleArray.includes(groupNo);
+      console.log("Auth Service => the account role is Valid? "+ result );
+    }
+
+    return result;
+  }
 }

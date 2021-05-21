@@ -4,6 +4,7 @@ import { Routes, RouterModule } from "@angular/router";
 // Import Containers
 import { DefaultLayoutComponent } from "./containers";
 import { AuthGuard } from "./core/_guards/auth.guard";
+import { AuthGuardRole } from "./core/_guards/auth.guard-role";
 import { DictionaryComponent } from "./views/dictionary/dictionary.component";
 import { F340PpdComponent } from "./views/dks/F340/F340-ppd/F340-ppd.component";
 import { F340Component } from "./views/dks/F340/F340.component";
@@ -47,7 +48,11 @@ export const routes: Routes = [
   },
   {
     path: "F340-PPD",
+    canActivate: [AuthGuardRole],
     component: F340PpdComponent,
+    data: {
+      roles: ['GM0000000038','GM0000000039'],
+    },
   },
   {
     path: "F420",

@@ -63,6 +63,7 @@ import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { DataTablesModule } from "angular-datatables";
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { ModalModule } from "ngx-bootstrap/modal";
+import { AuthGuardRole } from "./core/_guards/auth.guard-role";
 
 
 //載入 "/assets/i18n/[lang].json" 語系檔
@@ -119,6 +120,7 @@ export function createTranslateLoader(http: HttpClient) {
     ErrorInterceptorProvider,
     AlertifyService,
     AuthGuard,
+    AuthGuardRole,
     DatePipe,
     {
       provide: LocationStrategy,
