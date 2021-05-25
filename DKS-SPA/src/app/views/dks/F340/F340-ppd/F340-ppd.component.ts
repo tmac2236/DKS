@@ -18,6 +18,7 @@ export class F340PpdComponent implements OnInit {
   sF340PpdSchedule: SF340PpdSchedule = new SF340PpdSchedule();
   result: F340SchedulePpd[] = [];
   bpVerList: string[];
+  memoBtn = true;
   constructor(public utility: Utility, private dksService: DksService) {}
 
   ngOnInit() {
@@ -145,5 +146,13 @@ export class F340PpdComponent implements OnInit {
   viewPic(model: F340SchedulePpd){
     alert("DEMO click viewPic : " + model.article);
     window.open('http://10.4.0.39:6970/assets/systemImg/exit.png');
+  }
+  editMemo(){
+    this.memoBtn = !this.memoBtn;
+    alert("edit memo " );
+  }
+  saveMemo(){
+    this.memoBtn = !this.memoBtn;
+    alert("save memo " );
   }
 }

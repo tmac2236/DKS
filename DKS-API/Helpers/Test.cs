@@ -7,7 +7,7 @@ namespace DKS_API.Helpers
     {
         public Test()
         {
-            Init();
+            //Init();
         }
 
         public void Init()

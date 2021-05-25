@@ -173,6 +173,24 @@
                 >
                   {{ "Common.btnList.export" | translate }}
                 </button>
+                <button
+                  *ngIf="this.memoBtn; else elseMemoBtn"
+                  class="btn btn-success mr-1"
+                  type="button"
+                  (click)="editMemo()"
+                >
+                  修改Memo
+                </button>
+                <ng-template #elseMemoBtn>
+                  <button
+                    class="btn btn-danger mr-1"
+                    type="button"
+                    (click)="saveMemo()"
+                  >
+                    儲存Memo
+                  </button>
+                </ng-template>
+
               </div>
             </div>
           </form>
@@ -205,6 +223,13 @@
                           {{ "F340-PPD.picture" | translate }}
                         </th>
                         -->
+                        <th
+                          style="background-color: #ff7f50"
+                          tooltip="Buy Plan"
+                          placement="bottom"
+                        >
+                          Memo
+                        </th>
                         <th
                           style="background-color: #ff7f50"
                           tooltip="Buy Plan"
@@ -398,6 +423,8 @@
                             </td>
                           </div>
                           -->
+                          <td *ngIf="this.memoBtn; else elseMemoTd">{{ item.memo }}</td>
+                          <ng-template #elseMemoTd><input type="text" [(ngModel)]="item.memo" /></ng-template>
                           <td>{{ item.factory }}</td>
                           <td>{{ item.buyPlanSeason }}</td>
                           <td>{{ item.versionNo }}</td>
@@ -421,7 +448,7 @@
                           <td>{{ item.hpPartNo }}</td>
                           <td>{{ item.supsName }}</td>
                           <td>{{ item.treatMent }}</td>
-                          
+
                           <td>{{ item.partName }}</td>
                         </tr>
                       </ng-container>

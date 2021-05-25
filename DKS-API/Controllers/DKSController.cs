@@ -23,11 +23,13 @@ namespace DKS_API.Controllers
 
         private readonly IDKSDAO _dksDao;
         private readonly IDevBuyPlanDAO _devBuyPlanDAO;
-        public DKSController(IConfiguration config, IWebHostEnvironment webHostEnvironment, IDKSDAO dksDao, IDevBuyPlanDAO devBuyPlanDAO)
+        private readonly IDevTreatmentDAO _devTreatmentDAO;
+        public DKSController(IConfiguration config, IWebHostEnvironment webHostEnvironment, IDKSDAO dksDao, IDevBuyPlanDAO devBuyPlanDAO, IDevTreatmentDAO devTreatmentDAO)
         : base(config, webHostEnvironment)
         {
             _dksDao = dksDao;
             _devBuyPlanDAO = devBuyPlanDAO;
+            _devTreatmentDAO = devTreatmentDAO;
         }
         [HttpPost("exportF340_Process")]
         public async Task<IActionResult> ExportF340_Process(SF340Schedule sF340Schedule)

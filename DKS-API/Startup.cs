@@ -66,6 +66,8 @@ namespace DKS_API
             services.AddScoped<IDevBuyPlanDAO, DevBuyPlanDAO>();
             services.AddScoped<IWarehouseDAO, WarehouseDAO>();
             services.AddScoped<ISamPartBDAO,SamPartBDAO>();
+            services.AddScoped<IDevTreatmentDAO,DevTreatmentDAO>();
+
             //Service
             services.AddScoped<IAuthService, AuthService>();
 
