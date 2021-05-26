@@ -144,4 +144,11 @@ export class DksService {
       f340PpdPic
     );
   }
+  editF340Ppd(f340Ppds: F340SchedulePpd[]) {
+    console.log("dks.service editPicF340Ppd:", f340Ppds);
+    return this.utility.http.post(
+      this.utility.baseUrl + "dks/editF340Ppds",
+      f340Ppds
+    );
+  }
 }

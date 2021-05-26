@@ -173,7 +173,7 @@
                 >
                   {{ "Common.btnList.export" | translate }}
                 </button>
-                <button
+                <button [hidden]="!this.sF340PpdSchedule.role.includes('GM0000000038')"
                   *ngIf="this.memoBtn; else elseMemoBtn"
                   class="btn btn-success mr-1"
                   type="button"
@@ -190,7 +190,6 @@
                     儲存Memo
                   </button>
                 </ng-template>
-
               </div>
             </div>
           </form>
@@ -228,7 +227,7 @@
                           tooltip="Buy Plan"
                           placement="bottom"
                         >
-                          Memo
+                          PPD Remark
                         </th>
                         <th
                           style="background-color: #ff7f50"
@@ -423,8 +422,11 @@
                             </td>
                           </div>
                           -->
-                          <td *ngIf="this.memoBtn; else elseMemoTd">{{ item.memo }}</td>
-                          <ng-template #elseMemoTd><input type="text" [(ngModel)]="item.memo" /></ng-template>
+                          <td *ngIf="(this.memoBtn); else elseMemoTd">{{ item.ppdRemark }}</td>
+                          <ng-template #elseMemoTd>
+                            <!--<input type="text" [(ngModel)]="item.ppdRemark" [readonly]="(item.releaseType !== 'CWA')"/>-->
+                            <textarea class="form-control" name="ppdRemark" rows="2"[(ngModel)]="item.ppdRemark"#message='ngModel'></textarea>
+                          </ng-template>
                           <td>{{ item.factory }}</td>
                           <td>{{ item.buyPlanSeason }}</td>
                           <td>{{ item.versionNo }}</td>

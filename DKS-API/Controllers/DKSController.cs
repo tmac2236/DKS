@@ -214,6 +214,37 @@ namespace DKS_API.Controllers
             return Ok();
 
         }
+        [HttpPost("editF340Ppds")]
+        public async Task<IActionResult> EditF340Ppds(List<F340_PpdDto> dtos)
+        {
+            try
+            {
+                
+                foreach(F340_PpdDto dto in dtos){
+                    if(dto.PartName.Trim().Length < 1 || dto.TreatMent.Trim().Length <1 || dto.ReleaseType.Trim()!="CWA" ) continue;
+                    var partNo = dto.PartName.Trim().Split(" ")[0];
+                    var treatMentNo = dto.TreatMent.Trim().Split(" ")[0];
+                    DevTreatment model =_devTreatmentDAO.FindSingle(
+                                                     x => x.SAMPLENO.Trim() == dto.SampleNo.Trim() &&
+                                                     x.PARTNO.Trim() == partNo &&
+                                                     x.TREATMENTCODE.Trim() == treatMentNo);
+
+                    if(model != null ){
+                        if(model.PPD_REMARK.Trim() == dto.PpdRemark.Trim()) continue;
+                        model.PPD_REMARK = dto.PpdRemark.Trim();
+                        _devTreatmentDAO.Update(model);
+                    }
+                }
+                 await _devTreatmentDAO.SaveAll();
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+            return Ok();
+
+        }
 
     }
 }

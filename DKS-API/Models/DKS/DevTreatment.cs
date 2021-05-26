@@ -36,7 +36,7 @@ namespace DKS.API.Models.DKS
         [StringLength(50)]
         public string DEV_LOGIN { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public long GUID { get; set; }
 
         [StringLength(10)]
@@ -154,5 +154,6 @@ namespace DKS.API.Models.DKS
 
         [StringLength(20)]
         public string PHOTO { get; set; }
+
     }
 }

@@ -149,10 +149,21 @@ export class F340PpdComponent implements OnInit {
   }
   editMemo(){
     this.memoBtn = !this.memoBtn;
-    alert("edit memo " );
   }
   saveMemo(){
     this.memoBtn = !this.memoBtn;
-    alert("save memo " );
+    this.dksService.editF340Ppd(this.result).subscribe(
+      (res) => {
+        this.utility.spinner.hide();
+        this.utility.alertify.confirm(
+          "Sweet Alert",
+          "Update Success !",
+          () => { });  
+      },
+      (error) => {
+        this.utility.spinner.hide();
+        this.utility.alertify.error(error);
+      }
+    );
   }
 }
