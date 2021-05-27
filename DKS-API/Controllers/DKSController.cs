@@ -217,32 +217,50 @@ namespace DKS_API.Controllers
         [HttpPost("editF340Ppds")]
         public async Task<IActionResult> EditF340Ppds(List<F340_PpdDto> dtos)
         {
+            var editCount = 0;
             try
             {
-                
-                foreach(F340_PpdDto dto in dtos){
-                    if(dto.PartName.Trim().Length < 1 || dto.TreatMent.Trim().Length <1 || dto.ReleaseType.Trim()!="CWA" ) continue;
+                var content = "";
+                foreach (F340_PpdDto dto in dtos)
+                {
+                    if (dto.PartName.Trim().Length < 1 || dto.TreatMent.Trim().Length < 1 || dto.ReleaseType.Trim() != "CWA") continue;
                     var partNo = dto.PartName.Trim().Split(" ")[0];
                     var treatMentNo = dto.TreatMent.Trim().Split(" ")[0];
-                    DevTreatment model =_devTreatmentDAO.FindSingle(
+                    DevTreatment model = _devTreatmentDAO.FindSingle(
                                                      x => x.SAMPLENO.Trim() == dto.SampleNo.Trim() &&
                                                      x.PARTNO.Trim() == partNo &&
                                                      x.TREATMENTCODE.Trim() == treatMentNo);
 
-                    if(model != null ){
-                        if(model.PPD_REMARK.Trim() == dto.PpdRemark.Trim()) continue;
+                    if (model != null)
+                    {
+                        if (model.PPD_REMARK.ToSafetyString().Trim() == dto.PpdRemark.ToSafetyString().Trim()) continue;
                         model.PPD_REMARK = dto.PpdRemark.Trim();
                         _devTreatmentDAO.Update(model);
+                        editCount++;
+                        content += model.ARTICLE;
+                        content += "、";
                     }
                 }
-                 await _devTreatmentDAO.SaveAll();
+
+                if (editCount > 0)
+                {
+                    content = content.Remove(content.Length - 1 );
+                    var toMails = new List<string>();
+                    var users = await _dksDao.GetUsersByRole("GM0000000038");
+                    users.ForEach(x =>
+                    {
+                        toMails.Add(x.EMAIL);
+                    });
+                    await SendListMailAsync(toMails, "These Article Add Memo Please check !", content, null);
+                    await _devTreatmentDAO.SaveAll();
+                }
 
             }
             catch (Exception ex)
             {
                 return BadRequest();
             }
-            return Ok();
+            return Ok(editCount);
 
         }
 

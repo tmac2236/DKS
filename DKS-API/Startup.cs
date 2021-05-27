@@ -19,6 +19,7 @@ using DKS_API.Data.Interface;
 using DKS_API.Services.Implement;
 using DKS_API.Filters;
 using DKS_API.Helpers;
+using Bottom_API.Helpers;
 
 namespace DKS_API
 {
@@ -67,7 +68,8 @@ namespace DKS_API
             services.AddScoped<IWarehouseDAO, WarehouseDAO>();
             services.AddScoped<ISamPartBDAO,SamPartBDAO>();
             services.AddScoped<IDevTreatmentDAO,DevTreatmentDAO>();
-
+            services.AddScoped<IMailUtility,MailUtility>();
+            
             //Service
             services.AddScoped<IAuthService, AuthService>();
 

@@ -36,6 +36,14 @@ export class F340PpdComponent implements OnInit {
     this.dksService.searchF340PpdProcess(this.sF340PpdSchedule).subscribe(
       (res: PaginatedResult<F340SchedulePpd[]>) => {
         this.result = res.result;
+        this.result.forEach(m=>{
+          if(m.releaseType =="CWA" && m.treatMent.length > 1 && m.partName.length > 1 ){
+            m.isDisplay = utilityConfig.YesNumber;
+          }else{
+            m.isDisplay = utilityConfig.NoNumber;
+          }
+          
+        })
         this.sF340PpdSchedule.setPagination(res.pagination);
         this.utility.spinner.hide();
         if (res.result.length < 1) {
@@ -151,13 +159,14 @@ export class F340PpdComponent implements OnInit {
     this.memoBtn = !this.memoBtn;
   }
   saveMemo(){
+    this.utility.spinner.show();
     this.memoBtn = !this.memoBtn;
     this.dksService.editF340Ppd(this.result).subscribe(
       (res) => {
         this.utility.spinner.hide();
         this.utility.alertify.confirm(
           "Sweet Alert",
-          "Update Success !",
+          "You Updated PPD Remark.",
           () => { });  
       },
       (error) => {

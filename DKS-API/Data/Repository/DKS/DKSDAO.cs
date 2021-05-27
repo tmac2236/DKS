@@ -163,8 +163,29 @@ namespace DFPS.API.Data.Repository
                                                   ,A.LOGIN
                                                   ,A.FACTORYID
                                             	  ,B.GROUPNO
+                                                  ,C.EMAIL
                                               FROM STACCRTH AS A
-                                              LEFT JOIN UTL_PJOBINER AS B ON A.USERID = B.USERID ");
+                                              LEFT JOIN UTL_PJOBINER AS B ON A.USERID = B.USERID
+                                              INNER JOIN SSBDEV3..UTL_USERINFO AS C ON A.USERID = C.USERID ");
+            strSQL += strWhere;
+            var data = await _context.UserRoleDto.FromSqlRaw(strSQL).ToListAsync();
+            return data;
+        }
+
+        public async Task<List<UserRoleDto>> GetUsersByRole(string groupNo)
+        {
+            string strWhere = "WHERE B.GROUPNO = '" + groupNo +"'" ;
+            string strSQL = string.Format(@"
+                                            SELECT  
+                                                   A.WORKPNO
+                                                  ,CONVERT(varchar,A.USERID) AS USERID
+                                                  ,A.LOGIN
+                                                  ,A.FACTORYID
+                                            	  ,B.GROUPNO
+                                                  ,C.EMAIL
+                                              FROM STACCRTH AS A
+                                              LEFT JOIN UTL_PJOBINER AS B ON A.USERID = B.USERID
+                                              INNER JOIN SSBDEV3..UTL_USERINFO AS C ON A.USERID = C.USERID ");
             strSQL += strWhere;
             var data = await _context.UserRoleDto.FromSqlRaw(strSQL).ToListAsync();
             return data;

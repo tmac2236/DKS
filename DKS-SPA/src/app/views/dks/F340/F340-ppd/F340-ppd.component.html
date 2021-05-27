@@ -425,7 +425,7 @@
                           <td *ngIf="(this.memoBtn); else elseMemoTd">{{ item.ppdRemark }}</td>
                           <ng-template #elseMemoTd>
                             <!--<input type="text" [(ngModel)]="item.ppdRemark" [readonly]="(item.releaseType !== 'CWA')"/>-->
-                            <textarea class="form-control" name="ppdRemark" rows="2"[(ngModel)]="item.ppdRemark"#message='ngModel'></textarea>
+                            <textarea [readonly]="item.isDisplay == 0" class="form-control" name="ppdRemark" rows="2"[(ngModel)]="item.ppdRemark"#message='ngModel'></textarea>
                           </ng-template>
                           <td>{{ item.factory }}</td>
                           <td>{{ item.buyPlanSeason }}</td>

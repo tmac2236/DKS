@@ -7,5 +7,6 @@ namespace DKS_API.DTOs
         public string LOGIN { get; set; }
         public string FACTORYID { get; set; }
         public string GROUPNO { get; set; }
+        public string EMAIL { get; set; }
     }
 }
