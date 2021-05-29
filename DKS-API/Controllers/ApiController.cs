@@ -62,7 +62,7 @@ namespace DKS_API.Controllers
 
             return stream.ToArray(); ;
         }
-        //儲存檔案到Server
+        //儲存檔案到Server,If file is null resent to do Delete
         //file:檔案 
         //settingNam: root資料夾名稱
         //fileName: 檔案名稱
@@ -76,11 +76,10 @@ namespace DKS_API.Controllers
                 var pjName = _config.GetSection("AppSettings:ProjectName").Value;
                 var pathToSave = rootdir + localStr;
                 pathToSave = pathToSave.Replace(pjName + "-API", pjName + "-SPA");
-                if (file.Length > 0)
+                //新增檔名的全路徑
+                var fullPath = Path.Combine(pathToSave, fileName);
+                if (file != null)
                 {
-
-                    //新增檔名的全路徑
-                    var fullPath = Path.Combine(pathToSave, fileName);
                     if (!Directory.Exists(pathToSave))
                     {
                         DirectoryInfo di = Directory.CreateDirectory(pathToSave);
@@ -90,6 +89,14 @@ namespace DKS_API.Controllers
                         await file.CopyToAsync(stream);
                     }
                     isSuccess = true;
+                }
+                else
+                {   //upload null present Delete
+                    if (System.IO.File.Exists(fullPath))
+                    {
+                        System.IO.File.Delete(fullPath);
+                        isSuccess = true;
+                    }
                 }
             }
             catch (Exception ex)

@@ -191,20 +191,35 @@ namespace DKS_API.Controllers
                 var sampleNo = HttpContext.Request.Form["sampleNo"].ToString();
                 var treatMent = HttpContext.Request.Form["treatMent"].ToString();
                 var partName = HttpContext.Request.Form["partName"].ToString();
+                var article = HttpContext.Request.Form["article"].ToString();
+                var partNo = partName.Trim().Split(" ")[0];
+                var treatMentNo = treatMent.Trim().Split(" ")[0];
+                var fileName = string.Format("{0}_{1}_{2}.jpg", article, partNo, treatMentNo);
+
+                DevTreatment model = _devTreatmentDAO.FindSingle(
+                                 x => x.SAMPLENO.Trim() == sampleNo.Trim() &&
+                                 x.PARTNO.Trim() == partNo &&
+                                 x.TREATMENTCODE.Trim() == treatMentNo);
 
                 if (HttpContext.Request.Form.Files.Count > 0)
                 {
                     var file = HttpContext.Request.Form.Files[0];
-                    if (await SaveFiletoServer(file, "F340PpdPic", "test.jpg"))
+                    if (await SaveFiletoServer(file, "F340PpdPic", fileName))
                     {
-                        //do CRUD-U here.
-
+                        model.PHOTO = fileName;
+                        _devTreatmentDAO.Update(model);
                     }
                 }
                 else
-                {
-                    //do CRUD-D here.
+                {   //do CRUD-D here.
+
+                    if (await SaveFiletoServer(null, "F340PpdPic", fileName))
+                    {
+                        model.PHOTO = "";
+                        _devTreatmentDAO.Update(model);
+                    }
                 }
+                await _devTreatmentDAO.SaveAll();
 
             }
             catch (Exception ex)
@@ -244,7 +259,7 @@ namespace DKS_API.Controllers
 
                 if (editCount > 0)
                 {
-                    content = content.Remove(content.Length - 1 );
+                    content = content.Remove(content.Length - 1);
                     var toMails = new List<string>();
                     var users = await _dksDao.GetUsersByRole("GM0000000038");
                     users.ForEach(x =>

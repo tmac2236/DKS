@@ -19,6 +19,11 @@ export class F340PpdComponent implements OnInit {
   result: F340SchedulePpd[] = [];
   bpVerList: string[];
   memoBtn = true;
+  uiControls:any = {
+    uploadPicF340Ppd: 'GM0000000001',
+    editMemo:'GM0000000001'
+  };
+
   constructor(public utility: Utility, private dksService: DksService) {}
 
   ngOnInit() {
@@ -99,8 +104,6 @@ export class F340PpdComponent implements OnInit {
   }
 
   uploadPicF340Ppd(files: FileList, model: F340SchedulePpd) {
-    alert("DEMO Add!");
-    return ;
     console.log(model);
     if (!this.utility.checkFileMaxFormat(files.item(0), 1128659)) {
       this.utility.alertify.confirm(
@@ -115,36 +118,40 @@ export class F340PpdComponent implements OnInit {
     formData.append("sampleNo",model.sampleNo);
     formData.append("treatMent",model.treatMent);
     formData.append("partName",model.partName);
-
+    formData.append("article",model.article);
+    this.utility.spinner.show();
     this.dksService.editPicF340Ppd(formData).subscribe(
       () => {
+        this.utility.spinner.hide();
         //找到該筆model 把資料回填
       },
       (error) => {
+        this.utility.spinner.hide();
         this.utility.alertify.error("Add failed !!!!");
-      },()=>{
-        alert("You add one picture !");
       }
     );
   }
   removePicF340Ppd(model: F340SchedulePpd) {
-    alert("DEMO Delete!");
-    return ;
     var formData = new FormData(); 
-    formData.append("file", null);
+    formData.append("file", null);  // upload null present delete
     formData.append("sampleNo",model.sampleNo);
     formData.append("treatMent",model.treatMent);
     formData.append("partName",model.partName);
+    formData.append("article",model.article);
+     
     this.utility.alertify.confirm(
       "Sweet Alert",
       "Are you sure to Delete this picture ?",
       () => {
+        this.utility.spinner.show();
         this.dksService.editPicF340Ppd(formData).subscribe(
           () => {
-            location.reload();
+            this.utility.spinner.hide();
             this.utility.alertify.success("Delete succeed!");
+            model.photo =''; // make the url of photo to blank
           },
           (error) => {
+            this.utility.spinner.hide();
             this.utility.alertify.error("Delete failed !!!!");
           }
         );
@@ -152,8 +159,7 @@ export class F340PpdComponent implements OnInit {
     );
   }
   viewPic(model: F340SchedulePpd){
-    alert("DEMO click viewPic : " + model.article);
-    window.open('http://10.4.0.39:6970/assets/systemImg/exit.png');
+    window.open('../assets/F340PpdPic/'+ model.photo);
   }
   editMemo(){
     this.memoBtn = !this.memoBtn;

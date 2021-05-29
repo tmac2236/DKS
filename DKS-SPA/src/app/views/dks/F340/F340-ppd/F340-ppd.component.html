@@ -173,7 +173,10 @@
                 >
                   {{ "Common.btnList.export" | translate }}
                 </button>
-                <button [hidden]="!this.sF340PpdSchedule.role.includes('GM0000000038')"
+                <button
+                  [hidden]="
+                    !this.sF340PpdSchedule.role.includes(uiControls.editmemo)
+                  "
                   *ngIf="this.memoBtn; else elseMemoBtn"
                   class="btn btn-success mr-1"
                   type="button"
@@ -204,24 +207,6 @@
                     <!--套版分頁<table datatable id="f340Sche" class="table text-center table-striped">-->
                     <thead>
                       <tr class="table-info">
-                        <!--
-                        <th
-                          [hidden]="
-                            !this.sF340PpdSchedule.role.includes('GM0000000038')
-                          "
-                          style="background-color: #23d954"
-                          tooltip="開發人員維護"
-                          placement="right"
-                        >
-                          {{ "F340-PPD.mantainPic" | translate }}
-                        </th>
-                        <th
-                          style="background-color: #23d954"
-                          placement="bottom"
-                        >
-                          {{ "F340-PPD.picture" | translate }}
-                        </th>
-                        -->
                         <th
                           style="background-color: #ff7f50"
                           tooltip="Buy Plan"
@@ -379,53 +364,42 @@
                         >
                           {{ "F340-PPD.titleList.partName" | translate }}
                         </th>
+                        <th
+                        style="background-color: #23d954"
+                        placement="bottom"
+                      >
+                        {{ "F340-PPD.picture" | translate }}
+                      </th>
+                      <th
+                        [hidden]="
+                          !this.sF340PpdSchedule.role.includes(
+                            uiControls.uploadPicF340Ppd
+                          )
+                        "
+                        style="background-color: #23d954"
+                        tooltip="開發人員維護"
+                        placement="right"
+                      >
+                        {{ "F340-PPD.mantainPic" | translate }}
+                      </th>                        
                       </tr>
                     </thead>
                     <tbody>
                       <ng-container *ngFor="let item of result; let i = index">
                         <tr>
-                          <!--
-                          <td>
-                            <img
-                              src="../assets/systemImg/visible.png"
-                              class="mt-2"
-                              width="35"
-                              height="35"
-                              [hidden]="false"
-                              (click)="viewPic(item)"
-                            />
+                          <td *ngIf="this.memoBtn; else elseMemoTd">
+                            {{ item.ppdRemark }}
                           </td>
-                          <div
-                            [hidden]="
-                              !this.sF340PpdSchedule.role.includes('GM0000000038')">
-                            <td>
-                              <label
-                                class="btn btn-success mt-2"
-                                for="fileUpload{{ i }}"
-                                >+</label
-                              >
-                              <input
-                                id="fileUpload{{ i }}"
-                                type="file"
-                                style="display: none"
-                                accept=".jpg"
-                                (change)="
-                                  uploadPicF340Ppd($event.target.files, item)
-                                "
-                              />
-                              <img
-                                src="../assets/systemImg/delete.png"
-                                width="35"
-                                height="35"
-                                (click)="removePicF340Ppd(item)"
-                              />
-                            </td>
-                          </div>
-                          -->
-                          <td *ngIf="(this.memoBtn); else elseMemoTd">{{ item.ppdRemark }}</td>
                           <ng-template #elseMemoTd>
                             <!--<input type="text" [(ngModel)]="item.ppdRemark" [readonly]="(item.releaseType !== 'CWA')"/>-->
-                            <textarea [readonly]="item.isDisplay == 0" class="form-control" name="ppdRemark" rows="2"[(ngModel)]="item.ppdRemark"#message='ngModel'></textarea>
+                            <textarea
+                              [readonly]="item.isDisplay == 0"
+                              class="form-control"
+                              name="ppdRemark"
+                              rows="2"
+                              [(ngModel)]="item.ppdRemark"
+                              #message="ngModel"
+                            ></textarea>
                           </ng-template>
                           <td>{{ item.factory }}</td>
                           <td>{{ item.buyPlanSeason }}</td>
@@ -452,6 +426,54 @@
                           <td>{{ item.treatMent }}</td>
 
                           <td>{{ item.partName }}</td>
+                          <td>
+                            <img
+                              src="../assets/systemImg/visible.png"
+                              class="mt-2"
+                              width="35"
+                              height="35"
+                              [style.visibility]="
+                                item.photo.length < 1 ? 'hidden' : 'visible'
+                              "
+                              (click)="viewPic(item)"
+                            />
+                          </td>
+                          <div
+                            [hidden]="
+                              !this.sF340PpdSchedule.role.includes(
+                                uiControls.uploadPicF340Ppd
+                              )
+                            "
+                          >
+                            <td>
+                              <label
+                                [style.visibility]="
+                                  item.isDisplay == 0 ? 'hidden' : 'visible'
+                                "
+                                class="btn btn-success mt-2"
+                                for="fileUpload{{ i }}"
+                                >+</label
+                              >
+                              <input
+                                id="fileUpload{{ i }}"
+                                type="file"
+                                style="display: none"
+                                accept=".jpg"
+                                (change)="
+                                  uploadPicF340Ppd($event.target.files, item)
+                                "
+                              />
+                              <img
+                                [style.visibility]="
+                                  item.photo.length < 1 ? 'hidden' : 'visible'
+                                "
+                                src="../assets/systemImg/delete.png"
+                                width="35"
+                                height="35"
+                                (click)="removePicF340Ppd(item)"
+                              />
+                            </td>
+                          </div>                          
                         </tr>
                       </ng-container>
                     </tbody>

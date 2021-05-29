@@ -27,7 +27,7 @@ export class F340SchedulePpd implements ModelInterface {
 
   proStatusId:string;
   ppdRemark:string;
-
+  photo:string;
   
 
   isDisplay: number; //only use in front end
