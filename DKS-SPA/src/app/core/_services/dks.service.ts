@@ -1,7 +1,7 @@
 import { HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { map, timeout } from 'rxjs/operators';
+import { map, timeout } from "rxjs/operators";
 import { Utility } from "../utility/utility";
 import { utilityConfig } from "../utility/utility-config";
 import { F340SchedulePpd } from "../_models/f340-schedule-ppd";
@@ -16,36 +16,44 @@ import { SF340Schedule } from "../_models/s_f340-schedule";
 export class DksService {
   constructor(private utility: Utility) {}
 
-  searchF340Process(sF340Schedule: SF340Schedule): Observable<PaginatedResult<F340Schedule[]>> {
-    
-    const paginatedResult: PaginatedResult<F340Schedule[]> = new PaginatedResult<F340Schedule[]>();
+  searchF340Process(
+    sF340Schedule: SF340Schedule
+  ): Observable<PaginatedResult<F340Schedule[]>> {
+    const paginatedResult: PaginatedResult<F340Schedule[]> =
+      new PaginatedResult<F340Schedule[]>();
 
     let params = new HttpParams();
-    params = params.append('IsPaging', sF340Schedule.isPaging.toString());
-    if (sF340Schedule.currentPage != null && sF340Schedule.itemsPerPage != null) {
-      params = params.append('pageNumber', sF340Schedule.currentPage.toString());
-      params = params.append('pageSize', sF340Schedule.itemsPerPage.toString());
+    params = params.append("IsPaging", sF340Schedule.isPaging.toString());
+    if (
+      sF340Schedule.currentPage != null &&
+      sF340Schedule.itemsPerPage != null
+    ) {
+      params = params.append(
+        "pageNumber",
+        sF340Schedule.currentPage.toString()
+      );
+      params = params.append("pageSize", sF340Schedule.itemsPerPage.toString());
       //params = params.append('orderBy', sAttendance.orderBy);
     }
-    params = params.append('dataType', sF340Schedule.dataType.toString());
-    params = params.append('factory', sF340Schedule.factory.toString());
-    params = params.append('season', sF340Schedule.season.toString());
-    params = params.append('bpVer', sF340Schedule.bpVer.toString());
-    params = params.append('cwaDateS', sF340Schedule.cwaDateS.toString());
-    params = params.append('cwaDateE', sF340Schedule.cwaDateE.toString());
+    params = params.append("dataType", sF340Schedule.dataType.toString());
+    params = params.append("factory", sF340Schedule.factory.toString());
+    params = params.append("season", sF340Schedule.season.toString());
+    params = params.append("bpVer", sF340Schedule.bpVer.toString());
+    params = params.append("cwaDateS", sF340Schedule.cwaDateS.toString());
+    params = params.append("cwaDateE", sF340Schedule.cwaDateE.toString());
 
     return this.utility.http
-      .get<F340Schedule[]>(this.utility.baseUrl + 'dks/getF340_Process' , {
-        observe: 'response',
+      .get<F340Schedule[]>(this.utility.baseUrl + "dks/getF340_Process", {
+        observe: "response",
         params,
       })
       .pipe(
         timeout(utilityConfig.httpTimeOut),
         map((response) => {
           paginatedResult.result = response.body;
-          if (response.headers.get('Pagination') != null) {
+          if (response.headers.get("Pagination") != null) {
             paginatedResult.pagination = JSON.parse(
-              response.headers.get('Pagination')
+              response.headers.get("Pagination")
             );
           }
           return paginatedResult;
@@ -91,55 +99,68 @@ export class DksService {
       f420Excel
     );
   }
-  searchBPVerList(season : string, factory: string){
+  searchBPVerList(season: string, factory: string) {
     return this.utility.http.get<string[]>(
       this.utility.baseUrl +
         "dks/getBPVersionBySeason?season=" +
-        season +'&factory=' + factory
+        season +
+        "&factory=" +
+        factory
     );
   }
 
-  searchF340PpdProcess(sF340PpdSchedule: SF340PpdSchedule): Observable<PaginatedResult<F340SchedulePpd[]>> {
-    
-    const paginatedResult: PaginatedResult<F340SchedulePpd[]> = new PaginatedResult<F340SchedulePpd[]>();
+  searchF340PpdProcess(
+    sF340PpdSchedule: SF340PpdSchedule
+  ): Observable<PaginatedResult<F340SchedulePpd[]>> {
+    const paginatedResult: PaginatedResult<F340SchedulePpd[]> =
+      new PaginatedResult<F340SchedulePpd[]>();
 
     let params = new HttpParams();
-    params = params.append('IsPaging', sF340PpdSchedule.isPaging.toString());
-    if (sF340PpdSchedule.currentPage != null && sF340PpdSchedule.itemsPerPage != null) {
-      params = params.append('pageNumber', sF340PpdSchedule.currentPage.toString());
-      params = params.append('pageSize', sF340PpdSchedule.itemsPerPage.toString());
+    params = params.append("IsPaging", sF340PpdSchedule.isPaging.toString());
+    if (
+      sF340PpdSchedule.currentPage != null &&
+      sF340PpdSchedule.itemsPerPage != null
+    ) {
+      params = params.append(
+        "pageNumber",
+        sF340PpdSchedule.currentPage.toString()
+      );
+      params = params.append(
+        "pageSize",
+        sF340PpdSchedule.itemsPerPage.toString()
+      );
       //params = params.append('orderBy', sAttendance.orderBy);
     }
-    params = params.append('factory', sF340PpdSchedule.factory.toString());
-    params = params.append('season', sF340PpdSchedule.season.toString());
-    params = params.append('bpVer', sF340PpdSchedule.bpVer.toString());
-    params = params.append('cwaDateS', sF340PpdSchedule.cwaDateS.toString());
-    params = params.append('cwaDateE', sF340PpdSchedule.cwaDateE.toString());
-    params = params.append('article', sF340PpdSchedule.article.toString());
-    params = params.append('modelNo', sF340PpdSchedule.modelNo.toString());
-    params = params.append('modelName', sF340PpdSchedule.modelName.toString());
+    params = params.append("factory", sF340PpdSchedule.factory.toString());
+    params = params.append("season", sF340PpdSchedule.season.toString());
+    params = params.append("bpVer", sF340PpdSchedule.bpVer.toString());
+    params = params.append("cwaDateS", sF340PpdSchedule.cwaDateS.toString());
+    params = params.append("cwaDateE", sF340PpdSchedule.cwaDateE.toString());
+    params = params.append("article", sF340PpdSchedule.article.toString());
+    params = params.append("modelNo", sF340PpdSchedule.modelNo.toString());
+    params = params.append("modelName", sF340PpdSchedule.modelName.toString());
 
     return this.utility.http
-      .get<F340SchedulePpd[]>(this.utility.baseUrl + 'dks/getF340_ProcessPpd' , {
-        observe: 'response',
+      .get<F340SchedulePpd[]>(this.utility.baseUrl + "dks/getF340_ProcessPpd", {
+        observe: "response",
         params,
       })
       .pipe(
         map((response) => {
           paginatedResult.result = response.body;
-          if (response.headers.get('Pagination') != null) {
+          if (response.headers.get("Pagination") != null) {
             paginatedResult.pagination = JSON.parse(
-              response.headers.get('Pagination')
+              response.headers.get("Pagination")
             );
           }
           return paginatedResult;
         })
       );
   }
-  
+
   editPicF340Ppd(f340PpdPic: FormData) {
     console.log("dks.service editPicF340Ppd:", f340PpdPic);
-    return this.utility.http.post(
+    return this.utility.http.post<F340SchedulePpd>(
       this.utility.baseUrl + "dks/editPicF340Ppd",
       f340PpdPic
     );

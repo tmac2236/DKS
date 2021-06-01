@@ -20,8 +20,8 @@ export class F340PpdComponent implements OnInit {
   bpVerList: string[];
   memoBtn = true;
   uiControls:any = {
-    uploadPicF340Ppd: 'GM0000000001',
-    editMemo:'GM0000000001'
+    uploadPicF340Ppd: utilityConfig.RoleSysAdm,
+    editMemo: utilityConfig.RoleSysAdm
   };
 
   constructor(public utility: Utility, private dksService: DksService) {}
@@ -121,9 +121,10 @@ export class F340PpdComponent implements OnInit {
     formData.append("article",model.article);
     this.utility.spinner.show();
     this.dksService.editPicF340Ppd(formData).subscribe(
-      () => {
+      (res) => {
         this.utility.spinner.hide();
         //找到該筆model 把資料回填
+        model.photo = res.photo
       },
       (error) => {
         this.utility.spinner.hide();

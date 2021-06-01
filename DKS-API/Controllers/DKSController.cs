@@ -221,12 +221,12 @@ namespace DKS_API.Controllers
                 }
                 await _devTreatmentDAO.SaveAll();
 
+                return Ok(model);
             }
             catch (Exception ex)
             {
                 return BadRequest();
             }
-            return Ok();
 
         }
         [HttpPost("editF340Ppds")]

@@ -3,6 +3,7 @@ import { Routes, RouterModule } from "@angular/router";
 
 // Import Containers
 import { DefaultLayoutComponent } from "./containers";
+import { utilityConfig } from "./core/utility/utility-config";
 import { AuthGuard } from "./core/_guards/auth.guard";
 import { AuthGuardRole } from "./core/_guards/auth.guard-role";
 import { DictionaryComponent } from "./views/dictionary/dictionary.component";
@@ -51,7 +52,7 @@ export const routes: Routes = [
     canActivate: [AuthGuardRole],
     component: F340PpdComponent,
     data: {
-      roles: ['GM0000000038','GM0000000039'],
+      roles: [utilityConfig.RolePpdPic,utilityConfig.RolePpdLook],
     },
   },
   {
@@ -98,4 +99,8 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {
+  constructor(){
+    //alert("CCC");
+  }
+}
