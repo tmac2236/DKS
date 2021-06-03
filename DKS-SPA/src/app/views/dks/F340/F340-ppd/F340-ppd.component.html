@@ -368,7 +368,11 @@
                         >
                           {{ "F340-PPD.titleList.partName" | translate }}
                         </th>
-                        <th
+                        <th [hidden]="
+                        !this.sF340PpdSchedule.role.includes(
+                          uiControls.editMemo
+                        )
+                      "
                           style="background-color: #23d954"
                           tooltip="生管人員維護"
                           placement="right"
@@ -452,8 +456,13 @@
                           <td>{{ item.treatMent }}</td>
 
                           <td>{{ item.partName }}</td>
-                          <td>
+                          <td [hidden]="
+                          !this.sF340PpdSchedule.role.includes(
+                            uiControls.editMemo
+                          )
+                        ">
                             <img
+                              class="mt-2"
                               src="../assets/systemImg/edit.png"
                               width="35"
                               height="35"
@@ -478,8 +487,7 @@
                               !this.sF340PpdSchedule.role.includes(
                                 uiControls.uploadPicF340Ppd
                               )
-                            "
-                          >
+                            ">
                             <td>
                               <label
                                 [style.visibility]="

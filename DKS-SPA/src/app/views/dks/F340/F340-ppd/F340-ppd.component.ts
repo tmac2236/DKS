@@ -24,8 +24,8 @@ export class F340PpdComponent implements OnInit {
   bpVerList: string[];
   memoBtn = true;
   uiControls:any = {
-    uploadPicF340Ppd: utilityConfig.RoleSysAdm,
-    editMemo: utilityConfig.RoleSysAdm
+    uploadPicF340Ppd: utilityConfig.DevPreAssist,
+    editMemo: utilityConfig.DevPreAssist
   };
   editModel: F340SchedulePpd = new F340SchedulePpd(); //onlt use in photoCommentModal
 
@@ -124,6 +124,7 @@ export class F340PpdComponent implements OnInit {
     formData.append("treatMent",model.treatMent);
     formData.append("partName",model.partName);
     formData.append("article",model.article);
+    formData.append("devSeason",model.devSeason);
     this.utility.spinner.show();
     this.dksService.editPicF340Ppd(formData).subscribe(
       (res) => {
@@ -144,7 +145,8 @@ export class F340PpdComponent implements OnInit {
     formData.append("treatMent",model.treatMent);
     formData.append("partName",model.partName);
     formData.append("article",model.article);
-     
+    formData.append("devSeason",model.devSeason);
+    formData.append("photo",model.photo); 
     this.utility.alertify.confirm(
       "Sweet Alert",
       "Are you sure to Delete this picture ?",
@@ -165,7 +167,7 @@ export class F340PpdComponent implements OnInit {
     );
   }
   viewPic(model: F340SchedulePpd){
-    window.open('../assets/F340PpdPic/'+ model.photo);
+    window.open('../assets/F340PpdPic/' + model.devSeason +  "/" + model.article + "/" + model.photo);
   }
   editMemo(){
     this.memoBtn = !this.memoBtn;

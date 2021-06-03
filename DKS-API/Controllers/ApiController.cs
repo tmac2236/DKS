@@ -65,8 +65,8 @@ namespace DKS_API.Controllers
         //儲存檔案到Server,If file is null resent to do Delete
         //file:檔案 
         //settingNam: root資料夾名稱
-        //fileName: 檔案名稱
-        protected async Task<Boolean> SaveFiletoServer(IFormFile file, string settingNam, string fileName)
+        //fileNames: 檔案名稱(含分層路徑)
+        protected async Task<Boolean> SaveFiletoServer(IFormFile file, string settingNam, List<string> fileNames)
         {
             Boolean isSuccess = false;
             try
@@ -74,12 +74,20 @@ namespace DKS_API.Controllers
                 string rootdir = Directory.GetCurrentDirectory();
                 var localStr = _config.GetSection("AppSettings:" + settingNam).Value;
                 var pjName = _config.GetSection("AppSettings:ProjectName").Value;
-                var pathToSave = rootdir + localStr;
+
+                string innerPath = "";
+                string fileName = string.Join("\\",fileNames.GetRange( fileNames.Count-1 , 1 ));
+                //folder path
+                if( fileNames.Count > 1 ){
+                    innerPath = string.Join("\\",fileNames.GetRange( 0, fileNames.Count-1 ));
+                }
+
+                var pathToSave = rootdir + localStr + innerPath;    //新增資料夾的全路徑
                 pathToSave = pathToSave.Replace(pjName + "-API", pjName + "-SPA");
-                //新增檔名的全路徑
-                var fullPath = Path.Combine(pathToSave, fileName);
+                var fullPath = pathToSave + "\\" + fileName;   //新增檔名的全路徑
                 if (file != null)
                 {
+
                     if (!Directory.Exists(pathToSave))
                     {
                         DirectoryInfo di = Directory.CreateDirectory(pathToSave);

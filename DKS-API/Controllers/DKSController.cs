@@ -188,13 +188,25 @@ namespace DKS_API.Controllers
         {
             try
             {
-                var sampleNo = HttpContext.Request.Form["sampleNo"].ToString();
-                var treatMent = HttpContext.Request.Form["treatMent"].ToString();
-                var partName = HttpContext.Request.Form["partName"].ToString();
-                var article = HttpContext.Request.Form["article"].ToString();
-                var partNo = partName.Trim().Split(" ")[0];
-                var treatMentNo = treatMent.Trim().Split(" ")[0];
-                var fileName = string.Format("{0}_{1}_{2}.jpg", article, partNo, treatMentNo);
+                var sampleNo = HttpContext.Request.Form["sampleNo"].ToString().Trim();
+                var treatMent = HttpContext.Request.Form["treatMent"].ToString().Trim();
+                var partName = HttpContext.Request.Form["partName"].ToString().Trim();
+                var article = HttpContext.Request.Form["article"].ToString().Trim();
+                var devSeason = HttpContext.Request.Form["devSeason"].ToString().Trim();
+                var fileName = HttpContext.Request.Form["photo"].ToString().Trim();
+                var partNo = partName.Split(" ")[0];
+                var treatMentNo = treatMent.Split(" ")[0];
+
+                if(fileName == ""){
+                    //fileName + yyyy_MM_dd_HH_mm_ss_
+                    var formateDate = DateTime.Now.ToString("yyyyMMddHHmmss");
+                    fileName = string.Format("{0}_{1}_{2}_{3}.jpg", article, partNo, treatMentNo,formateDate);
+                }
+
+                List<string> nastFileName = new List<string>();
+                nastFileName.Add(devSeason);
+                nastFileName.Add(article);
+                nastFileName.Add(fileName);
 
                 DevTreatment model = _devTreatmentDAO.FindSingle(
                                  x => x.SAMPLENO.Trim() == sampleNo.Trim() &&
@@ -204,7 +216,7 @@ namespace DKS_API.Controllers
                 if (HttpContext.Request.Form.Files.Count > 0)
                 {
                     var file = HttpContext.Request.Form.Files[0];
-                    if (await SaveFiletoServer(file, "F340PpdPic", fileName))
+                    if (await SaveFiletoServer(file, "F340PpdPic", nastFileName))
                     {
                         model.PHOTO = fileName;
                         _devTreatmentDAO.Update(model);
@@ -213,7 +225,7 @@ namespace DKS_API.Controllers
                 else
                 {   //do CRUD-D here.
 
-                    if (await SaveFiletoServer(null, "F340PpdPic", fileName))
+                    if (await SaveFiletoServer(null, "F340PpdPic", nastFileName))
                     {
                         model.PHOTO = "";
                         _devTreatmentDAO.Update(model);
@@ -279,30 +291,30 @@ namespace DKS_API.Controllers
 
         }
         [HttpPost("editF340Ppd/{type}")]
-        public async Task<IActionResult> EditF340Ppd(F340_PpdDto dto,string type)
+        public async Task<IActionResult> EditF340Ppd(F340_PpdDto dto, string type)
         {
             var isSuccess = false;
             try
             {
-                    if (dto.PartName.Trim().Length < 1 || dto.TreatMent.Trim().Length < 1 || dto.ReleaseType.Trim() != "CWA") return Ok(isSuccess);
-                    var partNo = dto.PartName.Trim().Split(" ")[0];
-                    var treatMentNo = dto.TreatMent.Trim().Split(" ")[0];
-                    DevTreatment model = _devTreatmentDAO.FindSingle(
-                                                     x => x.SAMPLENO.Trim() == dto.SampleNo.Trim() &&
-                                                     x.PARTNO.Trim() == partNo &&
-                                                     x.TREATMENTCODE.Trim() == treatMentNo);
+                if (dto.PartName.Trim().Length < 1 || dto.TreatMent.Trim().Length < 1 || dto.ReleaseType.Trim() != "CWA") return Ok(isSuccess);
+                var partNo = dto.PartName.Trim().Split(" ")[0];
+                var treatMentNo = dto.TreatMent.Trim().Split(" ")[0];
+                DevTreatment model = _devTreatmentDAO.FindSingle(
+                                                 x => x.SAMPLENO.Trim() == dto.SampleNo.Trim() &&
+                                                 x.PARTNO.Trim() == partNo &&
+                                                 x.TREATMENTCODE.Trim() == treatMentNo);
 
-                    if (model != null)
-                    {
-                        // type is here
-                        if( type == "PhotoComment")model.PHOTO_COMMENT = dto.PhotoComment.Trim();
-                        if( type == "PpdRemark")model.PPD_REMARK = dto.PpdRemark.Trim();
-                        
-                        
-                        _devTreatmentDAO.Update(model);
-                    }
+                if (model != null)
+                {
+                    // type is here
+                    if (type == "PhotoComment") model.PHOTO_COMMENT = dto.PhotoComment.Trim();
+                    if (type == "PpdRemark") model.PPD_REMARK = dto.PpdRemark.Trim();
 
-                    await _devTreatmentDAO.SaveAll();
+
+                    _devTreatmentDAO.Update(model);
+                }
+
+                await _devTreatmentDAO.SaveAll();
             }
             catch (Exception ex)
             {
