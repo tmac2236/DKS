@@ -1,10 +1,11 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { Utility } from "../../../../core/utility/utility";
 import { utilityConfig } from "../../../../core/utility/utility-config";
 import { DksService } from "../../../../core/_services/dks.service";
 import { PaginatedResult } from "../../../../core/_models/pagination";
 import { SF340PpdSchedule } from "../../../../core/_models/s_f340-ppd-schedule";
 import { F340SchedulePpd } from "../../../../core/_models/f340-schedule-ppd";
+import { ModalDirective } from "ngx-bootstrap/modal";
 
 @Component({
   selector: "app-F340",
@@ -12,6 +13,9 @@ import { F340SchedulePpd } from "../../../../core/_models/f340-schedule-ppd";
   styleUrls: ["./F340-ppd.component.scss"],
 })
 export class F340PpdComponent implements OnInit {
+  @ViewChild('photoCommentModal') public photoCommentModal: ModalDirective;
+  @ViewChild('ppdRemarkModal') public ppdRemarkModal: ModalDirective;
+  
   //for sorting ; ASC DESC
   cwaDeadlineS = true;
 
@@ -23,6 +27,7 @@ export class F340PpdComponent implements OnInit {
     uploadPicF340Ppd: utilityConfig.RoleSysAdm,
     editMemo: utilityConfig.RoleSysAdm
   };
+  editModel: F340SchedulePpd = new F340SchedulePpd(); //onlt use in photoCommentModal
 
   constructor(public utility: Utility, private dksService: DksService) {}
 
@@ -168,7 +173,7 @@ export class F340PpdComponent implements OnInit {
   saveMemo(){
     this.utility.spinner.show();
     this.memoBtn = !this.memoBtn;
-    this.dksService.editF340Ppd(this.result).subscribe(
+    this.dksService.editF340Ppds(this.result).subscribe(
       (res) => {
         this.utility.spinner.hide();
         this.utility.alertify.confirm(
@@ -181,5 +186,38 @@ export class F340PpdComponent implements OnInit {
         this.utility.alertify.error(error);
       }
     );
+  }
+  openModal(type:string){
+    if(type == "PhotoComment") this.photoCommentModal.show();
+    if(type == "PpdRemark") this.ppdRemarkModal.show();
+
+  }
+  closeModal(type:string){
+    if(type == "PhotoComment") this.photoCommentModal.hide();
+    if(type == "PpdRemark")this.ppdRemarkModal.hide();
+  }
+  editPhotoComment(model: F340SchedulePpd){
+    this.openModal("PhotoComment");
+    this.editModel = model;
+  }
+  savePhotComment(type:string){
+    this.utility.spinner.show();
+    this.dksService.editF340Ppd(this.editModel,type).subscribe(
+      (res) => {
+        this.utility.spinner.hide();
+        this.utility.alertify.confirm(
+          "Sweet Alert",
+          "You Updated Comment.",
+          () => { this.closeModal(type) });  
+      },
+      (error) => {
+        this.utility.spinner.hide();
+        this.utility.alertify.error(error);
+      }
+    );
+  }
+  editPpdRemark(model: F340SchedulePpd){
+    this.openModal("PpdRemark");
+    this.editModel = model;
   }
 }

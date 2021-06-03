@@ -173,9 +173,10 @@
                 >
                   {{ "Common.btnList.export" | translate }}
                 </button>
+                <!--批次修改Memo
                 <button
                   [hidden]="
-                    !this.sF340PpdSchedule.role.includes(uiControls.editmemo)
+                    !this.sF340PpdSchedule.role.includes(uiControls.editMemo)
                   "
                   *ngIf="this.memoBtn; else elseMemoBtn"
                   class="btn btn-success mr-1"
@@ -193,6 +194,7 @@
                     儲存Memo
                   </button>
                 </ng-template>
+                -->
               </div>
             </div>
           </form>
@@ -207,6 +209,7 @@
                     <!--套版分頁<table datatable id="f340Sche" class="table text-center table-striped">-->
                     <thead>
                       <tr class="table-info">
+                        <!--批次修改Memo
                         <th
                           style="background-color: #ff7f50"
                           tooltip="Buy Plan"
@@ -214,6 +217,7 @@
                         >
                           PPD Remark
                         </th>
+                        -->
                         <th
                           style="background-color: #ff7f50"
                           tooltip="Buy Plan"
@@ -365,33 +369,54 @@
                           {{ "F340-PPD.titleList.partName" | translate }}
                         </th>
                         <th
-                        style="background-color: #23d954"
-                        placement="bottom"
-                      >
-                        {{ "F340-PPD.picture" | translate }}
-                      </th>
-                      <th
-                        [hidden]="
-                          !this.sF340PpdSchedule.role.includes(
-                            uiControls.uploadPicF340Ppd
-                          )
-                        "
-                        style="background-color: #23d954"
-                        tooltip="開發人員維護"
-                        placement="right"
-                      >
-                        {{ "F340-PPD.mantainPic" | translate }}
-                      </th>                        
+                          style="background-color: #23d954"
+                          tooltip="生管人員維護"
+                          placement="right"
+                        >
+                          生管{{ "F340-PPD.mantainPic" | translate }}
+                        </th>
+                        <th
+                          style="background-color: #23d954"
+                          tooltip="生管人員維護"
+                          placement="bottom"
+                        >
+                          PPD Remark
+                        </th>
+                        <th
+                          style="background-color: #23d954"
+                          placement="開發人員維護"
+                        >
+                          {{ "F340-PPD.picture" | translate }}
+                        </th>
+                        <th
+                          [hidden]="
+                            !this.sF340PpdSchedule.role.includes(
+                              uiControls.uploadPicF340Ppd
+                            )
+                          "
+                          style="background-color: #23d954"
+                          tooltip="開發人員維護"
+                          placement="right"
+                        >
+                          開發{{ "F340-PPD.mantainPic" | translate }}
+                        </th>
+                        <th
+                          style="background-color: #23d954"
+                          placement="bottom"
+                        >
+                          {{ "F340-PPD.titleList.photoComment" | translate }}
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
                       <ng-container *ngFor="let item of result; let i = index">
                         <tr>
+                          <!--批次修改Memo
                           <td *ngIf="this.memoBtn; else elseMemoTd">
                             {{ item.ppdRemark }}
                           </td>
                           <ng-template #elseMemoTd>
-                            <!--<input type="text" [(ngModel)]="item.ppdRemark" [readonly]="(item.releaseType !== 'CWA')"/>-->
+                           
                             <textarea
                               [readonly]="item.isDisplay == 0"
                               class="form-control"
@@ -401,6 +426,7 @@
                               #message="ngModel"
                             ></textarea>
                           </ng-template>
+                          -->
                           <td>{{ item.factory }}</td>
                           <td>{{ item.buyPlanSeason }}</td>
                           <td>{{ item.versionNo }}</td>
@@ -426,6 +452,15 @@
                           <td>{{ item.treatMent }}</td>
 
                           <td>{{ item.partName }}</td>
+                          <td>
+                            <img
+                              src="../assets/systemImg/edit.png"
+                              width="35"
+                              height="35"
+                              (click)="editPpdRemark(item)"
+                            />
+                          </td>
+                          <td>{{ item.ppdRemark }}</td>
                           <td>
                             <img
                               src="../assets/systemImg/visible.png"
@@ -472,8 +507,18 @@
                                 height="35"
                                 (click)="removePicF340Ppd(item)"
                               />
+                              <img
+                                [style.visibility]="
+                                  item.isDisplay == 0 ? 'hidden' : 'visible'
+                                "
+                                src="../assets/systemImg/edit.png"
+                                width="35"
+                                height="35"
+                                (click)="editPhotoComment(item)"
+                              />
                             </td>
-                          </div>                          
+                          </div>
+                          <td>{{ item.photoComment }}</td>
                         </tr>
                       </ng-container>
                     </tbody>
@@ -513,6 +558,124 @@
     </div>
   </div>
 </div>
+<!--photoCommentModal-->
+<div
+  bsModal
+  #photoCommentModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-info" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">請輸入圖片註解</h4>
+        <button
+          type="button"
+          class="close"
+          (click)="closeModal('PhotoComment')"
+          aria-label="Close"
+        >
+          <!--右上角的 X 符號-->
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group">
+              <label></label>
+              <textarea
+                class="form-control"
+                name="photoComment"
+                rows="2"
+                [(ngModel)]="editModel.photoComment"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-primary btn-lg"
+          (click)="savePhotComment('PhotoComment')"
+        >
+          {{ "Common.btnList.save" | translate }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary btn-lg"
+          (click)="closeModal('PhotoComment')"
+        >
+          {{ "Common.btnList.close" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--photoCommentModal-->
+<!--ppdRemarkCommentModal-->
+<div
+  bsModal
+  #ppdRemarkModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-info" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">請輸入PPD Remark註解</h4>
+        <button
+          type="button"
+          class="close"
+          (click)="closeModal('PpdRemark')"
+          aria-label="Close"
+        >
+          <!--右上角的 X 符號-->
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group">
+              <label></label>
+              <textarea
+                class="form-control"
+                name="ppdRemark"
+                rows="2"
+                [(ngModel)]="editModel.ppdRemark"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-primary btn-lg"
+          (click)="savePhotComment('PpdRemark')"
+        >
+          {{ "Common.btnList.save" | translate }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary btn-lg"
+          (click)="closeModal('PpdRemark')"
+        >
+          {{ "Common.btnList.close" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--ppdRemarkCommentModal-->
 <ngx-spinner
   bdColor="rgba(0, 0, 0, 0.8)"
   size="large"

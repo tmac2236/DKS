@@ -30,6 +30,7 @@ namespace DKS_API.DTOs
         public string ProStatusId { get; set; }
         public string PpdRemark { get; set; }
         public string Photo { get; set; }
+        public string PhotoComment { get; set; }
 
     }
 }

@@ -165,11 +165,18 @@ export class DksService {
       f340PpdPic
     );
   }
-  editF340Ppd(f340Ppds: F340SchedulePpd[]) {
-    console.log("dks.service editPicF340Ppd:", f340Ppds);
+  editF340Ppds(f340Ppds: F340SchedulePpd[]) {
+    console.log("dks.service editPicF340Ppds:", f340Ppds);
     return this.utility.http.post(
       this.utility.baseUrl + "dks/editF340Ppds",
       f340Ppds
+    );
+  }
+  editF340Ppd(f340Ppd: F340SchedulePpd,type: string) {
+    console.log("dks.service editPicF340Ppd:", f340Ppd);
+    return this.utility.http.post(
+      this.utility.baseUrl + "dks/editF340Ppd/"+type,
+      f340Ppd
     );
   }
 }

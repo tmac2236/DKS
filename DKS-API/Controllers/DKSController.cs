@@ -278,6 +278,44 @@ namespace DKS_API.Controllers
             return Ok(editCount);
 
         }
+        [HttpPost("editF340Ppd/{type}")]
+        public async Task<IActionResult> EditF340Ppd(F340_PpdDto dto,string type)
+        {
+            var isSuccess = false;
+            try
+            {
+                    if (dto.PartName.Trim().Length < 1 || dto.TreatMent.Trim().Length < 1 || dto.ReleaseType.Trim() != "CWA") return Ok(isSuccess);
+                    var partNo = dto.PartName.Trim().Split(" ")[0];
+                    var treatMentNo = dto.TreatMent.Trim().Split(" ")[0];
+                    DevTreatment model = _devTreatmentDAO.FindSingle(
+                                                     x => x.SAMPLENO.Trim() == dto.SampleNo.Trim() &&
+                                                     x.PARTNO.Trim() == partNo &&
+                                                     x.TREATMENTCODE.Trim() == treatMentNo);
+
+                    if (model != null)
+                    {
+                        // type is here
+                        if( type == "PhotoComment")model.PHOTO_COMMENT = dto.PhotoComment.Trim();
+                        if( type == "PpdRemark")model.PPD_REMARK = dto.PpdRemark.Trim();
+                        
+                        
+                        _devTreatmentDAO.Update(model);
+                    }
+
+                    await _devTreatmentDAO.SaveAll();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+            return Ok(isSuccess);
+
+        }
+
+        ////// It is a lazy way because I don't wanna craeat Servervice Layer......//////
+
+
+
 
     }
 }

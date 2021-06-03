@@ -6,7 +6,8 @@
             "export": "Export",
             "save": "Save",
             "upload":"Upload",
-            "delete":"Delete"
+            "delete":"Delete",
+            "close":"Close"
         }
     },
     "F340": {
@@ -104,7 +105,9 @@
             "processDate": "ProcessDate",
             "cardDate": "CardDate",
             
-            "proStatusId": "ProStatusId"
+            "proStatusId": "ProStatusId",
+            "photoComment":"PhotoComment"
+
         }
     }
 }

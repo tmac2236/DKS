@@ -152,8 +152,9 @@ namespace DKS.API.Models.DKS
         [StringLength(500)]
         public string PPD_REMARK { get; set; }
 
-        [StringLength(20)]
+        [StringLength(40)]
         public string PHOTO { get; set; }
-
+        [StringLength(300)]
+        public string PHOTO_COMMENT { get; set; }
     }
 }

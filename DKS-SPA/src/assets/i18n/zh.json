@@ -6,7 +6,8 @@
             "export": "匯出",
             "save": "儲存",
             "upload":"上傳",
-            "delete":"刪除"
+            "delete":"刪除",
+            "close":"關閉"
         }
     },
     "F340": {
@@ -104,7 +105,8 @@
             "processDate": "跨單位作業流程",
             "cardDate": "面部實物卡",
 
-            "proStatusId":"ProStatusId"
+            "proStatusId":"ProStatusId",
+            "photoComment":"PhotoComment"
         }
     }
 }
