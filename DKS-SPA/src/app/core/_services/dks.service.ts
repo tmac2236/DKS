@@ -179,4 +179,11 @@ export class DksService {
       f340Ppd
     );
   }
+  sentMailF340PpdByArticle(sF340PpdSchedule: SF340PpdSchedule) {
+    console.log("dks.service sentMailF340PpdByArticle:", sF340PpdSchedule);
+    return this.utility.http.post(
+      this.utility.baseUrl + "dks/sentMailF340PpdByArticle",
+      sF340PpdSchedule
+    );
+  }
 }

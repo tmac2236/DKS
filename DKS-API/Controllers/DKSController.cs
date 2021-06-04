@@ -323,6 +323,29 @@ namespace DKS_API.Controllers
             return Ok(isSuccess);
 
         }
+        [HttpPost("sentMailF340PpdByArticle")]
+        public async Task<IActionResult> SentMailF340PpdByArticle(SF340PPDSchedule sF340PPDSchedule)
+        {
+            try
+            {
+                    var dksSignature = _config.GetSection("DksSignatureLine").Value;
+                    var content = string.Format(@"The Article : {0} Added Memo please check it in F340-PPD of the below website.{1}",sF340PPDSchedule.article,dksSignature);
+                    
+                    var toMails = new List<string>();
+                    var users = await _dksDao.GetUsersByRole("GM0000000038");
+                    users.ForEach(x =>
+                    {
+                        toMails.Add(x.EMAIL);
+                    });
+                    await SendListMailAsync(toMails, "This Article Add Memo Please check it in F340-PPD !", content, null);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+            return Ok();
+
+        }         
 
         ////// It is a lazy way because I don't wanna craeat Servervice Layer......//////
 

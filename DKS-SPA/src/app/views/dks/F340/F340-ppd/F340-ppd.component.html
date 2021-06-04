@@ -173,6 +173,18 @@
                 >
                   {{ "Common.btnList.export" | translate }}
                 </button>
+                <button
+                [hidden]="
+                        !this.sF340PpdSchedule.role.includes(
+                          uiControls.editMemo
+                        )"
+                  class="btn btn-primary mr-1"
+                  type="button"
+                  (click)="sendMail()"
+                  [disabled]="!addQueryReportDataForm.valid"
+                >
+                  {{ "Common.btnList.sendMail" | translate }}
+                </button>                
                 <!--批次修改Memo
                 <button
                   [hidden]="

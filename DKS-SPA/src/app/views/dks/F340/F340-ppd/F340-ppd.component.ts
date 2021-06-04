@@ -222,4 +222,25 @@ export class F340PpdComponent implements OnInit {
     this.openModal("PpdRemark");
     this.editModel = model;
   }
+  sendMail(){
+    if(this.sF340PpdSchedule.article.length < 1) {
+      alert( "請先輸入Article" );
+      return;
+    } 
+    this.utility.spinner.show();
+    debugger;
+    this.dksService.sentMailF340PpdByArticle(this.sF340PpdSchedule).subscribe(
+      (res) => {
+        this.utility.spinner.hide();
+        this.utility.alertify.confirm(
+          "Sweet Alert",
+          "You sent Mail.",
+          () => { });  
+      },
+      (error) => {
+        this.utility.spinner.hide();
+        this.utility.alertify.error(error);
+      }
+    );
+  }
 }
