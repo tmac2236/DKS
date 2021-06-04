@@ -167,7 +167,9 @@ export class F340PpdComponent implements OnInit {
     );
   }
   viewPic(model: F340SchedulePpd){
-    window.open('../assets/F340PpdPic/' + model.devSeason +  "/" + model.article + "/" + model.photo);
+    debugger;
+    let dataUrl = '../assets/F340PpdPic/' + model.devSeason +  "/" + model.article + "/" + model.photo;
+    window.open(dataUrl);
   }
   editMemo(){
     this.memoBtn = !this.memoBtn;

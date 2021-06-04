@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using DKS_API.Helpers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Primitives;
+using DKS_API.Services.Implement;
 
 namespace DKS_API.Controllers
 {
@@ -24,9 +25,17 @@ namespace DKS_API.Controllers
         private readonly IDKSDAO _dksDao;
         private readonly IDevBuyPlanDAO _devBuyPlanDAO;
         private readonly IDevTreatmentDAO _devTreatmentDAO;
-        public DKSController(IConfiguration config, IWebHostEnvironment webHostEnvironment, IDKSDAO dksDao, IDevBuyPlanDAO devBuyPlanDAO, IDevTreatmentDAO devTreatmentDAO)
+        private readonly ISendMailService _sendMailService;
+        private readonly IFileService _fileService;
+        private readonly IExcelService _excelService;
+        
+        public DKSController(IConfiguration config, IWebHostEnvironment webHostEnvironment, IDKSDAO dksDao, IDevBuyPlanDAO devBuyPlanDAO, IDevTreatmentDAO devTreatmentDAO,
+        ISendMailService sendMailService,IFileService fileService,IExcelService excelService)
         : base(config, webHostEnvironment)
         {
+            _sendMailService = sendMailService;
+            _fileService = fileService;
+            _excelService = excelService;
             _dksDao = dksDao;
             _devBuyPlanDAO = devBuyPlanDAO;
             _devTreatmentDAO = devTreatmentDAO;
@@ -42,7 +51,7 @@ namespace DKS_API.Controllers
             // query data from database  
             var data = await _dksDao.GetF340ProcessView(sF340Schedule);
 
-            byte[] result = CommonExportReport(data, "TempF340Process.xlsx");
+            byte[] result = _excelService.CommonExportReport(data, "TempF340Process.xlsx");
 
             return File(result, "application/xlsx");
         }
@@ -178,7 +187,7 @@ namespace DKS_API.Controllers
                 bottom,
                 upper
             };
-            byte[] result = CommonExportReportTabs(dataList, "TempF340PPDProcessTabs.xlsx");
+            byte[] result = _excelService.CommonExportReportTabs(dataList, "TempF340PPDProcessTabs.xlsx");
 
             return File(result, "application/xlsx");
         }
@@ -216,7 +225,7 @@ namespace DKS_API.Controllers
                 if (HttpContext.Request.Form.Files.Count > 0)
                 {
                     var file = HttpContext.Request.Form.Files[0];
-                    if (await SaveFiletoServer(file, "F340PpdPic", nastFileName))
+                    if (await _fileService.SaveFiletoServer(file, "F340PpdPic", nastFileName))
                     {
                         model.PHOTO = fileName;
                         _devTreatmentDAO.Update(model);
@@ -225,7 +234,7 @@ namespace DKS_API.Controllers
                 else
                 {   //do CRUD-D here.
 
-                    if (await SaveFiletoServer(null, "F340PpdPic", nastFileName))
+                    if (await _fileService.SaveFiletoServer(null, "F340PpdPic", nastFileName))
                     {
                         model.PHOTO = "";
                         _devTreatmentDAO.Update(model);
@@ -278,7 +287,7 @@ namespace DKS_API.Controllers
                     {
                         toMails.Add(x.EMAIL);
                     });
-                    await SendListMailAsync(toMails, "These Article Add Memo Please check !", content, null);
+                    await _sendMailService.SendListMailAsync(toMails, "These Article Add Memo Please check !", content, null);
                     await _devTreatmentDAO.SaveAll();
                 }
 
@@ -337,7 +346,7 @@ namespace DKS_API.Controllers
                     {
                         toMails.Add(x.EMAIL);
                     });
-                    await SendListMailAsync(toMails, "This Article Add Memo Please check it in F340-PPD !", content, null);
+                    await _sendMailService.SendListMailAsync(toMails, "This Article Add Memo Please check it in F340-PPD !", content, null);
             }
             catch (Exception ex)
             {

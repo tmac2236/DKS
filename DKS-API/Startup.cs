@@ -72,7 +72,9 @@ namespace DKS_API
             
             //Service
             services.AddScoped<IAuthService, AuthService>();
-
+            services.AddScoped<ISendMailService, SendMailService>();
+            services.AddScoped<IFileService, FileService>();
+            services.AddScoped<IExcelService, ExcelService>();
             /*
             //新增Quartz服務
             services.AddSingleton<IJobFactory, SingletonJobFactory>();

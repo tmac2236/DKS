@@ -8,16 +8,20 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using DKS.API.Models.DKS;
 using Microsoft.AspNetCore.Hosting;
+using DKS_API.Services.Implement;
 
 namespace DKS_API.Controllers
 {
     public class WareHouseController : ApiController
     {
+        private readonly IExcelService _excelService;
         private readonly IWarehouseDAO _warehouseDao;
         private readonly ISamPartBDAO _samPartBDAO;
-        public WareHouseController(IConfiguration config, IWebHostEnvironment webHostEnvironment, IWarehouseDAO warehouseDao, ISamPartBDAO samPartBDAO)
+        public WareHouseController(IConfiguration config, IWebHostEnvironment webHostEnvironment, IWarehouseDAO warehouseDao, ISamPartBDAO samPartBDAO,
+        IExcelService excelService)
         : base(config, webHostEnvironment)
         {
+            _excelService = excelService;
             _warehouseDao = warehouseDao;
             _samPartBDAO = samPartBDAO;
         }
@@ -41,13 +45,13 @@ namespace DKS_API.Controllers
         }
 
         [HttpPost("exportMaterialNoBySampleNoForWarehouse")]
-        public  IActionResult ExportMaterialNoBySampleNoForWarehouse(SF428SampleNoDetail sF428SampleNoDetail)
+        public IActionResult ExportMaterialNoBySampleNoForWarehouse(SF428SampleNoDetail sF428SampleNoDetail)
         {
 
             // query data from database  
             var data = _warehouseDao.GetMaterialNoBySampleNoForWarehouse(sF428SampleNoDetail);
 
-            byte[] result = CommonExportReport(data,"TempF428.xlsx");
+            byte[] result = _excelService.CommonExportReport(data, "TempF428.xlsx");
 
             return File(result, "application/xlsx");
         }
