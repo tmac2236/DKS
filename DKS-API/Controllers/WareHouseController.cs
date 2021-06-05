@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using DKS.API.Models.DKS;
 using Microsoft.AspNetCore.Hosting;
 using DKS_API.Services.Implement;
+using DKS_API.Services.Interface;
 
 namespace DKS_API.Controllers
 {

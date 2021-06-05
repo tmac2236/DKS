@@ -4,6 +4,7 @@ using AutoMapper;
 using DKS.API.Models.DKSSys;
 using DKS_API.Data.Interface;
 using DKS_API.Helpers;
+using DKS_API.Services.Interface;
 using Microsoft.EntityFrameworkCore;
 
 namespace DKS_API.Services.Implement

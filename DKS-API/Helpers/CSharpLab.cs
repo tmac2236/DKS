@@ -95,6 +95,18 @@ namespace DKS_API.Helpers
         {
             return "[" + BitConverter.ToString(ba).Replace("-", ",") + "]";
         }
+        private static string Atob(string stanIsHandsome)
+        {
+            byte[] data = System.Convert.FromBase64String(stanIsHandsome);
+            string base64Decoded = System.Text.ASCIIEncoding.ASCII.GetString(data);
+            return base64Decoded;
+        }
+        private static string Btoa (string stanIsBig)
+        {
+            byte[] bytes = Encoding.GetEncoding(28591).GetBytes(stanIsBig);
+            string toReturn = System.Convert.ToBase64String(bytes);
+            return toReturn;
+        }
     }
 
 }

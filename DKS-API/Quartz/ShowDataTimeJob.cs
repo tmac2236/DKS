@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using DKS_API.Services.Implement;
+using DKS_API.Services.Interface;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Quartz;

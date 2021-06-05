@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DKS_API.Controllers;
 using DKS_API.DTOs;
-using DKS_API.Services.Implement;
+using DKS_API.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;

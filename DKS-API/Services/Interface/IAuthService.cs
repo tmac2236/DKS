@@ -1,7 +1,6 @@
 using DKS.API.Models.DKSSys;
-using DKS_API.Services.Interface;
 
-namespace DKS_API.Services.Implement
+namespace DKS_API.Services.Interface
 {
     public interface IAuthService : ICommonService<User>
     {

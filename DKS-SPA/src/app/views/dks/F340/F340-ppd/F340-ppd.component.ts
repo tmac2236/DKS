@@ -109,11 +109,13 @@ export class F340PpdComponent implements OnInit {
   }
 
   uploadPicF340Ppd(files: FileList, model: F340SchedulePpd) {
+    debugger;
     console.log(model);
-    if (!this.utility.checkFileMaxFormat(files.item(0), 1128659)) {
+    //"application/pdf"
+    if (!this.utility.checkFileMaxFormat(files.item(0), (1128659 * 2 ),"image/jpeg")) {
       this.utility.alertify.confirm(
         "Sweet Alert",
-        "Please upload jpg file and size cannot over 1 Mb.",
+        "Please upload jpg file and size cannot over 2 Mb.",
         () => {}
       );
       return; //exit function

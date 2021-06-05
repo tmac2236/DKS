@@ -27,7 +27,8 @@ export class AuthGuardRole implements CanActivate {
       }
     }
     this.alertify.error("This account didn't have the auth !!!");
-    this.router.navigate([""]); // redirect to login in
+    //this.router.navigate([""]); // redirect to login in
+    window.location.href ="http://10.4.0.39:8080/ArcareEng/login.jsp";
     return false;
   }
 }

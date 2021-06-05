@@ -16,6 +16,7 @@ using DKS_API.Helpers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Primitives;
 using DKS_API.Services.Implement;
+using DKS_API.Services.Interface;
 
 namespace DKS_API.Controllers
 {
@@ -28,9 +29,9 @@ namespace DKS_API.Controllers
         private readonly ISendMailService _sendMailService;
         private readonly IFileService _fileService;
         private readonly IExcelService _excelService;
-        
+
         public DKSController(IConfiguration config, IWebHostEnvironment webHostEnvironment, IDKSDAO dksDao, IDevBuyPlanDAO devBuyPlanDAO, IDevTreatmentDAO devTreatmentDAO,
-        ISendMailService sendMailService,IFileService fileService,IExcelService excelService)
+        ISendMailService sendMailService, IFileService fileService, IExcelService excelService)
         : base(config, webHostEnvironment)
         {
             _sendMailService = sendMailService;
@@ -191,7 +192,7 @@ namespace DKS_API.Controllers
 
             return File(result, "application/xlsx");
         }
-
+        //上傳F340PPD圖片
         [HttpPost("editPicF340Ppd")]
         public async Task<IActionResult> EditPicF340Ppd()
         {
@@ -206,10 +207,11 @@ namespace DKS_API.Controllers
                 var partNo = partName.Split(" ")[0];
                 var treatMentNo = treatMent.Split(" ")[0];
 
-                if(fileName == ""){
+                if (fileName == "")
+                {
                     //fileName + yyyy_MM_dd_HH_mm_ss_
                     var formateDate = DateTime.Now.ToString("yyyyMMddHHmmss");
-                    fileName = string.Format("{0}_{1}_{2}_{3}.jpg", article, partNo, treatMentNo,formateDate);
+                    fileName = string.Format("{0}_{1}_{2}_{3}.jpg", article, partNo, treatMentNo, formateDate);
                 }
 
                 List<string> nastFileName = new List<string>();
@@ -337,16 +339,16 @@ namespace DKS_API.Controllers
         {
             try
             {
-                    var dksSignature = _config.GetSection("DksSignatureLine").Value;
-                    var content = string.Format(@"The Article : {0} Added Memo please check it in F340-PPD of the below website.{1}",sF340PPDSchedule.article,dksSignature);
-                    
-                    var toMails = new List<string>();
-                    var users = await _dksDao.GetUsersByRole("GM0000000038");
-                    users.ForEach(x =>
-                    {
-                        toMails.Add(x.EMAIL);
-                    });
-                    await _sendMailService.SendListMailAsync(toMails, "This Article Add Memo Please check it in F340-PPD !", content, null);
+                var dksSignature = _config.GetSection("DksSignatureLine").Value;
+                var content = string.Format(@"The Article : {0} Added Memo please check it in F340-PPD of the below website.{1}", sF340PPDSchedule.article, dksSignature);
+
+                var toMails = new List<string>();
+                var users = await _dksDao.GetUsersByRole("GM0000000038");
+                users.ForEach(x =>
+                {
+                    toMails.Add(x.EMAIL);
+                });
+                await _sendMailService.SendListMailAsync(toMails, "This Article Add Memo Please check it in F340-PPD !", content, null);
             }
             catch (Exception ex)
             {
@@ -354,12 +356,25 @@ namespace DKS_API.Controllers
             }
             return Ok();
 
-        }         
-
-        ////// It is a lazy way because I don't wanna craeat Servervice Layer......//////
-
-
-
+        }
+        [HttpGet("getFileByLocalPath")]
+        public  IActionResult GetFileByLocalPath(string devSeason, string article, string fileName)
+        {
+            try
+            {
+                List<string> nastFileName = new List<string>();
+                nastFileName.Add(devSeason);
+                nastFileName.Add(article);
+                nastFileName.Add(fileName);
+                var pathList = _fileService.GetLocalPath("F340PpdPic", nastFileName);
+                var result = _fileService.GetByteArrayByLocalUrl(pathList[1]);
+                return File(result, "image/jpeg");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}.");
+            }
+        }
 
     }
 }
