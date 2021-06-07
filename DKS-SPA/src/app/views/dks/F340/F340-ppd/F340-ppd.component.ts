@@ -107,11 +107,10 @@ export class F340PpdComponent implements OnInit {
     this.bpVerList = [];
     this.sF340PpdSchedule.bpVer = "";
   }
-
+  //上傳PPD圖片
   uploadPicF340Ppd(files: FileList, model: F340SchedulePpd) {
-    debugger;
     console.log(model);
-    //"application/pdf"
+    //"application/pdf" "image/jpeg"
     if (!this.utility.checkFileMaxFormat(files.item(0), (1128659 * 2 ),"image/jpeg")) {
       this.utility.alertify.confirm(
         "Sweet Alert",
@@ -140,6 +139,39 @@ export class F340PpdComponent implements OnInit {
       }
     );
   }
+  //上傳pdf
+  uploadPdfF340Ppd(files: FileList, model: F340SchedulePpd) {
+    console.log(model);
+    //"application/pdf" "image/jpeg"
+    if (!this.utility.checkFileMaxFormat(files.item(0), (1128659 * 2 ),"application/pdf")) {
+      this.utility.alertify.confirm(
+        "Sweet Alert",
+        "Please upload pdf file and size cannot over 2 Mb.",
+        () => {}
+      );
+      return; //exit function
+    }
+    var formData = new FormData();
+    formData.append("file", files.item(0));
+    formData.append("sampleNo",model.sampleNo);
+    formData.append("treatMent",model.treatMent);
+    formData.append("partName",model.partName);
+    formData.append("article",model.article);
+    formData.append("devSeason",model.devSeason);
+    this.utility.spinner.show();
+    this.dksService.editPdfF340Ppd(formData).subscribe(
+      (res) => {
+        this.utility.spinner.hide();
+        //找到該筆model 把資料回填
+        model.photo = res.photo
+      },
+      (error) => {
+        this.utility.spinner.hide();
+        this.utility.alertify.error("Add failed !!!!");
+      }
+    );
+  }
+  //刪除F340 ppd 圖片  
   removePicF340Ppd(model: F340SchedulePpd) {
     var formData = new FormData(); 
     formData.append("file", null);  // upload null present delete
@@ -168,9 +200,42 @@ export class F340PpdComponent implements OnInit {
       }
     );
   }
+   //刪除F340 ppd Pdf  
+   removePdfF340Ppd(model: F340SchedulePpd) {
+    var formData = new FormData(); 
+    formData.append("file", null);  // upload null present delete
+    formData.append("sampleNo",model.sampleNo);
+    formData.append("treatMent",model.treatMent);
+    formData.append("partName",model.partName);
+    formData.append("article",model.article);
+    formData.append("devSeason",model.devSeason);
+    formData.append("pdf",model.pdf); 
+    this.utility.alertify.confirm(
+      "Sweet Alert",
+      "Are you sure to Delete this pdf ?",
+      () => {
+        this.utility.spinner.show();
+        this.dksService.editPdfF340Ppd(formData).subscribe(
+          () => {
+            this.utility.spinner.hide();
+            this.utility.alertify.success("Delete succeed!");
+            model.pdf =''; 
+          },
+          (error) => {
+            this.utility.spinner.hide();
+            this.utility.alertify.error("Delete failed !!!!");
+          }
+        );
+      }
+    );
+  }
   viewPic(model: F340SchedulePpd){
     debugger;
     let dataUrl = '../assets/F340PpdPic/' + model.devSeason +  "/" + model.article + "/" + model.photo;
+    window.open(dataUrl);
+  }
+  viewPDF(model: F340SchedulePpd){
+    let dataUrl = '../assets/F340PpdPic/' + model.devSeason +  "/" + model.article + "/" + model.pdf;
     window.open(dataUrl);
   }
   editMemo(){

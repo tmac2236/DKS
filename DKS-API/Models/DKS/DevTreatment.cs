@@ -156,5 +156,7 @@ namespace DKS.API.Models.DKS
         public string PHOTO { get; set; }
         [StringLength(300)]
         public string PHOTO_COMMENT { get; set; }
+        [StringLength(40)]
+        public string PDF { get; set; }
     }
 }

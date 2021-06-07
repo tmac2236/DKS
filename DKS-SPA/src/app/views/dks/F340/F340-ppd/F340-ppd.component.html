@@ -174,17 +174,16 @@
                   {{ "Common.btnList.export" | translate }}
                 </button>
                 <button
-                [hidden]="
-                        !this.sF340PpdSchedule.role.includes(
-                          uiControls.editMemo
-                        )"
+                  [hidden]="
+                    !this.sF340PpdSchedule.role.includes(uiControls.editMemo)
+                  "
                   class="btn btn-primary mr-1"
                   type="button"
                   (click)="sendMail()"
                   [disabled]="!addQueryReportDataForm.valid"
                 >
                   {{ "Common.btnList.sendMail" | translate }}
-                </button>                
+                </button>
                 <!--批次修改Memo
                 <button
                   [hidden]="
@@ -380,11 +379,12 @@
                         >
                           {{ "F340-PPD.titleList.partName" | translate }}
                         </th>
-                        <th [hidden]="
-                        !this.sF340PpdSchedule.role.includes(
-                          uiControls.editMemo
-                        )
-                      "
+                        <th
+                          [hidden]="
+                            !this.sF340PpdSchedule.role.includes(
+                              uiControls.editMemo
+                            )
+                          "
                           style="background-color: #23d954"
                           tooltip="生管人員維護"
                           placement="right"
@@ -398,11 +398,12 @@
                         >
                           PPD Remark
                         </th>
+<!---->
                         <th
                           style="background-color: #23d954"
                           placement="開發人員維護"
                         >
-                          {{ "F340-PPD.picture" | translate }}
+                          PDF{{ "F340-PPD.picture" | translate }}
                         </th>
                         <th
                           [hidden]="
@@ -414,7 +415,26 @@
                           tooltip="開發人員維護"
                           placement="right"
                         >
-                          開發{{ "F340-PPD.mantainPic" | translate }}
+                          PDF{{ "F340-PPD.mantainPic" | translate }}
+                        </th>                      
+<!---->                                                 
+                        <th
+                          style="background-color: #23d954"
+                          placement="開發人員維護"
+                        >
+                          Shoe{{ "F340-PPD.picture" | translate }}
+                        </th>
+                        <th
+                          [hidden]="
+                            !this.sF340PpdSchedule.role.includes(
+                              uiControls.uploadPicF340Ppd
+                            )
+                          "
+                          style="background-color: #23d954"
+                          tooltip="開發人員維護"
+                          placement="right"
+                        >
+                          Shoe{{ "F340-PPD.mantainPic" | translate }}
                         </th>
                         <th
                           style="background-color: #23d954"
@@ -469,10 +489,10 @@
 
                           <td>{{ item.partName }}</td>
                           <td [hidden]="
-                          !this.sF340PpdSchedule.role.includes(
-                            uiControls.editMemo
-                          )
-                        ">
+                              !this.sF340PpdSchedule.role.includes(
+                                uiControls.editMemo
+                              )
+                            ">
                             <img
                               class="mt-2"
                               src="../assets/systemImg/edit.png"
@@ -482,6 +502,56 @@
                             />
                           </td>
                           <td>{{ item.ppdRemark }}</td>
+<!-- -->
+                          <td>
+                            <img
+                              src="../assets/systemImg/visible.png"
+                              class="mt-2"
+                              width="35"
+                              height="35"
+                              [style.visibility]="
+                                item.pdf.length < 1 ? 'hidden' : 'visible'
+                              "
+                              (click)="viewPDF(item)"
+                            />
+                          </td>
+                          <div
+                            [hidden]="
+                              !this.sF340PpdSchedule.role.includes(
+                                uiControls.uploadPicF340Ppd
+                              )
+                            "
+                          >
+                            <td>
+                              <label
+                                [style.visibility]="
+                                  item.isDisplay == 0 ? 'hidden' : 'visible'
+                                "
+                                class="btn btn-success mt-2"
+                                for="fileUploadPdf{{ i }}"
+                                >+</label
+                              >
+                              <input
+                                id="fileUploadPdf{{ i }}"
+                                type="file"
+                                style="display: none"
+                                accept=".pdf"
+                                (change)="
+                                  uploadPdfF340Ppd($event.target.files, item)
+                                "
+                              />
+                              <img
+                                [style.visibility]="
+                                  item.pdf.length < 1 ? 'hidden' : 'visible'
+                                "
+                                src="../assets/systemImg/delete.png"
+                                width="35"
+                                height="35"
+                                (click)="removePdfF340Ppd(item)"
+                              />
+                            </td>
+                          </div>
+<!---->
                           <td>
                             <img
                               src="../assets/systemImg/visible.png"

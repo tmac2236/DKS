@@ -31,6 +31,7 @@ namespace DKS_API.DTOs
         public string PpdRemark { get; set; }
         public string Photo { get; set; }
         public string PhotoComment { get; set; }
+        public string Pdf { get; set; }
 
     }
 }

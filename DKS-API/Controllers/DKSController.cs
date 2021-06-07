@@ -192,7 +192,7 @@ namespace DKS_API.Controllers
 
             return File(result, "application/xlsx");
         }
-        //上傳F340PPD圖片
+        //上傳F340PPD圖片或刪除圖片
         [HttpPost("editPicF340Ppd")]
         public async Task<IActionResult> EditPicF340Ppd()
         {
@@ -252,6 +252,67 @@ namespace DKS_API.Controllers
             }
 
         }
+        //上傳F340PPD PDF或刪除PDF
+        [HttpPost("editPdfF340Ppd")]
+        public async Task<IActionResult> EditPdfF340Ppd()
+        {
+            try
+            {
+                var sampleNo = HttpContext.Request.Form["sampleNo"].ToString().Trim();
+                var treatMent = HttpContext.Request.Form["treatMent"].ToString().Trim();
+                var partName = HttpContext.Request.Form["partName"].ToString().Trim();
+                var article = HttpContext.Request.Form["article"].ToString().Trim();
+                var devSeason = HttpContext.Request.Form["devSeason"].ToString().Trim();
+                var fileName = HttpContext.Request.Form["pdf"].ToString().Trim();
+                var partNo = partName.Split(" ")[0];
+                var treatMentNo = treatMent.Split(" ")[0];
+
+                if (fileName == "")
+                {
+                    //fileName + yyyy_MM_dd_HH_mm_ss_
+                    var formateDate = DateTime.Now.ToString("yyyyMMddHHmmss");
+                    fileName = string.Format("{0}_{1}_{2}_{3}.pdf", article, partNo, treatMentNo, formateDate);
+                }
+
+                List<string> nastFileName = new List<string>();
+                nastFileName.Add(devSeason);
+                nastFileName.Add(article);
+                nastFileName.Add(fileName);
+
+                DevTreatment model = _devTreatmentDAO.FindSingle(
+                                 x => x.SAMPLENO.Trim() == sampleNo.Trim() &&
+                                 x.PARTNO.Trim() == partNo &&
+                                 x.TREATMENTCODE.Trim() == treatMentNo);
+
+                if (HttpContext.Request.Form.Files.Count > 0)
+                {
+                    var file = HttpContext.Request.Form.Files[0];
+                    if (await _fileService.SaveFiletoServer(file, "F340PpdPic", nastFileName))
+                    {
+                        model.PDF = fileName;
+                        _devTreatmentDAO.Update(model);
+                    }
+                }
+                else
+                {   //do CRUD-D here.
+
+                    if (await _fileService.SaveFiletoServer(null, "F340PpdPic", nastFileName))
+                    {
+                        model.PDF = "";   
+                        _devTreatmentDAO.Update(model);
+                    }
+                }
+                await _devTreatmentDAO.SaveAll();
+
+                return Ok(model);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+
+        }        
+
         [HttpPost("editF340Ppds")]
         public async Task<IActionResult> EditF340Ppds(List<F340_PpdDto> dtos)
         {
@@ -368,7 +429,7 @@ namespace DKS_API.Controllers
                 nastFileName.Add(fileName);
                 var pathList = _fileService.GetLocalPath("F340PpdPic", nastFileName);
                 var result = _fileService.GetByteArrayByLocalUrl(pathList[1]);
-                return File(result, "image/jpeg");
+                return File(result, "image/jpeg");//"image/jpeg"  "application/pdf"
             }
             catch (Exception ex)
             {

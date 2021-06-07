@@ -109,11 +109,11 @@ namespace DKS_API.Services.Implement
                 {
                     Font font = new Font("Arial", byteSize, FontStyle.Italic, GraphicsUnit.Pixel);
                     Color color = Color.DarkGray;
-                    Point point = new Point(image.Width / 10 * 1, (image.Height / 10 * 1));
-                    Point point1 = new Point(image.Width / 10 * 1, (image.Height / 10 * 3));
-                    Point point2 = new Point(image.Width / 10 * 1, (image.Height / 10 * 5));
-                    Point point3 = new Point(image.Width / 10 * 1, (image.Height / 10 * 7));
-                    Point point4 = new Point(image.Width / 10 * 1, (image.Height / 10 * 9));
+                    Point point = new Point(image.Width / 10 * 1, (image.Height / 10 * 3));
+                    Point point1 = new Point(image.Width / 10 * 1, (image.Height / 10 * 5));
+                    Point point2 = new Point(image.Width / 10 * 1, (image.Height / 10 * 9));
+                    Point point3 = new Point(image.Width / 10 * 1, (image.Height / 10 * 13));
+                    Point point4 = new Point(image.Width / 10 * 1, (image.Height / 10 * 15));
                     SolidBrush brush = new SolidBrush(color);
                     using (Graphics graphics = Graphics.FromImage(image))
                     {
@@ -122,6 +122,7 @@ namespace DKS_API.Services.Implement
                         stringFormat.LineAlignment = StringAlignment.Center;
                         var ssbStr = "copyright © SHYANG SHIN BAO IND. All Rights Reserved";
                         var blankStr = "                                     ";
+                        graphics.RotateTransform(-45);
                         graphics.DrawString(String.Format("{0}{1}{2}{3}{4}{5}{6}", ssbStr, blankStr, ssbStr, blankStr, ssbStr, blankStr, ssbStr), font, brush, point, stringFormat);
                         graphics.DrawString(String.Format("{0}{1}{2}{3}{4}{5}{6}", blankStr, ssbStr, blankStr, ssbStr, blankStr, ssbStr, blankStr), font, brush, point1, stringFormat);
                         graphics.DrawString(String.Format("{0}{1}{2}{3}{4}{5}{6}", ssbStr, blankStr, ssbStr, blankStr, ssbStr, blankStr, ssbStr), font, brush, point2, stringFormat);
