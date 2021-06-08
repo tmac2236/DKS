@@ -127,6 +127,8 @@ export class F340PpdComponent implements OnInit {
     formData.append("partName",model.partName);
     formData.append("article",model.article);
     formData.append("devSeason",model.devSeason);
+    formData.append("loginUser", this.sF340PpdSchedule.loginUser);
+    
     this.utility.spinner.show();
     this.dksService.editPicF340Ppd(formData).subscribe(
       (res) => {
@@ -182,6 +184,7 @@ export class F340PpdComponent implements OnInit {
     formData.append("article",model.article);
     formData.append("devSeason",model.devSeason);
     formData.append("photo",model.photo); 
+    formData.append("loginUser", this.sF340PpdSchedule.loginUser);
     this.utility.alertify.confirm(
       "Sweet Alert",
       "Are you sure to Delete this picture ?",

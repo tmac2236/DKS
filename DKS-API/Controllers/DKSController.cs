@@ -26,12 +26,13 @@ namespace DKS_API.Controllers
         private readonly IDKSDAO _dksDao;
         private readonly IDevBuyPlanDAO _devBuyPlanDAO;
         private readonly IDevTreatmentDAO _devTreatmentDAO;
+        private readonly IDevTreatmentFileDAO _devTreatmentFileDAO;
         private readonly ISendMailService _sendMailService;
         private readonly IFileService _fileService;
         private readonly IExcelService _excelService;
 
         public DKSController(IConfiguration config, IWebHostEnvironment webHostEnvironment, IDKSDAO dksDao, IDevBuyPlanDAO devBuyPlanDAO, IDevTreatmentDAO devTreatmentDAO,
-        ISendMailService sendMailService, IFileService fileService, IExcelService excelService)
+        IDevTreatmentFileDAO devTreatmentFileDAO, ISendMailService sendMailService, IFileService fileService, IExcelService excelService)
         : base(config, webHostEnvironment)
         {
             _sendMailService = sendMailService;
@@ -40,6 +41,7 @@ namespace DKS_API.Controllers
             _dksDao = dksDao;
             _devBuyPlanDAO = devBuyPlanDAO;
             _devTreatmentDAO = devTreatmentDAO;
+            _devTreatmentFileDAO = devTreatmentFileDAO;
         }
         [HttpPost("exportF340_Process")]
         public async Task<IActionResult> ExportF340_Process(SF340Schedule sF340Schedule)
@@ -189,7 +191,7 @@ namespace DKS_API.Controllers
                 if (x.Photo.Length > 1)
                 {
                     x.Photo = "http://" + serverIp + "/assets/F340PpdPic/" + x.DevSeason + "/" + x.Article + "/" + x.Photo;
-                    x.Pdf   = "http://" + serverIp + "/assets/F340PpdPic/" + x.DevSeason + "/" + x.Article + "/" + x.Pdf;
+                    x.Pdf = "http://" + serverIp + "/assets/F340PpdPic/" + x.DevSeason + "/" + x.Article + "/" + x.Pdf;
                 }
             });
 
@@ -215,13 +217,19 @@ namespace DKS_API.Controllers
                 var article = HttpContext.Request.Form["article"].ToString().Trim();
                 var devSeason = HttpContext.Request.Form["devSeason"].ToString().Trim();
                 var fileName = HttpContext.Request.Form["photo"].ToString().Trim();
+                var loginUser = HttpContext.Request.Form["loginUser"].ToString().Trim();
                 var partNo = partName.Split(" ")[0];
                 var treatMentNo = treatMent.Split(" ")[0];
+
+                DateTime nowtime = DateTime.Now;
+                var updateTimeStr = nowtime.ToString("yyyy-MM-dd HH:mm:ss");
+                DateTime updateTime = updateTimeStr.ToDateTime();
+
 
                 if (fileName == "")
                 {
                     //fileName + yyyy_MM_dd_HH_mm_ss_
-                    var formateDate = DateTime.Now.ToString("yyyyMMddHHmmss");
+                    var formateDate = nowtime.ToString("yyyyMMddHHmmss");
                     fileName = string.Format("{0}_{1}_{2}_{3}.jpg", article, partNo, treatMentNo, formateDate);
                 }
 
@@ -247,6 +255,17 @@ namespace DKS_API.Controllers
 
                         model.PHOTO = fileName;
                         _devTreatmentDAO.Update(model);
+
+                        DevTreatmentFile opRecord = new DevTreatmentFile();
+                        opRecord.ARTICLE = article;
+                        opRecord.PARTNO = partNo;
+                        opRecord.TREATMENTCODE = treatMentNo;
+                        opRecord.FILE_NAME = fileName;
+                        opRecord.KIND = "1";// 1: JPG 2:PDF
+                        opRecord.FILE_COMMENT = "";
+                        opRecord.UPUSR = loginUser;
+                        opRecord.UPTIME = updateTime;
+                        _devTreatmentFileDAO.Add(opRecord);
                     }
                 }
                 else
@@ -256,10 +275,15 @@ namespace DKS_API.Controllers
                     {
                         model.PHOTO = "";
                         _devTreatmentDAO.Update(model);
+
+                        DevTreatmentFile opRecord = _devTreatmentFileDAO.FindSingle(
+                        x => x.FILE_NAME.Trim() == fileName.Trim());
+                        _devTreatmentFileDAO.Remove(opRecord);
                     }
                 }
                 await _devTreatmentDAO.SaveAll();
 
+                await _devTreatmentFileDAO.SaveAll();
                 return Ok(model);
             }
             catch (Exception ex)
@@ -280,13 +304,18 @@ namespace DKS_API.Controllers
                 var article = HttpContext.Request.Form["article"].ToString().Trim();
                 var devSeason = HttpContext.Request.Form["devSeason"].ToString().Trim();
                 var fileName = HttpContext.Request.Form["pdf"].ToString().Trim();
+                var loginUser = HttpContext.Request.Form["loginUser"].ToString().Trim();
                 var partNo = partName.Split(" ")[0];
                 var treatMentNo = treatMent.Split(" ")[0];
+                
+                DateTime nowtime = DateTime.Now;
+                var updateTimeStr = nowtime.ToString("yyyy-MM-dd HH:mm:ss");
+                DateTime updateTime = updateTimeStr.ToDateTime();
 
                 if (fileName == "")
                 {
                     //fileName + yyyy_MM_dd_HH_mm_ss_
-                    var formateDate = DateTime.Now.ToString("yyyyMMddHHmmss");
+                    var formateDate = nowtime.ToString("yyyyMMddHHmmss");
                     fileName = string.Format("{0}_{1}_{2}_{3}.pdf", article, partNo, treatMentNo, formateDate);
                 }
 
@@ -307,6 +336,17 @@ namespace DKS_API.Controllers
                     {
                         model.PDF = fileName;
                         _devTreatmentDAO.Update(model);
+                        
+                        DevTreatmentFile opRecord = new DevTreatmentFile();
+                        opRecord.ARTICLE = article;
+                        opRecord.PARTNO = partNo;
+                        opRecord.TREATMENTCODE = treatMentNo;
+                        opRecord.FILE_NAME = fileName;
+                        opRecord.KIND = "2";// 1: JPG 2:PDF
+                        opRecord.FILE_COMMENT = "";
+                        opRecord.UPUSR = loginUser;
+                        opRecord.UPTIME = updateTime;
+                        _devTreatmentFileDAO.Add(opRecord);
                     }
                 }
                 else
@@ -316,9 +356,15 @@ namespace DKS_API.Controllers
                     {
                         model.PDF = "";
                         _devTreatmentDAO.Update(model);
+                        
+                        DevTreatmentFile opRecord = _devTreatmentFileDAO.FindSingle(
+                        x => x.FILE_NAME.Trim() == fileName.Trim());
+                        _devTreatmentFileDAO.Remove(opRecord);
                     }
                 }
                 await _devTreatmentDAO.SaveAll();
+
+                await _devTreatmentFileDAO.SaveAll();
 
                 return Ok(model);
             }

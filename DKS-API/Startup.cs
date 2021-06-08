@@ -69,6 +69,8 @@ namespace DKS_API
             services.AddScoped<IWarehouseDAO, WarehouseDAO>();
             services.AddScoped<ISamPartBDAO,SamPartBDAO>();
             services.AddScoped<IDevTreatmentDAO,DevTreatmentDAO>();
+            services.AddScoped<IDevTreatmentFileDAO,DevTreatmentFileDAO>();
+            
             services.AddScoped<IMailUtility,MailUtility>();
             
             //Service
