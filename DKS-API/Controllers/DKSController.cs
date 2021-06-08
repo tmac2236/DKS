@@ -182,6 +182,17 @@ namespace DKS_API.Controllers
             sF340PPDSchedule.cwaDateE = sF340PPDSchedule.cwaDateE.Replace("-", "/");
             // query data from database  
             var data = await _dksDao.GetF340PPDView(sF340PPDSchedule);
+            var serverIp = _config.GetSection("ServerIp:MpsSpa:" + sF340PPDSchedule.factory).Value;
+            //
+            data.ForEach(x =>
+            {
+                if (x.Photo.Length > 1)
+                {
+                    x.Photo = "http://" + serverIp + "/assets/F340PpdPic/" + x.DevSeason + "/" + x.Article + "/" + x.Photo;
+                    x.Pdf   = "http://" + serverIp + "/assets/F340PpdPic/" + x.DevSeason + "/" + x.Article + "/" + x.Pdf;
+                }
+            });
+
             var bottom = data.Where(x => x.HpPartNo == "2016").ToList();
             var upper = data.Where(x => x.HpPartNo != "2016").ToList();
             List<object> dataList = new List<object>(){
@@ -229,6 +240,11 @@ namespace DKS_API.Controllers
                     var file = HttpContext.Request.Form.Files[0];
                     if (await _fileService.SaveFiletoServer(file, "F340PpdPic", nastFileName))
                     {
+                        //add WaterMask
+                        var pathList = _fileService.GetLocalPath("F340PpdPic", nastFileName);
+                        var result = _fileService.GetByteArrayByLocalUrl(pathList[1]);
+                        System.IO.File.WriteAllBytes(pathList[1], result.ToArray());
+
                         model.PHOTO = fileName;
                         _devTreatmentDAO.Update(model);
                     }
@@ -298,7 +314,7 @@ namespace DKS_API.Controllers
 
                     if (await _fileService.SaveFiletoServer(null, "F340PpdPic", nastFileName))
                     {
-                        model.PDF = "";   
+                        model.PDF = "";
                         _devTreatmentDAO.Update(model);
                     }
                 }
@@ -311,7 +327,7 @@ namespace DKS_API.Controllers
                 return BadRequest();
             }
 
-        }        
+        }
 
         [HttpPost("editF340Ppds")]
         public async Task<IActionResult> EditF340Ppds(List<F340_PpdDto> dtos)
@@ -419,7 +435,7 @@ namespace DKS_API.Controllers
 
         }
         [HttpGet("getFileByLocalPath")]
-        public  IActionResult GetFileByLocalPath(string devSeason, string article, string fileName)
+        public IActionResult GetFileByLocalPath(string devSeason, string article, string fileName)
         {
             try
             {

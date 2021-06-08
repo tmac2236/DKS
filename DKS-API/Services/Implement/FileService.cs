@@ -101,7 +101,7 @@ namespace DKS_API.Services.Implement
         public byte[] AddWatermark(Byte[] stanIsBig)
         {
             byte[] convertedToBytes;
-            var byteSize = stanIsBig.Length / 50000;
+            var byteSize = 50 ;
 
             using (MemoryStream originalImageMemoryStream = new MemoryStream(stanIsBig))
             {

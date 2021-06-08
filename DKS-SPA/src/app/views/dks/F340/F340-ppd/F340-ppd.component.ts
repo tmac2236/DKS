@@ -6,6 +6,7 @@ import { PaginatedResult } from "../../../../core/_models/pagination";
 import { SF340PpdSchedule } from "../../../../core/_models/s_f340-ppd-schedule";
 import { F340SchedulePpd } from "../../../../core/_models/f340-schedule-ppd";
 import { ModalDirective } from "ngx-bootstrap/modal";
+import { environment } from "../../../../../environments/environment";
 
 @Component({
   selector: "app-F340",
@@ -230,12 +231,49 @@ export class F340PpdComponent implements OnInit {
     );
   }
   viewPic(model: F340SchedulePpd){
-    debugger;
-    let dataUrl = '../assets/F340PpdPic/' + model.devSeason +  "/" + model.article + "/" + model.photo;
+    let serverIp = "";
+    switch(this.sF340PpdSchedule.factory) { 
+      case 'C': { 
+        serverIp = environment.mpsSpaC;
+         break; 
+      } 
+      case 'U': { 
+        serverIp = environment.mpsSpaU;
+         break; 
+      } 
+      case 'E': { 
+        serverIp = environment.mpsSpaE; 
+        break; 
+      } 
+      case 'D': { 
+        serverIp = environment.mpsSpaD;
+         break; 
+      } 
+   } 
+    let dataUrl = 'http://' + serverIp +'/assets/F340PpdPic/' + model.devSeason +  "/" + model.article + "/" + model.photo;
     window.open(dataUrl);
   }
   viewPDF(model: F340SchedulePpd){
-    let dataUrl = '../assets/F340PpdPic/' + model.devSeason +  "/" + model.article + "/" + model.pdf;
+    let serverIp = "";
+    switch(this.sF340PpdSchedule.factory) { 
+      case 'C': { 
+        serverIp = environment.mpsSpaC;
+         break; 
+      } 
+      case 'U': { 
+        serverIp = environment.mpsSpaU;
+         break; 
+      } 
+      case 'E': { 
+        serverIp = environment.mpsSpaE; 
+        break; 
+      } 
+      case 'D': { 
+        serverIp = environment.mpsSpaD;
+         break; 
+      } 
+   } 
+    let dataUrl = 'http://' + serverIp +'/assets/F340PpdPic/' + model.devSeason +  "/" + model.article + "/" + model.pdf;
     window.open(dataUrl);
   }
   editMemo(){
