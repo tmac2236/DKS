@@ -142,7 +142,7 @@ namespace DKS_API.Services.Implement
         }
         public byte[] ReduceImageSize(byte[] stanIsLong)
         {
-            var jpegQuality = 50;
+            var jpegQuality = 50; //0~100
             Image image;
             Byte[] outputBytes;
             using (var inputStream = new MemoryStream(stanIsLong))

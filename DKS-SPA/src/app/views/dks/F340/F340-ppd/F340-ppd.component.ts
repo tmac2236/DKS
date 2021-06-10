@@ -41,6 +41,13 @@ export class F340PpdComponent implements OnInit {
     this.sF340PpdSchedule.currentPage = event.page;
     this.search();
   }
+  changePageSize(event: any){
+    
+    if(this.sF340PpdSchedule.season.length < 1){
+      return;
+    }
+    this.search();
+  }
   //搜尋
   search() {
     this.utility.spinner.show();

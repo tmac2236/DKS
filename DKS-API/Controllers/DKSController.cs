@@ -190,6 +190,7 @@ namespace DKS_API.Controllers
             {
                 if (x.Photo.Length > 1)
                 {
+                    //x.Photo = "=HYPERLINK(\"http://" + serverIp + "/assets/F340PpdPic/" + x.DevSeason + "/" + x.Article + "/" + x.Photo + "\",\"jpg\")";
                     x.Photo = "http://" + serverIp + "/assets/F340PpdPic/" + x.DevSeason + "/" + x.Article + "/" + x.Photo;
                     x.Pdf = "http://" + serverIp + "/assets/F340PpdPic/" + x.DevSeason + "/" + x.Article + "/" + x.Pdf;
                 }

@@ -618,6 +618,7 @@
                       style="height: 35px; width: 45px"
                       name="itemsPerPage"
                       [(ngModel)]="sF340PpdSchedule.itemsPerPage"
+                      (change)="changePageSize($event)"
                     >
                       <option value="10" selected>10</option>
                       <option value="25" selected>25</option>
@@ -681,6 +682,7 @@
                 class="form-control"
                 name="photoComment"
                 rows="2"
+                maxlength="300"
                 [(ngModel)]="editModel.photoComment"
               ></textarea>
             </div>
@@ -740,6 +742,7 @@
                 class="form-control"
                 name="ppdRemark"
                 rows="2"
+                maxlength="300"
                 [(ngModel)]="editModel.ppdRemark"
               ></textarea>
             </div>
