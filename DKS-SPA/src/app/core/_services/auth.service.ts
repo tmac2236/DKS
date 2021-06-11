@@ -62,4 +62,12 @@ export class AuthService {
 
     return result;
   }
+  getUserRole(){
+    let roleArray = "";
+    const token = localStorage.getItem('token');
+    if (token) {
+       roleArray = this.jwtHelper.decodeToken(token)["role"];
+    }
+    return roleArray;
+  }
 }

@@ -4,7 +4,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { User } from '../../core/_models/user';
 import { AlertifyService } from "../../core/_services/alertify.service";
 import { AuthService } from "../../core/_services/auth.service";
-import { navItems } from "../../_nav";
+import { NavItem, navItems } from "../../_nav";
 
 @Component({
   selector: "app-dashboard",
@@ -12,15 +12,19 @@ import { navItems } from "../../_nav";
 })
 export class DefaultLayoutComponent implements OnInit {
   public sidebarMinimized = false;
-  public navItems = navItems;
+  //public navItems = navItems;
+  public navItems = [];
   user: string;
   jwtHelper = new JwtHelperService();
 
   constructor(
     public authService: AuthService,
     private alertify: AlertifyService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private nav: NavItem
+  ) {
+    this.navItems = this.nav.getNav();
+  }
   ngOnInit() {
     const jwtTtoken  = localStorage.getItem('token');
     //console.log(this.jwtHelper.decodeToken(jwtTtoken));

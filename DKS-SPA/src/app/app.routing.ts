@@ -80,6 +80,15 @@ export const routes: Routes = [
         loadChildren: () =>
           import("./views/excel/excel.module").then((m) => m.ExcelModule),
       },
+      {
+        path: "engineer",
+        canActivate: [AuthGuardRole],
+        loadChildren: () =>
+          import("./views/engineer/engineer.module").then((m) => m.EngineerModule),
+          data: {
+            roles: [utilityConfig.RoleSysAdm],
+          }
+      },
     ],
   },
   { path: "**", component: P404Component },

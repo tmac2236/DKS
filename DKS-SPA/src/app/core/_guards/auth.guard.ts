@@ -17,9 +17,13 @@ export class AuthGuard implements CanActivate {
     if (this.authService.loggedIn()) {
       return true;
     }
-    this.alertify.error("Please login in first !!!");
-    //this.router.navigate([""]); // redirect to login in
-    window.location.href ="http://10.4.0.39:8080/ArcareEng/login.jsp";
+    this.alertify.confirm(
+      "Sweet Alert",
+      "Please login in first ! System is going to redirect to DKS.",
+      () => {
+        window.location.href ="http://10.4.0.39:8080/ArcareEng/login.jsp";
+      }
+    );
     return false;
   }
 }
