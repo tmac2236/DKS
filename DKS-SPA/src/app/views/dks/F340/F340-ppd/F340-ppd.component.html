@@ -536,6 +536,7 @@
                                 type="file"
                                 style="display: none"
                                 accept=".pdf"
+                                (click)="this.utility.reset($event)"
                                 (change)="
                                   uploadPdfF340Ppd($event.target.files, item)
                                 "
@@ -584,6 +585,7 @@
                                 type="file"
                                 style="display: none"
                                 accept=".jpg"
+                                (click)="this.utility.reset($event)"
                                 (change)="
                                   uploadPicF340Ppd($event.target.files, item)
                                 "

@@ -103,8 +103,9 @@ namespace DKS_API
                         ValidateAudience = false
                     };
                 });
-            //log
+            //AOP
             services.AddScoped<ApiExceptionFilter>();
+            services.AddScoped<ApiActionFilter>();
 
         }
 

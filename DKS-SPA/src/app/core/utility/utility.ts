@@ -142,5 +142,9 @@ export class Utility {
     }
     return new Blob([uInt8Array], { type: contentType });
   }
+  reset(e) {
+    console.log(" utility reset function fire! ", e);
+    e.target.value = "";
+  }
 
 }

@@ -9,7 +9,6 @@ import { AuthGuardRole } from "./core/_guards/auth.guard-role";
 import { DictionaryComponent } from "./views/dictionary/dictionary.component";
 import { F340PpdComponent } from "./views/dks/F340/F340-ppd/F340-ppd.component";
 import { F340Component } from "./views/dks/F340/F340.component";
-import { F420Component } from "./views/dks/F420/F420.component";
 import { F428EditComponent } from "./views/dks/F428/F428-edit/F428-edit.component";
 import { F428Component } from "./views/dks/F428/F428.component";
 
@@ -56,10 +55,6 @@ export const routes: Routes = [
     },
   },
   {
-    path: "F420",
-    component: F420Component,
-  },
-  {
     path: "F428",
     canActivate: [AuthGuard],
     component: F428Component,
@@ -84,11 +79,6 @@ export const routes: Routes = [
         path: "excel",
         loadChildren: () =>
           import("./views/excel/excel.module").then((m) => m.ExcelModule),
-      },
-      {
-        path: "kanban",
-        loadChildren: () =>
-          import("./views/kanban/kanban.module").then((m) => m.KanbanModule),
       },
     ],
   },

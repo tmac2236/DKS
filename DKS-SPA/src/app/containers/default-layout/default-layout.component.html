@@ -14,9 +14,9 @@
     alt: 'SSB Logo'
   }"
   [sidebarToggler]="'lg'"
-  [asideMenuToggler]="'lg'"
+  [asideMenuToggler]="false"
 >
-<div class="row ml-auto">
+<div class="row ml-auto mr-2">
   <div class="mr-2">
     <strong> Welcome {{ user | titlecase }}</strong>
   </div>
@@ -30,7 +30,7 @@
   <app-sidebar
     #appSidebar
     [fixed]="true"
-    [display]="'lg'"
+    [display]="false"
     [minimized]="sidebarMinimized"
     (minimizedChange)="toggleMinimize($event)"
   >
