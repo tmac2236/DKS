@@ -11,6 +11,7 @@ import { EngineerRoutingModule } from './engineer-routing.module';
 import { EngF340Component } from './eng-F340/eng-F340.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { EngComponent } from './eng/eng.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -22,6 +23,6 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
     PaginationModule,    
     EngineerRoutingModule,
   ],
-  declarations: [EngF340Component],
+  declarations: [EngF340Component,EngComponent],
 })
 export class EngineerModule {}

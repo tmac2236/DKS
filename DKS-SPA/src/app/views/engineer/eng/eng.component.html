@@ -1,0 +1,106 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="table-responsive">
+              <table class="table text-center text-nowrap table-striped">
+                <!--text-nowrap不換行-->
+                <!--套版分頁<table datatable id="f340Sche" class="table text-center table-striped">-->
+                <thead>
+                  <tr class="table-info">
+                    <th style="background-color: #76DAFF">Key</th>
+                    <th style="background-color: #76DAFF">Value</th>
+                    <th style="background-color: #76DAFF">Data Type</th>
+                    <th style="background-color: #76DAFF">Update User</th>
+                    <th style="background-color: #76DAFF">Update Time</th>
+                    <th style="background-color: #76DAFF"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container *ngFor="let item of result; let i = index">
+                    <tr>
+                      <td>{{ item.syskey }}</td>
+                      <td>{{ item.sysval }}</td>
+                      <td>{{ item.datatype }}</td>
+                      <td>{{ item.upusr }}</td>
+                      <td>{{ item.uptime | date: 'yyyy/MM/dd HH:mm:ss' }}</td>
+                      <td><input class='fa fa-print btn btn-warning' type='button' value='Edit' (click)="editSysSet(item)"/></td>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--editModelModal-->
+<div
+  bsModal
+  #editSysSetModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-info" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">請修改Value</h4>
+        <button
+          type="button"
+          class="close"
+          (click)="closeModal('EditSysSetModal')"
+          aria-label="Close"
+        >
+          <!--右上角的 X 符號-->
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group">
+              <label></label>
+              <input
+              class="form-control"
+              [type]="this.theEditSysSet.datatype == 'int'?'number':this.theEditSysSet.datatype == 'datetime'?'datetime-local':'text'"
+              name="sysval"
+              [(ngModel)]="theEditSysSet.sysval"/>              
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-primary btn-lg"
+          (click)="saveEditSysSet(this.theEditSysSet)"
+        >
+          Save
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary btn-lg"
+          (click)="closeModal('EditSysSetModal')"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--editModelModal-->
+<ngx-spinner
+  bdColor="rgba(0, 0, 0, 0.8)"
+  size="large"
+  color="#fff"
+  type="square-jelly-box"
+  [fullScreen]="true"
+  ><p style="color: white">Loading Dev Engineer</p></ngx-spinner
+>

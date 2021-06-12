@@ -27,12 +27,20 @@ export class NavItem {
       children: []
     };
     //children
+    const navEngineer_Eng = {
+      name: '10.1 Eng',
+      url: '/engineer/eng',
+      class: 'menu-margin',
+    };
     const navEngineer_F340 = {
-      name: '10.1 Eng-F340',
+      name: '10.2 Eng-F340',
       url: '/engineer/engF340',
       class: 'menu-margin',
     };
     //children -> father
+    if (this.theUserRoles.includes(utilityConfig.RoleSysAdm)) {
+      navEngineer.children.push(navEngineer_Eng);
+    }
     if (this.theUserRoles.includes(utilityConfig.RoleSysAdm)) {
       navEngineer.children.push(navEngineer_F340);
     }
