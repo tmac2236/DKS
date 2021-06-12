@@ -9,6 +9,8 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { EngineerRoutingModule } from './engineer-routing.module';
 import { EngF340Component } from './eng-F340/eng-F340.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 @NgModule({
   imports: [
     CommonModule,
@@ -16,6 +18,8 @@ import { EngF340Component } from './eng-F340/eng-F340.component';
     FormsModule,
     ReactiveFormsModule,
     ModalModule,
+    NgxSpinnerModule,
+    PaginationModule,    
     EngineerRoutingModule,
   ],
   declarations: [EngF340Component],

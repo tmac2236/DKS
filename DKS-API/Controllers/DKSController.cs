@@ -27,12 +27,13 @@ namespace DKS_API.Controllers
         private readonly IDevBuyPlanDAO _devBuyPlanDAO;
         private readonly IDevTreatmentDAO _devTreatmentDAO;
         private readonly IDevTreatmentFileDAO _devTreatmentFileDAO;
+        private readonly IDevSysSetDAO _devSysSetDAO;
         private readonly ISendMailService _sendMailService;
         private readonly IFileService _fileService;
         private readonly IExcelService _excelService;
 
         public DKSController(IConfiguration config, IWebHostEnvironment webHostEnvironment, IDKSDAO dksDao, IDevBuyPlanDAO devBuyPlanDAO, IDevTreatmentDAO devTreatmentDAO,
-        IDevTreatmentFileDAO devTreatmentFileDAO, ISendMailService sendMailService, IFileService fileService, IExcelService excelService)
+        IDevTreatmentFileDAO devTreatmentFileDAO, IDevSysSetDAO devSysSetDAO, ISendMailService sendMailService, IFileService fileService, IExcelService excelService)
         : base(config, webHostEnvironment)
         {
             _sendMailService = sendMailService;
@@ -42,6 +43,7 @@ namespace DKS_API.Controllers
             _devBuyPlanDAO = devBuyPlanDAO;
             _devTreatmentDAO = devTreatmentDAO;
             _devTreatmentFileDAO = devTreatmentFileDAO;
+            _devSysSetDAO = devSysSetDAO;
         }
         [HttpPost("exportF340_Process")]
         public async Task<IActionResult> ExportF340_Process(SF340Schedule sF340Schedule)
@@ -251,7 +253,10 @@ namespace DKS_API.Controllers
                     {
                         //add WaterMask
                         var pathList = _fileService.GetLocalPath("F340PpdPic", nastFileName);
-                        var result = _fileService.GetByteArrayByLocalUrl(pathList[1]);
+
+                        int size = _devSysSetDAO.FindSingle(x => x.SYSKEY == "copyRightSize").SYSVAL.ToInt();
+                        string copyrightStr = _devSysSetDAO.FindSingle(x => x.SYSKEY == "copyRightStr").SYSVAL;
+                        var result = _fileService.GetByteArrayByLocalUrl(pathList[1], size, copyrightStr);
                         System.IO.File.WriteAllBytes(pathList[1], result.ToArray());
 
                         model.PHOTO = fileName;
@@ -308,7 +313,7 @@ namespace DKS_API.Controllers
                 var loginUser = HttpContext.Request.Form["loginUser"].ToString().Trim();
                 var partNo = partName.Split(" ")[0];
                 var treatMentNo = treatMent.Split(" ")[0];
-                
+
                 DateTime nowtime = DateTime.Now;
                 var updateTimeStr = nowtime.ToString("yyyy-MM-dd HH:mm:ss");
                 DateTime updateTime = updateTimeStr.ToDateTime();
@@ -337,7 +342,7 @@ namespace DKS_API.Controllers
                     {
                         model.PDF = fileName;
                         _devTreatmentDAO.Update(model);
-                        
+
                         DevTreatmentFile opRecord = new DevTreatmentFile();
                         opRecord.ARTICLE = article;
                         opRecord.PARTNO = partNo;
@@ -357,7 +362,7 @@ namespace DKS_API.Controllers
                     {
                         model.PDF = "";
                         _devTreatmentDAO.Update(model);
-                        
+
                         DevTreatmentFile opRecord = _devTreatmentFileDAO.FindSingle(
                         x => x.FILE_NAME.Trim() == fileName.Trim());
                         _devTreatmentFileDAO.Remove(opRecord);
@@ -491,7 +496,9 @@ namespace DKS_API.Controllers
                 nastFileName.Add(article);
                 nastFileName.Add(fileName);
                 var pathList = _fileService.GetLocalPath("F340PpdPic", nastFileName);
-                var result = _fileService.GetByteArrayByLocalUrl(pathList[1]);
+                int size = _devSysSetDAO.FindSingle(x => x.SYSKEY == "copyRightSize").SYSVAL.ToInt();
+                string copyrightStr = _devSysSetDAO.FindSingle(x => x.SYSKEY == "copyRightStr").SYSVAL;
+                var result = _fileService.GetByteArrayByLocalUrl(pathList[1],size,copyrightStr);
                 return File(result, "image/jpeg");//"image/jpeg"  "application/pdf"
             }
             catch (Exception ex)

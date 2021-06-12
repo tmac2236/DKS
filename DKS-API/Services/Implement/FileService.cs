@@ -5,6 +5,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using DKS_API.Data.Interface;
 using DKS_API.Services.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -92,27 +93,26 @@ namespace DKS_API.Services.Implement
 
             return files;
         }
-        public byte[] GetByteArrayByLocalUrl(string folderPath)
+        public byte[] GetByteArrayByLocalUrl(string folderPath, int stanSize, string stanLoveU)
         {
             byte[] stanIsBig = File.ReadAllBytes(folderPath);
-            byte[] addWaterMask = AddWatermark(stanIsBig);
+            byte[] addWaterMask = AddWatermark(stanIsBig, stanSize, stanLoveU);
             return addWaterMask;
         }
-        public byte[] AddWatermark(Byte[] stanIsBig)
+        public byte[] AddWatermark(Byte[] stanIsBig, int stanSize, string stanLoveU)
         {
             byte[] convertedToBytes;
-            var byteSize = 50 ;
 
             using (MemoryStream originalImageMemoryStream = new MemoryStream(stanIsBig))
             {
                 using (Image image = Image.FromStream(originalImageMemoryStream))
                 {
-                    Font font = new Font("Arial", byteSize, FontStyle.Italic, GraphicsUnit.Pixel);
+                    Font font = new Font("Arial", stanSize, FontStyle.Italic, GraphicsUnit.Pixel);
                     Color color = Color.DarkGray;
                     Point point = new Point(image.Width / 10 * 1, (image.Height / 10 * 3));
-                    Point point1 = new Point(image.Width / 10 * 1, (image.Height / 10 * 5));
+                    Point point1 = new Point(image.Width / 10 * 1, (image.Height / 10 * 6));
                     Point point2 = new Point(image.Width / 10 * 1, (image.Height / 10 * 9));
-                    Point point3 = new Point(image.Width / 10 * 1, (image.Height / 10 * 13));
+                    Point point3 = new Point(image.Width / 10 * 1, (image.Height / 10 * 12));
                     Point point4 = new Point(image.Width / 10 * 1, (image.Height / 10 * 15));
                     SolidBrush brush = new SolidBrush(color);
                     using (Graphics graphics = Graphics.FromImage(image))
@@ -120,14 +120,13 @@ namespace DKS_API.Services.Implement
                         StringFormat stringFormat = new StringFormat();
                         stringFormat.Alignment = StringAlignment.Center;
                         stringFormat.LineAlignment = StringAlignment.Center;
-                        var ssbStr = "copyright © SHYANG SHIN BAO IND. All Rights Reserved";
                         var blankStr = "                                     ";
                         graphics.RotateTransform(-45);
-                        graphics.DrawString(String.Format("{0}{1}{2}{3}{4}{5}{6}", ssbStr, blankStr, ssbStr, blankStr, ssbStr, blankStr, ssbStr), font, brush, point, stringFormat);
-                        graphics.DrawString(String.Format("{0}{1}{2}{3}{4}{5}{6}", blankStr, ssbStr, blankStr, ssbStr, blankStr, ssbStr, blankStr), font, brush, point1, stringFormat);
-                        graphics.DrawString(String.Format("{0}{1}{2}{3}{4}{5}{6}", ssbStr, blankStr, ssbStr, blankStr, ssbStr, blankStr, ssbStr), font, brush, point2, stringFormat);
-                        graphics.DrawString(String.Format("{0}{1}{2}{3}{4}{5}{6}", blankStr, ssbStr, blankStr, ssbStr, blankStr, ssbStr, blankStr), font, brush, point3, stringFormat);
-                        graphics.DrawString(String.Format("{0}{1}{2}{3}{4}{5}{6}", ssbStr, blankStr, ssbStr, blankStr, ssbStr, blankStr, ssbStr), font, brush, point4, stringFormat);
+                        graphics.DrawString(String.Format("{0}{1}{2}{3}{4}{5}{6}", stanLoveU, blankStr, stanLoveU, blankStr, stanLoveU, blankStr, stanLoveU), font, brush, point, stringFormat);
+                        graphics.DrawString(String.Format("{0}{1}{2}{3}{4}{5}{6}", blankStr, stanLoveU, blankStr, stanLoveU, blankStr, stanLoveU, blankStr), font, brush, point1, stringFormat);
+                        graphics.DrawString(String.Format("{0}{1}{2}{3}{4}{5}{6}", stanLoveU, blankStr, stanLoveU, blankStr, stanLoveU, blankStr, stanLoveU), font, brush, point2, stringFormat);
+                        graphics.DrawString(String.Format("{0}{1}{2}{3}{4}{5}{6}", blankStr, stanLoveU, blankStr, stanLoveU, blankStr, stanLoveU, blankStr), font, brush, point3, stringFormat);
+                        graphics.DrawString(String.Format("{0}{1}{2}{3}{4}{5}{6}", stanLoveU, blankStr, stanLoveU, blankStr, stanLoveU, blankStr, stanLoveU), font, brush, point4, stringFormat);
                     }
 
                     using (MemoryStream updatedImageMemorySteam = new MemoryStream())

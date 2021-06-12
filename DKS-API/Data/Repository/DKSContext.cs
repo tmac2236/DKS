@@ -21,7 +21,7 @@ namespace DKS_API.Data.Repository
         public DbSet<SamPartB> SAMPARTB { get; set; }
         public DbSet<DevTreatment> DEV_TREATMENT { get; set; }
         public DbSet<DevTreatmentFile> DEV_TREATMENT_FILE { get; set; }
-
+        public DbSet<DevSysSet> DEV_SYSSET { get; set; }
         //DTO(Stored Procedure)
         public DbSet<F418_F420Dto> GetF420F418View { get; set; }
         public DbSet<F340_ProcessDto> GetF340ProcessView { get; set; }
@@ -44,6 +44,7 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<SamPartB>().HasKey(x => new { x.PARTNO, x.SAMPLENO });
             modelBuilder.Entity<DevTreatment>().HasKey(x => new { x.PARTNO,x.SAMPLENO,x.TREATMENTCODE,x.VERNO });
             modelBuilder.Entity<DevTreatmentFile>().HasKey(x => new { x.ARTICLE,x.PARTNO,x.TREATMENTCODE,x.UPTIME });
+            modelBuilder.Entity<DevSysSet>().HasKey(x => new { x.SYSKEY });
 
             //DTO(Stored Procedure)
             modelBuilder.Entity<F418_F420Dto>()
