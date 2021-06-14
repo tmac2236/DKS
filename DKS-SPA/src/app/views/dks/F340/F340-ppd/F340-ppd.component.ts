@@ -25,8 +25,8 @@ export class F340PpdComponent implements OnInit {
   bpVerList: string[];
   memoBtn = true;
   uiControls:any = {
-    uploadPicF340Ppd: utilityConfig.DevPreAssist,
-    editMemo: utilityConfig.DevPreAssist
+    uploadPicF340Ppd: utilityConfig.RoleSysAdm,
+    editMemo: utilityConfig.RoleSysAdm
   };
   editModel: F340SchedulePpd = new F340SchedulePpd(); //onlt use in photoCommentModal
 
@@ -173,7 +173,7 @@ export class F340PpdComponent implements OnInit {
       (res) => {
         this.utility.spinner.hide();
         //找到該筆model 把資料回填
-        model.photo = res.photo
+        model.pdf = res.pdf
       },
       (error) => {
         this.utility.spinner.hide();

@@ -69,7 +69,7 @@
               <label></label>
               <input
               class="form-control"
-              [type]="this.theEditSysSet.datatype == 'int'?'number':this.theEditSysSet.datatype == 'datetime'?'datetime-local':'text'"
+              [type]="this.utility.findInputType(this.theEditSysSet.datatype)"
               name="sysval"
               [(ngModel)]="theEditSysSet.sysval"/>              
             </div>

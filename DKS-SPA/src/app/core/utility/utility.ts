@@ -151,4 +151,22 @@ export class Utility {
     if (isNaN(newDate)) return false;
     return true;
   }
+  findInputType(dataType: string){
+    let inputType ="";
+    switch (dataType) {
+      case 'int':
+        inputType = 'number';
+          break;
+      case 'string':
+        inputType = 'text';
+          break;
+      case 'datetime':
+        inputType = 'datetime-local';
+          break;
+      default:
+        inputType = 'text'
+          break;
+    }
+    return inputType;
+  } 
 }
