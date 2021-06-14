@@ -418,7 +418,7 @@ namespace DKS_API.Controllers
                     {
                         toMails.Add(x.EMAIL);
                     });
-                    await _sendMailService.SendListMailAsync(toMails, "These Article Add Memo Please check !", content, null);
+                    await _sendMailService.SendListMailAsync(toMails, null, "These Article Add Memo Please check !", content, null);
                     await _devTreatmentDAO.SaveAll();
                 }
 
@@ -477,7 +477,7 @@ namespace DKS_API.Controllers
                 {
                     toMails.Add(x.EMAIL);
                 });
-                await _sendMailService.SendListMailAsync(toMails, "This Article Add Memo Please check it in F340-PPD !", content, null);
+                await _sendMailService.SendListMailAsync(toMails, null, "This Article Add Memo Please check it in F340-PPD !", content, null);
             }
             catch (Exception ex)
             {

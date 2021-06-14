@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Quartz;
 
-namespace DFPS_API.Quartz
+namespace DFPS_API.Quartz.Jobs
 {
     public class ShowDataTimeJob : IJob
     {

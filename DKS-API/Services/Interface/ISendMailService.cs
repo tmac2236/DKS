@@ -7,6 +7,6 @@ namespace DKS_API.Services.Interface
 {
     public interface ISendMailService
     {
-         Task SendListMailAsync(List<string> toMail, string subject, string content, string? filePath);
+         Task SendListMailAsync(List<string> toMail,List<string>? toCCMail, string subject, string content, string? filePath);
     }
 }

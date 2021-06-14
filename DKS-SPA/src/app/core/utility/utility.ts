@@ -151,22 +151,28 @@ export class Utility {
     if (isNaN(newDate)) return false;
     return true;
   }
-  findInputType(dataType: string){
-    let inputType ="";
+  findInputType(dataType: string) {
+    let inputType = "";
     switch (dataType) {
-      case 'int':
-        inputType = 'number';
-          break;
-      case 'string':
-        inputType = 'text';
-          break;
-      case 'datetime':
-        inputType = 'datetime-local';
-          break;
+      case "int":
+        inputType = "number";
+        break;
+      case "string":
+        inputType = "text";
+        break;
+      case "datetime":
+        inputType = "datetime-local";
+        break;
+      case "date":
+        inputType = "date";
+        break;
+      case "time":
+        inputType = "time";
+        break;
       default:
-        inputType = 'text'
-          break;
+        inputType = "text";
+        break;
     }
     return inputType;
-  } 
+  }
 }
