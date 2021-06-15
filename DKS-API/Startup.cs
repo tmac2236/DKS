@@ -89,7 +89,7 @@ namespace DKS_API
             services.AddSingleton<IJobFactory, SingletonJobFactory>();
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
             //新增我們的Job
-            services.AddSingleton<ShowDataTimeJob>();
+            //services.AddSingleton<ShowDataTimeJob>();
             services.AddSingleton<SentStanMailTimeJob>();
             //services.AddSingleton(
             //     new JobSchedule(jobType: typeof(ShowDataTimeJob), cronExpression: "0/5 * * * * ?")//每五秒鐘觸發一次

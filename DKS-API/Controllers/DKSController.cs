@@ -212,231 +212,167 @@ namespace DKS_API.Controllers
         [HttpPost("editPicF340Ppd")]
         public async Task<IActionResult> EditPicF340Ppd()
         {
-            try
+            var sampleNo = HttpContext.Request.Form["sampleNo"].ToString().Trim();
+            var treatMent = HttpContext.Request.Form["treatMent"].ToString().Trim();
+            var partName = HttpContext.Request.Form["partName"].ToString().Trim();
+            var article = HttpContext.Request.Form["article"].ToString().Trim();
+            var devSeason = HttpContext.Request.Form["devSeason"].ToString().Trim();
+            var fileName = HttpContext.Request.Form["photo"].ToString().Trim();
+            var loginUser = HttpContext.Request.Form["loginUser"].ToString().Trim();
+            var partNo = partName.Split(" ")[0];
+            var treatMentNo = treatMent.Split(" ")[0];
+
+            DateTime nowtime = DateTime.Now;
+            var updateTimeStr = nowtime.ToString("yyyy-MM-dd HH:mm:ss");
+            DateTime updateTime = updateTimeStr.ToDateTime();
+
+
+            if (fileName == "")
             {
-                var sampleNo = HttpContext.Request.Form["sampleNo"].ToString().Trim();
-                var treatMent = HttpContext.Request.Form["treatMent"].ToString().Trim();
-                var partName = HttpContext.Request.Form["partName"].ToString().Trim();
-                var article = HttpContext.Request.Form["article"].ToString().Trim();
-                var devSeason = HttpContext.Request.Form["devSeason"].ToString().Trim();
-                var fileName = HttpContext.Request.Form["photo"].ToString().Trim();
-                var loginUser = HttpContext.Request.Form["loginUser"].ToString().Trim();
-                var partNo = partName.Split(" ")[0];
-                var treatMentNo = treatMent.Split(" ")[0];
-
-                DateTime nowtime = DateTime.Now;
-                var updateTimeStr = nowtime.ToString("yyyy-MM-dd HH:mm:ss");
-                DateTime updateTime = updateTimeStr.ToDateTime();
-
-
-                if (fileName == "")
-                {
-                    //fileName + yyyy_MM_dd_HH_mm_ss_
-                    var formateDate = nowtime.ToString("yyyyMMddHHmmss");
-                    fileName = string.Format("{0}_{1}_{2}_{3}.jpg", article, partNo, treatMentNo, formateDate);
-                }
-
-                List<string> nastFileName = new List<string>();
-                nastFileName.Add(devSeason);
-                nastFileName.Add(article);
-                nastFileName.Add(fileName);
-
-                DevTreatment model = _devTreatmentDAO.FindSingle(
-                                 x => x.SAMPLENO.Trim() == sampleNo.Trim() &&
-                                 x.PARTNO.Trim() == partNo &&
-                                 x.TREATMENTCODE.Trim() == treatMentNo);
-
-                if (HttpContext.Request.Form.Files.Count > 0)
-                {
-                    var file = HttpContext.Request.Form.Files[0];
-                    if (await _fileService.SaveFiletoServer(file, "F340PpdPic", nastFileName))
-                    {
-                        //add WaterMask
-                        var pathList = _fileService.GetLocalPath("F340PpdPic", nastFileName);
-
-                        int size = _devSysSetDAO.FindSingle(x => x.SYSKEY == "copyRightSize").SYSVAL.ToInt();
-                        string copyrightStr = _devSysSetDAO.FindSingle(x => x.SYSKEY == "copyRightStr").SYSVAL;
-                        var result = _fileService.GetByteArrayByLocalUrl(pathList[1], size, copyrightStr);
-                        System.IO.File.WriteAllBytes(pathList[1], result.ToArray());
-
-                        model.PHOTO = fileName;
-                        _devTreatmentDAO.Update(model);
-
-                        DevTreatmentFile opRecord = new DevTreatmentFile();
-                        opRecord.ARTICLE = article;
-                        opRecord.PARTNO = partNo;
-                        opRecord.TREATMENTCODE = treatMentNo;
-                        opRecord.FILE_NAME = fileName;
-                        opRecord.KIND = "1";// 1: JPG 2:PDF
-                        opRecord.FILE_COMMENT = "";
-                        opRecord.UPUSR = loginUser;
-                        opRecord.UPTIME = updateTime;
-                        _devTreatmentFileDAO.Add(opRecord);
-                    }
-                }
-                else
-                {   //do CRUD-D here.
-
-                    if (await _fileService.SaveFiletoServer(null, "F340PpdPic", nastFileName))
-                    {
-                        model.PHOTO = "";
-                        _devTreatmentDAO.Update(model);
-
-                        DevTreatmentFile opRecord = _devTreatmentFileDAO.FindSingle(
-                        x => x.FILE_NAME.Trim() == fileName.Trim());
-                        _devTreatmentFileDAO.Remove(opRecord);
-                    }
-                }
-                await _devTreatmentDAO.SaveAll();
-
-                await _devTreatmentFileDAO.SaveAll();
-                return Ok(model);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest();
+                //fileName + yyyy_MM_dd_HH_mm_ss_
+                var formateDate = nowtime.ToString("yyyyMMddHHmmss");
+                fileName = string.Format("{0}_{1}_{2}_{3}.jpg", article, partNo, treatMentNo, formateDate);
             }
 
+            List<string> nastFileName = new List<string>();
+            nastFileName.Add(devSeason);
+            nastFileName.Add(article);
+            nastFileName.Add(fileName);
+
+            DevTreatment model = _devTreatmentDAO.FindSingle(
+                             x => x.SAMPLENO.Trim() == sampleNo.Trim() &&
+                             x.PARTNO.Trim() == partNo &&
+                             x.TREATMENTCODE.Trim() == treatMentNo);
+
+            if (HttpContext.Request.Form.Files.Count > 0)
+            {
+                var file = HttpContext.Request.Form.Files[0];
+                if (await _fileService.SaveFiletoServer(file, "F340PpdPic", nastFileName))
+                {
+                    //add WaterMask
+                    var pathList = _fileService.GetLocalPath("F340PpdPic", nastFileName);
+
+                    int size = _devSysSetDAO.FindSingle(x => x.SYSKEY == "copyRightSize").SYSVAL.ToInt();
+                    string copyrightStr = _devSysSetDAO.FindSingle(x => x.SYSKEY == "copyRightStr").SYSVAL;
+                    var result = _fileService.GetByteArrayByLocalUrl(pathList[1], size, copyrightStr);
+                    System.IO.File.WriteAllBytes(pathList[1], result.ToArray());
+
+                    model.PHOTO = fileName;
+                    _devTreatmentDAO.Update(model);
+
+                    DevTreatmentFile opRecord = new DevTreatmentFile();
+                    opRecord.ARTICLE = article;
+                    opRecord.PARTNO = partNo;
+                    opRecord.TREATMENTCODE = treatMentNo;
+                    opRecord.FILE_NAME = fileName;
+                    opRecord.KIND = "1";// 1: JPG 2:PDF
+                    opRecord.FILE_COMMENT = "";
+                    opRecord.UPUSR = loginUser;
+                    opRecord.UPTIME = updateTime;
+                    _devTreatmentFileDAO.Add(opRecord);
+                }
+            }
+            else
+            {   //do CRUD-D here.
+
+                if (await _fileService.SaveFiletoServer(null, "F340PpdPic", nastFileName))
+                {
+                    model.PHOTO = "";
+                    _devTreatmentDAO.Update(model);
+
+                    DevTreatmentFile opRecord = _devTreatmentFileDAO.FindSingle(
+                    x => x.FILE_NAME.Trim() == fileName.Trim());
+                    _devTreatmentFileDAO.Remove(opRecord);
+                }
+            }
+            await _devTreatmentDAO.SaveAll();
+
+            await _devTreatmentFileDAO.SaveAll();
+            return Ok(model);
         }
         //上傳F340PPD PDF或刪除PDF
         [HttpPost("editPdfF340Ppd")]
         public async Task<IActionResult> EditPdfF340Ppd()
         {
-            try
+            var sampleNo = HttpContext.Request.Form["sampleNo"].ToString().Trim();
+            var treatMent = HttpContext.Request.Form["treatMent"].ToString().Trim();
+            var partName = HttpContext.Request.Form["partName"].ToString().Trim();
+            var article = HttpContext.Request.Form["article"].ToString().Trim();
+            var devSeason = HttpContext.Request.Form["devSeason"].ToString().Trim();
+            var fileName = HttpContext.Request.Form["pdf"].ToString().Trim();
+            var loginUser = HttpContext.Request.Form["loginUser"].ToString().Trim();
+            var partNo = partName.Split(" ")[0];
+            var treatMentNo = treatMent.Split(" ")[0];
+
+            DateTime nowtime = DateTime.Now;
+            var updateTimeStr = nowtime.ToString("yyyy-MM-dd HH:mm:ss");
+            DateTime updateTime = updateTimeStr.ToDateTime();
+
+            if (fileName == "")
             {
-                var sampleNo = HttpContext.Request.Form["sampleNo"].ToString().Trim();
-                var treatMent = HttpContext.Request.Form["treatMent"].ToString().Trim();
-                var partName = HttpContext.Request.Form["partName"].ToString().Trim();
-                var article = HttpContext.Request.Form["article"].ToString().Trim();
-                var devSeason = HttpContext.Request.Form["devSeason"].ToString().Trim();
-                var fileName = HttpContext.Request.Form["pdf"].ToString().Trim();
-                var loginUser = HttpContext.Request.Form["loginUser"].ToString().Trim();
-                var partNo = partName.Split(" ")[0];
-                var treatMentNo = treatMent.Split(" ")[0];
-
-                DateTime nowtime = DateTime.Now;
-                var updateTimeStr = nowtime.ToString("yyyy-MM-dd HH:mm:ss");
-                DateTime updateTime = updateTimeStr.ToDateTime();
-
-                if (fileName == "")
-                {
-                    //fileName + yyyy_MM_dd_HH_mm_ss_
-                    var formateDate = nowtime.ToString("yyyyMMddHHmmss");
-                    fileName = string.Format("{0}_{1}_{2}_{3}.pdf", article, partNo, treatMentNo, formateDate);
-                }
-
-                List<string> nastFileName = new List<string>();
-                nastFileName.Add(devSeason);
-                nastFileName.Add(article);
-                nastFileName.Add(fileName);
-
-                DevTreatment model = _devTreatmentDAO.FindSingle(
-                                 x => x.SAMPLENO.Trim() == sampleNo.Trim() &&
-                                 x.PARTNO.Trim() == partNo &&
-                                 x.TREATMENTCODE.Trim() == treatMentNo);
-
-                if (HttpContext.Request.Form.Files.Count > 0)
-                {
-                    var file = HttpContext.Request.Form.Files[0];
-                    if (await _fileService.SaveFiletoServer(file, "F340PpdPic", nastFileName))
-                    {
-                        model.PDF = fileName;
-                        _devTreatmentDAO.Update(model);
-
-                        DevTreatmentFile opRecord = new DevTreatmentFile();
-                        opRecord.ARTICLE = article;
-                        opRecord.PARTNO = partNo;
-                        opRecord.TREATMENTCODE = treatMentNo;
-                        opRecord.FILE_NAME = fileName;
-                        opRecord.KIND = "2";// 1: JPG 2:PDF
-                        opRecord.FILE_COMMENT = "";
-                        opRecord.UPUSR = loginUser;
-                        opRecord.UPTIME = updateTime;
-                        _devTreatmentFileDAO.Add(opRecord);
-                    }
-                }
-                else
-                {   //do CRUD-D here.
-
-                    if (await _fileService.SaveFiletoServer(null, "F340PpdPic", nastFileName))
-                    {
-                        model.PDF = "";
-                        _devTreatmentDAO.Update(model);
-
-                        DevTreatmentFile opRecord = _devTreatmentFileDAO.FindSingle(
-                        x => x.FILE_NAME.Trim() == fileName.Trim());
-                        _devTreatmentFileDAO.Remove(opRecord);
-                    }
-                }
-                await _devTreatmentDAO.SaveAll();
-
-                await _devTreatmentFileDAO.SaveAll();
-
-                return Ok(model);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest();
+                //fileName + yyyy_MM_dd_HH_mm_ss_
+                var formateDate = nowtime.ToString("yyyyMMddHHmmss");
+                fileName = string.Format("{0}_{1}_{2}_{3}.pdf", article, partNo, treatMentNo, formateDate);
             }
 
+            List<string> nastFileName = new List<string>();
+            nastFileName.Add(devSeason);
+            nastFileName.Add(article);
+            nastFileName.Add(fileName);
+
+            DevTreatment model = _devTreatmentDAO.FindSingle(
+                             x => x.SAMPLENO.Trim() == sampleNo.Trim() &&
+                             x.PARTNO.Trim() == partNo &&
+                             x.TREATMENTCODE.Trim() == treatMentNo);
+
+            if (HttpContext.Request.Form.Files.Count > 0)
+            {
+                var file = HttpContext.Request.Form.Files[0];
+                if (await _fileService.SaveFiletoServer(file, "F340PpdPic", nastFileName))
+                {
+                    model.PDF = fileName;
+                    _devTreatmentDAO.Update(model);
+
+                    DevTreatmentFile opRecord = new DevTreatmentFile();
+                    opRecord.ARTICLE = article;
+                    opRecord.PARTNO = partNo;
+                    opRecord.TREATMENTCODE = treatMentNo;
+                    opRecord.FILE_NAME = fileName;
+                    opRecord.KIND = "2";// 1: JPG 2:PDF
+                    opRecord.FILE_COMMENT = "";
+                    opRecord.UPUSR = loginUser;
+                    opRecord.UPTIME = updateTime;
+                    _devTreatmentFileDAO.Add(opRecord);
+                }
+            }
+            else
+            {   //do CRUD-D here.
+
+                if (await _fileService.SaveFiletoServer(null, "F340PpdPic", nastFileName))
+                {
+                    model.PDF = "";
+                    _devTreatmentDAO.Update(model);
+
+                    DevTreatmentFile opRecord = _devTreatmentFileDAO.FindSingle(
+                    x => x.FILE_NAME.Trim() == fileName.Trim());
+                    _devTreatmentFileDAO.Remove(opRecord);
+                }
+            }
+            await _devTreatmentDAO.SaveAll();
+
+            await _devTreatmentFileDAO.SaveAll();
+
+            return Ok(model);
         }
 
         [HttpPost("editF340Ppds")]
         public async Task<IActionResult> EditF340Ppds(List<F340_PpdDto> dtos)
         {
             var editCount = 0;
-            try
+            var content = "";
+            foreach (F340_PpdDto dto in dtos)
             {
-                var content = "";
-                foreach (F340_PpdDto dto in dtos)
-                {
-                    if (dto.PartName.Trim().Length < 1 || dto.TreatMent.Trim().Length < 1 || dto.ReleaseType.Trim() != "CWA") continue;
-                    var partNo = dto.PartName.Trim().Split(" ")[0];
-                    var treatMentNo = dto.TreatMent.Trim().Split(" ")[0];
-                    DevTreatment model = _devTreatmentDAO.FindSingle(
-                                                     x => x.SAMPLENO.Trim() == dto.SampleNo.Trim() &&
-                                                     x.PARTNO.Trim() == partNo &&
-                                                     x.TREATMENTCODE.Trim() == treatMentNo);
-
-                    if (model != null)
-                    {
-                        if (model.PPD_REMARK.ToSafetyString().Trim() == dto.PpdRemark.ToSafetyString().Trim()) continue;
-                        model.PPD_REMARK = dto.PpdRemark.Trim();
-                        _devTreatmentDAO.Update(model);
-                        editCount++;
-                        content += model.ARTICLE;
-                        content += "、";
-                    }
-                }
-
-                if (editCount > 0)
-                {
-                    content = content.Remove(content.Length - 1);
-                    var toMails = new List<string>();
-                    var users = await _dksDao.GetUsersByRole("GM0000000038");
-                    users.ForEach(x =>
-                    {
-                        toMails.Add(x.EMAIL);
-                    });
-                    await _sendMailService.SendListMailAsync(toMails, null, "These Article Add Memo Please check !", content, null);
-                    await _devTreatmentDAO.SaveAll();
-                }
-
-            }
-            catch (Exception ex)
-            {
-                return BadRequest();
-            }
-            return Ok(editCount);
-
-        }
-        [HttpPost("editF340Ppd/{type}")]
-        public async Task<IActionResult> EditF340Ppd(F340_PpdDto dto, string type)
-        {
-            var isSuccess = false;
-            try
-            {
-                if (dto.PartName.Trim().Length < 1 || dto.TreatMent.Trim().Length < 1 || dto.ReleaseType.Trim() != "CWA") return Ok(isSuccess);
+                if (dto.PartName.Trim().Length < 1 || dto.TreatMent.Trim().Length < 1 || dto.ReleaseType.Trim() != "CWA") continue;
                 var partNo = dto.PartName.Trim().Split(" ")[0];
                 var treatMentNo = dto.TreatMent.Trim().Split(" ")[0];
                 DevTreatment model = _devTreatmentDAO.FindSingle(
@@ -446,43 +382,71 @@ namespace DKS_API.Controllers
 
                 if (model != null)
                 {
-                    // type is here
-                    if (type == "PhotoComment") model.PHOTO_COMMENT = dto.PhotoComment.Trim();
-                    if (type == "PpdRemark") model.PPD_REMARK = dto.PpdRemark.Trim();
-
-
+                    if (model.PPD_REMARK.ToSafetyString().Trim() == dto.PpdRemark.ToSafetyString().Trim()) continue;
+                    model.PPD_REMARK = dto.PpdRemark.Trim();
                     _devTreatmentDAO.Update(model);
+                    editCount++;
+                    content += model.ARTICLE;
+                    content += "、";
                 }
-
-                await _devTreatmentDAO.SaveAll();
             }
-            catch (Exception ex)
-            {
-                return BadRequest();
-            }
-            return Ok(isSuccess);
 
-        }
-        [HttpPost("sentMailF340PpdByArticle")]
-        public async Task<IActionResult> SentMailF340PpdByArticle(SF340PPDSchedule sF340PPDSchedule)
-        {
-            try
+            if (editCount > 0)
             {
-                var dksSignature = _config.GetSection("DksSignatureLine").Value;
-                var content = string.Format(@"The Article : {0} Added Memo please check it in F340-PPD of the below website.{1}", sF340PPDSchedule.article, dksSignature);
-
+                content = content.Remove(content.Length - 1);
                 var toMails = new List<string>();
                 var users = await _dksDao.GetUsersByRole("GM0000000038");
                 users.ForEach(x =>
                 {
                     toMails.Add(x.EMAIL);
                 });
-                await _sendMailService.SendListMailAsync(toMails, null, "This Article Add Memo Please check it in F340-PPD !", content, null);
+                await _sendMailService.SendListMailAsync(toMails, null, "These Article Add Memo Please check !", content, null);
+                await _devTreatmentDAO.SaveAll();
             }
-            catch (Exception ex)
+            return Ok(editCount);
+
+        }
+        [HttpPost("editF340Ppd/{type}")]
+        public async Task<IActionResult> EditF340Ppd(F340_PpdDto dto, string type)
+        {
+            var isSuccess = false;
+
+            if (dto.PartName.Trim().Length < 1 || dto.TreatMent.Trim().Length < 1 || dto.ReleaseType.Trim() != "CWA") return Ok(isSuccess);
+            var partNo = dto.PartName.Trim().Split(" ")[0];
+            var treatMentNo = dto.TreatMent.Trim().Split(" ")[0];
+            DevTreatment model = _devTreatmentDAO.FindSingle(
+                                             x => x.SAMPLENO.Trim() == dto.SampleNo.Trim() &&
+                                             x.PARTNO.Trim() == partNo &&
+                                             x.TREATMENTCODE.Trim() == treatMentNo);
+
+            if (model != null)
             {
-                return BadRequest();
+                // type is here
+                if (type == "PhotoComment") model.PHOTO_COMMENT = dto.PhotoComment.Trim();
+                if (type == "PpdRemark") model.PPD_REMARK = dto.PpdRemark.Trim();
+
+
+                _devTreatmentDAO.Update(model);
             }
+
+            await _devTreatmentDAO.SaveAll();
+            return Ok(isSuccess);
+
+        }
+        [HttpPost("sentMailF340PpdByArticle")]
+        public async Task<IActionResult> SentMailF340PpdByArticle(SF340PPDSchedule sF340PPDSchedule)
+        {
+
+            var dksSignature = _config.GetSection("DksSignatureLine").Value;
+            var content = string.Format(@"The Article : {0} Added Memo please check it in F340-PPD of the below website.{1}", sF340PPDSchedule.article, dksSignature);
+
+            var toMails = new List<string>();
+            var users = await _dksDao.GetUsersByRole("GM0000000038");
+            users.ForEach(x =>
+            {
+                toMails.Add(x.EMAIL);
+            });
+            await _sendMailService.SendListMailAsync(toMails, null, "This Article Add Memo Please check it in F340-PPD !", content, null);
             return Ok();
 
         }
@@ -498,7 +462,7 @@ namespace DKS_API.Controllers
                 var pathList = _fileService.GetLocalPath("F340PpdPic", nastFileName);
                 int size = _devSysSetDAO.FindSingle(x => x.SYSKEY == "copyRightSize").SYSVAL.ToInt();
                 string copyrightStr = _devSysSetDAO.FindSingle(x => x.SYSKEY == "copyRightStr").SYSVAL;
-                var result = _fileService.GetByteArrayByLocalUrl(pathList[1],size,copyrightStr);
+                var result = _fileService.GetByteArrayByLocalUrl(pathList[1], size, copyrightStr);
                 return File(result, "image/jpeg");//"image/jpeg"  "application/pdf"
             }
             catch (Exception ex)

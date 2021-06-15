@@ -64,47 +64,35 @@ namespace DKS_API.Controllers
         [HttpPost("uploadPicByArticle")]
         public IActionResult UploadPicByArticle([FromForm] ArticlePic source)
         {
-            try
-            {
 
-                string rootdir = Directory.GetCurrentDirectory();
-                var localStr = _config.GetSection("AppSettings:ArticleUrl").Value;
-                var pathToSave = rootdir + localStr + source.Article;
-                pathToSave = pathToSave.Replace("DKS-API", "DKS-SPA");
-                if (source.File.Length > 0)
-                {
-                    //檔名含副檔名
-                    //var fileName = ContentDispositionHeaderValue.Parse(source.File.ContentDisposition).FileName.Trim('"');
-                    var fileName = source.Article + "_" + source.No + ".jpg";
-                    //新增檔名的全路徑
-                    var fullPath = Path.Combine(pathToSave, fileName);
-                    if (!Directory.Exists(pathToSave))
-                    {
-                        DirectoryInfo di = Directory.CreateDirectory(pathToSave);
-                    }
-                    using (var stream = new FileStream(fullPath, FileMode.Create))
-                    {
-                        source.File.CopyTo(stream);
+            string rootdir = Directory.GetCurrentDirectory();
+            var localStr = _config.GetSection("AppSettings:ArticleUrl").Value;
+            var pathToSave = rootdir + localStr + source.Article;
+            pathToSave = pathToSave.Replace("DKS-API", "DKS-SPA");
 
-                        var staff = _dksDao.SearchStaffByLOGIN(source.User);
-                        UserLog userlog = new UserLog();
-                        userlog.PROGNAME = "F205";
-                        userlog.LOGINNAME = staff.Result.LOGIN;
-                        userlog.HISTORY = "Add Picture " + fileName;
-                        userlog.UPDATETIME = DateTime.Now;
-                        _dksDao.AddUserLogAsync(userlog);
-                    }
-                    return Ok();
-                }
-                else
-                {
-                    return BadRequest();
-                }
-            }
-            catch (Exception ex)
+            //檔名含副檔名
+            //var fileName = ContentDispositionHeaderValue.Parse(source.File.ContentDisposition).FileName.Trim('"');
+            var fileName = source.Article + "_" + source.No + ".jpg";
+            //新增檔名的全路徑
+            var fullPath = Path.Combine(pathToSave, fileName);
+            if (!Directory.Exists(pathToSave))
             {
-                return StatusCode(500, $"Internal server error: {ex}");
+                DirectoryInfo di = Directory.CreateDirectory(pathToSave);
             }
+            using (var stream = new FileStream(fullPath, FileMode.Create))
+            {
+                source.File.CopyTo(stream);
+
+                var staff = _dksDao.SearchStaffByLOGIN(source.User);
+                UserLog userlog = new UserLog();
+                userlog.PROGNAME = "F205";
+                userlog.LOGINNAME = staff.Result.LOGIN;
+                userlog.HISTORY = "Add Picture " + fileName;
+                userlog.UPDATETIME = DateTime.Now;
+                _dksDao.AddUserLogAsync(userlog);
+            }
+            return Ok();
+
         }
         [HttpGet("getPicByArticle")]
         public async Task<IActionResult> GetPicByArticle(string article)
