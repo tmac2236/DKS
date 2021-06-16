@@ -85,20 +85,20 @@ namespace DKS_API
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IExcelService, ExcelService>();
             
-            //新增Quartz服務
-            services.AddSingleton<IJobFactory, SingletonJobFactory>();
-            services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
-            //新增我們的Job
+            //Add Quartz Service
+            //services.AddSingleton<IJobFactory, SingletonJobFactory>();
+            //services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
+            //Add Jobs
             //services.AddSingleton<ShowDataTimeJob>();
-            services.AddSingleton<SentStanMailTimeJob>();
+            //services.AddSingleton<SentStanMailTimeJob>();
             //services.AddSingleton(
             //     new JobSchedule(jobType: typeof(ShowDataTimeJob), cronExpression: "0/5 * * * * ?")//每五秒鐘觸發一次
             //);
-            services.AddSingleton(
-                 new JobSchedule(jobType: typeof(SentStanMailTimeJob), cronExpression: " 0 30 8,9,10,11,12,13,14,15 ? * MON,TUE,WED,THU,FRI,SAT *")//禮拜一到六七點到下午三點每30分鐘
-           );
-           //啟動QuartzHostedServie
-            services.AddHostedService<QuartzHostedService>();
+            //services.AddSingleton(
+            //     new JobSchedule(jobType: typeof(SentStanMailTimeJob), cronExpression: " 0 30 8,9,10,11,12,13,14,15 ? * MON,TUE,WED,THU,FRI,SAT *")
+            //);
+           //Launch QuartzHostedServie
+            //services.AddHostedService<QuartzHostedService>();
             
             //auth
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

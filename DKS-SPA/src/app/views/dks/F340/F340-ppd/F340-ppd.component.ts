@@ -173,7 +173,9 @@ export class F340PpdComponent implements OnInit {
       (res) => {
         this.utility.spinner.hide();
         //找到該筆model 把資料回填
+        console.log("res dpf" + res.pdf);
         model.pdf = res.pdf
+        console.log("model dpf" + model.pdf);
       },
       (error) => {
         this.utility.spinner.hide();
@@ -285,6 +287,10 @@ export class F340PpdComponent implements OnInit {
    } 
     let dataUrl = 'http://' + serverIp +'/assets/F340PpdPic/' + model.devSeason +  "/" + model.article + "/" + model.pdf;
     window.open(dataUrl);
+  }
+  downloadPDF(model: F340SchedulePpd){
+    const url = this.utility.baseUrl + "dks/exportF340_ProcessPpd_pdf";
+    this.utility.exportPdfFactory(url, model.pdf, model);
   }
   editMemo(){
     this.memoBtn = !this.memoBtn;

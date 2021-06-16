@@ -5,6 +5,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Aspose.Cells;
 using DKS_API.Data.Interface;
 using DKS_API.Services.Interface;
 using Microsoft.AspNetCore.Http;
@@ -122,7 +123,7 @@ namespace DKS_API.Services.Implement
                 {
                     using (Image image = Image.FromStream(originalImageMemoryStream))
                     {
-                        Font font = new Font("Arial", stanSize, FontStyle.Italic, GraphicsUnit.Pixel);
+                        System.Drawing.Font font = new System.Drawing.Font("Arial", stanSize, FontStyle.Italic, GraphicsUnit.Pixel);
                         Color color = Color.DarkGray;
                         Point point = new Point(image.Width / 10 * 1, (image.Height / 10 * 3));
                         Point point1 = new Point(image.Width / 10 * 1, (image.Height / 10 * 6));
@@ -189,6 +190,13 @@ namespace DKS_API.Services.Implement
                 throw ex;
             }
             return outputBytes;
+        }
+        public Task<string> UploadExcel(string filePath)
+        {
+            // Instantiating a Workbook object
+            Workbook workbook = new Workbook(filePath);
+            var num = workbook.Worksheets.Count();
+            throw new NotImplementedException();
         }
     }
 }

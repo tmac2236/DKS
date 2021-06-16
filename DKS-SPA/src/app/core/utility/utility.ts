@@ -6,6 +6,7 @@ import { JwtHelperService } from "@auth0/angular-jwt";
 import { NgxSpinnerService } from "ngx-spinner";
 import { timeout } from "rxjs/operators";
 import { environment } from "../../../environments/environment";
+import { ModelInterface } from "../_models/interface/model-interface";
 import { Pagination } from "../_models/pagination";
 import { AlertifyService } from "../_services/alertify.service";
 import { LanguageService } from "../_services/language.service";
@@ -31,7 +32,7 @@ export class Utility {
     localStorage.removeItem("token");
     this.alertify.message("logged out");
   }
-  //匯出
+  //匯出excel
   exportFactory(url: string, nameParam: string, params: Pagination) {
     this.spinner.show();
     this.http
@@ -63,6 +64,28 @@ export class Utility {
         this.spinner.hide();
       });
   }
+    //匯出pdf by model
+    exportPdfFactory(url: string, nameParam: string, model: ModelInterface) {
+      this.spinner.show();
+      this.http
+        .post(url, model, { responseType: "blob" })
+        .pipe(timeout(utilityConfig.httpTimeOut))
+        .subscribe((result: Blob) => {
+          if (result.type !== "application/pdf") {
+            alert(result.type);
+            this.spinner.hide();
+          }
+          const blob = new Blob([result]);
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          const currentTime = new Date();
+          link.href = url;
+          link.setAttribute("download", nameParam);
+          document.body.appendChild(link);
+          link.click();
+          this.spinner.hide();
+        });
+    }
   //取得目前語言
   getCurrentLang() {
     return this.languageService.translate.currentLang;

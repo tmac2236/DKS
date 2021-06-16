@@ -470,6 +470,88 @@ namespace DKS_API.Controllers
                 return StatusCode(500, $"Internal server error: {ex}.");
             }
         }
+        [HttpGet("rejectF340Process")]
+        public async Task<IActionResult> RejectF340Process(string sampleNo, string type)
+        {
+            string errMsg = "";
+            if (!(type == "U" || type == "B" || type == "UB"))
+            {
+                errMsg = "Type must be U or B or UB.\r\nU is reject Upper、B is reject Bottom、UB is reject both.";
+                return Ok(errMsg);
+            }
+            var result = await _devTreatmentDAO.FindAll(x => x.SAMPLENO == sampleNo.Trim()).ToListAsync();
+            if (result.Count > 0)
+            {
+                var biz_flag = result[0].BIZ_FLAG.Trim();
+                if (biz_flag == "Y")
+                {
+                    var title = string.Format(@"麻煩協助刪除F340中介檔資料!");
 
+                    var toMails = new List<string>();
+                    toMails.Add("stan.chen@ssbshoes.com");
+                    toMails.Add("aven.yu@ssbshoes.com");
+                    toMails.Add("hsin.chen@ssbshoes.com");
+                    var sqlDetail = string.Format(@"delete infxshcmes@ondbs:dev_f340\r\nwhere spno in\r\n( '{0}' )", sampleNo);
+                    var sign = "\r\n\r\n\r\n陳尚賢Stan Chen\r\n--------------------------------------------------------------------------------------------------------------------\r\nInformation and Technology Center (資訊中心)-ERP\r\nSHYANG SHIN BAO industrial co., LTD (翔鑫堡工業股份有限公司)\r\nSHYANG HUNG CHENG CO.,LTD (翔鴻程責任有限公司)\r\nTel: +84 (0274)3745-001-025 #6696\r\nEmail : Stan.Chen@ssbshoes.com";
+                    var content = string.Format(@"Dear Hsin:\r\n請幫忙協助刪除中介檔資料，謝謝。\r\n{0}\r\n\r\n{1}", sqlDetail, sign);
+                    await _sendMailService.SendListMailAsync(toMails, null, title, content, null);
+
+                }
+                result.ForEach(x =>
+                    {
+                        x.BIZ_FLAG = "N";
+                        x.STATUS = "1";
+                        x.BIZ_P_TIME = null;
+                        if (type == "U")
+                        {
+                            x.DEV_DATE = null;
+                            x.DEV_LOGIN = "";
+                            x.TT_DATE = null;
+                            x.TT_LOGIN = "";
+                        }
+                        else if (type == "B")
+                        {
+                            x.DEV_DATE2 = null;
+                            x.DEV_LOGIN2 = "";
+                            x.TT_DATE2 = null;
+                            x.TT_LOGIN2 = "";
+                        }
+                        else if (type == "UB")
+                        {
+                            x.DEV_DATE = null;
+                            x.DEV_LOGIN = "";
+                            x.TT_DATE = null;
+                            x.TT_LOGIN = "";
+                            x.DEV_DATE2 = null;
+                            x.DEV_LOGIN2 = "";
+                            x.TT_DATE2 = null;
+                            x.TT_LOGIN2 = "";
+                        }
+                        _devTreatmentDAO.Update(x);
+                    }
+                );
+
+                await _devTreatmentDAO.SaveAll();
+            }
+            else
+            {
+                errMsg = String.Format(@"There is no data with this Sample No :{0}", sampleNo);
+            }
+
+            return Ok(errMsg);
+        }
+        //exportF340_ProcessPpd_pdf
+        [HttpPost("exportF340_ProcessPpd_pdf")]
+        public IActionResult exportF340_ProcessPpd_pdf(F340_PpdDto f340_ProcessDto)
+        {
+            List<string> nastFileName = new List<string>();
+            nastFileName.Add(f340_ProcessDto.DevSeason);
+            nastFileName.Add(f340_ProcessDto.Article);
+            nastFileName.Add(f340_ProcessDto.Pdf);
+            var pathList = _fileService.GetLocalPath("F340PpdPic", nastFileName);
+            byte[] result = System.IO.File.ReadAllBytes(pathList[1]);
+
+            return File(result, "application/pdf");
+        }
     }
 }

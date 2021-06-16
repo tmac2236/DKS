@@ -15,6 +15,7 @@ namespace DKS_API.Services.Interface
         byte[] GetByteArrayByLocalUrl(string folderPath, int stanSize, string stanLoveU);
         List<string> GetLocalPath(string settingNam, List<string> fileNames);
         byte[] AddWatermark(Byte[] stanIsBig,int stanSize,string stanLoveU);
+        Task<string> UploadExcel(string dataUrl);
     }
 
 }

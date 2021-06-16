@@ -403,7 +403,7 @@
                           style="background-color: #23d954"
                           placement="開發人員維護"
                         >
-                          PDF{{ "F340-PPD.picture" | translate }}
+                          PDF
                         </th>
                         <th
                           [hidden]="
@@ -418,12 +418,6 @@
                           PDF{{ "F340-PPD.mantainPic" | translate }}
                         </th>                      
 <!---->                                                 
-                        <th
-                          style="background-color: #23d954"
-                          placement="開發人員維護"
-                        >
-                          Shoe{{ "F340-PPD.picture" | translate }}
-                        </th>
                         <th
                           [hidden]="
                             !this.sF340PpdSchedule.role.includes(
@@ -505,24 +499,23 @@
 <!-- -->
                           <td>
                             <img
-                              src="../assets/systemImg/visible.png"
+                              src="../assets/systemImg/download-pdf.png"
                               class="mt-2"
                               width="35"
                               height="35"
                               [style.visibility]="
                                 item.pdf.length < 1 ? 'hidden' : 'visible'
                               "
-                              (click)="viewPDF(item)"
+                              (click)="downloadPDF(item)"
                             />
                           </td>
-                          <div
-                            [hidden]="
-                              !this.sF340PpdSchedule.role.includes(
-                                uiControls.uploadPicF340Ppd
-                              )
-                            "
-                          >
                             <td>
+                              <div
+                              [hidden]="
+                                !this.sF340PpdSchedule.role.includes(
+                                  uiControls.uploadPicF340Ppd
+                                )
+                              ">
                               <label
                                 [style.visibility]="
                                   item.isDisplay == 0 ? 'hidden' : 'visible'
@@ -550,28 +543,15 @@
                                 height="35"
                                 (click)="removePdfF340Ppd(item)"
                               />
-                            </td>
-                          </div>
+                              </div>
+                            </td>   
 <!---->
-                          <td>
-                            <img
-                              src="../assets/systemImg/visible.png"
-                              class="mt-2"
-                              width="35"
-                              height="35"
-                              [style.visibility]="
-                                item.photo.length < 1 ? 'hidden' : 'visible'
-                              "
-                              (click)="viewPic(item)"
-                            />
-                          </td>
-                          <div
-                            [hidden]="
-                              !this.sF340PpdSchedule.role.includes(
-                                uiControls.uploadPicF340Ppd
-                              )
-                            ">
                             <td>
+                              <div
+                              [hidden]="
+                                !this.sF340PpdSchedule.role.includes(
+                                  uiControls.uploadPicF340Ppd
+                                )">
                               <label
                                 [style.visibility]="
                                   item.isDisplay == 0 ? 'hidden' : 'visible'
@@ -608,8 +588,8 @@
                                 height="35"
                                 (click)="editPhotoComment(item)"
                               />
+                              </div>
                             </td>
-                          </div>
                           <td>{{ item.photoComment }}</td>
                         </tr>
                       </ng-container>
@@ -661,7 +641,7 @@
   aria-labelledby="myModalLabel"
   aria-hidden="true"
 >
-  <div class="modal-dialog modal-info" role="document">
+  <div class="modal-dialog modal-info modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">請輸入圖片註解</h4>
@@ -687,25 +667,26 @@
                 maxlength="300"
                 [(ngModel)]="editModel.photoComment"
               ></textarea>
+              <button
+              type="button"
+              class="btn btn-primary btn-lg mt-2"
+              (click)="savePhotComment('PhotoComment')"
+            >
+              {{ "Common.btnList.save" | translate }}
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary btn-lg mt-2"
+              (click)="closeModal('PhotoComment')"
+            >
+              {{ "Common.btnList.close" | translate }}
+            </button>
             </div>
           </div>
         </div>
       </div>
-      <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-primary btn-lg"
-          (click)="savePhotComment('PhotoComment')"
-        >
-          {{ "Common.btnList.save" | translate }}
-        </button>
-        <button
-          type="button"
-          class="btn btn-secondary btn-lg"
-          (click)="closeModal('PhotoComment')"
-        >
-          {{ "Common.btnList.close" | translate }}
-        </button>
+      <div [hidden]="editModel.photo === ''" class="modal-footer">
+        <img src="../assets/F340PpdPic/{{editModel.devSeason}}/{{editModel.article}}/{{editModel.photo}}" width="1000" height="800" />
       </div>
     </div>
   </div>
