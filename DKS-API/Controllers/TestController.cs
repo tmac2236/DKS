@@ -1,4 +1,5 @@
 using DFPS.API.Data.Repository;
+using DKS.API.Models.DKS;
 using DKS_API.Controllers;
 using DKS_API.Data;
 using DKS_API.Data.Interface;
@@ -18,19 +19,18 @@ namespace DFPS.API.Controllers
     public class TestController : ApiController
     {
         private readonly DataContext _context;
-        //private readonly IArticledLdtmDAO _dao;
+        private readonly IArticledLdtmDAO _dao;
         public TestController(IConfiguration config, IWebHostEnvironment webHostEnvironment,DataContext context,IArticledLdtmDAO dao)
         : base(config, webHostEnvironment)
         {
             _context = context;
-            //_dao = dao;
+            _dao = dao;
         }
         //http://localhost:5000/api/test/getTest
         [AllowAnonymous]
         [HttpGet("getTest")]
         public async Task<IActionResult> GetTestJustName()
         {
-            //var test = _dao.FindAll();
             var deptList = from t1 in _context.SampleWorkBase
                            join t2 in _context.SampleWorkProcess on t1.Fid equals t2.Hid
                            join t3 in _context.SampleWorkWorker on t2.Fid equals t3.Hid
@@ -81,6 +81,15 @@ namespace DFPS.API.Controllers
             var list = await deptList.ToListAsync().ConfigureAwait(false); // <-- notice the `await`
 
             return Ok(list);
+        }
+        [AllowAnonymous]
+        [HttpGet("testGetFile")]
+        public IActionResult testGetFile()
+        {
+            ArticledLdtm model = _dao.FindSingle( x =>x.PKARTBID == "CD0000020155");
+            byte[] result = model.ATTACHED_DATA;
+
+            return File(result, "",model.ATTACHED_DATA_NAME);
         }
 
 

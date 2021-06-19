@@ -188,23 +188,27 @@ namespace DKS_API.Controllers
             var data = await _dksDao.GetF340PPDView(sF340PPDSchedule);
             //
             data.ForEach(x =>
-            {
-                var serverIp = _config.GetSection("ServerIp:Mps4PicApi:" + sF340PPDSchedule.factory).Value;
+            {   
+                var ip =_config.GetSection("ServerIp:Mps4Pic:" + sF340PPDSchedule.factory).Value;
+                var apiPort =_config.GetSection("ServerIp:Mps4Pic:API").Value;
+                var spaPort =_config.GetSection("ServerIp:Mps4Pic:SPA").Value;
                 if (x.Photo.Length > 1)
                 {
                     var param = dksSignature + x.DevSeason+  "$" + x.Article + "$" + x.Photo + "$" + sF340PPDSchedule.factory + "$" + sF340PPDSchedule.loginUser;
                     var encodeStr = CSharpLab.Btoa(param);
-                    var dataUrl = string.Format(@"{0}{1}{2}",serverIp,"/api/dks/getF340PpdPic?isStanHandsome=",encodeStr);
+                    var dataUrl = string.Format(@"{0}:{1}{2}{3}",ip,apiPort,"/api/dks/getF340PpdPic?isStanHandsome=",encodeStr);
                     //let dataUrl = environment.apiUrl + "dks/getF340PpdPdf?isStanHandsome=" + window.btoa(param);
                     x.Photo = "=HYPERLINK(\"" + dataUrl + "\",\"jpg\")";
                     //x.Photo = "http://" + serverIp + "/assets/F340PpdPic/" + x.DevSeason + "/" + x.Article + "/" + x.Photo;
                 }
                 if (x.Pdf.Length > 1)
-                {
+                {   //encoding version
                     var param = dksSignature + x.DevSeason+  "$" + x.Article + "$" + x.Pdf + "$" + sF340PPDSchedule.factory + "$" + sF340PPDSchedule.loginUser;
                     var encodeStr = CSharpLab.Btoa(param);
-                    var dataUrl = string.Format(@"{0}{1}{2}",serverIp,"/api/dks/getF340PpdPdf?isStanHandsome=",encodeStr);
-                    //let dataUrl = environment.apiUrl + "dks/getF340PpdPdf?isStanHandsome=" + window.btoa(param);
+                    var dataUrl = string.Format(@"{0}:{1}{2}{3}",ip,apiPort,"/api/dks/getF340PpdPdf?isStanHandsome=",encodeStr);
+                    
+                    // no encoding version
+                    //var dataUrl = string.Format(@"{0}:{1}{2}{3}/{4}/{5}",ip,spaPort,"/assets/F340PpdPic/",x.DevSeason,x.Article,x.Pdf);
                     x.Pdf = "=HYPERLINK(\"" + dataUrl + "\",\"pdf\")";
 
                 }
