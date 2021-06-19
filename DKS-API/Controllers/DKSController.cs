@@ -209,12 +209,12 @@ namespace DKS_API.Controllers
 
                 }
             });
-
-            var bottom = data.Where(x => x.HpPartNo == "2016").ToList();
             var upper = data.Where(x => x.HpPartNo != "2016").ToList();
+            var bottom = data.Where(x => x.HpPartNo == "2016").ToList();
+
             List<object> dataList = new List<object>(){
-                bottom,
-                upper
+                upper,
+                bottom
             };
             byte[] result = _excelService.CommonExportReportTabs(dataList, "TempF340PPDProcessTabs.xlsx");
 
