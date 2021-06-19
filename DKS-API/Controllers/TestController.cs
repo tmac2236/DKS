@@ -1,5 +1,7 @@
+using DFPS.API.Data.Repository;
 using DKS_API.Controllers;
 using DKS_API.Data;
+using DKS_API.Data.Interface;
 using DKS_API.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -16,16 +18,19 @@ namespace DFPS.API.Controllers
     public class TestController : ApiController
     {
         private readonly DataContext _context;
-        public TestController(IConfiguration config, IWebHostEnvironment webHostEnvironment,DataContext context)
+        //private readonly IArticledLdtmDAO _dao;
+        public TestController(IConfiguration config, IWebHostEnvironment webHostEnvironment,DataContext context,IArticledLdtmDAO dao)
         : base(config, webHostEnvironment)
         {
             _context = context;
+            //_dao = dao;
         }
         //http://localhost:5000/api/test/getTest
         [AllowAnonymous]
         [HttpGet("getTest")]
         public async Task<IActionResult> GetTestJustName()
         {
+            //var test = _dao.FindAll();
             var deptList = from t1 in _context.SampleWorkBase
                            join t2 in _context.SampleWorkProcess on t1.Fid equals t2.Hid
                            join t3 in _context.SampleWorkWorker on t2.Fid equals t3.Hid

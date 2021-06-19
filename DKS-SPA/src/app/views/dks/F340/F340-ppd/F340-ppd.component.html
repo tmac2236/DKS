@@ -417,7 +417,13 @@
                         >
                           PDF{{ "F340-PPD.mantainPic" | translate }}
                         </th>                      
-<!---->                                                 
+<!---->
+                        <th
+                            style="background-color: #23d954"
+                            placement="開發人員維護"
+                            >
+                            Shoe{{ "F340-PPD.picture" | translate }}
+                        </th>                                                 
                         <th
                           [hidden]="
                             !this.sF340PpdSchedule.role.includes(
@@ -506,16 +512,12 @@
                               [style.visibility]="
                                 item.pdf.length < 1 ? 'hidden' : 'visible'
                               "
-                              (click)="downloadPDF(item)"
+                              (click)="viewPDF(item)"
                             />
                           </td>
-                            <td>
-                              <div
-                              [hidden]="
-                                !this.sF340PpdSchedule.role.includes(
-                                  uiControls.uploadPicF340Ppd
-                                )
-                              ">
+                          <td [hidden]="
+                            !this.sF340PpdSchedule.role.includes(
+                              uiControls.uploadPicF340Ppd)">
                               <label
                                 [style.visibility]="
                                   item.isDisplay == 0 ? 'hidden' : 'visible'
@@ -543,15 +545,23 @@
                                 height="35"
                                 (click)="removePdfF340Ppd(item)"
                               />
-                              </div>
-                            </td>   
+                          </td>   
 <!---->
                             <td>
-                              <div
-                              [hidden]="
-                                !this.sF340PpdSchedule.role.includes(
-                                  uiControls.uploadPicF340Ppd
-                                )">
+                              <img
+                                src="../assets/systemImg/visible.png"
+                                class="mt-2"
+                                width="35"
+                                height="35"
+                                [style.visibility]="
+                                  item.photo.length < 1 ? 'hidden' : 'visible'
+                                "
+                                (click)="viewPic(item)"
+                              />
+                            </td>
+                            <td [hidden]="
+                            !this.sF340PpdSchedule.role.includes(
+                              uiControls.uploadPicF340Ppd)">
                               <label
                                 [style.visibility]="
                                   item.isDisplay == 0 ? 'hidden' : 'visible'
@@ -588,7 +598,6 @@
                                 height="35"
                                 (click)="editPhotoComment(item)"
                               />
-                              </div>
                             </td>
                           <td>{{ item.photoComment }}</td>
                         </tr>
@@ -665,13 +674,23 @@
                 name="photoComment"
                 rows="2"
                 maxlength="300"
+                [hidden]="
+                !this.sF340PpdSchedule.role.includes(
+                  uiControls.uploadPicF340Ppd
+                )
+              "
                 [(ngModel)]="editModel.photoComment"
               ></textarea>
               <button
               type="button"
+              [hidden]="
+              !this.sF340PpdSchedule.role.includes(
+                uiControls.uploadPicF340Ppd
+              )
+            "
               class="btn btn-primary btn-lg mt-2"
               (click)="savePhotComment('PhotoComment')"
-            >
+              >
               {{ "Common.btnList.save" | translate }}
             </button>
             <button

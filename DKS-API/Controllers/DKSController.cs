@@ -179,22 +179,34 @@ namespace DKS_API.Controllers
         [HttpPost("exportF340_ProcessPpd")]
         public async Task<IActionResult> ExportF340_ProcessPpd(SF340PPDSchedule sF340PPDSchedule)
         {
-
+            var dksSignature = _config.GetSection("AppSettings:encodeStr").Value;
             if (sF340PPDSchedule.cwaDateS == "" || sF340PPDSchedule.cwaDateS == null) sF340PPDSchedule.cwaDateS = _config.GetSection("LogicSettings:MinDate").Value;
             if (sF340PPDSchedule.cwaDateE == "" || sF340PPDSchedule.cwaDateE == null) sF340PPDSchedule.cwaDateE = _config.GetSection("LogicSettings:MaxDate").Value;
             sF340PPDSchedule.cwaDateS = sF340PPDSchedule.cwaDateS.Replace("-", "/");
             sF340PPDSchedule.cwaDateE = sF340PPDSchedule.cwaDateE.Replace("-", "/");
             // query data from database  
             var data = await _dksDao.GetF340PPDView(sF340PPDSchedule);
-            var serverIp = _config.GetSection("ServerIp:MpsSpa:" + sF340PPDSchedule.factory).Value;
             //
             data.ForEach(x =>
             {
+                var serverIp = _config.GetSection("ServerIp:Mps4PicApi:" + sF340PPDSchedule.factory).Value;
                 if (x.Photo.Length > 1)
                 {
-                    //x.Photo = "=HYPERLINK(\"http://" + serverIp + "/assets/F340PpdPic/" + x.DevSeason + "/" + x.Article + "/" + x.Photo + "\",\"jpg\")";
-                    x.Photo = "http://" + serverIp + "/assets/F340PpdPic/" + x.DevSeason + "/" + x.Article + "/" + x.Photo;
-                    x.Pdf = "http://" + serverIp + "/assets/F340PpdPic/" + x.DevSeason + "/" + x.Article + "/" + x.Pdf;
+                    var param = dksSignature + x.DevSeason+  "$" + x.Article + "$" + x.Photo + "$" + sF340PPDSchedule.factory + "$" + sF340PPDSchedule.loginUser;
+                    var encodeStr = CSharpLab.Btoa(param);
+                    var dataUrl = string.Format(@"{0}{1}{2}",serverIp,"/api/dks/getF340PpdPic?isStanHandsome=",encodeStr);
+                    //let dataUrl = environment.apiUrl + "dks/getF340PpdPdf?isStanHandsome=" + window.btoa(param);
+                    x.Photo = "=HYPERLINK(\"" + dataUrl + "\",\"jpg\")";
+                    //x.Photo = "http://" + serverIp + "/assets/F340PpdPic/" + x.DevSeason + "/" + x.Article + "/" + x.Photo;
+                }
+                if (x.Pdf.Length > 1)
+                {
+                    var param = dksSignature + x.DevSeason+  "$" + x.Article + "$" + x.Pdf + "$" + sF340PPDSchedule.factory + "$" + sF340PPDSchedule.loginUser;
+                    var encodeStr = CSharpLab.Btoa(param);
+                    var dataUrl = string.Format(@"{0}{1}{2}",serverIp,"/api/dks/getF340PpdPdf?isStanHandsome=",encodeStr);
+                    //let dataUrl = environment.apiUrl + "dks/getF340PpdPdf?isStanHandsome=" + window.btoa(param);
+                    x.Pdf = "=HYPERLINK(\"" + dataUrl + "\",\"pdf\")";
+
                 }
             });
 
@@ -249,14 +261,13 @@ namespace DKS_API.Controllers
                 var file = HttpContext.Request.Form.Files[0];
                 if (await _fileService.SaveFiletoServer(file, "F340PpdPic", nastFileName))
                 {
-                    //add WaterMask
+                    /*  //add WaterMask
                     var pathList = _fileService.GetLocalPath("F340PpdPic", nastFileName);
-
                     int size = _devSysSetDAO.FindSingle(x => x.SYSKEY == "copyRightSize").SYSVAL.ToInt();
                     string copyrightStr = _devSysSetDAO.FindSingle(x => x.SYSKEY == "copyRightStr").SYSVAL;
-                    var result = _fileService.GetByteArrayByLocalUrl(pathList[1], size, copyrightStr);
+                    var result = _fileService.GetByteArrayByLocalUrlAddWaterMask(pathList[1], size, copyrightStr);
                     System.IO.File.WriteAllBytes(pathList[1], result.ToArray());
-
+                    */
                     model.PHOTO = fileName;
                     _devTreatmentDAO.Update(model);
 
@@ -450,20 +461,46 @@ namespace DKS_API.Controllers
             return Ok();
 
         }
-        [HttpGet("getFileByLocalPath")]
-        public IActionResult GetFileByLocalPath(string devSeason, string article, string fileName)
+        [HttpGet("getF340PpdPic")]
+        public IActionResult getF340PpdPic(string isStanHandsome)
         {
             try
             {
-                List<string> nastFileName = new List<string>();
-                nastFileName.Add(devSeason);
-                nastFileName.Add(article);
-                nastFileName.Add(fileName);
+                var decodeStr = CSharpLab.Atob(isStanHandsome);
+                var dksSignature = _config.GetSection("AppSettings:encodeStr").Value;
+                decodeStr = decodeStr.Replace(dksSignature, "");
+                List<string> nastFileName = decodeStr.Split("$").ToList();
+                var factory = nastFileName[nastFileName.Count - 2];
+                nastFileName.RemoveAt(nastFileName.Count - 2);
+                var loginUser = nastFileName[nastFileName.Count - 1];
+                nastFileName.RemoveAt(nastFileName.Count - 1);
                 var pathList = _fileService.GetLocalPath("F340PpdPic", nastFileName);
-                int size = _devSysSetDAO.FindSingle(x => x.SYSKEY == "copyRightSize").SYSVAL.ToInt();
-                string copyrightStr = _devSysSetDAO.FindSingle(x => x.SYSKEY == "copyRightStr").SYSVAL;
-                var result = _fileService.GetByteArrayByLocalUrl(pathList[1], size, copyrightStr);
+
+                var result = _fileService.GetByteArrayByLocalUrlAddWaterMask(pathList[1], 160, loginUser);
                 return File(result, "image/jpeg");//"image/jpeg"  "application/pdf"
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}.");
+            }
+        }
+        [HttpGet("getF340PpdPdf")]
+        public IActionResult getF340PpdPdf(string isStanHandsome)
+        {
+            try
+            {
+                var decodeStr = CSharpLab.Atob(isStanHandsome);
+                var dksSignature = _config.GetSection("AppSettings:encodeStr").Value;
+                decodeStr = decodeStr.Replace(dksSignature, "");
+                List<string> nastFileName = decodeStr.Split("$").ToList();
+                var factory = nastFileName[nastFileName.Count - 2];
+                nastFileName.RemoveAt(nastFileName.Count - 2);
+                var loginUser = nastFileName[nastFileName.Count - 1];
+                nastFileName.RemoveAt(nastFileName.Count - 1);
+                var pathList = _fileService.GetLocalPath("F340PpdPic", nastFileName);
+
+                var result = System.IO.File.ReadAllBytes(pathList[1]);
+                return File(result, "application/pdf");//"image/jpeg"  "application/pdf"
             }
             catch (Exception ex)
             {
@@ -491,9 +528,12 @@ namespace DKS_API.Controllers
                     toMails.Add("stan.chen@ssbshoes.com");
                     toMails.Add("aven.yu@ssbshoes.com");
                     toMails.Add("hsin.chen@ssbshoes.com");
-                    var sqlDetail = string.Format(@"delete infxshcmes@ondbs:dev_f340\r\nwhere spno in\r\n( '{0}' )", sampleNo);
+                    var sqlDetail = string.Format(@"delete infxshcmes@ondbs:dev_f340 where spno in ( '{0}' )", sampleNo);
                     var sign = "\r\n\r\n\r\n陳尚賢Stan Chen\r\n--------------------------------------------------------------------------------------------------------------------\r\nInformation and Technology Center (資訊中心)-ERP\r\nSHYANG SHIN BAO industrial co., LTD (翔鑫堡工業股份有限公司)\r\nSHYANG HUNG CHENG CO.,LTD (翔鴻程責任有限公司)\r\nTel: +84 (0274)3745-001-025 #6696\r\nEmail : Stan.Chen@ssbshoes.com";
-                    var content = string.Format(@"Dear Hsin:\r\n請幫忙協助刪除中介檔資料，謝謝。\r\n{0}\r\n\r\n{1}", sqlDetail, sign);
+                    var content = string.Format(@"Dear Hsin:   請幫忙協助刪除中介檔資料，謝謝。 
+                    {0}
+                    
+                    {1}", sqlDetail, sign);
                     await _sendMailService.SendListMailAsync(toMails, null, title, content, null);
 
                 }
@@ -535,7 +575,7 @@ namespace DKS_API.Controllers
             }
             else
             {
-                errMsg = String.Format(@"There is no data with this Sample No :{0}", sampleNo);
+                errMsg += String.Format(@"There is no data with this Sample No :{0}", sampleNo);
             }
 
             return Ok(errMsg);

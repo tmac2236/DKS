@@ -53,7 +53,20 @@ export class F340PpdComponent implements OnInit {
     this.utility.spinner.show();
     this.dksService.searchF340PpdProcess(this.sF340PpdSchedule).subscribe(
       (res: PaginatedResult<F340SchedulePpd[]>) => {
+
         this.result = res.result;
+        /*
+        if (res.result.length < 1) {
+          this.utility.alertify.confirm(
+            "Sweet Alert",
+            "No Data in these conditions of search, please try again.",
+            () => { 
+              this.utility.spinner.hide();
+              return;
+            }
+          );
+        }
+        */
         this.result.forEach(m=>{
           if(m.releaseType =="CWA" && m.treatMent.length > 1 && m.partName.length > 1 ){
             m.isDisplay = utilityConfig.YesNumber;
@@ -64,13 +77,7 @@ export class F340PpdComponent implements OnInit {
         })
         this.sF340PpdSchedule.setPagination(res.pagination);
         this.utility.spinner.hide();
-        if (res.result.length < 1) {
-          this.utility.alertify.confirm(
-            "Sweet Alert",
-            "No Data in these conditions of search, please try again.",
-            () => {}
-          );
-        }
+
       },
       (error) => {
         this.utility.spinner.hide();
@@ -243,50 +250,16 @@ export class F340PpdComponent implements OnInit {
     );
   }
   viewPic(model: F340SchedulePpd){
-    let serverIp = "";
-    switch(this.sF340PpdSchedule.factory) { 
-      case 'C': { 
-        serverIp = environment.mpsSpaC;
-         break; 
-      } 
-      case 'U': { 
-        serverIp = environment.mpsSpaU;
-         break; 
-      } 
-      case 'E': { 
-        serverIp = environment.mpsSpaE; 
-        break; 
-      } 
-      case 'D': { 
-        serverIp = environment.mpsSpaD;
-         break; 
-      } 
-   } 
-    let dataUrl = 'http://' + serverIp +'/assets/F340PpdPic/' + model.devSeason +  "/" + model.article + "/" + model.photo;
+
+    let param = utilityConfig.encodeStr + model.devSeason +  "$" + model.article + "$" + model.photo + "$" + this.sF340PpdSchedule.factory + "$" + this.sF340PpdSchedule.loginUser;
+    let dataUrl = environment.apiUrl + "dks/getF340PpdPic?isStanHandsome=" + window.btoa(param);
     window.open(dataUrl);
   }
   viewPDF(model: F340SchedulePpd){
-    let serverIp = "";
-    switch(this.sF340PpdSchedule.factory) { 
-      case 'C': { 
-        serverIp = environment.mpsSpaC;
-         break; 
-      } 
-      case 'U': { 
-        serverIp = environment.mpsSpaU;
-         break; 
-      } 
-      case 'E': { 
-        serverIp = environment.mpsSpaE; 
-        break; 
-      } 
-      case 'D': { 
-        serverIp = environment.mpsSpaD;
-         break; 
-      } 
-   } 
-    let dataUrl = 'http://' + serverIp +'/assets/F340PpdPic/' + model.devSeason +  "/" + model.article + "/" + model.pdf;
-    window.open(dataUrl);
+  
+   let param = utilityConfig.encodeStr + model.devSeason +  "$" + model.article + "$" + model.pdf + "$" + this.sF340PpdSchedule.factory + "$" + this.sF340PpdSchedule.loginUser;
+   let dataUrl = environment.apiUrl + "dks/getF340PpdPdf?isStanHandsome=" + window.btoa(param);
+   window.open(dataUrl);
   }
   downloadPDF(model: F340SchedulePpd){
     const url = this.utility.baseUrl + "dks/exportF340_ProcessPpd_pdf";
@@ -321,6 +294,7 @@ export class F340PpdComponent implements OnInit {
     if(type == "PhotoComment") this.photoCommentModal.hide();
     if(type == "PpdRemark")this.ppdRemarkModal.hide();
   }
+  //viewPic 共用
   editPhotoComment(model: F340SchedulePpd){
     this.openModal("PhotoComment");
     this.editModel = model;

@@ -29,6 +29,7 @@ namespace DKS_API.Data.Repository
         public DbSet<StockDetailByMaterialNo> GetStockDetailByMaterialNoView { get; set; }
         public DbSet<F340_PpdDto> GetF340PpdView { get; set; }
         public DbSet<UserRoleDto> UserRoleDto { get; set; }
+        public DbSet<ArticledLdtm> ARTICLED_LDTM { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -45,6 +46,8 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<DevTreatment>().HasKey(x => new { x.PARTNO,x.SAMPLENO,x.TREATMENTCODE,x.VERNO });
             modelBuilder.Entity<DevTreatmentFile>().HasKey(x => new { x.ARTICLE,x.PARTNO,x.TREATMENTCODE,x.UPTIME });
             modelBuilder.Entity<DevSysSet>().HasKey(x => new { x.SYSKEY });
+            modelBuilder.Entity<ArticledLdtm>().HasKey(x => new { x.PKARTBID });
+            
 
             //DTO(Stored Procedure)
             modelBuilder.Entity<F418_F420Dto>()

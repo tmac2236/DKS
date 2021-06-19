@@ -28,7 +28,7 @@ namespace DKS_API.Helpers
         }
 
         //加密
-        private static string encrypt(string data, string strKey, string strIV)
+        public static string encrypt(string data, string strKey, string strIV)
         {
 
             //將key轉成utf8編碼 byte array
@@ -59,7 +59,7 @@ namespace DKS_API.Helpers
         }
 
         //解密
-        private static string decrypt(string data, string strKey, string strIV)
+        public static string decrypt(string data, string strKey, string strIV)
         {
             //將key轉成utf8編碼 byte array
             byte[] tmpkey = System.Text.Encoding.UTF8.GetBytes(strKey);
@@ -91,17 +91,17 @@ namespace DKS_API.Helpers
             return pText;
 
         }
-        private static string ByteToHex(byte[] ba)
+        public static string ByteToHex(byte[] ba)
         {
             return "[" + BitConverter.ToString(ba).Replace("-", ",") + "]";
         }
-        private static string Atob(string stanIsHandsome)
+        public static string Atob(string stanIsHandsome)
         {
             byte[] data = System.Convert.FromBase64String(stanIsHandsome);
             string base64Decoded = System.Text.ASCIIEncoding.ASCII.GetString(data);
             return base64Decoded;
         }
-        private static string Btoa (string stanIsBig)
+        public static string Btoa (string stanIsBig)
         {
             byte[] bytes = Encoding.GetEncoding(28591).GetBytes(stanIsBig);
             string toReturn = System.Convert.ToBase64String(bytes);

@@ -108,7 +108,7 @@ namespace DKS_API.Services.Implement
 
             return files;
         }
-        public byte[] GetByteArrayByLocalUrl(string folderPath, int stanSize, string stanLoveU)
+        public byte[] GetByteArrayByLocalUrlAddWaterMask(string folderPath, int stanSize, string stanLoveU)
         {
             byte[] stanIsBig = File.ReadAllBytes(folderPath);
             byte[] addWaterMask = AddWatermark(stanIsBig, stanSize, stanLoveU);
@@ -136,7 +136,7 @@ namespace DKS_API.Services.Implement
                             StringFormat stringFormat = new StringFormat();
                             stringFormat.Alignment = StringAlignment.Center;
                             stringFormat.LineAlignment = StringAlignment.Center;
-                            var blankStr = "                                     ";
+                            var blankStr = "                 ";
                             graphics.RotateTransform(-45);
                             graphics.DrawString(String.Format("{0}{1}{2}{3}{4}{5}{6}", stanLoveU, blankStr, stanLoveU, blankStr, stanLoveU, blankStr, stanLoveU), font, brush, point, stringFormat);
                             graphics.DrawString(String.Format("{0}{1}{2}{3}{4}{5}{6}", blankStr, stanLoveU, blankStr, stanLoveU, blankStr, stanLoveU, blankStr), font, brush, point1, stringFormat);

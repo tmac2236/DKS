@@ -76,6 +76,7 @@ namespace DKS_API
             services.AddScoped<IDevTreatmentDAO,DevTreatmentDAO>();
             services.AddScoped<IDevTreatmentFileDAO,DevTreatmentFileDAO>();
             services.AddScoped<IDevSysSetDAO,DevSysSetDAO>();
+            services.AddScoped<IArticledLdtmDAO,ArticledLdtmDAO>();
 
             services.AddScoped<IMailUtility,MailUtility>();
             

@@ -6,8 +6,5 @@
 export const environment = {
   production: false,
   apiUrl:  "http://localhost:5000/api/",
-  mpsSpaC: "localhost:4200",
-  mpsSpaU: "localhost:4200",
-  mpsSpaE: "localhost:4200",
-  mpsSpaD: "localhost:4200"
+
 };

@@ -57,7 +57,7 @@ namespace DKS_API.Services.Implement
                 foreach (object data in dataList)
                 {
                     Worksheet ws = designer.Workbook.Worksheets[index];
-                    designer.SetDataSource("result", data);
+                    designer.SetDataSource(string.Format(@"result{0}",index), data);
                     index++;
                 }
                 designer.Process();

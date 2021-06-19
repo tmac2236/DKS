@@ -12,7 +12,7 @@ namespace DKS_API.Services.Interface
     {
         Task<Boolean> SaveFiletoServer(IFormFile file, string settingNam, List<string> fileNames);
         FileInfo[] GetFileInfoByUrl(string folderPath);
-        byte[] GetByteArrayByLocalUrl(string folderPath, int stanSize, string stanLoveU);
+        byte[] GetByteArrayByLocalUrlAddWaterMask(string folderPath, int stanSize, string stanLoveU);
         List<string> GetLocalPath(string settingNam, List<string> fileNames);
         byte[] AddWatermark(Byte[] stanIsBig,int stanSize,string stanLoveU);
         Task<string> UploadExcel(string dataUrl);
