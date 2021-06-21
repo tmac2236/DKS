@@ -11,6 +11,7 @@ namespace DKS_API.Services.Interface
     {
         byte[] CommonExportReport(object data, string templateName);
         byte[] CommonExportReportTabs(List<object> dataList, string templateName);
+        byte[] CommonExportReportTabs4F340PPD(List<object> dataList, string templateName);
     }
 
 }

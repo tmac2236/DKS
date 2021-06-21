@@ -71,5 +71,65 @@ namespace DKS_API.Services.Implement
             }
             return stream.ToArray(); ;
         }
+        public byte[] CommonExportReportTabs4F340PPD(List<object> dataList, string templateName)
+        {
+            MemoryStream stream = new MemoryStream();
+            try
+            {
+                string rootStr = _webHostEnvironment.ContentRootPath;
+                var path = Path.Combine(rootStr, "Resources\\Template\\" + templateName);
+                WorkbookDesigner designer = new WorkbookDesigner();
+                designer.Workbook = new Workbook(path);
+                int index = 0;
+                foreach (object data in dataList)
+                {
+                    Worksheet ws = designer.Workbook.Worksheets[index];
+                    designer.SetDataSource(string.Format(@"result{0}",index), data);
+                    index++;
+
+                }
+                designer.Process();
+                index = 0;
+                foreach (object data in dataList)
+                {
+                    Worksheet ws = designer.Workbook.Worksheets[index];
+                    //ws.Cells["W1"].PutValue("hello world");
+                    int maxRow = ws.Cells.MaxDataRow;
+                    for(int i = 3 ; i<= maxRow; i++){
+
+                        string photo = (string)ws.Cells["U" + i].Value; //If Photo Column is not empty or null 
+                        if( !String.IsNullOrEmpty(photo) ){
+                            string hyperlink = (string)ws.Cells["U" + i].Value;
+                            ws.Cells["U" + i].PutValue("Click Me");
+                            //Adding a hyperlink to a URL at "U"? cell
+                            ws.Hyperlinks.Add("U" + i, 1, 1, hyperlink);
+                        }
+                        string pdf = (string)ws.Cells["V" + i].Value; //If Pdf Column is not empty or null
+                        if( !String.IsNullOrEmpty(pdf) ){
+                            string hyperlink = (string)ws.Cells["V" + i].Value;
+                            ws.Cells["V" + i].PutValue("Click Me");
+                            //Adding a hyperlink to a URL at "U"? cell
+                            ws.Hyperlinks.Add("V" + i, 1, 1, hyperlink);
+                        }
+                        
+                        string article = (string)ws.Cells["F" + i].Value; //If Pdf Column is not empty or null
+                        if( String.IsNullOrEmpty(article) ) {
+                           break;
+                        }
+                    }
+                    
+                    index++;
+                }                    
+                designer.Process();
+                designer.Workbook.Save(stream, SaveFormat.Xlsx);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("!!!!!!CommonExportReportTabs4F340PPD have a exception!!!!!");
+                _logger.LogError(ex.ToString());
+                throw ex;
+            }
+            return stream.ToArray(); ;
+        }
     }
 }

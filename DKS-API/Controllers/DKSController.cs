@@ -198,7 +198,9 @@ namespace DKS_API.Controllers
                     var encodeStr = CSharpLab.Btoa(param);
                     var dataUrl = string.Format(@"{0}:{1}{2}{3}",ip,apiPort,"/api/dks/getF340PpdPic?isStanHandsome=",encodeStr);
                     //let dataUrl = environment.apiUrl + "dks/getF340PpdPdf?isStanHandsome=" + window.btoa(param);
-                    x.Photo = "=HYPERLINK(\"" + dataUrl + "\",\"jpg\")";
+                    //x.Photo = "=HYPERLINK(\"" + dataUrl + "\",\"jpg\")";
+                    x.Photo = dataUrl;
+
                     //x.Photo = "http://" + serverIp + "/assets/F340PpdPic/" + x.DevSeason + "/" + x.Article + "/" + x.Photo;
                 }
                 if (x.Pdf.Length > 1)
@@ -209,7 +211,7 @@ namespace DKS_API.Controllers
                     
                     // no encoding version
                     //var dataUrl = string.Format(@"{0}:{1}{2}{3}/{4}/{5}",ip,spaPort,"/assets/F340PpdPic/",x.DevSeason,x.Article,x.Pdf);
-                    x.Pdf = "=HYPERLINK(\"" + dataUrl + "\",\"pdf\")";
+                    x.Pdf = dataUrl ;
 
                 }
             });
@@ -220,7 +222,7 @@ namespace DKS_API.Controllers
                 upper,
                 bottom
             };
-            byte[] result = _excelService.CommonExportReportTabs(dataList, "TempF340PPDProcessTabs.xlsx");
+            byte[] result = _excelService.CommonExportReportTabs4F340PPD(dataList, "TempF340PPDProcessTabs.xlsx");
 
             return File(result, "application/xlsx");
         }
