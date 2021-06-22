@@ -25,9 +25,7 @@ namespace DFPS_API.Quartz.Jobs
             using (var scope = _provider.CreateScope())
             {
                 // 解析你的作用域服務
-                var authService = scope.ServiceProvider.GetService<IAuthService>();
-                var ss = authService.GetById(4);
-                _logger.LogError(ss.ToString());
+                var sendMailService = scope.ServiceProvider.GetService<ISendMailService>();
             }
 
             _logger.LogError("ShowDataTimeJob was fired!!!!!");
