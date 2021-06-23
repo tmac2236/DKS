@@ -297,6 +297,7 @@ namespace DKS_API.Controllers
                     opRecord.UPUSR = loginUser;
                     opRecord.UPTIME = updateTime;
                     _devTreatmentFileDAO.Add(opRecord);
+                    _logger.LogInformation(String.Format(@"******DKSController EditPicF340Ppd Add a Picture: {0}!! ******",fileName));
                 }
             }
             else
@@ -310,6 +311,7 @@ namespace DKS_API.Controllers
                     DevTreatmentFile opRecord = _devTreatmentFileDAO.FindSingle(
                     x => x.FILE_NAME.Trim() == fileName.Trim());
                     _devTreatmentFileDAO.Remove(opRecord);
+                    _logger.LogInformation(String.Format(@"******DKSController EditPicF340Ppd Delete a Picture: {0}!! ******",fileName));
                 }
             }
             await _devTreatmentDAO.SaveAll();
@@ -372,6 +374,7 @@ namespace DKS_API.Controllers
                     opRecord.UPUSR = loginUser;
                     opRecord.UPTIME = updateTime;
                     _devTreatmentFileDAO.Add(opRecord);
+                    _logger.LogInformation(String.Format(@"******DKSController EditPdfF340Ppd Add a Pdf: {0}!! ******",fileName));
                 }
             }
             else
@@ -385,6 +388,7 @@ namespace DKS_API.Controllers
                     DevTreatmentFile opRecord = _devTreatmentFileDAO.FindSingle(
                     x => x.FILE_NAME.Trim() == fileName.Trim());
                     _devTreatmentFileDAO.Remove(opRecord);
+                    _logger.LogInformation(String.Format(@"******DKSController EditPdfF340Ppd Delete a Pdf: {0}!! ******",fileName));
                 }
             }
             await _devTreatmentDAO.SaveAll();
@@ -415,6 +419,7 @@ namespace DKS_API.Controllers
                 if (model != null)
                 {
                     if (model.PPD_REMARK.ToSafetyString().Trim() == dto.PpdRemark.ToSafetyString().Trim()) continue;
+                    _logger.LogInformation(String.Format(@"******DKSController EditF340Ppds Add a Remark: {0}!! ******",dto.PpdRemark));
                     model.PPD_REMARK = dto.PpdRemark.Trim();
                     _devTreatmentDAO.Update(model);
                     editCount++;
@@ -457,10 +462,15 @@ namespace DKS_API.Controllers
             if (model != null)
             {
                 // type is here
-                if (type == "PhotoComment") model.PHOTO_COMMENT = dto.PhotoComment.Trim();
-                if (type == "PpdRemark") model.PPD_REMARK = dto.PpdRemark.Trim();
-
-
+                if (type == "PhotoComment") {
+                    model.PHOTO_COMMENT = dto.PhotoComment.Trim();
+                    _logger.LogInformation(String.Format(@"******DKSController EditF340Ppd Add a PhotoComment: {0}!! ******",dto.PhotoComment));
+                }
+                if (type == "PpdRemark"){
+                     model.PPD_REMARK = dto.PpdRemark.Trim();
+                     _logger.LogInformation(String.Format(@"******DKSController EditF340Ppd Add a PpdRemark: {0}!! ******",dto.PhotoComment));
+                }
+                
                 _devTreatmentDAO.Update(model);
             }
 
