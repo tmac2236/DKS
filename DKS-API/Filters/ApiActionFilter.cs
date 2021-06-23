@@ -8,9 +8,12 @@ namespace DKS_API.Filters
 {
     public class ApiActionFilter : IActionFilter
     {
+        private ILogger<ApiActionFilter> _logger;
+
         //constructor
-        public ApiActionFilter()
+        public ApiActionFilter(ILogger<ApiActionFilter> logger)
         {
+            _logger = logger;
         }
 
         public void OnActionExecuted(ActionExecutedContext context)
@@ -22,9 +25,8 @@ namespace DKS_API.Filters
         {
             var clientIp = context.HttpContext.Connection.RemoteIpAddress.ToString();
             var reqUrl =  Microsoft.AspNetCore.Http.Extensions.UriHelper.GetDisplayUrl(context.HttpContext.Request);
-
-            //ar header = context.HttpContext.Request.Headers;
-            //var querystr = context.HttpContext.Request.QueryString;     
+            _logger.LogInformation(string.Format(@"###### ApiActionFilter Client IP : {0} ######",clientIp));
+            _logger.LogInformation(string.Format(@"###### ApiActionFilter Request URL : {0} ######",reqUrl));
         }
     }
 

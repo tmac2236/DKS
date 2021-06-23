@@ -63,22 +63,21 @@ namespace DFPS_API.Quartz.Jobs
 
                     var toMails = new List<string>();
                     toMails.Add("stan.chen@ssbshoes.com");
-                    toMails.Add("andy.lo@ssbshoes.com");
-                    toMails.Add("eddy.lee@ssbshoes.com");
+                    //toMails.Add("andy.lo@ssbshoes.com");
+                    //toMails.Add("eddy.lee@ssbshoes.com");
                     var sign = "\r\n\r\n\r\n陳尚賢Stan Chen\r\n--------------------------------------------------------------------------------------------------------------------\r\nInformation and Technology Center (資訊中心)-ERP\r\nSHYANG SHIN BAO industrial co., LTD (翔鑫堡工業股份有限公司)\r\nSHYANG HUNG CHENG CO.,LTD (翔鴻程責任有限公司)\r\nTel: +84 (0274)3745-001-025 #6696\r\nEmail : Stan.Chen@ssbshoes.com";
                     var content = string.Format(@"{0}{1}", canWord[index], sign);
 
                     await sendMailService.SendListMailAsync(toMails, null, title, content, pathToSave);
                     _logger.LogError(title);
                 }
-
-                _logger.LogError("SentStanMailTimeJob was fired!!!!!");
+                _logger.LogInformation(String.Format(@"******   SentStanMailTimeJob was fired!!!! ******"));
 
                 return;
             }
             catch (Exception e)
             {
-                _logger.LogError("SentStanMailTimeJob have a exception!!!!!");
+                _logger.LogError("!!!!!!SentStanMailTimeJob have a exception!!!!!!");
                 _logger.LogError(e.ToString());
             }
         }

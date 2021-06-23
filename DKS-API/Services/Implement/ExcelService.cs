@@ -38,7 +38,7 @@ namespace DKS_API.Services.Implement
             }
             catch (Exception ex)
             {
-                _logger.LogError("!!!!!!CommonExportReportTabs have a exception!!!!!");
+                _logger.LogError("!!!!!!CommonExportReportTabs have a exception!!!!!!");
                 _logger.LogError(ex.ToString());
                 throw ex;
             }
@@ -65,7 +65,7 @@ namespace DKS_API.Services.Implement
             }
             catch (Exception ex)
             {
-                _logger.LogError("!!!!!!CommonExportReportTabs have a exception!!!!!");
+                _logger.LogError("!!!!!!CommonExportReportTabs have a exception!!!!!!");
                 _logger.LogError(ex.ToString());
                 throw ex;
             }
@@ -125,7 +125,7 @@ namespace DKS_API.Services.Implement
             }
             catch (Exception ex)
             {
-                _logger.LogError("!!!!!!CommonExportReportTabs4F340PPD have a exception!!!!!");
+                _logger.LogError("!!!!!!CommonExportReportTabs4F340PPD have a exception!!!!!!");
                 _logger.LogError(ex.ToString());
                 throw ex;
             }

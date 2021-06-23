@@ -17,12 +17,14 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Primitives;
 using DKS_API.Services.Implement;
 using DKS_API.Services.Interface;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace DKS_API.Controllers
 {
     public class DKSController : ApiController
     {
-
+        private ActionExecutingContext _actionContext;
         private readonly IDKSDAO _dksDao;
         private readonly IDevBuyPlanDAO _devBuyPlanDAO;
         private readonly IDevTreatmentDAO _devTreatmentDAO;
@@ -32,9 +34,9 @@ namespace DKS_API.Controllers
         private readonly IFileService _fileService;
         private readonly IExcelService _excelService;
 
-        public DKSController(IConfiguration config, IWebHostEnvironment webHostEnvironment, IDKSDAO dksDao, IDevBuyPlanDAO devBuyPlanDAO, IDevTreatmentDAO devTreatmentDAO,
+        public DKSController(IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<DKSController> logger, IDKSDAO dksDao, IDevBuyPlanDAO devBuyPlanDAO, IDevTreatmentDAO devTreatmentDAO,
         IDevTreatmentFileDAO devTreatmentFileDAO, IDevSysSetDAO devSysSetDAO, ISendMailService sendMailService, IFileService fileService, IExcelService excelService)
-        : base(config, webHostEnvironment)
+        : base(config, webHostEnvironment,logger)
         {
             _sendMailService = sendMailService;
             _fileService = fileService;
@@ -44,11 +46,13 @@ namespace DKS_API.Controllers
             _devTreatmentDAO = devTreatmentDAO;
             _devTreatmentFileDAO = devTreatmentFileDAO;
             _devSysSetDAO = devSysSetDAO;
+
+            
         }
         [HttpPost("exportF340_Process")]
         public async Task<IActionResult> ExportF340_Process(SF340Schedule sF340Schedule)
         {
-
+            _logger.LogInformation(String.Format(@"****** DKSController ExportF340_Process fired!! ******"));
             if (sF340Schedule.cwaDateS == "" || sF340Schedule.cwaDateS == null) sF340Schedule.cwaDateS = _config.GetSection("LogicSettings:MinDate").Value;
             if (sF340Schedule.cwaDateE == "" || sF340Schedule.cwaDateE == null) sF340Schedule.cwaDateE = _config.GetSection("LogicSettings:MaxDate").Value;
             sF340Schedule.cwaDateS = sF340Schedule.cwaDateS.Replace("-", "/");
@@ -64,6 +68,7 @@ namespace DKS_API.Controllers
         [HttpGet("getF340_Process")]
         public async Task<IActionResult> GetF340_Process([FromQuery] SF340Schedule sF340Schedule)
         {
+            _logger.LogInformation(String.Format(@"****** DKSController GetF340_Process fired!! ******"));
             try
             {
                 if (sF340Schedule.cwaDateS == "" || sF340Schedule.cwaDateS == null) sF340Schedule.cwaDateS = _config.GetSection("LogicSettings:MinDate").Value;
@@ -88,6 +93,7 @@ namespace DKS_API.Controllers
         [HttpGet("getBPVersionBySeason")]
         public async Task<IActionResult> GetBPVersionBySeason(string season, string factory)
         {
+            _logger.LogInformation(String.Format(@"******DKSController GetBPVersionBySeason fired!! ******"));
             try
             {
 
@@ -98,11 +104,8 @@ namespace DKS_API.Controllers
                                             VERN = x.VERN
                                         }).Distinct()
                                         .ToListAsync();
-                List<string> bpVern = new List<string>();
-                foreach (var r in result)
-                {
-                    bpVern.Add(r.VERN.ToString());
-                }
+
+                List<string> bpVern =  result.Select( x =>x.VERN.ToString() ).ToList();
 
                 return Ok(bpVern);
             }
@@ -114,6 +117,8 @@ namespace DKS_API.Controllers
         [HttpPost("checkF420Valid")]
         public IActionResult CheckF420Valid([FromForm] ArticlePic excel)
         {
+            _logger.LogInformation(String.Format(@"****** DKSController CheckF420Valid fired!! ******"));
+            
             int processIndex = 0;//use in debug
             try
             {
@@ -159,6 +164,7 @@ namespace DKS_API.Controllers
         [HttpGet("getF340_ProcessPpd")]
         public async Task<IActionResult> GetF340_ProcessPpd([FromQuery] SF340PPDSchedule sF340PPDSchedule)
         {
+            _logger.LogInformation(String.Format(@"****** DKSController GetF340_ProcessPpd fired!! ******"));
             try
             {
                 if (sF340PPDSchedule.cwaDateS == "" || sF340PPDSchedule.cwaDateS == null) sF340PPDSchedule.cwaDateS = _config.GetSection("LogicSettings:MinDate").Value;
@@ -179,6 +185,8 @@ namespace DKS_API.Controllers
         [HttpPost("exportF340_ProcessPpd")]
         public async Task<IActionResult> ExportF340_ProcessPpd(SF340PPDSchedule sF340PPDSchedule)
         {
+             _logger.LogInformation(String.Format(@"****** DKSController ExportF340_ProcessPpd fired!! ******"));
+
             var dksSignature = _config.GetSection("AppSettings:encodeStr").Value;
             if (sF340PPDSchedule.cwaDateS == "" || sF340PPDSchedule.cwaDateS == null) sF340PPDSchedule.cwaDateS = _config.GetSection("LogicSettings:MinDate").Value;
             if (sF340PPDSchedule.cwaDateE == "" || sF340PPDSchedule.cwaDateE == null) sF340PPDSchedule.cwaDateE = _config.GetSection("LogicSettings:MaxDate").Value;
@@ -230,6 +238,8 @@ namespace DKS_API.Controllers
         [HttpPost("editPicF340Ppd")]
         public async Task<IActionResult> EditPicF340Ppd()
         {
+            _logger.LogInformation(String.Format(@"****** DKSController EditPicF340Ppd fired!! ******"));
+
             var sampleNo = HttpContext.Request.Form["sampleNo"].ToString().Trim();
             var treatMent = HttpContext.Request.Form["treatMent"].ToString().Trim();
             var partName = HttpContext.Request.Form["partName"].ToString().Trim();
@@ -311,6 +321,8 @@ namespace DKS_API.Controllers
         [HttpPost("editPdfF340Ppd")]
         public async Task<IActionResult> EditPdfF340Ppd()
         {
+            _logger.LogInformation(String.Format(@"****** DKSController EditPdfF340Ppd fired!! ******"));
+
             var sampleNo = HttpContext.Request.Form["sampleNo"].ToString().Trim();
             var treatMent = HttpContext.Request.Form["treatMent"].ToString().Trim();
             var partName = HttpContext.Request.Form["partName"].ToString().Trim();
@@ -385,6 +397,9 @@ namespace DKS_API.Controllers
         [HttpPost("editF340Ppds")]
         public async Task<IActionResult> EditF340Ppds(List<F340_PpdDto> dtos)
         {
+
+            _logger.LogInformation(String.Format(@"******DKSController EditF340Ppds fired!! ******"));
+
             var editCount = 0;
             var content = "";
             foreach (F340_PpdDto dto in dtos)
@@ -426,6 +441,9 @@ namespace DKS_API.Controllers
         [HttpPost("editF340Ppd/{type}")]
         public async Task<IActionResult> EditF340Ppd(F340_PpdDto dto, string type)
         {
+
+            _logger.LogInformation(String.Format(@"******DKSController EditF340Ppd fired!! ******"));
+
             var isSuccess = false;
 
             if (dto.PartName.Trim().Length < 1 || dto.TreatMent.Trim().Length < 1 || dto.ReleaseType.Trim() != "CWA") return Ok(isSuccess);
@@ -454,6 +472,8 @@ namespace DKS_API.Controllers
         public async Task<IActionResult> SentMailF340PpdByArticle(SF340PPDSchedule sF340PPDSchedule)
         {
 
+            _logger.LogInformation(String.Format(@"******DKSController SentMailF340PpdByArticle fired!! ******"));
+
             var dksSignature = _config.GetSection("DksSignatureLine").Value;
             var content = string.Format(@"The Article : {0} Added Memo please check it in F340-PPD of the below website.{1}", sF340PPDSchedule.article, dksSignature);
 
@@ -470,6 +490,8 @@ namespace DKS_API.Controllers
         [HttpGet("getF340PpdPic")]
         public IActionResult getF340PpdPic(string isStanHandsome)
         {
+            _logger.LogInformation(String.Format(@"****** DKSController getF340PpdPic fired!! ******"));
+
             try
             {
                 var decodeStr = CSharpLab.Atob(isStanHandsome);
@@ -493,6 +515,8 @@ namespace DKS_API.Controllers
         [HttpGet("getF340PpdPdf")]
         public IActionResult getF340PpdPdf(string isStanHandsome)
         {
+            _logger.LogInformation(String.Format(@"****** DKSController getF340PpdPdf fired!! ******"));
+
             try
             {
                 var decodeStr = CSharpLab.Atob(isStanHandsome);
@@ -516,6 +540,9 @@ namespace DKS_API.Controllers
         [HttpGet("rejectF340Process")]
         public async Task<IActionResult> RejectF340Process(string sampleNo, string type)
         {
+
+            _logger.LogInformation(String.Format(@"****** DKSController RejectF340Process fired!! ******"));
+
             string errMsg = "";
             if (!(type == "U" || type == "B" || type == "UB"))
             {
@@ -590,6 +617,9 @@ namespace DKS_API.Controllers
         [HttpPost("exportF340_ProcessPpd_pdf")]
         public IActionResult exportF340_ProcessPpd_pdf(F340_PpdDto f340_ProcessDto)
         {
+
+            _logger.LogInformation(String.Format(@"****** DKSController exportF340_ProcessPpd_pdf fired!! ******"));
+
             List<string> nastFileName = new List<string>();
             nastFileName.Add(f340_ProcessDto.DevSeason);
             nastFileName.Add(f340_ProcessDto.Article);

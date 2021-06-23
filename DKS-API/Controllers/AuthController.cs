@@ -13,6 +13,7 @@ using DKS.API.Models.DKSSys;
 using Microsoft.AspNetCore.Hosting;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace DKS_API.Controllers
 {
@@ -20,8 +21,8 @@ namespace DKS_API.Controllers
     {
 
         private readonly IDKSDAO _dksDAO;
-        public AuthController(IConfiguration config, IWebHostEnvironment webHostEnvironment, IDKSDAO dksDAO)
-                 : base(config, webHostEnvironment)
+        public AuthController(IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<AuthController> logger, IDKSDAO dksDAO)
+                 : base(config, webHostEnvironment,logger)
         {
             _dksDAO = dksDAO;
         }
@@ -29,7 +30,7 @@ namespace DKS_API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserDto userForLoginDto)
         {
-
+            _logger.LogInformation(String.Format(@"******  AuthController Login fired!! ******"));
             //var userFromRepo = await _dksDAO.SearchStaffByLOGIN(userForLoginDto.Account);
 
             //if (userFromRepo == null)

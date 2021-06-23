@@ -8,11 +8,11 @@ namespace DKS_API.Filters
 {
     public class ApiExceptionFilter : ExceptionFilterAttribute
     {
-        private ILogger<ApiExceptionFilter> _Logger;
+        private ILogger<ApiExceptionFilter> _logger;
 
         public ApiExceptionFilter(ILogger<ApiExceptionFilter> logger)
         {
-            _Logger = logger;
+            _logger = logger;
         }
         public override void OnException(ExceptionContext context)
         {
@@ -49,7 +49,7 @@ namespace DKS_API.Filters
                 context.HttpContext.Response.StatusCode = 500;
 
                 // handle logging here
-                _Logger.LogError(new EventId(0), context.Exception, msg );
+                _logger.LogError(new EventId(0), context.Exception, msg );
             }
 
             // always return a JSON result

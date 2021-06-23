@@ -10,6 +10,7 @@ using DKS.API.Models.DKS;
 using Microsoft.AspNetCore.Hosting;
 using DKS_API.Services.Implement;
 using DKS_API.Services.Interface;
+using Microsoft.Extensions.Logging;
 
 namespace DKS_API.Controllers
 {
@@ -18,9 +19,9 @@ namespace DKS_API.Controllers
         private readonly IExcelService _excelService;
         private readonly IWarehouseDAO _warehouseDao;
         private readonly ISamPartBDAO _samPartBDAO;
-        public WareHouseController(IConfiguration config, IWebHostEnvironment webHostEnvironment, IWarehouseDAO warehouseDao, ISamPartBDAO samPartBDAO,
+        public WareHouseController(IConfiguration config, IWebHostEnvironment webHostEnvironment,ILogger<WareHouseController> logger, IWarehouseDAO warehouseDao, ISamPartBDAO samPartBDAO,
         IExcelService excelService)
-        : base(config, webHostEnvironment)
+        : base(config, webHostEnvironment,logger)
         {
             _excelService = excelService;
             _warehouseDao = warehouseDao;
@@ -29,6 +30,8 @@ namespace DKS_API.Controllers
         [HttpGet("getMaterialNoBySampleNoForWarehouse")]
         public IActionResult GetMaterialNoBySampleNoForWarehouse([FromQuery] SF428SampleNoDetail sF428SampleNoDetail)
         {
+            _logger.LogInformation(String.Format(@"****** WareHouseController GetMaterialNoBySampleNoForWarehouse fired!! ******"));
+
             try
             {
                 //sF428SampleNoDetail.SampleNo ="FW21-SMS-GZ7884-01";
@@ -48,6 +51,7 @@ namespace DKS_API.Controllers
         [HttpPost("exportMaterialNoBySampleNoForWarehouse")]
         public IActionResult ExportMaterialNoBySampleNoForWarehouse(SF428SampleNoDetail sF428SampleNoDetail)
         {
+            _logger.LogInformation(String.Format(@"****** WareHouseController ExportMaterialNoBySampleNoForWarehouse fired!! ******"));
 
             // query data from database  
             var data = _warehouseDao.GetMaterialNoBySampleNoForWarehouse(sF428SampleNoDetail);
@@ -59,6 +63,8 @@ namespace DKS_API.Controllers
         [HttpPost("getStockDetailByMaterialNo")]
         public async Task<IActionResult> GetStockDetailByMaterialNo(SF428SampleNoDetail sF428SampleNoDetail)
         {
+            _logger.LogInformation(String.Format(@"****** WareHouseController GetStockDetailByMaterialNo fired!! ******"));
+
             var data = await _warehouseDao.GetStockDetailByMaterialNo(sF428SampleNoDetail);
             return Ok(data);
 
@@ -66,6 +72,8 @@ namespace DKS_API.Controllers
         [HttpPost("addStockDetailByMaterialNo")]
         public async Task<IActionResult> AddStockDetailByMaterialNo(SF428SampleNoDetail sF428SampleNoDetail)
         {
+            _logger.LogInformation(String.Format(@"****** WareHouseController AddStockDetailByMaterialNo fired!! ******"));
+
             SamPartB model = await _samPartBDAO.FindAll(x => x.SAMPLENO.Trim() == sF428SampleNoDetail.SampleNo.Trim() &&
                                                  x.MATERIANO == sF428SampleNoDetail.MaterialNo.Trim()).FirstOrDefaultAsync();
             if (model != null)

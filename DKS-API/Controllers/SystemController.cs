@@ -9,6 +9,7 @@ using DKS.API.Models.DKS;
 using DKS_API.Data.Interface;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace DKS_API.Controllers
 {
@@ -16,8 +17,8 @@ namespace DKS_API.Controllers
     {
         private readonly IDevSysSetDAO _devSysSetDAO;
 
-        public SystemController(IConfiguration config, IWebHostEnvironment webHostEnvironment, IDevSysSetDAO devSysSetDAO)
-                : base(config, webHostEnvironment)
+        public SystemController(IConfiguration config, IWebHostEnvironment webHostEnvironment,ILogger<SystemController> logger, IDevSysSetDAO devSysSetDAO)
+                : base(config, webHostEnvironment,logger)
         {
             _devSysSetDAO = devSysSetDAO;
         }
@@ -25,6 +26,7 @@ namespace DKS_API.Controllers
         [HttpGet("findAll")]
         public async Task<IActionResult> FindAll()
         {
+            _logger.LogInformation(String.Format(@"****** SystemController FindAll fired!! ******"));
             try
             {
                 var result = await _devSysSetDAO.GetAll().ToListAsync();
@@ -38,6 +40,8 @@ namespace DKS_API.Controllers
         [HttpPost("eidtSysSet")]
         public async Task<IActionResult> EidtSysSet(DevSysSet devSysSet)
         {
+            _logger.LogInformation(String.Format(@"****** SystemController EidtSysSet fired!! ******"));
+
             string errorStr = "";
             try
             {

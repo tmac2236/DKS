@@ -8,12 +8,12 @@ using Quartz;
 
 namespace DFPS_API.Quartz.Jobs
 {
-    public class ShowDataTimeJob : IJob
+    public class F340CheckTimeJob : IJob
     {
-        private ILogger<ShowDataTimeJob> _logger;
+        private ILogger<F340CheckTimeJob> _logger;
         // 注入DI provider
         private readonly IServiceProvider _provider;
-        public ShowDataTimeJob(ILogger<ShowDataTimeJob> logger, IServiceProvider provider)
+        public F340CheckTimeJob(ILogger<F340CheckTimeJob> logger, IServiceProvider provider)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _provider = provider;
@@ -26,9 +26,9 @@ namespace DFPS_API.Quartz.Jobs
             {
                 // 解析你的作用域服務
                 var sendMailService = scope.ServiceProvider.GetService<ISendMailService>();
+                
             }
-
-            _logger.LogError("ShowDataTimeJob was fired!!!!!");
+            _logger.LogInformation(String.Format(@"******   F340CheckTimeJob was fired!!!!! ******"));
 
             return Task.CompletedTask;
         }

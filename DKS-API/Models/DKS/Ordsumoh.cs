@@ -1,5 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace DKS.API.Models.DKS
 {
     public class Ordsumoh
@@ -11,10 +13,12 @@ namespace DKS.API.Models.DKS
         public string STATUS { get; set; }
 
         public string BRANDNO { get; set; }
+        [Column(TypeName = "decimal(9,0)")]
         public decimal MKUSERID { get; set; }
         public DateTime INSERDATE { get; set; }
         [Key]
         public string PRSUMNO { get; set; }
+        [Column(TypeName = "decimal(9,0)")]
         public decimal? MDUSERID { get; set; }
 
         public DateTime? CHANGDATE { get; set; }

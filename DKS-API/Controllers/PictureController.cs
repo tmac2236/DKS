@@ -8,6 +8,7 @@ using System.Drawing;
 using DKS.API.Models.DKS;
 using DKS_API.Data.Interface;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace DKS_API.Controllers
 {
@@ -15,8 +16,8 @@ namespace DKS_API.Controllers
     {
         private readonly IDKSDAO _dksDao;
 
-        public PictureController(IConfiguration config, IWebHostEnvironment webHostEnvironment, IDKSDAO dksDao)
-                : base(config, webHostEnvironment)
+        public PictureController(IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<PictureController> logger, IDKSDAO dksDao)
+                : base(config, webHostEnvironment,logger)
         {
             _dksDao = dksDao;
         }
@@ -24,6 +25,8 @@ namespace DKS_API.Controllers
         [HttpPost("deletePicByArticle")]
         public IActionResult DeletePicByArticle([FromForm] ArticlePic source)
         {
+            _logger.LogInformation(String.Format(@"****** PictureController DeletePicByArticle fired!! ******"));
+
             try
             {
                 string rootdir = Directory.GetCurrentDirectory();
@@ -65,6 +68,8 @@ namespace DKS_API.Controllers
         public IActionResult UploadPicByArticle([FromForm] ArticlePic source)
         {
 
+            _logger.LogInformation(String.Format(@"****** PictureController UploadPicByArticle fired!! ******"));
+
             string rootdir = Directory.GetCurrentDirectory();
             var localStr = _config.GetSection("AppSettings:ArticleUrl").Value;
             var pathToSave = rootdir + localStr + source.Article;
@@ -97,6 +102,9 @@ namespace DKS_API.Controllers
         [HttpGet("getPicByArticle")]
         public async Task<IActionResult> GetPicByArticle(string article)
         {
+
+            _logger.LogInformation(String.Format(@"****** PictureController GetPicByArticle fired!! ******"));
+
             var localStr = _config.GetSection("AppSettings:ArticleUrl").Value;
             string folderPath = localStr + article;
             DirectoryInfo d = new DirectoryInfo(folderPath);//Assuming Test is your Folder
@@ -126,6 +134,8 @@ namespace DKS_API.Controllers
 
         private Image HorizontalMergeImages(Image img1, Image img2)
         {
+            _logger.LogInformation(String.Format(@"****** PictureController HorizontalMergeImages fired!! ******"));
+
             Image MergedImage = default(Image);
             Int32 Wide = 0;
             Int32 High = 0;
@@ -151,6 +161,8 @@ namespace DKS_API.Controllers
 
         public byte[] ImageToByteArray(Image img)
         {
+            _logger.LogInformation(String.Format(@"****** PictureController ImageToByteArray fired!! ******"));
+
             MemoryStream ms = new MemoryStream();
             img.Save(ms, System.Drawing.Imaging.ImageFormat.Gif);
             return ms.ToArray();

@@ -81,20 +81,22 @@ namespace DKS_API
             services.AddScoped<ISendMailService, SendMailService>();
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IExcelService, ExcelService>();
-            
+            services.AddScoped<IF340CheckService, F340CheckService>();
+
             //Add Quartz Service
             //services.AddSingleton<IJobFactory, SingletonJobFactory>();
             //services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
             //Add Jobs
-            //services.AddSingleton<ShowDataTimeJob>();
+            //services.AddSingleton<F340CheckTimeJob>();
             //services.AddSingleton<SentStanMailTimeJob>();
+            //Add Triggers 
             //services.AddSingleton(
-            //     new JobSchedule(jobType: typeof(ShowDataTimeJob), cronExpression: "0/5 * * * * ?")//每五秒鐘觸發一次
+            //     new JobSchedule(jobType: typeof(F340CheckTimeJob), cronExpression: " * 30 8-15 ? * MON,TUE,WED,THU,FRI,SAT *")//每五秒鐘觸發一次
             //);
             //services.AddSingleton(
-            //     new JobSchedule(jobType: typeof(SentStanMailTimeJob), cronExpression: " 0 30 8,9,10,11,12,13,14,15 ? * MON,TUE,WED,THU,FRI,SAT *")
+            //     new JobSchedule(jobType: typeof(SentStanMailTimeJob), cronExpression: "0 30 8-15 ? * MON,TUE,WED,THU,FRI,SAT")
             //);
-           //Launch QuartzHostedServie
+            //Launch QuartzHostedServie
             //services.AddHostedService<QuartzHostedService>();
             
             //auth
