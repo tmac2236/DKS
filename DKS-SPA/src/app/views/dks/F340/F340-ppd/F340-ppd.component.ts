@@ -16,7 +16,11 @@ import { environment } from "../../../../../environments/environment";
 export class F340PpdComponent implements OnInit {
   @ViewChild('photoCommentModal') public photoCommentModal: ModalDirective;
   @ViewChild('ppdRemarkModal') public ppdRemarkModal: ModalDirective;
-  
+  //for hint
+  hintMsg:any = {
+    uploadPic: "Please upload pdf file and size cannot over 2 Mb.",
+    uploadPdf: "Please upload jpg file and size cannot over 2 Mb."
+  };
   //for sorting ; ASC DESC
   cwaDeadlineS = true;
 
@@ -129,7 +133,7 @@ export class F340PpdComponent implements OnInit {
     if (!this.utility.checkFileMaxFormat(files.item(0), (1128659 * 2 ),"image/jpeg")) {
       this.utility.alertify.confirm(
         "Sweet Alert",
-        "Please upload jpg file and size cannot over 2 Mb.",
+        this.hintMsg.uploadPic,
         () => {}
       );
       return; //exit function
@@ -163,7 +167,7 @@ export class F340PpdComponent implements OnInit {
     if (!this.utility.checkFileMaxFormat(files.item(0), (1128659 * 2 ),"application/pdf")) {
       this.utility.alertify.confirm(
         "Sweet Alert",
-        "Please upload pdf file and size cannot over 2 Mb.",
+        this.hintMsg.uploadPdf,
         () => {}
       );
       return; //exit function
@@ -203,7 +207,7 @@ export class F340PpdComponent implements OnInit {
     formData.append("loginUser", this.sF340PpdSchedule.loginUser);
     this.utility.alertify.confirm(
       "Sweet Alert",
-      "Are you sure to Delete this picture ?",
+      "Are you sure to Delete this picture of article:" + model.article + ", treatment:" + model.treatMent + ", partName:" + model.partName + ".",
       () => {
         this.utility.spinner.show();
         this.dksService.editPicF340Ppd(formData).subscribe(
@@ -232,7 +236,7 @@ export class F340PpdComponent implements OnInit {
     formData.append("pdf",model.pdf); 
     this.utility.alertify.confirm(
       "Sweet Alert",
-      "Are you sure to Delete this pdf ?",
+      "Are you sure to Delete this pdf of article:" + model.article + ", treatment:" + model.treatMent + ", partName:" + model.partName + ".",
       () => {
         this.utility.spinner.show();
         this.dksService.editPdfF340Ppd(formData).subscribe(
@@ -331,7 +335,7 @@ export class F340PpdComponent implements OnInit {
         this.utility.spinner.hide();
         this.utility.alertify.confirm(
           "Sweet Alert",
-          "You sent Mail.",
+          "sent ail success.",
           () => { });  
       },
       (error) => {

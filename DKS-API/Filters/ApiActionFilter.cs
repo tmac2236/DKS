@@ -25,8 +25,8 @@ namespace DKS_API.Filters
         {
             var clientIp = context.HttpContext.Connection.RemoteIpAddress.ToString();
             var reqUrl =  Microsoft.AspNetCore.Http.Extensions.UriHelper.GetDisplayUrl(context.HttpContext.Request);
-            _logger.LogInformation(string.Format(@"###### ApiActionFilter Client IP : {0} ######",clientIp));
-            _logger.LogInformation(string.Format(@"###### ApiActionFilter Request URL : {0} ######",reqUrl));
+            _logger.LogInformation("####################################################################");
+            _logger.LogInformation(string.Format("ApiActionFilter Client IP : {0} URL : {1}",clientIp,reqUrl));
         }
     }
 
