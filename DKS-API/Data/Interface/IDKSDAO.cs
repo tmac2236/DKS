@@ -9,7 +9,6 @@ namespace DKS_API.Data.Interface
 {
     public interface IDKSDAO
     {
-        Task<List<Ordsumoh>> SearchConvergence(string season, string stage);
         Task<Staccrth> SearchStaffByLOGIN(string login);
         Task<Staccrth> SearchStaffByUserId(string userId);
         Task<List<UserRoleDto>> GetRolesByUserId(string userId);

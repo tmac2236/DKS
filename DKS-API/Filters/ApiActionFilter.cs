@@ -1,8 +1,6 @@
-using System;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace DKS_API.Filters
 {
@@ -25,8 +23,11 @@ namespace DKS_API.Filters
         {
             var clientIp = context.HttpContext.Connection.RemoteIpAddress.ToString();
             var reqUrl =  Microsoft.AspNetCore.Http.Extensions.UriHelper.GetDisplayUrl(context.HttpContext.Request);
+            var method = context.HttpContext.Request.Method;
+            var actionParam = "GET";
+            if(method == "POST" ) actionParam = JsonConvert.SerializeObject(context.ActionArguments.Values, Formatting.Indented);
             _logger.LogInformation("####################################################################");
-            _logger.LogInformation(string.Format("ApiActionFilter Client IP : {0} URL : {1}",clientIp,reqUrl));
+            _logger.LogInformation(string.Format("ApiActionFilter Client IP : {0} URL : {1} Parameters: {2}",clientIp,reqUrl,actionParam));
         }
     }
 

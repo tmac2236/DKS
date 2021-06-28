@@ -24,7 +24,6 @@ namespace DKS_API.Controllers
 {
     public class DKSController : ApiController
     {
-        private ActionExecutingContext _actionContext;
         private readonly IDKSDAO _dksDao;
         private readonly IDevBuyPlanDAO _devBuyPlanDAO;
         private readonly IDevTreatmentDAO _devTreatmentDAO;

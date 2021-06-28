@@ -22,6 +22,7 @@ namespace DKS_API.Data.Repository
         public DbSet<DevTreatment> DEV_TREATMENT { get; set; }
         public DbSet<DevTreatmentFile> DEV_TREATMENT_FILE { get; set; }
         public DbSet<DevSysSet> DEV_SYSSET { get; set; }
+        public DbSet<ArticledLdtm> ARTICLED_LDTM { get; set; }
         //DTO(Stored Procedure)
         public DbSet<F418_F420Dto> GetF420F418View { get; set; }
         public DbSet<F340_ProcessDto> GetF340ProcessView { get; set; }
@@ -29,7 +30,9 @@ namespace DKS_API.Data.Repository
         public DbSet<StockDetailByMaterialNo> GetStockDetailByMaterialNoView { get; set; }
         public DbSet<F340_PpdDto> GetF340PpdView { get; set; }
         public DbSet<UserRoleDto> UserRoleDto { get; set; }
-        public DbSet<ArticledLdtm> ARTICLED_LDTM { get; set; }
+        public DbSet<P206DataByStageArticleDto> GetP206DataByArticle { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -43,11 +46,11 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<Articled>().HasKey(x => new { x.PKARTBID });
             modelBuilder.Entity<DevBuyPlan>().HasKey(x => new { x.MANUF, x.SEASON, x.MODELNO, x.SCOLOR, x.ARTICLE, x.VERN });
             modelBuilder.Entity<SamPartB>().HasKey(x => new { x.PARTNO, x.SAMPLENO });
-            modelBuilder.Entity<DevTreatment>().HasKey(x => new { x.PARTNO,x.SAMPLENO,x.TREATMENTCODE,x.VERNO });
-            modelBuilder.Entity<DevTreatmentFile>().HasKey(x => new { x.ARTICLE,x.PARTNO,x.TREATMENTCODE,x.UPTIME });
+            modelBuilder.Entity<DevTreatment>().HasKey(x => new { x.PARTNO, x.SAMPLENO, x.TREATMENTCODE, x.VERNO });
+            modelBuilder.Entity<DevTreatmentFile>().HasKey(x => new { x.ARTICLE, x.PARTNO, x.TREATMENTCODE, x.UPTIME });
             modelBuilder.Entity<DevSysSet>().HasKey(x => new { x.SYSKEY });
             modelBuilder.Entity<ArticledLdtm>().HasKey(x => new { x.PKARTBID });
-            
+
 
             //DTO(Stored Procedure)
             modelBuilder.Entity<F418_F420Dto>()
@@ -61,6 +64,8 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<F340_PpdDto>()
             .HasNoKey();
             modelBuilder.Entity<UserRoleDto>()
+            .HasNoKey();
+            modelBuilder.Entity<P206DataByStageArticleDto>()
             .HasNoKey();
 
         }

@@ -11,7 +11,10 @@ namespace DKS_API.Services.Interface
     {
         byte[] CommonExportReport(object data, string templateName);
         byte[] CommonExportReportTabs(List<object> dataList, string templateName);
+        //only for F340PPD
         byte[] CommonExportReportTabs4F340PPD(List<object> dataList, string templateName);
+        //if the export excel have a title use this one
+        byte[] CommonExportReportWithATitle(object data, string templateName,string aTitle);
     }
 
 }

@@ -108,18 +108,18 @@ namespace DKS_API.Services.Implement
 
             return files;
         }
-        public byte[] GetByteArrayByLocalUrlAddWaterMask(string folderPath, int stanSize, string stanLoveU)
+        public byte[] GetByteArrayByLocalUrlAddWaterMask(string folderPath, int stanSize, string stanName)
         {
             byte[] stanIsBig = File.ReadAllBytes(folderPath);
-            byte[] addWaterMask = AddWatermark(stanIsBig, stanSize, stanLoveU);
+            byte[] addWaterMask = AddWatermark(stanIsBig, stanSize, stanName);
             return addWaterMask;
         }
-        public byte[] AddWatermark(Byte[] stanIsBig, int stanSize, string stanLoveU)
+        public byte[] AddWatermark(Byte[] originalByte, int stanSize, string stanName)
         {
             byte[] convertedToBytes;
             try
             {
-                using (MemoryStream originalImageMemoryStream = new MemoryStream(stanIsBig))
+                using (MemoryStream originalImageMemoryStream = new MemoryStream(originalByte))
                 {
                     using (Image image = Image.FromStream(originalImageMemoryStream))
                     {
@@ -138,11 +138,11 @@ namespace DKS_API.Services.Implement
                             stringFormat.LineAlignment = StringAlignment.Center;
                             var blankStr = "                 ";
                             graphics.RotateTransform(-45);
-                            graphics.DrawString(String.Format("{0}{1}{2}{3}{4}{5}{6}", stanLoveU, blankStr, stanLoveU, blankStr, stanLoveU, blankStr, stanLoveU), font, brush, point, stringFormat);
-                            graphics.DrawString(String.Format("{0}{1}{2}{3}{4}{5}{6}", blankStr, stanLoveU, blankStr, stanLoveU, blankStr, stanLoveU, blankStr), font, brush, point1, stringFormat);
-                            graphics.DrawString(String.Format("{0}{1}{2}{3}{4}{5}{6}", stanLoveU, blankStr, stanLoveU, blankStr, stanLoveU, blankStr, stanLoveU), font, brush, point2, stringFormat);
-                            graphics.DrawString(String.Format("{0}{1}{2}{3}{4}{5}{6}", blankStr, stanLoveU, blankStr, stanLoveU, blankStr, stanLoveU, blankStr), font, brush, point3, stringFormat);
-                            graphics.DrawString(String.Format("{0}{1}{2}{3}{4}{5}{6}", stanLoveU, blankStr, stanLoveU, blankStr, stanLoveU, blankStr, stanLoveU), font, brush, point4, stringFormat);
+                            graphics.DrawString(String.Format("{0}{1}{2}{3}{4}{5}{6}", stanName, blankStr, stanName, blankStr, stanName, blankStr, stanName), font, brush, point, stringFormat);
+                            graphics.DrawString(String.Format("{0}{1}{2}{3}{4}{5}{6}", blankStr, stanName, blankStr, stanName, blankStr, stanName, blankStr), font, brush, point1, stringFormat);
+                            graphics.DrawString(String.Format("{0}{1}{2}{3}{4}{5}{6}", stanName, blankStr, stanName, blankStr, stanName, blankStr, stanName), font, brush, point2, stringFormat);
+                            graphics.DrawString(String.Format("{0}{1}{2}{3}{4}{5}{6}", blankStr, stanName, blankStr, stanName, blankStr, stanName, blankStr), font, brush, point3, stringFormat);
+                            graphics.DrawString(String.Format("{0}{1}{2}{3}{4}{5}{6}", stanName, blankStr, stanName, blankStr, stanName, blankStr, stanName), font, brush, point4, stringFormat);
                         }
 
                         using (MemoryStream updatedImageMemorySteam = new MemoryStream())

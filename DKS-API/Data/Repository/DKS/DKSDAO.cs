@@ -24,11 +24,7 @@ namespace DFPS.API.Data.Repository
             _config = config;
             spCode = _config.GetSection("AppSettings:SpCode").Value;
         }
-        public async Task<List<Ordsumoh>> SearchConvergence(string season, string stage)
-        {
-            var list = await _context.ORDSUMOH.Where(x => x.SEASON == season && x.STAGE == stage).OrderBy(x => x.PRSUMNO).ToListAsync();
-            return list;
-        }
+
         //依LOGIN查帳號
         public async Task<Staccrth> SearchStaffByLOGIN(string login)
         {

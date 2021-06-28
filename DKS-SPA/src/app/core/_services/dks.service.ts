@@ -61,15 +61,7 @@ export class DksService {
       );
   }
 
-  searchConvergence(season: string, stage: string) {
-    return this.utility.http.get<string[]>(
-      this.utility.baseUrl +
-        "dks/searchConvergence?season=" +
-        season +
-        "&stage=" +
-        stage
-    );
-  }
+
   uploadPicByArticle(articlePic: FormData) {
     console.log("dks.service upload:", articlePic);
     return this.utility.http.post(
