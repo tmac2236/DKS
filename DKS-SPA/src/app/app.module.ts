@@ -63,6 +63,7 @@ import { DataTablesModule } from "angular-datatables";
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { ModalModule } from "ngx-bootstrap/modal";
 import { AuthGuardRole } from "./core/_guards/auth.guard-role";
+import { NgSelectModule } from "@ng-select/ng-select";
 
 
 //載入 "/assets/i18n/[lang].json" 語系檔
@@ -99,6 +100,7 @@ export function createTranslateLoader(http: HttpClient) {
     ChartsModule,
     NgImageSliderModule,
     PaginationModule.forRoot(), //分頁用
+    NgSelectModule, //selection
   ],
   declarations: [
     AppComponent,

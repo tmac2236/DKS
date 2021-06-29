@@ -2,37 +2,70 @@
   <div class="row">
     <div class="col-md-12">
       <div class="card">
-        <div class="card-header">
-          <strong>Home of Excel</strong>
-        </div>
-        <form class="form-horizontal" #addQueryReportDataForm="ngForm">
-          <div class="card-body">
-            <div class="form-group row">
-              <div class="col-md-12">
-                <div class="col">
-                  <label class="col-form-label mr-2">Article</label>
-                  <input
-                    class="col-form-label mr-2"
-                    type="text"
-                    placeholder="Article"
-                    name="article"
-                    [(ngModel)]="sExcelHome.article"
-                    required
-                  />
-                  <button
-                    class="btn btn-primary mr-2"
-                    type="button"
-                    (click)="export()"
-                  >
-                  Export
-                  </button>
+        <div class="card-header"><strong>Home Excel</strong></div>
+        <div class="card-body">
+          <form class="form-horizontal" #F428DataForm="ngForm">
+            <div class="form-row">
+              <div class="form-group col-2">
+                <label>下載報表類型</label>
+                <ng-select [items]="excelTypeList"
+                name="excelTypeList"
+                bindLabel="excelTypeList"
+                bindValue="id"
+                [clearable]="false"
+                [(ngModel)]="selectedExcel"
+                >
+                </ng-select>                
+              </div>
+              <div *ngIf="selectedExcel === 'P206_BOM_Export'" class="form-group col-1">
+                <label>Article</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="article"
+                  maxlength="6"
+                  [(ngModel)]="sExcelHome.article"
+                  />                
+              </div>
+           
+              <div class="form-group col-md-3 mt-4">
+                <button
+                  class="btn btn-primary mr-1 btn-lg"
+                  type="button"
+                  (click)="export()"
+                >
+                {{ 'Common.btnList.export' | translate }}
+                </button>
+                <!--
+                <button
+                  class="btn btn-primary mr-1 btn-lg"
+                  type="button"
+                >export</button>
+                -->
+                <div class="form-group col-md-2">
+
                 </div>
+                <div class="form-group col-md-2">
+                  
+                </div>
+                <div class="form-group col-md-1">
+  
+                </div>                
               </div>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   </div>
 </div>
-<ngx-spinner></ngx-spinner>
+<ngx-spinner
+  bdColor="rgba(0, 0, 0, 0.8)"
+  size="large"
+  color="#fff"
+  type="square-jelly-box"
+  [fullScreen]="true"
+  ><p style="color: white">
+    Loading Please Wait
+  </p>
+</ngx-spinner>

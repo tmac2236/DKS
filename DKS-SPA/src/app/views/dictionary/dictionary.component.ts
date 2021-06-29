@@ -10,7 +10,8 @@ import { SExcelHome } from "../../core/_models/s-excel-home";
 export class DictionaryComponent implements OnInit {
 
   sExcelHome: SExcelHome = new SExcelHome();
-
+  excelTypeList:string[] = ['P206_BOM_Export'];
+  selectedExcel:string = "";
   constructor(
     private utility: Utility,
     private route: ActivatedRoute
@@ -22,8 +23,34 @@ export class DictionaryComponent implements OnInit {
   }
 
   ngOnInit() {}
+  
   export() {
-    const url = this.utility.baseUrl + "excel/getP206DataByArticle";
-    this.utility.exportFactory(url, "P206Data", this.sExcelHome);
+    
+    var url = "";
+    var fileName = "";
+    switch (this.selectedExcel) {
+      case "P206_BOM_Export":
+          if(this.sExcelHome.article.trim() === ""){
+            this.utility.alertify.confirm(
+              "System Notice",
+              "You have to key article first !",
+              () => {}
+            );
+            return;
+          }
+          url = this.utility.baseUrl + "excel/getP206DataByArticle";
+          fileName = "P206_BOM_Export";
+          break;
+          default: { 
+            this.utility.alertify.confirm(
+              "System Notice",
+              "Please select one type of excel !",
+              () => {}
+            );
+            return;
+         } 
+    }
+
+    this.utility.exportFactory(url, fileName, this.sExcelHome);
   }
 }
