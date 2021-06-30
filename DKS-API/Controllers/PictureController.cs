@@ -27,8 +27,6 @@ namespace DKS_API.Controllers
         {
             _logger.LogInformation(String.Format(@"****** PictureController DeletePicByArticle fired!! ******"));
 
-            try
-            {
                 string rootdir = Directory.GetCurrentDirectory();
                 var localStr = _config.GetSection("AppSettings:ArticleUrl").Value;
                 var pathToSave = rootdir + localStr + source.Article;
@@ -58,11 +56,6 @@ namespace DKS_API.Controllers
 
                 }
                 return Ok();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex}");
-            }
         }
         [HttpPost("uploadPicByArticle")]
         public IActionResult UploadPicByArticle([FromForm] ArticlePic source)

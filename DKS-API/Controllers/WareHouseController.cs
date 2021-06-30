@@ -19,9 +19,9 @@ namespace DKS_API.Controllers
         private readonly IExcelService _excelService;
         private readonly IWarehouseDAO _warehouseDao;
         private readonly ISamPartBDAO _samPartBDAO;
-        public WareHouseController(IConfiguration config, IWebHostEnvironment webHostEnvironment,ILogger<WareHouseController> logger, IWarehouseDAO warehouseDao, ISamPartBDAO samPartBDAO,
+        public WareHouseController(IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<WareHouseController> logger, IWarehouseDAO warehouseDao, ISamPartBDAO samPartBDAO,
         IExcelService excelService)
-        : base(config, webHostEnvironment,logger)
+        : base(config, webHostEnvironment, logger)
         {
             _excelService = excelService;
             _warehouseDao = warehouseDao;
@@ -32,20 +32,14 @@ namespace DKS_API.Controllers
         {
             _logger.LogInformation(String.Format(@"****** WareHouseController GetMaterialNoBySampleNoForWarehouse fired!! ******"));
 
-            try
-            {
-                //sF428SampleNoDetail.SampleNo ="FW21-SMS-GZ7884-01";
+            //sF428SampleNoDetail.SampleNo ="FW21-SMS-GZ7884-01";
 
-                var result = _warehouseDao.GetMaterialNoBySampleNoForWarehouse(sF428SampleNoDetail);
+            var result = _warehouseDao.GetMaterialNoBySampleNoForWarehouse(sF428SampleNoDetail);
 
-                Response.AddPagination(result.CurrentPage, result.PageSize,
-                result.TotalCount, result.TotalPages);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex}.");
-            }
+            Response.AddPagination(result.CurrentPage, result.PageSize,
+            result.TotalCount, result.TotalPages);
+            return Ok(result);
+
         }
 
         [HttpPost("exportMaterialNoBySampleNoForWarehouse")]

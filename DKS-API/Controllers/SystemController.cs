@@ -17,8 +17,8 @@ namespace DKS_API.Controllers
     {
         private readonly IDevSysSetDAO _devSysSetDAO;
 
-        public SystemController(IConfiguration config, IWebHostEnvironment webHostEnvironment,ILogger<SystemController> logger, IDevSysSetDAO devSysSetDAO)
-                : base(config, webHostEnvironment,logger)
+        public SystemController(IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<SystemController> logger, IDevSysSetDAO devSysSetDAO)
+                : base(config, webHostEnvironment, logger)
         {
             _devSysSetDAO = devSysSetDAO;
         }
@@ -27,15 +27,10 @@ namespace DKS_API.Controllers
         public async Task<IActionResult> FindAll()
         {
             _logger.LogInformation(String.Format(@"****** SystemController FindAll fired!! ******"));
-            try
-            {
-                var result = await _devSysSetDAO.GetAll().ToListAsync();
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex}");
-            }
+
+            var result = await _devSysSetDAO.GetAll().ToListAsync();
+            return Ok(result);
+
         }
         [HttpPost("eidtSysSet")]
         public async Task<IActionResult> EidtSysSet(DevSysSet devSysSet)
@@ -43,23 +38,18 @@ namespace DKS_API.Controllers
             _logger.LogInformation(String.Format(@"****** SystemController EidtSysSet fired!! ******"));
 
             string errorStr = "";
-            try
-            {
-                DevSysSet opRecord = _devSysSetDAO.FindSingle(
-                x => x.SYSKEY.Trim() == devSysSet.SYSKEY.Trim());
+
+            DevSysSet opRecord = _devSysSetDAO.FindSingle(
+            x => x.SYSKEY.Trim() == devSysSet.SYSKEY.Trim());
 
 
-                opRecord.SYSVAL = devSysSet.SYSVAL.Trim();
-                opRecord.UPUSR = devSysSet.UPUSR.Trim();
-                opRecord.UPTIME = DateTime.Now;
-                _devSysSetDAO.Update(opRecord);
-                await _devSysSetDAO.SaveAll();
-                return Ok(errorStr);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex}");
-            }
+            opRecord.SYSVAL = devSysSet.SYSVAL.Trim();
+            opRecord.UPUSR = devSysSet.UPUSR.Trim();
+            opRecord.UPTIME = DateTime.Now;
+            _devSysSetDAO.Update(opRecord);
+            await _devSysSetDAO.SaveAll();
+            return Ok(errorStr);
+
         }
 
     }

@@ -35,7 +35,7 @@ namespace DKS_API.Controllers
 
         public DKSController(IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<DKSController> logger, IDKSDAO dksDao, IDevBuyPlanDAO devBuyPlanDAO, IDevTreatmentDAO devTreatmentDAO,
         IDevTreatmentFileDAO devTreatmentFileDAO, IDevSysSetDAO devSysSetDAO, ISendMailService sendMailService, IFileService fileService, IExcelService excelService)
-        : base(config, webHostEnvironment,logger)
+        : base(config, webHostEnvironment, logger)
         {
             _sendMailService = sendMailService;
             _fileService = fileService;
@@ -46,7 +46,7 @@ namespace DKS_API.Controllers
             _devTreatmentFileDAO = devTreatmentFileDAO;
             _devSysSetDAO = devSysSetDAO;
 
-            
+
         }
         [HttpPost("exportF340_Process")]
         public async Task<IActionResult> ExportF340_Process(SF340Schedule sF340Schedule)
@@ -68,123 +68,101 @@ namespace DKS_API.Controllers
         public async Task<IActionResult> GetF340_Process([FromQuery] SF340Schedule sF340Schedule)
         {
             _logger.LogInformation(String.Format(@"****** DKSController GetF340_Process fired!! ******"));
-            try
-            {
-                if (sF340Schedule.cwaDateS == "" || sF340Schedule.cwaDateS == null) sF340Schedule.cwaDateS = _config.GetSection("LogicSettings:MinDate").Value;
-                if (sF340Schedule.cwaDateE == "" || sF340Schedule.cwaDateE == null) sF340Schedule.cwaDateE = _config.GetSection("LogicSettings:MaxDate").Value;
-                sF340Schedule.cwaDateS = sF340Schedule.cwaDateS.Replace("-", "/");
-                sF340Schedule.cwaDateE = sF340Schedule.cwaDateE.Replace("-", "/");
-                var data = await _dksDao.GetF340ProcessView(sF340Schedule);
-                //Response.AddPagination(result.CurrentPage, result.PageSize,
-                //result.TotalCount, result.TotalPages);
+
+            if (sF340Schedule.cwaDateS == "" || sF340Schedule.cwaDateS == null) sF340Schedule.cwaDateS = _config.GetSection("LogicSettings:MinDate").Value;
+            if (sF340Schedule.cwaDateE == "" || sF340Schedule.cwaDateE == null) sF340Schedule.cwaDateE = _config.GetSection("LogicSettings:MaxDate").Value;
+            sF340Schedule.cwaDateS = sF340Schedule.cwaDateS.Replace("-", "/");
+            sF340Schedule.cwaDateE = sF340Schedule.cwaDateE.Replace("-", "/");
+            var data = await _dksDao.GetF340ProcessView(sF340Schedule);
+            //Response.AddPagination(result.CurrentPage, result.PageSize,
+            //result.TotalCount, result.TotalPages);
 
 
-                PagedList<F340_ProcessDto> result = PagedList<F340_ProcessDto>.Create(data, sF340Schedule.PageNumber, sF340Schedule.PageSize, sF340Schedule.IsPaging);
-                Response.AddPagination(result.CurrentPage, result.PageSize,
-                result.TotalCount, result.TotalPages);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex}.");
-            }
+            PagedList<F340_ProcessDto> result = PagedList<F340_ProcessDto>.Create(data, sF340Schedule.PageNumber, sF340Schedule.PageSize, sF340Schedule.IsPaging);
+            Response.AddPagination(result.CurrentPage, result.PageSize,
+            result.TotalCount, result.TotalPages);
+            return Ok(result);
         }
         [HttpGet("getBPVersionBySeason")]
         public async Task<IActionResult> GetBPVersionBySeason(string season, string factory)
         {
             _logger.LogInformation(String.Format(@"******DKSController GetBPVersionBySeason fired!! ******"));
-            try
-            {
 
-                var result = await _devBuyPlanDAO.FindAll(x => x.SEASON.Trim() == season.ToUpper().Trim()
-                                                        && x.MANUF.Trim() == factory.ToUpper().Trim())
-                                        .Select(x => new
-                                        {
-                                            VERN = x.VERN
-                                        }).Distinct()
-                                        .ToListAsync();
+            var result = await _devBuyPlanDAO.FindAll(x => x.SEASON.Trim() == season.ToUpper().Trim()
+                                                    && x.MANUF.Trim() == factory.ToUpper().Trim())
+                                    .Select(x => new
+                                    {
+                                        VERN = x.VERN
+                                    }).Distinct()
+                                    .ToListAsync();
 
-                List<string> bpVern =  result.Select( x =>x.VERN.ToString() ).ToList();
+            List<string> bpVern = result.Select(x => x.VERN.ToString()).ToList();
 
-                return Ok(bpVern);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex}.");
-            }
+            return Ok(bpVern);
+
         }
         [HttpPost("checkF420Valid")]
         public IActionResult CheckF420Valid([FromForm] ArticlePic excel)
         {
             _logger.LogInformation(String.Format(@"****** DKSController CheckF420Valid fired!! ******"));
-            
+
             int processIndex = 0;//use in debug
-            try
-            {
-                string rootdir = Directory.GetCurrentDirectory();
-                string filePath = rootdir + "\\Resources\\Temp";
-                var fileName = "F420.xls";
-                //新增檔名的全路徑
-                var fullPath = Path.Combine(filePath, fileName);
-                using (var stream = new FileStream(fullPath, FileMode.Create))
-                {
-                    excel.File.CopyTo(stream);
-                }
 
-                List<F418_F420Dto> list = new List<F418_F420Dto>();
-                //read excel
-                Aspose.Cells.Workbook wk = new Aspose.Cells.Workbook(fullPath);
-                Worksheet ws = wk.Worksheets[0];
-                DataTable dt = ws.Cells.ExportDataTable(0, 0, ws.Cells.MaxDataRow + 1, ws.Cells.MaxDataColumn + 1);
-
-                for (int i = 1; i < dt.Rows.Count; i++)
-                {
-                    processIndex = i;
-                    string orderNo = dt.Rows[i][1].ToString().Trim();  //Order No
-                    string qty = dt.Rows[i][30].ToString().Trim();     //廠商出貨數量
-                    if (orderNo == "" || qty == "") continue; //如果任一沒輸入忽略
-                    decimal nQty = decimal.Parse(qty);
-                    //檢查該訂購單號還有幾個要驗收
-                    var result = _dksDao.GetF420F418View(orderNo);
-                    decimal compare = nQty - result.NEEDQTY;
-                    if (compare > 0)    //驗收數量大於數量
-                    {
-                        result.NEEDQTY = compare;
-                        list.Add(result);
-                    }
-                }
-                return Ok(list);
-            }
-            catch (Exception ex)
+            string rootdir = Directory.GetCurrentDirectory();
+            string filePath = rootdir + "\\Resources\\Temp";
+            var fileName = "F420.xls";
+            //新增檔名的全路徑
+            var fullPath = Path.Combine(filePath, fileName);
+            using (var stream = new FileStream(fullPath, FileMode.Create))
             {
-                return StatusCode(500, $"Internal server error: {ex}. DKS_DEBUG: The row is {processIndex}");
+                excel.File.CopyTo(stream);
             }
+
+            List<F418_F420Dto> list = new List<F418_F420Dto>();
+            //read excel
+            Aspose.Cells.Workbook wk = new Aspose.Cells.Workbook(fullPath);
+            Worksheet ws = wk.Worksheets[0];
+            DataTable dt = ws.Cells.ExportDataTable(0, 0, ws.Cells.MaxDataRow + 1, ws.Cells.MaxDataColumn + 1);
+
+            for (int i = 1; i < dt.Rows.Count; i++)
+            {
+                processIndex = i;
+                string orderNo = dt.Rows[i][1].ToString().Trim();  //Order No
+                string qty = dt.Rows[i][30].ToString().Trim();     //廠商出貨數量
+                if (orderNo == "" || qty == "") continue; //如果任一沒輸入忽略
+                decimal nQty = decimal.Parse(qty);
+                //檢查該訂購單號還有幾個要驗收
+                var result = _dksDao.GetF420F418View(orderNo);
+                decimal compare = nQty - result.NEEDQTY;
+                if (compare > 0)    //驗收數量大於數量
+                {
+                    result.NEEDQTY = compare;
+                    list.Add(result);
+                }
+            }
+            return Ok(list);
+
         }
         [HttpGet("getF340_ProcessPpd")]
         public async Task<IActionResult> GetF340_ProcessPpd([FromQuery] SF340PPDSchedule sF340PPDSchedule)
         {
             _logger.LogInformation(String.Format(@"****** DKSController GetF340_ProcessPpd fired!! ******"));
-            try
-            {
-                if (sF340PPDSchedule.cwaDateS == "" || sF340PPDSchedule.cwaDateS == null) sF340PPDSchedule.cwaDateS = _config.GetSection("LogicSettings:MinDate").Value;
-                if (sF340PPDSchedule.cwaDateE == "" || sF340PPDSchedule.cwaDateE == null) sF340PPDSchedule.cwaDateE = _config.GetSection("LogicSettings:MaxDate").Value;
-                sF340PPDSchedule.cwaDateS = sF340PPDSchedule.cwaDateS.Replace("-", "/");
-                sF340PPDSchedule.cwaDateE = sF340PPDSchedule.cwaDateE.Replace("-", "/");
-                var data = await _dksDao.GetF340PPDView(sF340PPDSchedule);
-                PagedList<F340_PpdDto> result = PagedList<F340_PpdDto>.Create(data, sF340PPDSchedule.PageNumber, sF340PPDSchedule.PageSize, sF340PPDSchedule.IsPaging);
-                Response.AddPagination(result.CurrentPage, result.PageSize,
-                result.TotalCount, result.TotalPages);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex}.");
-            }
+
+            if (sF340PPDSchedule.cwaDateS == "" || sF340PPDSchedule.cwaDateS == null) sF340PPDSchedule.cwaDateS = _config.GetSection("LogicSettings:MinDate").Value;
+            if (sF340PPDSchedule.cwaDateE == "" || sF340PPDSchedule.cwaDateE == null) sF340PPDSchedule.cwaDateE = _config.GetSection("LogicSettings:MaxDate").Value;
+            sF340PPDSchedule.cwaDateS = sF340PPDSchedule.cwaDateS.Replace("-", "/");
+            sF340PPDSchedule.cwaDateE = sF340PPDSchedule.cwaDateE.Replace("-", "/");
+            var data = await _dksDao.GetF340PPDView(sF340PPDSchedule);
+            PagedList<F340_PpdDto> result = PagedList<F340_PpdDto>.Create(data, sF340PPDSchedule.PageNumber, sF340PPDSchedule.PageSize, sF340PPDSchedule.IsPaging);
+            Response.AddPagination(result.CurrentPage, result.PageSize,
+            result.TotalCount, result.TotalPages);
+            return Ok(result);
+
         }
         [HttpPost("exportF340_ProcessPpd")]
         public async Task<IActionResult> ExportF340_ProcessPpd(SF340PPDSchedule sF340PPDSchedule)
         {
-             _logger.LogInformation(String.Format(@"****** DKSController ExportF340_ProcessPpd fired!! ******"));
+            _logger.LogInformation(String.Format(@"****** DKSController ExportF340_ProcessPpd fired!! ******"));
 
             var dksSignature = _config.GetSection("AppSettings:encodeStr").Value;
             if (sF340PPDSchedule.cwaDateS == "" || sF340PPDSchedule.cwaDateS == null) sF340PPDSchedule.cwaDateS = _config.GetSection("LogicSettings:MinDate").Value;
@@ -195,15 +173,15 @@ namespace DKS_API.Controllers
             var data = await _dksDao.GetF340PPDView(sF340PPDSchedule);
             //
             data.ForEach(x =>
-            {   
-                var ip =_config.GetSection("ServerIp:Mps4Pic:" + sF340PPDSchedule.factory).Value;
-                var apiPort =_config.GetSection("ServerIp:Mps4Pic:API").Value;
-                var spaPort =_config.GetSection("ServerIp:Mps4Pic:SPA").Value;
+            {
+                var ip = _config.GetSection("ServerIp:Mps4Pic:" + sF340PPDSchedule.factory).Value;
+                var apiPort = _config.GetSection("ServerIp:Mps4Pic:API").Value;
+                var spaPort = _config.GetSection("ServerIp:Mps4Pic:SPA").Value;
                 if (x.Photo.Length > 1)
                 {
-                    var param = dksSignature + x.DevSeason+  "$" + x.Article + "$" + x.Photo + "$" + sF340PPDSchedule.factory + "$" + sF340PPDSchedule.loginUser;
+                    var param = dksSignature + x.DevSeason + "$" + x.Article + "$" + x.Photo + "$" + sF340PPDSchedule.factory + "$" + sF340PPDSchedule.loginUser;
                     var encodeStr = CSharpLab.Btoa(param);
-                    var dataUrl = string.Format(@"{0}:{1}{2}{3}",ip,apiPort,"/api/dks/getF340PpdPic?isStanHandsome=",encodeStr);
+                    var dataUrl = string.Format(@"{0}:{1}{2}{3}", ip, apiPort, "/api/dks/getF340PpdPic?isStanHandsome=", encodeStr);
                     //let dataUrl = environment.apiUrl + "dks/getF340PpdPdf?isStanHandsome=" + window.btoa(param);
                     //x.Photo = "=HYPERLINK(\"" + dataUrl + "\",\"jpg\")";
                     x.Photo = dataUrl;
@@ -212,13 +190,13 @@ namespace DKS_API.Controllers
                 }
                 if (x.Pdf.Length > 1)
                 {   //encoding version
-                    var param = dksSignature + x.DevSeason+  "$" + x.Article + "$" + x.Pdf + "$" + sF340PPDSchedule.factory + "$" + sF340PPDSchedule.loginUser;
+                    var param = dksSignature + x.DevSeason + "$" + x.Article + "$" + x.Pdf + "$" + sF340PPDSchedule.factory + "$" + sF340PPDSchedule.loginUser;
                     var encodeStr = CSharpLab.Btoa(param);
-                    var dataUrl = string.Format(@"{0}:{1}{2}{3}",ip,apiPort,"/api/dks/getF340PpdPdf?isStanHandsome=",encodeStr);
-                    
+                    var dataUrl = string.Format(@"{0}:{1}{2}{3}", ip, apiPort, "/api/dks/getF340PpdPdf?isStanHandsome=", encodeStr);
+
                     // no encoding version
                     //var dataUrl = string.Format(@"{0}:{1}{2}{3}/{4}/{5}",ip,spaPort,"/assets/F340PpdPic/",x.DevSeason,x.Article,x.Pdf);
-                    x.Pdf = dataUrl ;
+                    x.Pdf = dataUrl;
 
                 }
             });
@@ -296,7 +274,7 @@ namespace DKS_API.Controllers
                     opRecord.UPUSR = loginUser;
                     opRecord.UPTIME = updateTime;
                     _devTreatmentFileDAO.Add(opRecord);
-                    _logger.LogInformation(String.Format(@"******DKSController EditPicF340Ppd Add a Picture: {0}!! ******",fileName));
+                    _logger.LogInformation(String.Format(@"******DKSController EditPicF340Ppd Add a Picture: {0}!! ******", fileName));
                 }
             }
             else
@@ -310,7 +288,7 @@ namespace DKS_API.Controllers
                     DevTreatmentFile opRecord = _devTreatmentFileDAO.FindSingle(
                     x => x.FILE_NAME.Trim() == fileName.Trim());
                     _devTreatmentFileDAO.Remove(opRecord);
-                    _logger.LogInformation(String.Format(@"******DKSController EditPicF340Ppd Delete a Picture: {0}!! ******",fileName));
+                    _logger.LogInformation(String.Format(@"******DKSController EditPicF340Ppd Delete a Picture: {0}!! ******", fileName));
                 }
             }
             await _devTreatmentDAO.SaveAll();
@@ -373,7 +351,7 @@ namespace DKS_API.Controllers
                     opRecord.UPUSR = loginUser;
                     opRecord.UPTIME = updateTime;
                     _devTreatmentFileDAO.Add(opRecord);
-                    _logger.LogInformation(String.Format(@"******DKSController EditPdfF340Ppd Add a Pdf: {0}!! ******",fileName));
+                    _logger.LogInformation(String.Format(@"******DKSController EditPdfF340Ppd Add a Pdf: {0}!! ******", fileName));
                 }
             }
             else
@@ -387,7 +365,7 @@ namespace DKS_API.Controllers
                     DevTreatmentFile opRecord = _devTreatmentFileDAO.FindSingle(
                     x => x.FILE_NAME.Trim() == fileName.Trim());
                     _devTreatmentFileDAO.Remove(opRecord);
-                    _logger.LogInformation(String.Format(@"******DKSController EditPdfF340Ppd Delete a Pdf: {0}!! ******",fileName));
+                    _logger.LogInformation(String.Format(@"******DKSController EditPdfF340Ppd Delete a Pdf: {0}!! ******", fileName));
                 }
             }
             await _devTreatmentDAO.SaveAll();
@@ -418,7 +396,7 @@ namespace DKS_API.Controllers
                 if (model != null)
                 {
                     if (model.PPD_REMARK.ToSafetyString().Trim() == dto.PpdRemark.ToSafetyString().Trim()) continue;
-                    _logger.LogInformation(String.Format(@"******DKSController EditF340Ppds Add a Remark: {0}!! ******",dto.PpdRemark));
+                    _logger.LogInformation(String.Format(@"******DKSController EditF340Ppds Add a Remark: {0}!! ******", dto.PpdRemark));
                     model.PPD_REMARK = dto.PpdRemark.Trim();
                     _devTreatmentDAO.Update(model);
                     editCount++;
@@ -461,15 +439,17 @@ namespace DKS_API.Controllers
             if (model != null)
             {
                 // type is here
-                if (type == "PhotoComment") {
+                if (type == "PhotoComment")
+                {
                     model.PHOTO_COMMENT = dto.PhotoComment.Trim();
-                    _logger.LogInformation(String.Format(@"******DKSController EditF340Ppd Add a PhotoComment: {0}!! ******",dto.PhotoComment));
+                    _logger.LogInformation(String.Format(@"******DKSController EditF340Ppd Add a PhotoComment: {0}!! ******", dto.PhotoComment));
                 }
-                if (type == "PpdRemark"){
-                     model.PPD_REMARK = dto.PpdRemark.Trim();
-                     _logger.LogInformation(String.Format(@"******DKSController EditF340Ppd Add a PpdRemark: {0}!! ******",dto.PhotoComment));
+                if (type == "PpdRemark")
+                {
+                    model.PPD_REMARK = dto.PpdRemark.Trim();
+                    _logger.LogInformation(String.Format(@"******DKSController EditF340Ppd Add a PpdRemark: {0}!! ******", dto.PhotoComment));
                 }
-                
+
                 _devTreatmentDAO.Update(model);
             }
 
@@ -501,50 +481,36 @@ namespace DKS_API.Controllers
         {
             _logger.LogInformation(String.Format(@"****** DKSController getF340PpdPic fired!! ******"));
 
-            try
-            {
-                var decodeStr = CSharpLab.Atob(isStanHandsome);
-                var dksSignature = _config.GetSection("AppSettings:encodeStr").Value;
-                decodeStr = decodeStr.Replace(dksSignature, "");
-                List<string> nastFileName = decodeStr.Split("$").ToList();
-                var factory = nastFileName[nastFileName.Count - 2];
-                nastFileName.RemoveAt(nastFileName.Count - 2);
-                var loginUser = nastFileName[nastFileName.Count - 1];
-                nastFileName.RemoveAt(nastFileName.Count - 1);
-                var pathList = _fileService.GetLocalPath("F340PpdPic", nastFileName);
+            var decodeStr = CSharpLab.Atob(isStanHandsome);
+            var dksSignature = _config.GetSection("AppSettings:encodeStr").Value;
+            decodeStr = decodeStr.Replace(dksSignature, "");
+            List<string> nastFileName = decodeStr.Split("$").ToList();
+            var factory = nastFileName[nastFileName.Count - 2];
+            nastFileName.RemoveAt(nastFileName.Count - 2);
+            var loginUser = nastFileName[nastFileName.Count - 1];
+            nastFileName.RemoveAt(nastFileName.Count - 1);
+            var pathList = _fileService.GetLocalPath("F340PpdPic", nastFileName);
 
-                var result = _fileService.GetByteArrayByLocalUrlAddWaterMask(pathList[1], 160, loginUser);
-                return File(result, "image/jpeg");//"image/jpeg"  "application/pdf"
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex}.");
-            }
+            var result = _fileService.GetByteArrayByLocalUrlAddWaterMask(pathList[1], 160, loginUser);
+            return File(result, "image/jpeg");//"image/jpeg"  "application/pdf"
         }
         [HttpGet("getF340PpdPdf")]
         public IActionResult getF340PpdPdf(string isStanHandsome)
         {
             _logger.LogInformation(String.Format(@"****** DKSController getF340PpdPdf fired!! ******"));
 
-            try
-            {
-                var decodeStr = CSharpLab.Atob(isStanHandsome);
-                var dksSignature = _config.GetSection("AppSettings:encodeStr").Value;
-                decodeStr = decodeStr.Replace(dksSignature, "");
-                List<string> nastFileName = decodeStr.Split("$").ToList();
-                var factory = nastFileName[nastFileName.Count - 2];
-                nastFileName.RemoveAt(nastFileName.Count - 2);
-                var loginUser = nastFileName[nastFileName.Count - 1];
-                nastFileName.RemoveAt(nastFileName.Count - 1);
-                var pathList = _fileService.GetLocalPath("F340PpdPic", nastFileName);
+            var decodeStr = CSharpLab.Atob(isStanHandsome);
+            var dksSignature = _config.GetSection("AppSettings:encodeStr").Value;
+            decodeStr = decodeStr.Replace(dksSignature, "");
+            List<string> nastFileName = decodeStr.Split("$").ToList();
+            var factory = nastFileName[nastFileName.Count - 2];
+            nastFileName.RemoveAt(nastFileName.Count - 2);
+            var loginUser = nastFileName[nastFileName.Count - 1];
+            nastFileName.RemoveAt(nastFileName.Count - 1);
+            var pathList = _fileService.GetLocalPath("F340PpdPic", nastFileName);
 
-                var result = System.IO.File.ReadAllBytes(pathList[1]);
-                return File(result, "application/pdf");//"image/jpeg"  "application/pdf"
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex}.");
-            }
+            var result = System.IO.File.ReadAllBytes(pathList[1]);
+            return File(result, "application/pdf");//"image/jpeg"  "application/pdf"
         }
         [HttpGet("rejectF340Process")]
         public async Task<IActionResult> RejectF340Process(string sampleNo, string type)
