@@ -39,7 +39,11 @@ namespace DFPS.API.Controllers
                    .FromSqlRaw(" EXECUTE dbo.GetP206DataByArticle @Article ", pc.ToArray())
                    .ToListAsync();
             string title = "";
-            if (data.Count > 0) title = data[0].Title;
+            if (data.Count > 0){
+                 title = data[0].Title;
+            }else{
+                return Ok("0");
+            }
 
             byte[] result = _excelService.CommonExportReportWithATitle(data, "TempP206DataByArticle.xlsx", title);
             return File(result, "application/xlsx", "P206DataByArticle.xlsx");

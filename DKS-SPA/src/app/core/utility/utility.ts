@@ -40,8 +40,13 @@ export class Utility {
       .pipe(timeout(utilityConfig.httpTimeOut))
       .subscribe((result: Blob) => {
         if (result.type !== "application/xlsx") {
-          alert(result.type);
+          this.alertify.confirm(
+            "System Alert",
+            "There are no data with these conditions !",
+            () => {}
+          );
           this.spinner.hide();
+          return;
         }
         const blob = new Blob([result]);
         const url = window.URL.createObjectURL(blob);
