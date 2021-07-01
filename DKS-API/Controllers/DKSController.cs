@@ -491,7 +491,7 @@ namespace DKS_API.Controllers
             nastFileName.RemoveAt(nastFileName.Count - 1);
             var pathList = _fileService.GetLocalPath("F340PpdPic", nastFileName);
 
-            var result = _fileService.GetByteArrayByLocalUrlAddWaterMask(pathList[1], 160, loginUser);
+            var result = _fileService.GetByteArrayByLocalUrlAddWaterMask(pathList[1], loginUser);
             return File(result, "image/jpeg");//"image/jpeg"  "application/pdf"
         }
         [HttpGet("getF340PpdPdf")]

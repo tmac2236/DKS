@@ -108,13 +108,13 @@ namespace DKS_API.Services.Implement
 
             return files;
         }
-        public byte[] GetByteArrayByLocalUrlAddWaterMask(string folderPath, int stanSize, string stanName)
+        public byte[] GetByteArrayByLocalUrlAddWaterMask(string folderPath, string stanName)
         {
             byte[] stanIsBig = File.ReadAllBytes(folderPath);
-            byte[] addWaterMask = AddWatermark(stanIsBig, stanSize, stanName);
+            byte[] addWaterMask = AddWatermark(stanIsBig, stanName);
             return addWaterMask;
         }
-        public byte[] AddWatermark(Byte[] originalByte, int stanSize, string stanName)
+        public byte[] AddWatermark(Byte[] originalByte, string stanName)
         {
             byte[] convertedToBytes;
             try
@@ -123,6 +123,7 @@ namespace DKS_API.Services.Implement
                 {
                     using (Image image = Image.FromStream(originalImageMemoryStream))
                     {
+                        int stanSize = (image.Height * image.Width)/37400;
                         System.Drawing.Font font = new System.Drawing.Font("Arial", stanSize, FontStyle.Italic, GraphicsUnit.Pixel);
                         Color color = Color.DarkGray;
                         Point point = new Point(image.Width / 10 * 1, (image.Height / 10 * 3));
@@ -159,6 +160,12 @@ namespace DKS_API.Services.Implement
                 _logger.LogError(ex.ToString());
                 throw ex;
             }
+
+            return convertedToBytes;
+        }
+        public byte[] AddPdfWatermark(Byte[] originalByte, string stanName)
+        {
+            byte[] convertedToBytes = null;
 
             return convertedToBytes;
         }
