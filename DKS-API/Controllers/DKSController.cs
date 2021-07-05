@@ -4,7 +4,6 @@ using System.IO;
 using System.Collections.Generic;
 using System;
 using System.Threading.Tasks;
-using System.Drawing;
 using DKS.API.Models.DKS;
 using DKS_API.DTOs;
 using DKS_API.Data.Interface;
@@ -14,11 +13,9 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using DKS_API.Helpers;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Primitives;
-using DKS_API.Services.Implement;
 using DKS_API.Services.Interface;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Mvc.Filters;
+
 
 namespace DKS_API.Controllers
 {
@@ -507,9 +504,12 @@ namespace DKS_API.Controllers
             nastFileName.RemoveAt(nastFileName.Count - 2);
             var loginUser = nastFileName[nastFileName.Count - 1];
             nastFileName.RemoveAt(nastFileName.Count - 1);
+
             var pathList = _fileService.GetLocalPath("F340PpdPic", nastFileName);
 
-            var result = System.IO.File.ReadAllBytes(pathList[1]);
+            //var result = System.IO.File.ReadAllBytes(pathList[1]);
+            var result =  _fileService.AddWatermarkPdf(pathList[1],loginUser);
+
             return File(result, "application/pdf");//"image/jpeg"  "application/pdf"
         }
         [HttpGet("rejectF340Process")]

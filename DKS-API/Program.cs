@@ -27,6 +27,11 @@ namespace DFPS.API
                 string filePath = rootdir + "\\Resources\\" + "Aspose.Total.lic";
                 FileStream fileStream = new FileStream(filePath, FileMode.Open);
                 cellLicense.SetLicense(fileStream);
+                fileStream.Close();
+                Aspose.Pdf.License pdfLicense = new Aspose.Pdf.License();
+                FileStream fileStreampdf = new FileStream(filePath, FileMode.Open);
+                pdfLicense.SetLicense(fileStreampdf);
+                fileStreampdf.Close();
                 //Initialize Logger
                 Log.Logger = new LoggerConfiguration()
                     .ReadFrom.Configuration(config)

@@ -179,6 +179,7 @@ export class F340PpdComponent implements OnInit {
     formData.append("partName",model.partName);
     formData.append("article",model.article);
     formData.append("devSeason",model.devSeason);
+    formData.append("loginUser", this.sF340PpdSchedule.loginUser);
     this.utility.spinner.show();
     this.dksService.editPdfF340Ppd(formData).subscribe(
       (res) => {
@@ -234,6 +235,7 @@ export class F340PpdComponent implements OnInit {
     formData.append("article",model.article);
     formData.append("devSeason",model.devSeason);
     formData.append("pdf",model.pdf); 
+    formData.append("loginUser", this.sF340PpdSchedule.loginUser);
     this.utility.alertify.confirm(
       "Sweet Alert",
       "Are you sure to Delete this pdf of article:" + model.article + ", treatment:" + model.treatMent + ", partName:" + model.partName + ".",

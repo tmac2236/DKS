@@ -6,7 +6,9 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Aspose.Cells;
-using DKS_API.Data.Interface;
+using Aspose.Pdf;
+using Aspose.Pdf.Facades;
+using Aspose.Pdf.Text;
 using DKS_API.Services.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -114,6 +116,12 @@ namespace DKS_API.Services.Implement
             byte[] addWaterMask = AddWatermark(stanIsBig, stanName);
             return addWaterMask;
         }
+        public byte[] GetByteArrayByLocalUrlAddWaterMaskPDF(string folderPath, string stanLoveU)
+        {
+            byte[] stanIsBig = File.ReadAllBytes(folderPath);
+            byte[] addWaterMask = AddWatermark(stanIsBig, stanLoveU);
+            return addWaterMask;
+        }
         public byte[] AddWatermark(Byte[] originalByte, string stanName)
         {
             byte[] convertedToBytes;
@@ -121,16 +129,16 @@ namespace DKS_API.Services.Implement
             {
                 using (MemoryStream originalImageMemoryStream = new MemoryStream(originalByte))
                 {
-                    using (Image image = Image.FromStream(originalImageMemoryStream))
+                    using (System.Drawing.Image image = System.Drawing.Image.FromStream(originalImageMemoryStream))
                     {
-                        int stanSize = (image.Height * image.Width)/37400;
-                        System.Drawing.Font font = new System.Drawing.Font("Arial", stanSize, FontStyle.Italic, GraphicsUnit.Pixel);
-                        Color color = Color.DarkGray;
-                        Point point = new Point(image.Width / 10 * 1, (image.Height / 10 * 3));
-                        Point point1 = new Point(image.Width / 10 * 1, (image.Height / 10 * 6));
-                        Point point2 = new Point(image.Width / 10 * 1, (image.Height / 10 * 9));
-                        Point point3 = new Point(image.Width / 10 * 1, (image.Height / 10 * 12));
-                        Point point4 = new Point(image.Width / 10 * 1, (image.Height / 10 * 15));
+                        int stanSize = (image.Height * image.Width) / 37400;
+                        System.Drawing.Font font = new System.Drawing.Font("Arial", stanSize, System.Drawing.FontStyle.Italic, GraphicsUnit.Pixel);
+                        System.Drawing.Color color = System.Drawing.Color.DarkGray;
+                        System.Drawing.Point point = new System.Drawing.Point(image.Width / 10 * 1, (image.Height / 10 * 3));
+                        System.Drawing.Point point1 = new System.Drawing.Point(image.Width / 10 * 1, (image.Height / 10 * 6));
+                        System.Drawing.Point point2 = new System.Drawing.Point(image.Width / 10 * 1, (image.Height / 10 * 9));
+                        System.Drawing.Point point3 = new System.Drawing.Point(image.Width / 10 * 1, (image.Height / 10 * 12));
+                        System.Drawing.Point point4 = new System.Drawing.Point(image.Width / 10 * 1, (image.Height / 10 * 15));
                         SolidBrush brush = new SolidBrush(color);
                         using (Graphics graphics = Graphics.FromImage(image))
                         {
@@ -163,22 +171,64 @@ namespace DKS_API.Services.Implement
 
             return convertedToBytes;
         }
-        public byte[] AddPdfWatermark(Byte[] originalByte, string stanName)
+        public byte[] AddWatermarkPdf(string filePath, string stanName)
         {
-            byte[] convertedToBytes = null;
+            byte[] convertedToBytes;
+            // Open document
+            Document pdfDocument = new Document(filePath);
+            var blankStr = "                 ";
+            var textStr1 = String.Format("{0}{1}{2}{3}{4}{5}{6}", stanName, blankStr, stanName, blankStr, stanName, blankStr, stanName);
+            var textStr2 = String.Format("{0}{1}{2}{3}{4}{5}{6}", blankStr, stanName, blankStr, stanName, blankStr, stanName, blankStr);
 
+            // Add stamp to each page of PDF
+            //foreach (Page page in pdfDocument.Pages)
+            for (int i = 1; i <= pdfDocument.Pages.Count; i++)
+            {
+                for (int j = 1; j <= 5; j++)
+                {
+                    // Create text stamp
+                    TextStamp textStamp;
+                    if (j % 2 == 0)
+                    {
+                        textStamp = new TextStamp(textStr2);
+                    }
+                    else
+                    {
+                        textStamp = new TextStamp(textStr1);
+                    }
+                    // Set origin
+                    textStamp.XIndent = 10;
+                    textStamp.YIndent = (j * 10) + 20 ;
+
+                    // Set text properties
+                    textStamp.TextState.Font = FontRepository.FindFont("Arial");
+                    textStamp.TextState.FontSize = 30.0F;
+                    textStamp.TextState.FontStyle = FontStyles.Italic;
+                    textStamp.TextState.ForegroundColor = Aspose.Pdf.Color.FromRgb(System.Drawing.Color.Gray);
+                    textStamp.Opacity = 50;
+
+                    pdfDocument.Pages[i].AddStamp(textStamp);
+                }
+
+            }
+
+            using (MemoryStream updatedImageMemorySteam = new MemoryStream())
+            {
+                pdfDocument.Save(updatedImageMemorySteam, Aspose.Pdf.SaveFormat.Pdf);
+                convertedToBytes = updatedImageMemorySteam.ToArray();
+            }
             return convertedToBytes;
         }
         public byte[] ReduceImageSize(byte[] stanIsLong)
         {
             var jpegQuality = 50; //0~100
-            Image image;
+            System.Drawing.Image image;
             Byte[] outputBytes;
             try
             {
                 using (var inputStream = new MemoryStream(stanIsLong))
                 {
-                    image = Image.FromStream(inputStream);
+                    image = System.Drawing.Image.FromStream(inputStream);
                     var jpegEncoder = ImageCodecInfo.GetImageDecoders()
                       .First(c => c.FormatID == ImageFormat.Jpeg.Guid);
                     var encoderParameters = new EncoderParameters(1);
