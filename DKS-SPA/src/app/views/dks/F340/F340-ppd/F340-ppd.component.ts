@@ -29,7 +29,7 @@ export class F340PpdComponent implements OnInit {
   bpVerList: string[];
   memoBtn = true;
   uiControls:any = {
-    uploadPicF340Ppd: utilityConfig.RoleSysAdm,
+    uploadPicF340Ppd: utilityConfig.RolePpdPic,
     editMemo: utilityConfig.RoleSysAdm
   };
   editModel: F340SchedulePpd = new F340SchedulePpd(); //onlt use in photoCommentModal

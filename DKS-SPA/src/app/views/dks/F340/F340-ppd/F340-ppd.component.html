@@ -392,13 +392,18 @@
                           生管{{ "F340-PPD.mantainPic" | translate }}
                         </th>
                         <th
+                          [hidden]="
+                            !this.sF340PpdSchedule.role.includes(
+                              uiControls.editMemo
+                            )
+                          "
                           style="background-color: #23d954"
                           tooltip="生管人員維護"
                           placement="bottom"
                         >
                           PPD Remark
                         </th>
-<!---->
+                        <!---->
                         <th
                           style="background-color: #23d954"
                           placement="開發人員維護"
@@ -416,14 +421,14 @@
                           placement="right"
                         >
                           PDF{{ "F340-PPD.mantainPic" | translate }}
-                        </th>                      
-<!---->
+                        </th>
+                        <!---->
                         <th
-                            style="background-color: #23d954"
-                            placement="開發人員維護"
-                            >
-                            Shoe{{ "F340-PPD.picture" | translate }}
-                        </th>                                                 
+                          style="background-color: #23d954"
+                          placement="開發人員維護"
+                        >
+                          Shoe{{ "F340-PPD.picture" | translate }}
+                        </th>
                         <th
                           [hidden]="
                             !this.sF340PpdSchedule.role.includes(
@@ -488,11 +493,13 @@
                           <td>{{ item.treatMent }}</td>
 
                           <td>{{ item.partName }}</td>
-                          <td [hidden]="
+                          <td
+                            [hidden]="
                               !this.sF340PpdSchedule.role.includes(
                                 uiControls.editMemo
                               )
-                            ">
+                            "
+                          >
                             <img
                               class="mt-2"
                               src="../assets/systemImg/edit.png"
@@ -501,8 +508,13 @@
                               (click)="editPpdRemark(item)"
                             />
                           </td>
-                          <td>{{ item.ppdRemark }}</td>
-<!-- -->
+                          <td
+                          [hidden]="
+                          !this.sF340PpdSchedule.role.includes(
+                            uiControls.editMemo
+                          )
+                        ">{{ item.ppdRemark }}</td>
+                          <!-- -->
                           <td>
                             <img
                               src="../assets/systemImg/download-pdf.png"
@@ -515,94 +527,102 @@
                               (click)="viewPDF(item)"
                             />
                           </td>
-                          <td [hidden]="
-                            !this.sF340PpdSchedule.role.includes(
-                              uiControls.uploadPicF340Ppd)">
-                              <label
-                                [style.visibility]="
-                                  item.isDisplay == 0 ? 'hidden' : 'visible'
-                                "
-                                class="btn btn-success mt-2"
-                                for="fileUploadPdf{{ i }}"
-                                tooltip = {{this.hintMsg.uploadPdf}}
-                                placement = "right"
-                                >+</label
-                              >
-                              <input
-                                id="fileUploadPdf{{ i }}"
-                                type="file"
-                                style="display: none"
-                                accept=".pdf"
-                                (click)="this.utility.reset($event)"
-                                (change)="
-                                  uploadPdfF340Ppd($event.target.files, item)
-                                "
-                              />
-                              <img
-                                [style.visibility]="
-                                  item.pdf.length < 1 ? 'hidden' : 'visible'
-                                "
-                                src="../assets/systemImg/delete.png"
-                                width="35"
-                                height="35"
-                                (click)="removePdfF340Ppd(item)"
-                              />
-                          </td>   
-<!---->
-                            <td>
-                              <img
-                                src="../assets/systemImg/visible.png"
-                                class="mt-2"
-                                width="35"
-                                height="35"
-                                [style.visibility]="
-                                  item.photo.length < 1 ? 'hidden' : 'visible'
-                                "
-                                (click)="viewPic(item)"
-                              />
-                            </td>
-                            <td [hidden]="
-                            !this.sF340PpdSchedule.role.includes(
-                              uiControls.uploadPicF340Ppd)">
-                              <label
-                                [style.visibility]="
-                                  item.isDisplay == 0 ? 'hidden' : 'visible'
-                                "
-                                class="btn btn-success mt-2"
-                                for="fileUpload{{ i }}"
-                                tooltip = {{this.hintMsg.uploadPic}}
-                                placement ="right"
-                                >+</label
-                              >
-                              <input
-                                id="fileUpload{{ i }}"
-                                type="file"
-                                style="display: none"
-                                accept=".jpg"
-                                (click)="this.utility.reset($event)"
-                                (change)="
-                                  uploadPicF340Ppd($event.target.files, item)
-                                "
-                              />
-                              <img
-                                [style.visibility]="
-                                  item.photo.length < 1 ? 'hidden' : 'visible'
-                                "
-                                src="../assets/systemImg/delete.png"
-                                width="35"
-                                height="35"
-                                (click)="removePicF340Ppd(item)"
-                              />
-                              <img
-                                [style.visibility]="
-                                  item.isDisplay == 0 ? 'hidden' : 'visible'
-                                "
-                                src="../assets/systemImg/edit.png"
-                                width="35"
-                                height="35"
-                                (click)="editPhotoComment(item)"
-                              />
-                            </td>
+                          <td
+                            [hidden]="
+                              !this.sF340PpdSchedule.role.includes(
+                                uiControls.uploadPicF340Ppd
+                              )
+                            "
+                          >
+                            <label
+                              [style.visibility]="
+                                item.isDisplay == 0 ? 'hidden' : 'visible'
+                              "
+                              class="btn btn-success mt-2"
+                              for="fileUploadPdf{{ i }}"
+                              tooltip="{{ this.hintMsg.uploadPdf }}"
+                              placement="right"
+                              >+</label
+                            >
+                            <input
+                              id="fileUploadPdf{{ i }}"
+                              type="file"
+                              style="display: none"
+                              accept=".pdf"
+                              (click)="this.utility.reset($event)"
+                              (change)="
+                                uploadPdfF340Ppd($event.target.files, item)
+                              "
+                            />
+                            <img
+                              [style.visibility]="
+                                item.pdf.length < 1 ? 'hidden' : 'visible'
+                              "
+                              src="../assets/systemImg/delete.png"
+                              width="35"
+                              height="35"
+                              (click)="removePdfF340Ppd(item)"
+                            />
+                          </td>
+                          <!---->
+                          <td>
+                            <img
+                              src="../assets/systemImg/visible.png"
+                              class="mt-2"
+                              width="35"
+                              height="35"
+                              [style.visibility]="
+                                item.photo.length < 1 ? 'hidden' : 'visible'
+                              "
+                              (click)="viewPic(item)"
+                            />
+                          </td>
+                          <td
+                            [hidden]="
+                              !this.sF340PpdSchedule.role.includes(
+                                uiControls.uploadPicF340Ppd
+                              )
+                            "
+                          >
+                            <label
+                              [style.visibility]="
+                                item.isDisplay == 0 ? 'hidden' : 'visible'
+                              "
+                              class="btn btn-success mt-2"
+                              for="fileUpload{{ i }}"
+                              tooltip="{{ this.hintMsg.uploadPic }}"
+                              placement="right"
+                              >+</label
+                            >
+                            <input
+                              id="fileUpload{{ i }}"
+                              type="file"
+                              style="display: none"
+                              accept=".jpg"
+                              (click)="this.utility.reset($event)"
+                              (change)="
+                                uploadPicF340Ppd($event.target.files, item)
+                              "
+                            />
+                            <img
+                              [style.visibility]="
+                                item.photo.length < 1 ? 'hidden' : 'visible'
+                              "
+                              src="../assets/systemImg/delete.png"
+                              width="35"
+                              height="35"
+                              (click)="removePicF340Ppd(item)"
+                            />
+                            <img
+                              [style.visibility]="
+                                item.isDisplay == 0 ? 'hidden' : 'visible'
+                              "
+                              src="../assets/systemImg/edit.png"
+                              width="35"
+                              height="35"
+                              (click)="editPhotoComment(item)"
+                            />
+                          </td>
                           <td>{{ item.photoComment }}</td>
                         </tr>
                       </ng-container>
@@ -679,37 +699,43 @@
                 rows="2"
                 maxlength="300"
                 [hidden]="
-                !this.sF340PpdSchedule.role.includes(
-                  uiControls.uploadPicF340Ppd
-                )
-              "
+                  !this.sF340PpdSchedule.role.includes(
+                    uiControls.uploadPicF340Ppd
+                  )
+                "
                 [(ngModel)]="editModel.photoComment"
               ></textarea>
               <button
-              type="button"
-              [hidden]="
-              !this.sF340PpdSchedule.role.includes(
-                uiControls.uploadPicF340Ppd
-              )
-            "
-              class="btn btn-primary btn-lg mt-2"
-              (click)="savePhotComment('PhotoComment')"
+                type="button"
+                [hidden]="
+                  !this.sF340PpdSchedule.role.includes(
+                    uiControls.uploadPicF340Ppd
+                  )
+                "
+                class="btn btn-primary btn-lg mt-2"
+                (click)="savePhotComment('PhotoComment')"
               >
-              {{ "Common.btnList.save" | translate }}
-            </button>
-            <button
-              type="button"
-              class="btn btn-secondary btn-lg mt-2"
-              (click)="closeModal('PhotoComment')"
-            >
-              {{ "Common.btnList.close" | translate }}
-            </button>
+                {{ "Common.btnList.save" | translate }}
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary btn-lg mt-2"
+                (click)="closeModal('PhotoComment')"
+              >
+                {{ "Common.btnList.close" | translate }}
+              </button>
             </div>
           </div>
         </div>
       </div>
       <div [hidden]="editModel.photo === ''" class="modal-footer">
-        <img src="../assets/F340PpdPic/{{editModel.devSeason}}/{{editModel.article}}/{{editModel.photo}}" width="1000" height="800" />
+        <img
+          src="../assets/F340PpdPic/{{ editModel.devSeason }}/{{
+            editModel.article
+          }}/{{ editModel.photo }}"
+          width="1000"
+          height="800"
+        />
       </div>
     </div>
   </div>
