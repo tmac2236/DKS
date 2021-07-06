@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
-import { EngF340Component } from "./eng-F340/eng-F340.component";
+import { EngAuthorizeComponent } from "./eng-authorize/eng-authorize.component";
 import { EngComponent } from "./eng/eng.component";
 
 const routes: Routes = [
@@ -22,10 +22,10 @@ const routes: Routes = [
         },
       },      
       {
-        path: 'engF340',
-        component: EngF340Component,
+        path: 'eng-authorize',
+        component: EngAuthorizeComponent,
         data: {
-          title: 'Eng-F340',
+          title: 'Eng-Authorize',
         },
       },
     ],

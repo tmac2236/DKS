@@ -251,13 +251,6 @@ namespace DKS_API.Controllers
                 var file = HttpContext.Request.Form.Files[0];
                 if (await _fileService.SaveFiletoServer(file, "F340PpdPic", nastFileName))
                 {
-                    /*  //add WaterMask
-                    var pathList = _fileService.GetLocalPath("F340PpdPic", nastFileName);
-                    int size = _devSysSetDAO.FindSingle(x => x.SYSKEY == "copyRightSize").SYSVAL.ToInt();
-                    string copyrightStr = _devSysSetDAO.FindSingle(x => x.SYSKEY == "copyRightStr").SYSVAL;
-                    var result = _fileService.GetByteArrayByLocalUrlAddWaterMask(pathList[1], size, copyrightStr);
-                    System.IO.File.WriteAllBytes(pathList[1], result.ToArray());
-                    */
                     model.PHOTO = fileName;
                     _devTreatmentDAO.Update(model);
 

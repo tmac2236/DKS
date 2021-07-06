@@ -8,10 +8,10 @@ import { ReactiveFormsModule,FormsModule } from '@angular/forms';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { EngineerRoutingModule } from './engineer-routing.module';
-import { EngF340Component } from './eng-F340/eng-F340.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { EngComponent } from './eng/eng.component';
+import { EngAuthorizeComponent } from './eng-authorize/eng-authorize.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -23,6 +23,6 @@ import { EngComponent } from './eng/eng.component';
     PaginationModule,    
     EngineerRoutingModule,
   ],
-  declarations: [EngF340Component,EngComponent],
+  declarations: [EngAuthorizeComponent,EngComponent],
 })
 export class EngineerModule {}

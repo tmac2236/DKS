@@ -33,8 +33,8 @@ export class NavItem {
       class: 'menu-margin',
     };
     const navEngineer_F340 = {
-      name: '10.2 Eng-F340',
-      url: '/engineer/engF340',
+      name: '10.2 Eng-Authorize',
+      url: '/engineer/eng-authorize',
       class: 'menu-margin',
     };
     //children -> father
