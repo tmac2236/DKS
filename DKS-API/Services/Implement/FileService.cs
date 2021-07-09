@@ -176,15 +176,15 @@ namespace DKS_API.Services.Implement
             byte[] convertedToBytes;
             // Open document
             Document pdfDocument = new Document(filePath);
-            var blankStr = "                 ";
-            var textStr1 = String.Format("{0}{1}{2}{3}{4}{5}{6}", stanName, blankStr, stanName, blankStr, stanName, blankStr, stanName);
-            var textStr2 = String.Format("{0}{1}{2}{3}{4}{5}{6}", blankStr, stanName, blankStr, stanName, blankStr, stanName, blankStr);
+            var blankStr = "          ";
+            var textStr1 = String.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}", stanName, blankStr, stanName, blankStr, stanName, blankStr, stanName, blankStr, stanName, blankStr, stanName);
+            var textStr2 = String.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}", blankStr, stanName, blankStr, stanName, blankStr, stanName, blankStr, stanName, blankStr, stanName, blankStr);
 
             // Add stamp to each page of PDF
             //foreach (Page page in pdfDocument.Pages)
             for (int i = 1; i <= pdfDocument.Pages.Count; i++)
             {
-                for (int j = 1; j <= 5; j++)
+                for (int j = 1; j <= 15; j++)
                 {
                     // Create text stamp
                     TextStamp textStamp;
@@ -198,7 +198,7 @@ namespace DKS_API.Services.Implement
                     }
                     // Set origin
                     textStamp.XIndent = 10;
-                    textStamp.YIndent = (j * 10) + 20 ;
+                    textStamp.YIndent = (j * 100) - 500;
 
                     // Set text properties
                     textStamp.TextState.Font = FontRepository.FindFont("Arial");
@@ -206,7 +206,7 @@ namespace DKS_API.Services.Implement
                     textStamp.TextState.FontStyle = FontStyles.Italic;
                     textStamp.TextState.ForegroundColor = Aspose.Pdf.Color.FromRgb(System.Drawing.Color.Gray);
                     textStamp.Opacity = 50;
-
+                    textStamp.RotateAngle = 45;
                     pdfDocument.Pages[i].AddStamp(textStamp);
                 }
 

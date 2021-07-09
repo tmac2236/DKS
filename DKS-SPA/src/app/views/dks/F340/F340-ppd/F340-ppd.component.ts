@@ -27,10 +27,12 @@ export class F340PpdComponent implements OnInit {
   sF340PpdSchedule: SF340PpdSchedule = new SF340PpdSchedule();
   result: F340SchedulePpd[] = [];
   bpVerList: string[];
-  memoBtn = true;
+  //memoBtn = true;
   uiControls:any = {
     uploadPicF340Ppd: utilityConfig.RolePpdPic,
-    editMemo: utilityConfig.RoleSysAdm
+    uploadPdfF340Ppd: utilityConfig.RolePpdPic,
+    editMemo: utilityConfig.RoleSysAdm,
+    sendMemoMail: utilityConfig.RoleSysAdm,
   };
   editModel: F340SchedulePpd = new F340SchedulePpd(); //onlt use in photoCommentModal
 
@@ -271,6 +273,7 @@ export class F340PpdComponent implements OnInit {
     const url = this.utility.baseUrl + "dks/exportF340_ProcessPpd_pdf";
     this.utility.exportPdfFactory(url, model.pdf, model);
   }
+  /*
   editMemo(){
     this.memoBtn = !this.memoBtn;
   }
@@ -291,6 +294,7 @@ export class F340PpdComponent implements OnInit {
       }
     );
   }
+  */
   openModal(type:string){
     if(type == "PhotoComment") this.photoCommentModal.show();
     if(type == "PpdRemark") this.ppdRemarkModal.show();
