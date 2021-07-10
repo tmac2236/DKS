@@ -500,8 +500,8 @@ namespace DKS_API.Controllers
 
             var pathList = _fileService.GetLocalPath("F340PpdPic", nastFileName);
 
-            //var result = System.IO.File.ReadAllBytes(pathList[1]);
-            var result =  _fileService.AddWatermarkPdf(pathList[1],loginUser);
+            var result = System.IO.File.ReadAllBytes(pathList[1]);
+            //var result =  _fileService.AddWatermarkPdf(pathList[1],loginUser);
 
             return File(result, "application/pdf");//"image/jpeg"  "application/pdf"
         }

@@ -9,17 +9,21 @@ using DKS.API.Models.DKS;
 using DKS_API.Data.Interface;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
+using DKS_API.Services.Interface;
+using DKS_API.Helpers;
 
 namespace DKS_API.Controllers
 {
     public class PictureController : ApiController
     {
         private readonly IDKSDAO _dksDao;
+        private readonly IFileService _fileService;
 
-        public PictureController(IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<PictureController> logger, IDKSDAO dksDao)
-                : base(config, webHostEnvironment,logger)
+        public PictureController(IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<PictureController> logger, IDKSDAO dksDao, IFileService fileService)
+                : base(config, webHostEnvironment, logger)
         {
             _dksDao = dksDao;
+            _fileService = fileService;
         }
 
         [HttpPost("deletePicByArticle")]
@@ -27,35 +31,35 @@ namespace DKS_API.Controllers
         {
             _logger.LogInformation(String.Format(@"****** PictureController DeletePicByArticle fired!! ******"));
 
-                string rootdir = Directory.GetCurrentDirectory();
-                var localStr = _config.GetSection("AppSettings:ArticleUrl").Value;
-                var pathToSave = rootdir + localStr + source.Article;
-                pathToSave = pathToSave.Replace("DKS-API", "DKS-SPA");
+            string rootdir = Directory.GetCurrentDirectory();
+            var localStr = _config.GetSection("AppSettings:ArticleUrl").Value;
+            var pathToSave = rootdir + localStr + source.Article;
+            pathToSave = pathToSave.Replace("DKS-API", "DKS-SPA");
 
-                var fileName = source.Article + "_" + source.No + ".jpg";
-                //新增檔名的全路徑
-                var fullPath = Path.Combine(pathToSave, fileName);
-                bool isExist = System.IO.File.Exists(fullPath);
-                if (isExist)
+            var fileName = source.Article + "_" + source.No + ".jpg";
+            //新增檔名的全路徑
+            var fullPath = Path.Combine(pathToSave, fileName);
+            bool isExist = System.IO.File.Exists(fullPath);
+            if (isExist)
+            {
+                string birdUrl = rootdir + "\\Resources\\article_null.jpg"; //讀取API的那張鳥圖
+
+                using (var stream = new FileStream(fullPath, FileMode.Create))
                 {
-                    string birdUrl = rootdir + "\\Resources\\article_null.jpg"; //讀取API的那張鳥圖
-
-                    using (var stream = new FileStream(fullPath, FileMode.Create))
-                    {
-                        var fileStream = System.IO.File.OpenRead(birdUrl);
-                        fileStream.CopyTo(stream);
-                        fileStream.Close();
-                    }
-                    var staff = _dksDao.SearchStaffByLOGIN(source.User);
-                    UserLog userlog = new UserLog();
-                    userlog.PROGNAME = "F205";
-                    userlog.LOGINNAME = staff.Result.LOGIN;
-                    userlog.HISTORY = "Delete Picture " + fileName;
-                    userlog.UPDATETIME = DateTime.Now;
-                    _dksDao.AddUserLogAsync(userlog);
-
+                    var fileStream = System.IO.File.OpenRead(birdUrl);
+                    fileStream.CopyTo(stream);
+                    fileStream.Close();
                 }
-                return Ok();
+                var staff = _dksDao.SearchStaffByLOGIN(source.User);
+                UserLog userlog = new UserLog();
+                userlog.PROGNAME = "F205";
+                userlog.LOGINNAME = staff.Result.LOGIN;
+                userlog.HISTORY = "Delete Picture " + fileName;
+                userlog.UPDATETIME = DateTime.Now;
+                _dksDao.AddUserLogAsync(userlog);
+
+            }
+            return Ok();
         }
         [HttpPost("uploadPicByArticle")]
         public IActionResult UploadPicByArticle([FromForm] ArticlePic source)
@@ -124,7 +128,55 @@ namespace DKS_API.Controllers
             byte[] result = ImageToByteArray(combined);
             return File(result, "image/jpeg");
         }
+        [HttpPost("uploadDtrQcPic")]
+        public async Task<IActionResult> UploadDtrQcPic()
+        {
+            _logger.LogInformation(String.Format(@"****** PictureController UploadDtrQcPic fired!! ******"));
 
+            var devSeason = HttpContext.Request.Form["devSeason"].ToString().Trim();
+            var article = HttpContext.Request.Form["article"].ToString().Trim();
+            var fileName = HttpContext.Request.Form["pdf"].ToString().Trim();
+            //var loginUser = HttpContext.Request.Form["loginUser"].ToString().Trim();
+
+            DateTime nowtime = DateTime.Now;
+            var updateTimeStr = nowtime.ToString("yyyy-MM-dd HH:mm:ss");
+            DateTime updateTime = updateTimeStr.ToDateTime();
+
+
+            if (fileName == "") //using in adding
+            {
+                //fileName + yyyy_MM_dd_HH_mm_ss_
+                var formateDate = nowtime.ToString("yyyyMMddHHmmss");
+                fileName = string.Format("{0}_{1}.jpg", article, formateDate);
+            }
+
+            List<string> nastFileName = new List<string>();
+            nastFileName.Add("QCTestResult");
+            nastFileName.Add(devSeason);
+            nastFileName.Add(article);
+            nastFileName.Add(fileName);
+
+
+            if (HttpContext.Request.Form.Files.Count > 0)
+            {
+                var file = HttpContext.Request.Form.Files[0];
+                if (await _fileService.SaveFiletoServer(file, "F340PpdPic", nastFileName))
+                {
+                    _logger.LogInformation(String.Format(@"******DKSController EditPicF340Ppd Add a Picture: {0}!! ******", fileName));
+                }
+            }
+            else
+            {   //do CRUD-D here.
+
+                if (await _fileService.SaveFiletoServer(null, "F340PpdPic", nastFileName))
+                {
+                    _logger.LogInformation(String.Format(@"******DKSController EditPicF340Ppd Delete a Picture: {0}!! ******", fileName));
+                }
+            }
+
+            return Ok();
+
+        }
         private Image HorizontalMergeImages(Image img1, Image img2)
         {
             _logger.LogInformation(String.Format(@"****** PictureController HorizontalMergeImages fired!! ******"));
