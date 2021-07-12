@@ -7,6 +7,7 @@ import { utilityConfig } from "./core/utility/utility-config";
 import { AuthGuard } from "./core/_guards/auth.guard";
 import { AuthGuardRole } from "./core/_guards/auth.guard-role";
 import { DictionaryComponent } from "./views/dictionary/dictionary.component";
+import { DtrQcComponentComponent } from "./views/dks/dtr-qc-component/dtr-qc-component.component";
 import { F340PpdComponent } from "./views/dks/F340/F340-ppd/F340-ppd.component";
 import { F340Component } from "./views/dks/F340/F340.component";
 import { F428EditComponent } from "./views/dks/F428/F428-edit/F428-edit.component";
@@ -51,7 +52,7 @@ export const routes: Routes = [
     canActivate: [AuthGuardRole],
     component: F340PpdComponent,
     data: {
-      roles: [utilityConfig.RolePpdPic,utilityConfig.RolePpdLook],
+      roles: [utilityConfig.RolePpdPic, utilityConfig.RolePpdLook],
     },
   },
   {
@@ -69,6 +70,10 @@ export const routes: Routes = [
     component: DictionaryComponent,
   },
   {
+    path: "DTR-QC",
+    component: DtrQcComponentComponent,
+  },
+  {
     path: "",
     component: DefaultLayoutComponent,
     data: {
@@ -84,10 +89,12 @@ export const routes: Routes = [
         path: "engineer",
         canActivate: [AuthGuardRole],
         loadChildren: () =>
-          import("./views/engineer/engineer.module").then((m) => m.EngineerModule),
-          data: {
-            roles: [utilityConfig.RoleSysAdm],
-          }
+          import("./views/engineer/engineer.module").then(
+            (m) => m.EngineerModule
+          ),
+        data: {
+          roles: [utilityConfig.RoleSysAdm],
+        },
       },
     ],
   },
@@ -99,7 +106,7 @@ export const routes: Routes = [
   exports: [RouterModule],
 })
 export class AppRoutingModule {
-  constructor(){
+  constructor() {
     //alert("CCC");
   }
 }

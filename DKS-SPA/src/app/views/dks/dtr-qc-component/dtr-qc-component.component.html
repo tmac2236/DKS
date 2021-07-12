@@ -1,0 +1,103 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-3">
+              <strong>DTC-QC Report</strong>
+            </div>
+            <div class="col-9">
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table text-center text-nowrap table-striped">
+              <!--text-nowrap不換行-->
+              <!--套版分頁<table datatable id="f340Sche" class="table text-center table-striped">-->
+              <thead>
+                <tr class="table-info">
+                  <!---->
+                  <th style="background-color: #23d954">
+                    Article
+                  </th>
+                  <th style="background-color: #23d954">
+                    Stage
+                  </th>
+                  <th style="background-color: #23d954">
+                    Kind
+                  </th>
+                  <th style="background-color: #23d954">
+                    Version No
+                  </th>
+                  <th style="background-color: #23d954">
+                    QC {{ "F340-PPD.picture" | translate }}
+                  </th>
+                  <th style="background-color: #23d954">
+                    QC {{ "F340-PPD.mantainPic" | translate }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ this.model.article }}</td>
+                  <td>{{ this.model.stage }}</td>
+                  <td>{{ this.model.kind }}</td>
+                  <td>{{ this.model.vern }}</td>
+                  <td>
+                    <img
+                      src="../assets/systemImg/visible.png"
+                      class="mt-2"
+                      width="35"
+                      height="35"
+                      [style.visibility]="
+                        this.model.fileName.length < 1 ? 'hidden' : 'visible'
+                      "
+                      (click)="viewPdf(this.model)"
+                    />
+                  </td>
+                  <td [hidden]="false">
+                    <label
+                      class="btn btn-success mt-2"
+                      for="fileUpload{{ this.model.article }}"
+                      tooltip="{{ this.hintMsg.uploadPic }}"
+                      placement="right"
+                      >+</label
+                    >
+                    <input
+                      id="fileUpload{{ this.model.article }}"
+                      type="file"
+                      style="display: none"
+                      accept=".pdf"
+                      (click)="this.utility.reset($event)"
+                      (change)="uploadPdfDtrQc($event.target.files, this.model)"
+                    />
+                    <img
+                      [style.visibility]="
+                        this.model.fileName.length < 1 ? 'hidden' : 'visible'
+                      "
+                      src="../assets/systemImg/delete.png"
+                      width="35"
+                      height="35"
+                      (click)="removePdfDtrQc(this.model)"
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ngx-spinner
+  bdColor="rgba(0, 0, 0, 0.8)"
+  size="large"
+  color="#fff"
+  type="square-jelly-box"
+  [fullScreen]="true"
+  ><p style="color: white">Loading DTR-QC ...</p></ngx-spinner
+>

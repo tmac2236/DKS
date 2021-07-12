@@ -23,6 +23,8 @@ namespace DKS_API.Data.Repository
         public DbSet<DevTreatmentFile> DEV_TREATMENT_FILE { get; set; }
         public DbSet<DevSysSet> DEV_SYSSET { get; set; }
         public DbSet<ArticledLdtm> ARTICLED_LDTM { get; set; }
+        public DbSet<DevDtrFgt> DTR_FGT { get; set; }
+
         //DTO(Stored Procedure)
         public DbSet<F418_F420Dto> GetF420F418View { get; set; }
         public DbSet<F340_ProcessDto> GetF340ProcessView { get; set; }
@@ -50,7 +52,7 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<DevTreatmentFile>().HasKey(x => new { x.ARTICLE, x.PARTNO, x.TREATMENTCODE, x.UPTIME });
             modelBuilder.Entity<DevSysSet>().HasKey(x => new { x.SYSKEY });
             modelBuilder.Entity<ArticledLdtm>().HasKey(x => new { x.PKARTBID });
-
+            modelBuilder.Entity<DevDtrFgt>().HasKey(x => new { x.ARTICLE,x.STAGE,x.KIND,x.VERN });
 
             //DTO(Stored Procedure)
             modelBuilder.Entity<F418_F420Dto>()

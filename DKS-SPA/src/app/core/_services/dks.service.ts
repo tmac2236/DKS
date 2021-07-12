@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import { map, timeout } from "rxjs/operators";
 import { Utility } from "../utility/utility";
 import { utilityConfig } from "../utility/utility-config";
+import { DtrFgt } from "../_models/dtr-fgt";
 import { F340SchedulePpd } from "../_models/f340-schedule-ppd";
 import { F340Schedule } from "../_models/f340-schedule.ts";
 import { PaginatedResult } from "../_models/pagination";
@@ -183,6 +184,13 @@ export class DksService {
     return this.utility.http.post(
       this.utility.baseUrl + "dks/sentMailF340PpdByArticle",
       sF340PpdSchedule
+    );
+  }
+  editDtrQc(formData: FormData) {
+    console.log("dtr.service editDtrQc:", formData);
+    return this.utility.http.post<DtrFgt>(
+      this.utility.baseUrl + "dtr/editDtrQc",
+      formData
     );
   }
 }

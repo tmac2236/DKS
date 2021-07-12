@@ -129,10 +129,10 @@ namespace DKS_API.Controllers
             return File(result, "image/jpeg");
         }
         [HttpPost("uploadDtrQcPic")]
-        public async Task<IActionResult> UploadDtrQcPic()
+        public  IActionResult UploadDtrQcPic([FromBody] byte[] sFileName)
         {
             _logger.LogInformation(String.Format(@"****** PictureController UploadDtrQcPic fired!! ******"));
-
+            /*
             var devSeason = HttpContext.Request.Form["devSeason"].ToString().Trim();
             var article = HttpContext.Request.Form["article"].ToString().Trim();
             var fileName = HttpContext.Request.Form["pdf"].ToString().Trim();
@@ -173,7 +173,7 @@ namespace DKS_API.Controllers
                     _logger.LogInformation(String.Format(@"******DKSController EditPicF340Ppd Delete a Picture: {0}!! ******", fileName));
                 }
             }
-
+            */
             return Ok();
 
         }
