@@ -31,6 +31,7 @@ export class DtrQcComponentComponent implements OnInit {
           this.model.stage = params.stage;
           this.model.kind = params.kind;
           this.model.vern = params.vern;
+          this.model.fileName = params.fileName;
   });}
 
   ngOnInit() {
@@ -57,13 +58,12 @@ export class DtrQcComponentComponent implements OnInit {
     formData.append("stage", model.stage);
     formData.append("kind", model.kind);
     formData.append("vern", model.vern.toString());
-
     this.utility.spinner.show();
     this.dksService.editDtrQc(formData).subscribe(
       (res) => {
         this.utility.spinner.hide();
         //找到該筆model 把資料回填
-        model.fileName = res.fileName;
+        model.fileName =  model.article +  "_" + model.stage + "_" + model.kind + "_"+ model.vern + ".pdf"
       },
       (error) => {
         this.utility.spinner.hide();
@@ -108,7 +108,8 @@ export class DtrQcComponentComponent implements OnInit {
     );
   }
   viewPdf(model: DtrFgt) {
-    let url ="";
-    window.open(url);
+    let dataUrl = '../assets/F340PpdPic/QCTestResult/'+ model.article +'/' + model.article +  "_" + model.stage + "_" + model.kind + "_"+ model.vern + ".pdf";
+    console.log(dataUrl);
+    window.open(dataUrl);
   }
 }

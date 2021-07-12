@@ -11,8 +11,5 @@ export class DtrFgt implements ModelInterface {
   upday: Date;
   fileName: string;
   upusr: string;
-  
-  constructor() {
-    this.fileName = "";
-  }
+
 }

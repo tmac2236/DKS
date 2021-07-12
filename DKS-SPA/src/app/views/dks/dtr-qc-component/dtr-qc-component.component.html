@@ -52,7 +52,7 @@
                       width="35"
                       height="35"
                       [style.visibility]="
-                        this.model.fileName.length < 1 ? 'hidden' : 'visible'
+                       (this.model.fileName == undefined || this.model.fileName == null)  ? 'hidden' : 'visible'
                       "
                       (click)="viewPdf(this.model)"
                     />
@@ -75,7 +75,7 @@
                     />
                     <img
                       [style.visibility]="
-                        this.model.fileName.length < 1 ? 'hidden' : 'visible'
+                        (this.model.fileName == undefined || this.model.fileName == null) ? 'hidden' : 'visible'
                       "
                       src="../assets/systemImg/delete.png"
                       width="35"
