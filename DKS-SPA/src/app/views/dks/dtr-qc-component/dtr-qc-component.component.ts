@@ -97,7 +97,7 @@ export class DtrQcComponentComponent implements OnInit {
           () => {
             this.utility.spinner.hide();
             this.utility.alertify.success("Delete succeed!");
-            model.fileName = ""; // make the url of pdf to blank
+            model.fileName = null; // make the url of pdf to blank
           },
           (error) => {
             this.utility.spinner.hide();

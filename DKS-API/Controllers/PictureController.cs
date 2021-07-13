@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using DKS_API.Services.Interface;
 using DKS_API.Helpers;
+using Microsoft.AspNetCore.Http;
 
 namespace DKS_API.Controllers
 {
@@ -128,53 +129,25 @@ namespace DKS_API.Controllers
             byte[] result = ImageToByteArray(combined);
             return File(result, "image/jpeg");
         }
-        [HttpPost("uploadDtrQcPic")]
-        public  IActionResult UploadDtrQcPic([FromBody] byte[] sFileName)
+        [HttpPost("pdf2word")]
+        public async Task<IActionResult> Pdf2Word()
         {
-            _logger.LogInformation(String.Format(@"****** PictureController UploadDtrQcPic fired!! ******"));
-            /*
-            var devSeason = HttpContext.Request.Form["devSeason"].ToString().Trim();
-            var article = HttpContext.Request.Form["article"].ToString().Trim();
-            var fileName = HttpContext.Request.Form["pdf"].ToString().Trim();
-            //var loginUser = HttpContext.Request.Form["loginUser"].ToString().Trim();
-
-            DateTime nowtime = DateTime.Now;
-            var updateTimeStr = nowtime.ToString("yyyy-MM-dd HH:mm:ss");
-            DateTime updateTime = updateTimeStr.ToDateTime();
-
-
-            if (fileName == "") //using in adding
-            {
-                //fileName + yyyy_MM_dd_HH_mm_ss_
-                var formateDate = nowtime.ToString("yyyyMMddHHmmss");
-                fileName = string.Format("{0}_{1}.jpg", article, formateDate);
-            }
-
-            List<string> nastFileName = new List<string>();
-            nastFileName.Add("QCTestResult");
-            nastFileName.Add(devSeason);
-            nastFileName.Add(article);
-            nastFileName.Add(fileName);
-
+            _logger.LogInformation(String.Format(@"****** PictureController Pdf2Word fired!! ******"));
 
             if (HttpContext.Request.Form.Files.Count > 0)
             {
-                var file = HttpContext.Request.Form.Files[0];
-                if (await _fileService.SaveFiletoServer(file, "F340PpdPic", nastFileName))
+                IFormFile file = HttpContext.Request.Form.Files[0];
+                byte[] pdfByte;
+                using (var ms = new MemoryStream())
                 {
-                    _logger.LogInformation(String.Format(@"******DKSController EditPicF340Ppd Add a Picture: {0}!! ******", fileName));
+                    await file.CopyToAsync(ms);
+                    pdfByte = ms.ToArray();
                 }
+                _fileService.ConvertPDFtoWord(pdfByte);
+                return File(pdfByte, "application/msword");
             }
-            else
-            {   //do CRUD-D here.
 
-                if (await _fileService.SaveFiletoServer(null, "F340PpdPic", nastFileName))
-                {
-                    _logger.LogInformation(String.Format(@"******DKSController EditPicF340Ppd Delete a Picture: {0}!! ******", fileName));
-                }
-            }
-            */
-            return Ok();
+            return NoContent();
 
         }
         private Image HorizontalMergeImages(Image img1, Image img2)

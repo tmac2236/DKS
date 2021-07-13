@@ -255,5 +255,21 @@ namespace DKS_API.Services.Implement
             var num = workbook.Worksheets.Count();
             throw new NotImplementedException();
         }
+        public byte[] ConvertPDFtoWord(byte[] pdfByte)
+        {
+            Byte[] outputBytes;
+            using (var inputStream = new MemoryStream(pdfByte))
+            {
+                // Open the source PDF document
+                Document pdfDocument = new Document(inputStream);
+                // Save the file into MS document format
+                using (var outputStream = new MemoryStream())
+                {
+                    pdfDocument.Save(outputStream, Aspose.Pdf.SaveFormat.Doc);
+                    outputBytes = outputStream.ToArray();
+                }
+            }
+            return outputBytes;
+        }
     }
 }

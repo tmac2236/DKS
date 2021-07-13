@@ -19,6 +19,7 @@ namespace DKS_API.Services.Interface
         byte[] AddWatermark(Byte[] stanIsBig,string stanLoveU);
         byte[] AddWatermarkPdf(string stanIsBig,string stanLoveU);
         Task<string> UploadExcel(string dataUrl);
+        byte[] ConvertPDFtoWord(byte[] pdfByte);
     }
 
 }
