@@ -7,6 +7,7 @@ import { utilityConfig } from "./core/utility/utility-config";
 import { AuthGuard } from "./core/_guards/auth.guard";
 import { AuthGuardRole } from "./core/_guards/auth.guard-role";
 import { DictionaryComponent } from "./views/dictionary/dictionary.component";
+import { DtrFgtResultComponentComponent } from "./views/dks/dtr-fgt-result-component/dtr-fgt-result-component.component";
 import { DtrQcComponentComponent } from "./views/dks/dtr-qc-component/dtr-qc-component.component";
 import { F340PpdComponent } from "./views/dks/F340/F340-ppd/F340-ppd.component";
 import { F340Component } from "./views/dks/F340/F340.component";
@@ -72,6 +73,10 @@ export const routes: Routes = [
   {
     path: "DTR-QC",
     component: DtrQcComponentComponent,
+  },
+  {
+    path: "DTR-FGT-Result",
+    component: DtrFgtResultComponentComponent,
   },
   {
     path: "",

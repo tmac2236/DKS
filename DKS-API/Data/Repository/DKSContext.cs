@@ -24,6 +24,8 @@ namespace DKS_API.Data.Repository
         public DbSet<DevSysSet> DEV_SYSSET { get; set; }
         public DbSet<ArticledLdtm> ARTICLED_LDTM { get; set; }
         public DbSet<DevDtrFgt> DTR_FGT { get; set; }
+        public DbSet<DevDtrFgtResult> DTR_FGT_RESULT { get; set; }
+
 
         //DTO(Stored Procedure)
         public DbSet<F418_F420Dto> GetF420F418View { get; set; }
@@ -33,8 +35,8 @@ namespace DKS_API.Data.Repository
         public DbSet<F340_PpdDto> GetF340PpdView { get; set; }
         public DbSet<UserRoleDto> UserRoleDto { get; set; }
         public DbSet<P206DataByStageArticleDto> GetP206DataByArticle { get; set; }
-
-
+        public DbSet<DevDtrFgtResultDto> GetDevDtrFgtResultDto { get; set; }
+        public DbSet<F340PartNoTreatmemtDto> GetF340PartNoTreatmemtDto { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -52,7 +54,8 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<DevTreatmentFile>().HasKey(x => new { x.ARTICLE, x.PARTNO, x.TREATMENTCODE, x.UPTIME });
             modelBuilder.Entity<DevSysSet>().HasKey(x => new { x.SYSKEY });
             modelBuilder.Entity<ArticledLdtm>().HasKey(x => new { x.PKARTBID });
-            modelBuilder.Entity<DevDtrFgt>().HasKey(x => new { x.ARTICLE,x.STAGE,x.KIND,x.VERN });
+            modelBuilder.Entity<DevDtrFgt>().HasKey(x => new { x.ARTICLE, x.STAGE, x.KIND, x.VERN });
+            modelBuilder.Entity<DevDtrFgtResult>().HasKey(x => new { x.ARTICLE, x.MODELNO, x.MODELNAME, x.LABNO });
 
             //DTO(Stored Procedure)
             modelBuilder.Entity<F418_F420Dto>()
@@ -69,7 +72,11 @@ namespace DKS_API.Data.Repository
             .HasNoKey();
             modelBuilder.Entity<P206DataByStageArticleDto>()
             .HasNoKey();
-
+            modelBuilder.Entity<DevDtrFgtResultDto>()
+            .HasNoKey();
+            modelBuilder.Entity<F340PartNoTreatmemtDto>()
+            .HasNoKey();
+            
         }
     }
 }

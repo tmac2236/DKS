@@ -1,0 +1,246 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-3">
+              <strong>LAB Test Result</strong>
+            </div>
+            <div class="col-9">
+              <div class="float-right">
+                <strong *ngIf="this.sDevDtrFgtResult.loginUser"
+                  >{{ "Common.hello" | translate }}
+                  {{ this.sDevDtrFgtResult.loginUser }}</strong
+                >
+                <img
+                  src="../assets/systemImg/taiwan.png"
+                  tooltip="{{
+                    this.sDevDtrFgtResult.loginUser
+                  }} Prefers Mandarin"
+                  placement="bottom"
+                  width="25"
+                  height="25"
+                  (click)="this.utility.useLanguage('zh')"
+                />
+                <img
+                  src="../assets/systemImg/united-states.png"
+                  tooltip="{{
+                    this.sDevDtrFgtResult.loginUser
+                  }} Prefers English"
+                  placement="bottom"
+                  width="25"
+                  height="25"
+                  (click)="this.utility.useLanguage('en')"
+                />
+                <img
+                  src="../assets/systemImg/exit.png"
+                  tooltip="Logout"
+                  width="25"
+                  height="25"
+                  (click)="this.utility.logout()"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <form class="form" #addQueryReportDataForm="ngForm">
+            <!-- first column-->
+            <div class="row">
+              <div class="form-group col-6 mr-1">
+                <label>Model #</label>
+                <input
+                  class="col-form-label"
+                  type="text"
+                  name="modelNo"
+                  [(ngModel)]="sDevDtrFgtResult.modelNo"
+                />
+                <label>Article</label>
+                <input
+                  class="col-form-label"
+                  type="text"
+                  name="article"
+                  [(ngModel)]="sDevDtrFgtResult.article"
+                />
+              </div>
+              <div class="form-group col-6"></div>
+            </div>
+            <!-- Second column-->
+            <div class="row">
+              <div class="form-group col-6 mr-1">
+                <label>Model Name</label>
+                <input
+                  class="col-form-label"
+                  type="text"
+                  name="modelName"
+                  [(ngModel)]="sDevDtrFgtResult.modelName"
+                />
+                <button
+                  class="btn btn-primary mr-1"
+                  type="button"
+                  (click)="search()"
+                  [disabled]="!addQueryReportDataForm.valid"
+                >
+                  {{ "Common.btnList.search" | translate }}
+                </button>
+              </div>
+              <div class="form-group col-6"></div>
+            </div>
+          </form>
+        </div>
+        <div class="row" *ngIf="result.length > 0">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table text-center text-nowrap table-striped">
+                    <!--text-nowrap不換行-->
+                    <!--套版分頁<table datatable id="f340Sche" class="table text-center table-striped">-->
+                    <thead>
+                      <tr class="table-info">
+                        <th>Model Name</th>
+                        <th>Model No</th>
+                        <th>Article</th>
+                        <th>Stage</th>
+                        <th>Lab No</th>
+
+                        <th>Type</th>
+                        <th>Kind</th>
+                        <th>Test Result</th>
+                        <th>File Name</th>
+                        <th>Remark</th>
+
+                        <th>Part Name</th>
+                        <th>TreatMent(zh-TW)</th>
+                        <th>TreatMent(En)</th>
+                        <th>Upload Time</th>
+                        <th>Maintain Report</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container *ngFor="let item of result; let i = index">
+                        <tr>
+                          <td>{{ item.modelName }}</td>
+                          <td>{{ item.modelNo }}</td>
+                          <td>{{ item.article }}</td>
+                          <td>{{ item.stage }}</td>
+                          <td>{{ item.labNo }}</td>
+
+                          <td>{{ item.type }}</td>
+                          <td>{{ item.kind }}</td>
+                          <td>{{ item.result }}</td>
+                          <td>{{ item.fileName }}</td>
+                          <td>{{ item.remark }}</td>
+
+                          <th>{{ item.partName }}</th>
+                          <td>{{ item.treatmentZh }}</td>
+                          <td>{{ item.treatmentEn }}</td>
+                          <td>{{ item.upday }}</td>
+                          <!--Maintain-->
+                          <td [hidden]="false">
+                            <label
+                              class="btn btn-success mt-2"
+                              for="fileUpload{{ item.article }}"
+                              tooltip="{{ this.hintMsg.uploadPic }}"
+                              placement="right"
+                              >+</label
+                            >
+                            <input
+                              id="fileUpload{{ item.article }}"
+                              type="file"
+                              style="display: none"
+                              accept=".pdf"
+                              (click)="this.utility.reset($event)"
+                              (change)="
+                                uploadPdfDtrFgtResult(
+                                  $event.target.files,
+                                  item
+                                )
+                              "
+                            />
+                            <!--Delete Btn
+                            <img
+                              [style.visibility]="
+                                item.fileName == undefined ||
+                                item.fileName == null
+                                  ? 'hidden'
+                                  : 'visible'
+                              "
+                              src="../assets/systemImg/delete.png"
+                              width="35"
+                              height="35"
+                              (click)="removePdfDtrFgtResult(item)"
+                            />
+                            -->
+                          </td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--addFgtResultModal
+<div
+  bsModal
+  #addFgtResultModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-info modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Pleas add a FGT result</h4>
+        <button
+          type="button"
+          class="close"
+          (click)="closeModal('addFgtResult')"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group">
+              <button
+              type="button"
+              class="btn btn-secondary btn-lg mt-2"
+              (click)="saveAFgtResult()"
+              >
+              Save
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary btn-lg mt-2"
+                (click)="closeModal('addFgtResult')"
+              >
+                {{ "Common.btnList.close" | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+addFgtResultModal-->
+<ngx-spinner
+  bdColor="rgba(0, 0, 0, 0.8)"
+  size="large"
+  color="#fff"
+  type="square-jelly-box"
+  [fullScreen]="true"
+  ><p style="color: white">Loading F340 Shchdule...</p></ngx-spinner
+>

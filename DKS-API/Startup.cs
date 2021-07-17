@@ -75,6 +75,7 @@ namespace DKS_API
             services.AddScoped<IDevSysSetDAO,DevSysSetDAO>();
             services.AddScoped<IArticledLdtmDAO,ArticledLdtmDAO>();
             services.AddScoped<IDevDtrFgtDAO,DevDtrFgtDAO>();
+            services.AddScoped<IDevDtrFgtResultDAO,DevDtrFgtResultDAO>();
             
 
             services.AddScoped<IMailUtility,MailUtility>();
