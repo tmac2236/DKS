@@ -37,6 +37,7 @@ namespace DKS_API.Data.Repository
         public DbSet<P206DataByStageArticleDto> GetP206DataByArticle { get; set; }
         public DbSet<DevDtrFgtResultDto> GetDevDtrFgtResultDto { get; set; }
         public DbSet<F340PartNoTreatmemtDto> GetF340PartNoTreatmemtDto { get; set; }
+        public DbSet<ArticleModelNameDto> GetArticleModelNameDto { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -75,6 +76,8 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<DevDtrFgtResultDto>()
             .HasNoKey();
             modelBuilder.Entity<F340PartNoTreatmemtDto>()
+            .HasNoKey();
+            modelBuilder.Entity<ArticleModelNameDto>()
             .HasNoKey();
             
         }

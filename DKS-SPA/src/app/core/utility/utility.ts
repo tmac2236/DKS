@@ -203,4 +203,10 @@ export class Utility {
     }
     return inputType;
   }
+  checkIsNullorEmpty(obj:any){
+    let result = false;
+    if(obj == null) result = true;
+    if(obj == "") result = true;
+    return result;
+  }
 }

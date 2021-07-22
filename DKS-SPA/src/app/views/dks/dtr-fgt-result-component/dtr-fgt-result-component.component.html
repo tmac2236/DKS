@@ -14,26 +14,6 @@
                   {{ this.sDevDtrFgtResult.loginUser }}</strong
                 >
                 <img
-                  src="../assets/systemImg/taiwan.png"
-                  tooltip="{{
-                    this.sDevDtrFgtResult.loginUser
-                  }} Prefers Mandarin"
-                  placement="bottom"
-                  width="25"
-                  height="25"
-                  (click)="this.utility.useLanguage('zh')"
-                />
-                <img
-                  src="../assets/systemImg/united-states.png"
-                  tooltip="{{
-                    this.sDevDtrFgtResult.loginUser
-                  }} Prefers English"
-                  placement="bottom"
-                  width="25"
-                  height="25"
-                  (click)="this.utility.useLanguage('en')"
-                />
-                <img
                   src="../assets/systemImg/exit.png"
                   tooltip="Logout"
                   width="25"
@@ -80,9 +60,16 @@
                   class="btn btn-primary mr-1"
                   type="button"
                   (click)="search()"
-                  [disabled]="!addQueryReportDataForm.valid"
                 >
                   {{ "Common.btnList.search" | translate }}
+                </button>
+                <button
+                  class="btn btn-primary mr-1"
+                  type="button"
+                  (click)="openAddFgtResultModal()"
+                  [disabled]="!(articleList?.length > 0)"
+                >
+                  Add A Report
                 </button>
               </div>
               <div class="form-group col-6"></div>
@@ -108,7 +95,7 @@
                         <th>Type</th>
                         <th>Kind</th>
                         <th>Test Result</th>
-                        <th>File Name</th>
+                        <th>Test Report</th>
                         <th>Remark</th>
 
                         <th>Part Name</th>
@@ -136,27 +123,34 @@
                           <th>{{ item.partName }}</th>
                           <td>{{ item.treatmentZh }}</td>
                           <td>{{ item.treatmentEn }}</td>
-                          <td>{{ item.upday }}</td>
+                          <td>{{ item.upday  | date: "yyyy/MM/dd HH:mm:ss"  }}</td>
                           <!--Maintain-->
                           <td [hidden]="false">
+                            <img
+                            src="../assets/systemImg/download-pdf.png"
+                            class="mr-1"
+                            width="40"
+                            height="40"
+                            [style.visibility]="
+                              item.fileName?.length < 1 ? 'hidden' : 'visible'
+                            "
+                            (click)="viewPdf(item)"
+                            />
                             <label
                               class="btn btn-success mt-2"
-                              for="fileUpload{{ item.article }}"
+                              for="fileUpload{{ item.labNo }}"
                               tooltip="{{ this.hintMsg.uploadPic }}"
                               placement="right"
                               >+</label
                             >
                             <input
-                              id="fileUpload{{ item.article }}"
+                              id="fileUpload{{ item.labNo }}"
                               type="file"
                               style="display: none"
                               accept=".pdf"
                               (click)="this.utility.reset($event)"
                               (change)="
-                                uploadPdfDtrFgtResult(
-                                  $event.target.files,
-                                  item
-                                )
+                                uploadPdfDtrFgtResult($event.target.files, item)
                               "
                             />
                             <!--Delete Btn
@@ -187,7 +181,7 @@
     </div>
   </div>
 </div>
-<!--addFgtResultModal
+<!--addFgtResultModal-->
 <div
   bsModal
   #addFgtResultModal="bs-modal"
@@ -211,31 +205,183 @@
         </button>
       </div>
       <div class="modal-body">
+        <!-- first column-->
+        <div class="row">
+          <div class="col-2">
+            <div class="form-group">
+              <label for="modalModelName" class="col-form-label"
+                >Model Name</label
+              >
+              <input type="text" class="form-control" id="modalModelName" [(ngModel)]="addAModel.modelName" readonly/>
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="form-group">
+              <label for="modalModelNo" class="col-form-label">Model No</label>
+              <input type="text" class="form-control" id="modalModelNo" [(ngModel)]="addAModel.modelNo" readonly/>
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="form-group">
+              <label for="modalArticle" class="col-form-label">Article</label>
+              <label style="color:red;">*</label>
+              <div class="w-100"></div>
+              <select
+              id="modalArticle"
+              class="form-control"
+              [(ngModel)]="addAModel.article"
+              (change)="selectArticle()"
+              >
+                <option
+                *ngFor="let atc of articleList"
+                value="{{ atc.article }}">
+                {{ atc.article }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="form-group">
+              <label for="modalStage" class="col-form-label">Stage</label>
+              <label style="color:red;">*</label>
+              <div class="w-100"></div>
+              <select
+              id="modalStage"
+              class="form-control"
+              [(ngModel)]="addAModel.stage"
+              (change)="getPartName4DtrFgt()"
+              >
+                <option value = "CR2" selected>CR2</option>
+                <option value = "SMS" selected>SMS</option>
+                <option value = "MCS" selected>MCS</option>
+                <option value = "CS1" selected>CS1</option>
+                <option value = "CS2" selected>CS2</option>
+                <option value = "CS3" selected>CS3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="form-group">
+              <label for="modalKind" class="col-form-label">Kind</label>
+              <label style="color:red;">*</label>
+              <div class="w-100"></div>
+              <select
+              id="modalKind"
+              class="form-control"
+              [(ngModel)]="addAModel.kind"
+              >
+                <option value = "FGT" selected>FGT</option>
+                <option value = "CMA" selected>CMA</option>
+                <option value = "FIT" selected>FIT</option>
+                <option value = "WEAR" selected>WEAR</option>
+                <option value = "CT" selected>Component Test</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="form-group">
+              <label for="modalType" class="col-form-label">Type</label>
+              <label style="color:red;">*</label>
+              <div class="w-100"></div>
+              <select
+              id="modalType"
+              class="form-control"
+              [(ngModel)]="addAModel.type"
+              >
+                <option value = "Article" selected>Article</option>
+                <option value = "Model No" selected>Model No</option>
+                <option value = "Model Name" selected>Model Name</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <!-- Second column-->
+        <div class="row">
+          <div class="col-2">
+            <div class="form-group">
+              <label for="modalLabNo" class="col-form-label">Lab No</label>
+              <label style="color:red;">*</label>
+              <input type="text" class="form-control" id="modalLabNo" [(ngModel)]="addAModel.labNo" />
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="form-group">
+              <label for="modalTestResult" class="col-form-label"
+                >Test Result</label>
+              <label style="color:red;">*</label>
+              <div class="w-100"></div>
+              <select
+              id="modalTestResult"
+              class="form-control"
+              [(ngModel)]="addAModel.result"
+              >
+                <option value = "PASS" selected>PASS</option>
+                <option value = "FAIL" selected>FAIL</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="form-group">
+              <input type="text" class="form-control" id="modalPartNo" [(ngModel)]="addAModel.partNo" [hidden]="true"/>
+              <label for="modalPartName" class="col-form-label">Part Name</label>
+              <label style="color:red;">*</label>
+              <div class="w-100"></div>
+              <select
+              id="modalPartName"
+              class="form-control"
+              [(ngModel)]="addAModel.partName"
+              (change)="showPartNameDetail()"
+              >
+                <option
+                *ngFor="let ptn of partNameList"
+                value="{{ ptn.partName }}">
+                {{ ptn.partName }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="form-group">
+              <label for="modalTreatMent" class="col-form-label"
+                >TreatMent</label>
+              <input type="text" class="form-control" id="modalTreatMent" value="{{addAModelTreatment}}" readonly/>
+            </div>
+          </div>
+        </div>
+        <!-- Third column-->
         <div class="row">
           <div class="col-12">
             <div class="form-group">
-              <button
+              <label for="modalRemark" class="col-form-label">Remark</label>
+              <textarea class="form-control" id="modalRemark" [(ngModel)]="addAModel.remark"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col-12">
+            <button
               type="button"
               class="btn btn-secondary btn-lg mt-2"
               (click)="saveAFgtResult()"
-              >
+            >
               Save
-              </button>
-              <button
-                type="button"
-                class="btn btn-secondary btn-lg mt-2"
-                (click)="closeModal('addFgtResult')"
-              >
-                {{ "Common.btnList.close" | translate }}
-              </button>
-            </div>
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary btn-lg mt-2"
+              (click)="closeModal('addFgtResult')"
+            >
+              Close
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-addFgtResultModal-->
+<!--addFgtResultModal-->
 <ngx-spinner
   bdColor="rgba(0, 0, 0, 0.8)"
   size="large"

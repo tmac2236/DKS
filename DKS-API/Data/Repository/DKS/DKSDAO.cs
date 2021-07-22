@@ -190,9 +190,9 @@ namespace DFPS.API.Data.Repository
         {
             string strWhere = " WHERE 1=1 ";
             if (!(String.IsNullOrEmpty(article)))
-                strWhere += " AND t1.ARTICLE = N'" + article  + "' " ;
+                strWhere += " AND t1.ARTICLE = N'" + article.Trim()  + "' " ;
             if (!(String.IsNullOrEmpty(modelNo)))
-                strWhere += " AND t1.MODELNO like N'" + modelNo  + "%' " ;
+                strWhere += " AND t1.MODELNO like N'" + modelNo.Trim()  + "%' " ;
 
             string strSQL = string.Format(@"
 select t1.ARTICLE as Article,
@@ -218,7 +218,7 @@ left join(
 	       ARTICLE,
 	       PARTNO,
 		   PARTNAME,
-		   (case T1.RELEASE_TYPE when 'CWA' then 'SMU' else T1.RELEASE_TYPE  end) as RELEASE_TYPE,
+		   (case T1.RELEASE_TYPE when 'CWA' then 'MCS' else T1.RELEASE_TYPE  end) as RELEASE_TYPE,
 		   T1.TreatmentCode,
 		   T2.TreatmentZh,
 		   T2.TreatmentEn 

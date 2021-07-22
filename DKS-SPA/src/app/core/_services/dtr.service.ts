@@ -16,11 +16,16 @@ import { SDevDtrFgtResult } from "../_models/s-dev-dtr-fgt-result";
 export class DtrService {
   constructor(private utility: Utility) {}
 
-  findAll() {
-    return this.utility.http.get<DevSysSet[]>(
-      this.utility.baseUrl + "System/findAll"
-    );
+  getPartName4DtrFgt(article: string, stage: string) {
+    return this.utility.http.get<object[]>(
+      this.utility.baseUrl +
+        "dtr/getPartName4DtrFgt?article=" +
+        article +
+        "&stage=" +
+        stage
+    ).toPromise();
   }
+
   editPdfDevDtrFgtResult(devDtrFgtResult: FormData) {
     console.log("dtr.service editPdfDevDtrFgtResult:", devDtrFgtResult);
     return this.utility.http.post<DevDtrFgtResult>(
@@ -74,11 +79,15 @@ export class DtrService {
         })
       );
   }
-  getArticlebyModelNo(modelNo: string) {
-    return this.utility.http.get<string[]>(
-      this.utility.baseUrl +
-        "dtr/getArticlebyModelNo?modelNo=" +
-        modelNo 
+  getArticle4Fgt(modelNo: string, article:string) {
+    return this.utility.http.get<object[]>(
+      this.utility.baseUrl + "dtr/getArticle4Fgt?modelNo=" + modelNo +"&article=" + article
+    ).toPromise();
+  }
+  addDevDtrFgtResult(devDtrFgtResult: DevDtrFgtResult) {
+    return this.utility.http.post<boolean>(
+      this.utility.baseUrl + 'dtr/addDevDtrFgtResult',
+      devDtrFgtResult
     );
   }
 }

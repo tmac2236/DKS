@@ -522,7 +522,7 @@
                               width="35"
                               height="35"
                               [style.visibility]="
-                                item.pdf.length < 1 ? 'hidden' : 'visible'
+                                item.pdf?.length < 1 ? 'hidden' : 'visible'
                               "
                               (click)="viewPDF(item)"
                             />
@@ -556,7 +556,7 @@
                             />
                             <img
                               [style.visibility]="
-                                item.pdf.length < 1 ? 'hidden' : 'visible'
+                                item.pdf?.length < 1 ? 'hidden' : 'visible'
                               "
                               src="../assets/systemImg/delete.png"
                               width="35"
@@ -572,7 +572,7 @@
                               width="35"
                               height="35"
                               [style.visibility]="
-                                item.photo.length < 1 ? 'hidden' : 'visible'
+                                item.photo?.length < 1 ? 'hidden' : 'visible'
                               "
                               (click)="viewPic(item)"
                             />
@@ -606,7 +606,7 @@
                             />
                             <img
                               [style.visibility]="
-                                item.photo.length < 1 ? 'hidden' : 'visible'
+                                item.photo?.length < 1 ? 'hidden' : 'visible'
                               "
                               src="../assets/systemImg/delete.png"
                               width="35"

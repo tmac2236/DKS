@@ -28,5 +28,35 @@ namespace DFPS.API.Data.Repository
 
                 return data;
         }
+        public async Task<List<F340PartNoTreatmemtDto>> GetPartName4DtrFgt(string article,string stage)
+        {
+            string strWhere = " WHERE T1.TREATMENTCODE<> '' AND T1.RELEASE_LOGIN<>'' " ;//--已放行(T1.RELEASE_LOGIN<>'')
+            if (!(String.IsNullOrEmpty(article))) strWhere += " AND T1.ARTICLE = '" + article.Trim() +"' " ;
+            if (!(String.IsNullOrEmpty(stage))) {
+                if(stage.Trim() == "MCS") stage = "CWA";    // because the CWA of DKS = the MSC offgt
+                strWhere += " AND T1.RELEASE_TYPE = '" + stage.Trim() +"' " ;
+            }
+            string strSQL = string.Format(@"
+SELECT T1.PARTNO as PartNo,
+	   T1.PARTNAME as PartName,
+	   T2.TreatmentCode,
+	   T2.TreatmentZh,
+	   T2.TreatmentEn
+  FROM DEV_TREATMENT as T1
+  left join (
+			select 
+				 (select RTRIM(MEMO1) from BASEIDB   where FKBASEHID=t1.PKBASEHID and LANGID='437') as TreatmentCode
+				 ,RTRIM( t1.TYPENO) as [Code]
+				 ,(select RTRIM(BASENAME) from BASEIDB where FKBASEHID=t1.PKBASEHID and LANGID='950') as TreatmentZh
+				 ,(select RTRIM(BASENAME) from BASEIDB where FKBASEHID=t1.PKBASEHID and LANGID='437') as TreatmentEn
+				 ,t1.DISABCODE
+			  from BASEIDH t1
+			  where t1.FKBASEFID='ABH000000959' and DISABCODE=1  --043
+			  	) as T2
+	ON T1.TREATMENTCODE = T2.TREATMENTCODE ");
+            strSQL += strWhere;
+            var data = await _context.GetF340PartNoTreatmemtDto.FromSqlRaw(strSQL).ToListAsync();
+            return data;
+        }
     }
 }

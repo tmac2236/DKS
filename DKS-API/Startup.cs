@@ -26,6 +26,7 @@ using Quartz.Spi;
 using Quartz.Impl;
 using DFPS_API.Quartz;
 using DFPS_API.Quartz.Jobs;
+using DKS_API.Helpers.AutoMapper;
 
 namespace DKS_API
 {
@@ -60,7 +61,12 @@ namespace DKS_API
                   opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
               });
 
-            services.AddAutoMapper(typeof(Startup));
+            //Auto Mapper
+            services.AddAutoMapper (typeof (Startup));
+            services.AddScoped<IMapper> (sp => {
+                return new Mapper (AutoMapperConfig.RegisterMappings ());
+            });
+            services.AddSingleton (AutoMapperConfig.RegisterMappings ());
             //DAO
 
             services.AddScoped<IDKSSysUserDAO, DKSSysUserDAO>();

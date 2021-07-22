@@ -8,6 +8,7 @@ namespace DKS_API.Data.Interface
 {
     public interface IDevDtrFgtResultDAO : ICommonDAO<DevDtrFgtResult>
     {
+        Task<List<F340PartNoTreatmemtDto>> GetPartName4DtrFgt(string article, string stage);
         Task<List<DevDtrFgtResult>> GetDevDtrFgtResultByModelArticle(string modelNo, string article);
     }
 

@@ -13,38 +13,37 @@ using DKS_API.Helpers;
 using DKS_API.DTOs;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace DKS_API.Controllers
 {
     public class DTRController : ApiController
     {
-
+        private readonly IMapper _mapper;
         private readonly IDKSDAO _dKSDAO;
         private readonly IDevDtrFgtResultDAO _devDtrFgtResultDAO;
         private readonly IArticledDAO _articledDAO;
         private readonly IFileService _fileService;
 
-
-        [HttpGet("getArticlebyModelNo")]
-        public async Task<IActionResult> GetArticlebyModelNo(string modelNo)
-        {
-            _logger.LogInformation(String.Format(@"****** DTRController GetArticlebyModelNo fired!! ******"));
-
-
-            var data = await _articledDAO.FindAll(x => x.MODELNO.StartsWith(modelNo)).ToListAsync();
-            return Ok(data);
-        }
-        public DTRController(IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<PictureController> logger,
+        public DTRController(IMapper mapper,IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<PictureController> logger,
          IDKSDAO dKSDAO, IDevDtrFgtResultDAO devDtrFgtResultDAO, IArticledDAO articledDAO,
           IFileService fileService)
                 : base(config, webHostEnvironment, logger)
         {
+            _mapper = mapper;
             _dKSDAO = dKSDAO;
             _devDtrFgtResultDAO = devDtrFgtResultDAO;
             _articledDAO = articledDAO;
             _fileService = fileService;
         }
 
+        [HttpGet("getArticle4Fgt")]
+        public async Task<IActionResult> GetArticle4Fgt(string modelNo, string article)
+        {
+            _logger.LogInformation(String.Format(@"****** DTRController GetArticle4Fgt fired!! ******"));
+            var data = await _articledDAO.GetArticleModelNameDto(modelNo, article);
+            return Ok(data);
+        }
         [HttpGet("getDevDtrFgtResultByModelArticle")]
         public async Task<IActionResult> GetDevDtrFgtResultByModelArticle([FromQuery] SDevDtrFgtResult sDevDtrFgtResult)
         {
@@ -56,6 +55,15 @@ namespace DKS_API.Controllers
             Response.AddPagination(result.CurrentPage, result.PageSize,
             result.TotalCount, result.TotalPages);
             return Ok(result);
+        }
+
+        [HttpGet("getPartName4DtrFgt")]
+        public async Task<IActionResult> GetPartName4DtrFgt(string article, string stage)
+        {
+            _logger.LogInformation(String.Format(@"****** DTRController GetPartName4DtrFgt fired!! ******"));
+            var data = await _devDtrFgtResultDAO.GetPartName4DtrFgt(article, stage);
+
+            return Ok(data);
         }
 
         [HttpPost("editPdfDevDtrFgtResult")]
@@ -112,5 +120,21 @@ namespace DKS_API.Controllers
 
             return Ok(model);
         }
+        [HttpPost("addDevDtrFgtResult")]
+        public async Task<IActionResult> AddDevDtrFgtResult(AddDevDtrFgtResultDto addDevDtrFgtResultDto)
+        {
+            _logger.LogInformation(String.Format(@"****** DTRController AddDevDtrFgtResult fired!! ******"));
+            var devDtrFgtResult = _mapper.Map<DevDtrFgtResult>(addDevDtrFgtResultDto);
+            if (addDevDtrFgtResultDto != null)
+            {
+                devDtrFgtResult.FILENAME = "";
+                devDtrFgtResult.UPDAY = DateTime.Now;
+                _devDtrFgtResultDAO.Add(devDtrFgtResult);
+                await _devDtrFgtResultDAO.SaveAll();
+                return Ok(true);
+            }
+            return Ok(false);
+        }
+
     }
 }
