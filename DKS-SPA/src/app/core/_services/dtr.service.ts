@@ -90,4 +90,10 @@ export class DtrService {
       devDtrFgtResult
     );
   }
+  deleteDevDtrFgtResult(devDtrFgtResult: DevDtrFgtResult) {
+    return this.utility.http.post<boolean>(
+      this.utility.baseUrl + 'dtr/deleteDevDtrFgtResult',
+      devDtrFgtResult
+    );
+  }
 }

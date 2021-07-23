@@ -82,7 +82,7 @@ namespace DKS_API
             services.AddScoped<IArticledLdtmDAO,ArticledLdtmDAO>();
             services.AddScoped<IDevDtrFgtDAO,DevDtrFgtDAO>();
             services.AddScoped<IDevDtrFgtResultDAO,DevDtrFgtResultDAO>();
-            
+            services.AddScoped<IDevDtrFgtStatsDAO,DevDtrFgtStatsDAO>();
 
             services.AddScoped<IMailUtility,MailUtility>();
             
@@ -93,20 +93,20 @@ namespace DKS_API
             services.AddScoped<IF340CheckService, F340CheckService>();
 
             //Add Quartz Service
-            services.AddSingleton<IJobFactory, SingletonJobFactory>();
-            services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
+            //services.AddSingleton<IJobFactory, SingletonJobFactory>();
+            //services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
             //Add Jobs
             //services.AddSingleton<F340CheckTimeJob>();
-            services.AddSingleton<SentStanMailTimeJob>();
+            //services.AddSingleton<SentStanMailTimeJob>();
             //Add Triggers 
             //services.AddSingleton(
             //     new JobSchedule(jobType: typeof(F340CheckTimeJob), cronExpression: " * 30 8-15 ? * MON,TUE,WED,THU,FRI,SAT *")//每五秒鐘觸發一次
             //);
-            services.AddSingleton(
-                 new JobSchedule(jobType: typeof(SentStanMailTimeJob), cronExpression: "0 30 8,9,10,11,12,13,14,15 ? * MON,TUE,WED,THU,FRI,SAT")
-            );
+            //services.AddSingleton(
+            //     new JobSchedule(jobType: typeof(SentStanMailTimeJob), cronExpression: "0 30 8,9,10,11,12,13,14,15 ? * MON,TUE,WED,THU,FRI,SAT")
+            //);
             //Launch QuartzHostedServie
-            services.AddHostedService<QuartzHostedService>();
+            //services.AddHostedService<QuartzHostedService>();
             
             //auth
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

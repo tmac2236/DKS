@@ -25,7 +25,7 @@ namespace DKS_API.Data.Repository
         public DbSet<ArticledLdtm> ARTICLED_LDTM { get; set; }
         public DbSet<DevDtrFgt> DTR_FGT { get; set; }
         public DbSet<DevDtrFgtResult> DTR_FGT_RESULT { get; set; }
-
+        public DbSet<DevDtrFgtStats> DTR_FGT_STATS { get; set; }
 
         //DTO(Stored Procedure)
         public DbSet<F418_F420Dto> GetF420F418View { get; set; }
@@ -57,7 +57,7 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<ArticledLdtm>().HasKey(x => new { x.PKARTBID });
             modelBuilder.Entity<DevDtrFgt>().HasKey(x => new { x.ARTICLE, x.STAGE, x.KIND, x.VERN });
             modelBuilder.Entity<DevDtrFgtResult>().HasKey(x => new { x.ARTICLE, x.MODELNO, x.MODELNAME, x.LABNO });
-
+            modelBuilder.Entity<DevDtrFgtStats>().HasKey(x => new { x.ARTICLE, x.STAGE, x.KIND });
             //DTO(Stored Procedure)
             modelBuilder.Entity<F418_F420Dto>()
             .HasNoKey();

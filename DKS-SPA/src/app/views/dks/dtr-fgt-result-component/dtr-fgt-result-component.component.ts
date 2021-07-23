@@ -41,6 +41,7 @@ export class DtrFgtResultComponentComponent implements OnInit {
 
   ngOnInit() {
     this.utility.initUserRole(this.sDevDtrFgtResult);
+    this.addAModel.upusr = this.sDevDtrFgtResult.loginUser;
   }
 
   //搜尋
@@ -185,6 +186,7 @@ export class DtrFgtResultComponentComponent implements OnInit {
     formData.append("modelNo", model.modelNo);
     formData.append("modelName", model.modelName);
     formData.append("labNo", model.labNo);
+    formData.append("fileName", model.fileName);
     formData.append("loginUser", this.sDevDtrFgtResult.loginUser);
     this.utility.spinner.show();
     this.dtrService.editPdfDevDtrFgtResult(formData).subscribe(
@@ -298,9 +300,10 @@ export class DtrFgtResultComponentComponent implements OnInit {
         return;
       });
     } else {
-
       //Step 2: check is labNo valid
-      let model = this.result.find((x) => x["labNo"] == this.addAModel.labNo.trim());
+      let model = this.result.find(
+        (x) => x["labNo"] == this.addAModel.labNo.trim()
+      );
       if (model) {
         this.utility.alertify.confirm(
           "Sweet Alert",
@@ -309,9 +312,9 @@ export class DtrFgtResultComponentComponent implements OnInit {
             return;
           }
         );
-      } else {  
+      } else {
         //Step 3: call api save to db
-        this.addAModel.upusr = this.sDevDtrFgtResult.loginUser;
+
         this.utility.spinner.show();
         this.dtrService.addDevDtrFgtResult(this.addAModel).subscribe(
           (res: boolean) => {
@@ -353,5 +356,31 @@ export class DtrFgtResultComponentComponent implements OnInit {
     this.articleList = [];
     this.addAModel = new DevDtrFgtResult();
     this.addAModelTreatment = "";
+  }
+  deleteDevDtrFgtResult(model:DevDtrFgtResult) {
+    this.utility.spinner.show();
+    this.dtrService.deleteDevDtrFgtResult(model).subscribe(
+      (res: boolean) => {
+        this.utility.spinner.hide();
+        if (!res) {
+          this.utility.alertify.confirm(
+            "Sweet Alert",
+            "Delete fault please refresh browser and try again!",
+            () => {}
+          );
+        } else {
+          //Step 2: refresh the page
+          this.search();
+        }
+      },
+      (error) => {
+        this.utility.spinner.hide();
+        this.utility.alertify.confirm(
+          "System Notice",
+          "Syetem is busy, please try later.",
+          () => {}
+        );
+      }
+    );
   }
 }

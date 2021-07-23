@@ -108,7 +108,14 @@
                     <tbody>
                       <ng-container *ngFor="let item of result; let i = index">
                         <tr>
-                          <td>{{ item.modelName }}</td>
+                          <td>
+                            <img
+                              src="../assets/systemImg/delete.png"
+                              width="35"
+                              height="35"
+                              (click)="deleteDevDtrFgtResult(item)"/>                            
+                            {{ item.modelName }}
+                          </td>
                           <td>{{ item.modelNo }}</td>
                           <td>{{ item.article }}</td>
                           <td>{{ item.stage }}</td>

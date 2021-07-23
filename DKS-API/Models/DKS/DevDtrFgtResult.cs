@@ -53,11 +53,10 @@ namespace DKS.API.Models.DKS
         [Required]
         [StringLength(100)]
         public string FILENAME { get; set; }
-        [Required]
         [StringLength(500)]
-        public string REMARK { get; set; }
+        public string? REMARK { get; set; }
 
-        public DateTime UPDAY { get; set; }
+        public DateTime? UPDAY { get; set; }
 
         [Required]
         [StringLength(50)]

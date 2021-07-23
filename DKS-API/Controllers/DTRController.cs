@@ -23,10 +23,11 @@ namespace DKS_API.Controllers
         private readonly IDKSDAO _dKSDAO;
         private readonly IDevDtrFgtResultDAO _devDtrFgtResultDAO;
         private readonly IArticledDAO _articledDAO;
+        private readonly IDevDtrFgtStatsDAO _devDtrFgtStatsDAO;
         private readonly IFileService _fileService;
 
-        public DTRController(IMapper mapper,IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<PictureController> logger,
-         IDKSDAO dKSDAO, IDevDtrFgtResultDAO devDtrFgtResultDAO, IArticledDAO articledDAO,
+        public DTRController(IMapper mapper, IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<PictureController> logger,
+         IDKSDAO dKSDAO, IDevDtrFgtResultDAO devDtrFgtResultDAO, IArticledDAO articledDAO, IDevDtrFgtStatsDAO devDtrFgtStatsDAO,
           IFileService fileService)
                 : base(config, webHostEnvironment, logger)
         {
@@ -34,6 +35,7 @@ namespace DKS_API.Controllers
             _dKSDAO = dKSDAO;
             _devDtrFgtResultDAO = devDtrFgtResultDAO;
             _articledDAO = articledDAO;
+            _devDtrFgtStatsDAO = devDtrFgtStatsDAO;
             _fileService = fileService;
         }
 
@@ -77,6 +79,7 @@ namespace DKS_API.Controllers
             var modelName = HttpContext.Request.Form["modelName"].ToString().Trim();
             var labNo = HttpContext.Request.Form["labNo"].ToString().Trim();
             var fileName = HttpContext.Request.Form["fileName"].ToString().Trim();
+            var loginUser = HttpContext.Request.Form["loginUser"].ToString().Trim();
             DevDtrFgtResult model = _devDtrFgtResultDAO.FindSingle(
                                  x => x.ARTICLE.Trim() == article &&
                                  x.MODELNO.Trim() == modelNo &&
@@ -85,28 +88,77 @@ namespace DKS_API.Controllers
 
             if (model == null) return NoContent();
 
-            if (fileName == "")
+            bool isUpdatePdf = false;
+            if (fileName == "") //add a new
             {
                 //Article + Stage + Kind + Test Result + LAB No .pdf
                 fileName = string.Format("{0}_{1}_{2}_{3}_{4}.pdf", model.ARTICLE, model.STAGE, model.KIND, model.RESULT, model.LABNO);
             }
+            else
+            { //update and overwrite PDF
+                isUpdatePdf = true;
+            }
+
             // save or delete file to server
             List<string> nastFileName = new List<string>();
             nastFileName.Add("QCTestResult");
             nastFileName.Add(article);
             nastFileName.Add(fileName);
 
-            if (HttpContext.Request.Form.Files.Count > 0)
+            if (HttpContext.Request.Form.Files.Count > 0)       //save to server
             {
                 var file = HttpContext.Request.Form.Files[0];
                 if (await _fileService.SaveFiletoServer(file, "F340PpdPic", nastFileName))
                 {
                     _logger.LogInformation(String.Format(@"******DTRController EditPdfDevDtrFgtResult Add a PDF: {0}!! ******", fileName));
                     model.FILENAME = fileName;
+                    model.UPUSR = loginUser;
+                    model.UPDAY = DateTime.Now;
+
+                    //add DTR FGT STATUS start
+                    //find the status by article stage kind
+                    var dtrFgtStats = _devDtrFgtStatsDAO.FindSingle(
+                                    x => x.ARTICLE.Trim() == model.ARTICLE &&
+                                    x.STAGE.Trim() == model.STAGE &&
+                                    x.KIND.Trim() == model.KIND);
+
+                    if (dtrFgtStats == null)
+                    { //add status
+                        dtrFgtStats = new DevDtrFgtStats();
+                        dtrFgtStats.ARTICLE = model.ARTICLE;
+                        dtrFgtStats.STAGE = model.STAGE;
+                        dtrFgtStats.KIND = model.KIND;
+                        dtrFgtStats.LABNO = model.LABNO;
+                        dtrFgtStats.FILENAME = "";
+                        if (model.RESULT == "PASS") dtrFgtStats.PASS = 1;
+                        if (model.RESULT == "FAIL") dtrFgtStats.FAIL = 1;
+                        _devDtrFgtStatsDAO.Add(dtrFgtStats);
+                        _logger.LogInformation(String.Format(@"******DTRController EditPdfDevDtrFgtResult Add a NEW DevDtrFgtStats: {0}!! ******", dtrFgtStats));
+                    }
+                    else
+                    {
+                        if (isUpdatePdf)
+                        {  //overwrite pdf 
+                           //won't update status
+                           _logger.LogInformation(String.Format(@"******DTRController EditPdfDevDtrFgtResult Overwrite a PDF: {0}!! ******", dtrFgtStats));
+                        }
+                        else
+                        {   //same status but NEW LabNo   => update status
+                            if (model.RESULT == "PASS") dtrFgtStats.PASS += 1;
+                            if (model.RESULT == "FAIL") dtrFgtStats.FAIL += 1;
+                            dtrFgtStats.LABNO = model.LABNO;
+                            _devDtrFgtStatsDAO.Update(dtrFgtStats);
+                            _logger.LogInformation(String.Format(@"******DTRController EditPdfDevDtrFgtResult ReCount result and  update LabNo: {0}!! ******", dtrFgtStats));
+
+                        }
+                        _logger.LogInformation(String.Format(@"******DTRController EditPdfDevDtrFgtResult Update a Pdf BUT won't update DevDtrFgtStats: {0}!! ******", dtrFgtStats));
+                    }
+                    await _devDtrFgtStatsDAO.SaveAll();
+                    //add DTR FGT STATUS end
                 }
             }
             else
-            {   //do CRUD-D here.
+            {   //do CRUD-D here. delete from server
 
                 if (await _fileService.SaveFiletoServer(null, "F340PpdPic", nastFileName))
                 {
@@ -125,12 +177,64 @@ namespace DKS_API.Controllers
         {
             _logger.LogInformation(String.Format(@"****** DTRController AddDevDtrFgtResult fired!! ******"));
             var devDtrFgtResult = _mapper.Map<DevDtrFgtResult>(addDevDtrFgtResultDto);
-            if (addDevDtrFgtResultDto != null)
+            if (devDtrFgtResult != null)
             {
                 devDtrFgtResult.FILENAME = "";
-                devDtrFgtResult.UPDAY = DateTime.Now;
+                devDtrFgtResult.UPUSR = "";
+                devDtrFgtResult.UPDAY = null;
                 _devDtrFgtResultDAO.Add(devDtrFgtResult);
                 await _devDtrFgtResultDAO.SaveAll();
+
+                return Ok(true);
+            }
+            return Ok(false);
+        }
+        [HttpPost("deleteDevDtrFgtResult")]
+        public async Task<IActionResult> DeleteDevDtrFgtResult(AddDevDtrFgtResultDto addDevDtrFgtResultDto)
+        {
+            _logger.LogInformation(String.Format(@"****** DTRController DeleteDevDtrFgtResult fired!! ******"));
+            var devDtrFgtResult = _mapper.Map<DevDtrFgtResult>(addDevDtrFgtResultDto);
+            if (devDtrFgtResult != null)
+            {
+                //Step1: kill fgt result
+                _devDtrFgtResultDAO.Remove(devDtrFgtResult);
+                await _devDtrFgtResultDAO.SaveAll();
+                //Step2: kill the pdf
+                    // save or delete file to server
+                    List<string> nastFileName = new List<string>();
+                    nastFileName.Add("QCTestResult");
+                    nastFileName.Add(devDtrFgtResult.ARTICLE);
+                    nastFileName.Add(devDtrFgtResult.FILENAME);
+                //Step3:( if it have pdf) recount the pass or fault and previous labNo
+                if (await _fileService.SaveFiletoServer(null, "F340PpdPic", nastFileName))
+                {
+                    _logger.LogInformation(String.Format(@"******DTRController DeleteDevDtrFgtResult Delete a PDF: {0}!! ******", devDtrFgtResult.FILENAME));
+                    
+                    
+                    //3.1 :find the status by article stage kind
+                    var dtrFgtStats = _devDtrFgtStatsDAO.FindSingle(
+                                    x => x.ARTICLE.Trim() == devDtrFgtResult.ARTICLE &&
+                                    x.STAGE.Trim() == devDtrFgtResult.STAGE &&
+                                    x.KIND.Trim() == devDtrFgtResult.KIND);
+                    if (devDtrFgtResult.RESULT == "PASS") dtrFgtStats.PASS -= 1;
+                    if (devDtrFgtResult.RESULT == "FAIL") dtrFgtStats.FAIL -= 1;
+                    //3.2 find previous (the)
+                    var thePrevious = _devDtrFgtResultDAO
+                        .FindAll( x => x.ARTICLE.Trim() == devDtrFgtResult.ARTICLE &&
+                                    x.STAGE.Trim() == devDtrFgtResult.STAGE &&
+                                    x.KIND.Trim() == devDtrFgtResult.KIND &&
+                                    x.FILENAME.Trim() != "")
+                        .OrderByDescending(x => x.LABNO).Take(1).ToList().FirstOrDefault();
+                    _logger.LogInformation(String.Format(@"******DTRController DeleteDevDtrFgtResult the Previous Lab No is : {0}!! ******", devDtrFgtResult.FILENAME));
+                    if(thePrevious != null){
+                        dtrFgtStats.LABNO = thePrevious.LABNO;
+                    }else{
+                        dtrFgtStats.LABNO = "" ;
+                    }
+                    _devDtrFgtStatsDAO.Update(dtrFgtStats);
+                    await _devDtrFgtStatsDAO.SaveAll();
+                }
+
                 return Ok(true);
             }
             return Ok(false);
