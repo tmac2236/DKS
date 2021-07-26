@@ -264,15 +264,51 @@ export class F340PpdComponent implements OnInit {
     );
   }
   viewPic(model: F340SchedulePpd){
-
+    let factoryApi = "";
+    switch (this.sF340PpdSchedule.factory) {
+      case "C": //SHC
+          factoryApi = environment.apiUrl + "dks/getF340PpdPic?isStanHandsome=";
+          break;
+      case "E": //CB
+          factoryApi = "http://10.9.0.35/material/WatermarkAPI/GetF340PpdPic?param=";
+          break;
+      case "D": //SPC
+          factoryApi = "http://10.10.0.21/material/WatermarkAPI/GetF340PpdPic?param=";
+          break;
+      case "U": //TSH
+          factoryApi = "http://10.11.0.22/material/WatermarkAPI/GetF340PpdPic?param=";
+          break;                                
+      default: { 
+          factoryApi = environment.apiUrl + "dks/getF340PpdPic?isStanHandsome=";
+          break;
+         } 
+    }
     let param = utilityConfig.encodeStr + model.devSeason +  "$" + model.article + "$" + model.photo + "$" + this.sF340PpdSchedule.factory + "$" + this.sF340PpdSchedule.loginUser;
-    let dataUrl = environment.apiUrl + "dks/getF340PpdPic?isStanHandsome=" + window.btoa(param);
+    let dataUrl = factoryApi + window.btoa(param);
     window.open(dataUrl);
   }
   viewPDF(model: F340SchedulePpd){
-  
+    let factoryApi = "";
+    switch (this.sF340PpdSchedule.factory) {
+      case "C": //SHC
+          factoryApi = environment.apiUrl + "dks/getF340PpdPdf?isStanHandsome=";
+          break;
+      case "E": //CB
+          factoryApi = "http://10.9.0.35/material/WatermarkAPI/GetF340PpdPdf?param=";
+          break;
+      case "D": //SPC
+          factoryApi = "http://10.10.0.21/material/WatermarkAPI/GetF340PpdPdf?param=";
+          break;
+      case "U": //TSH
+          factoryApi = "http://10.11.0.22/material/WatermarkAPI/GetF340PpdPdf?param=";
+          break;                                
+      default: { 
+          factoryApi = environment.apiUrl + "dks/getF340PpdPdf?isStanHandsome=";
+          break;
+         } 
+    }
    let param = utilityConfig.encodeStr + model.devSeason +  "$" + model.article + "$" + model.pdf + "$" + this.sF340PpdSchedule.factory + "$" + this.sF340PpdSchedule.loginUser;
-   let dataUrl = environment.apiUrl + "dks/getF340PpdPdf?isStanHandsome=" + window.btoa(param);
+   let dataUrl = factoryApi + window.btoa(param);
    window.open(dataUrl);
   }
   downloadPDF(model: F340SchedulePpd){
