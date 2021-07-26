@@ -94,7 +94,7 @@ namespace DKS_API.Services.Implement
                 {
                     Worksheet ws = designer.Workbook.Worksheets[index];
                     //ws.Cells["W1"].PutValue("hello world");
-                    int maxRow = ws.Cells.MaxDataRow;
+                    int maxRow = dataList.Count + 2; //title have 2 rows
                     for (int i = 3; i <= maxRow; i++)
                     {
 

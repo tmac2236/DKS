@@ -171,14 +171,33 @@ namespace DKS_API.Controllers
             //
             data.ForEach(x =>
             {
-                var ip = _config.GetSection("ServerIp:Mps4Pic:" + sF340PPDSchedule.factory).Value;
-                var apiPort = _config.GetSection("ServerIp:Mps4Pic:API").Value;
-                var spaPort = _config.GetSection("ServerIp:Mps4Pic:SPA").Value;
                 if (x.Photo.Length > 1)
                 {
+                    var factoryApi = "";
+                    var apiUrl = _config.GetSection("AppSettings:ApiUrl").Value;
+                    switch (sF340PPDSchedule.factory)
+                    {
+                        case "C": //SHC
+                            factoryApi = apiUrl + "dks/getF340PpdPic?isStanHandsome=";
+                            break;
+                        case "E": //CB
+                            factoryApi = "http://10.9.0.35/material/WatermarkAPI/GetF340PpdPic?param=";
+                            break;
+                        case "D": //SPC
+                            factoryApi = "http://10.10.0.21/material/WatermarkAPI/GetF340PpdPic?param=";
+                            break;
+                        case "U": //TSH
+                            factoryApi = "http://10.11.0.22/material/WatermarkAPI/GetF340PpdPic?param=";
+                            break;
+                        default:
+                            {
+                                factoryApi = apiUrl + "dks/getF340PpdPic?isStanHandsome=";
+                                break;
+                            }
+                    }
                     var param = dksSignature + x.DevSeason + "$" + x.Article + "$" + x.Photo + "$" + sF340PPDSchedule.factory + "$" + sF340PPDSchedule.loginUser;
                     var encodeStr = CSharpLab.Btoa(param);
-                    var dataUrl = string.Format(@"{0}:{1}{2}{3}", ip, apiPort, "/api/dks/getF340PpdPic?isStanHandsome=", encodeStr);
+                    var dataUrl = string.Format(@"{0}{1}",factoryApi, encodeStr);
                     //let dataUrl = environment.apiUrl + "dks/getF340PpdPdf?isStanHandsome=" + window.btoa(param);
                     //x.Photo = "=HYPERLINK(\"" + dataUrl + "\",\"jpg\")";
                     x.Photo = dataUrl;
@@ -187,9 +206,31 @@ namespace DKS_API.Controllers
                 }
                 if (x.Pdf.Length > 1)
                 {   //encoding version
+                    var factoryApi = "";
+                    var apiUrl = _config.GetSection("AppSettings:ApiUrl").Value;
+                    switch (sF340PPDSchedule.factory)
+                    {
+                        case "C": //SHC
+                            factoryApi = apiUrl + "dks/getF340PpdPdf?isStanHandsome=";
+                            break;
+                        case "E": //CB
+                            factoryApi = "http://10.9.0.35/material/WatermarkAPI/GetF340PpdPdf?param=";
+                            break;
+                        case "D": //SPC
+                            factoryApi = "http://10.10.0.21/material/WatermarkAPI/GetF340PpdPdf?param=";
+                            break;
+                        case "U": //TSH
+                            factoryApi = "http://10.11.0.22/material/WatermarkAPI/GetF340PpdPdf?param=";
+                            break;
+                        default:
+                            {
+                                factoryApi = apiUrl + "dks/getF340PpdPdf?isStanHandsome=";
+                                break;
+                            }
+                    }                
                     var param = dksSignature + x.DevSeason + "$" + x.Article + "$" + x.Pdf + "$" + sF340PPDSchedule.factory + "$" + sF340PPDSchedule.loginUser;
                     var encodeStr = CSharpLab.Btoa(param);
-                    var dataUrl = string.Format(@"{0}:{1}{2}{3}", ip, apiPort, "/api/dks/getF340PpdPdf?isStanHandsome=", encodeStr);
+                    var dataUrl = string.Format(@"{0}{1}",factoryApi, encodeStr);
 
                     // no encoding version
                     //var dataUrl = string.Format(@"{0}:{1}{2}{3}/{4}/{5}",ip,spaPort,"/assets/F340PpdPic/",x.DevSeason,x.Article,x.Pdf);
