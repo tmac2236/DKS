@@ -52,7 +52,8 @@ namespace DKS_API.Controllers
             {
                 new Claim(ClaimTypes.NameIdentifier, userFromRepo[0].USERID.ToString()),
                 new Claim(ClaimTypes.Name, userFromRepo[0].LOGIN),
-                new Claim(ClaimTypes.Role, roleArray)
+                new Claim(ClaimTypes.Role, roleArray),
+                new Claim(ClaimTypes.Actor, userFromRepo[0].FACTORYID),
                 };
             var tokenName = _config.GetSection("AppSettings:Token").Value;
             var key = new SymmetricSecurityKey(Encoding.UTF8

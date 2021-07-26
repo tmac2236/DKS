@@ -77,17 +77,31 @@
             <div class="row">
               <div class="form-group col-xs-2 mr-1">
                 <label>Factory</label>
-                <select
+                    <!--事業部帳號的選項-->
+                <select *ngIf="sF340PpdSchedule.factoryId ==='2'; else elseFactory"
                   class="col-form-label"
                   name="factory"
                   [(ngModel)]="sF340PpdSchedule.factory"
-                  (change)="cleanBP()"
-                >
+                  (change)="cleanBP()">
                   <option value="C" selected>SHC</option>
                   <option value="U" selected>TSH</option>
                   <option value="E" selected>CB</option>
                   <option value="D" selected>SPC</option>
                 </select>
+                    <!--各廠區帳號的選項-->
+                <ng-template #elseFactory>
+                  <select
+                    class="col-form-label"
+                    name="factory"
+                    [(ngModel)]="sF340PpdSchedule.factory"
+                    (change)="cleanBP()"
+                    disabled="disabled">
+                    <option value="C" selected>SHC</option>
+                    <option value="U" selected>TSH</option>
+                    <option value="E" selected>CB</option>
+                    <option value="D" selected>SPC</option>
+                  </select>
+                </ng-template>
               </div>
               <div class="form-group col-xs-2 mr-1">
                 <label>Season</label>

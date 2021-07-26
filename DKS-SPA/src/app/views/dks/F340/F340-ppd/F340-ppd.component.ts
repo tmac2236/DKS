@@ -40,6 +40,12 @@ export class F340PpdComponent implements OnInit {
 
   ngOnInit() {
     this.utility.initUserRole(this.sF340PpdSchedule);
+    if(this.sF340PpdSchedule.factoryId =='2'){
+      this.sF340PpdSchedule.factory = utilityConfig.factory; //事業部帳號預設翔鴻程
+    }else{
+      this.sF340PpdSchedule.factory = this.sF340PpdSchedule.factoryId;
+    }
+
     //this.sF340PpdSchedule.loginUser = this.utility.getToken("unique_name");
   }
   //分頁按鈕

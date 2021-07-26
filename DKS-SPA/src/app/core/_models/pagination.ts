@@ -8,6 +8,7 @@ export class Pagination {
   loginUser: string;
   role:string;
   userId:string;
+  factoryId:string;
   /**
    * default setting of page
    */

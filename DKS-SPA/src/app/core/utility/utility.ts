@@ -134,7 +134,8 @@ export class Utility {
   getToken(key: string) {
     const jwtTtoken = localStorage.getItem("token");
     if (jwtTtoken) {
-      return this.jwtHelper.decodeToken(jwtTtoken)[key];
+      let list = this.jwtHelper.decodeToken(jwtTtoken);
+      return list[key];
     }
     return "";
   }
@@ -150,6 +151,7 @@ export class Utility {
     s.loginUser = this.getToken("unique_name");
     s.role = this.getToken("role");
     s.userId = this.getToken("nameid");
+    s.factoryId = this.getToken("actort");
     return s;
   }
   //Base64 to Blob
