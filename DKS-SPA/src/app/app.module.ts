@@ -66,6 +66,7 @@ import { AuthGuardRole } from "./core/_guards/auth.guard-role";
 import { NgSelectModule } from "@ng-select/ng-select";
 import { DtrQcComponentComponent } from "./views/dks/dtr-qc-component/dtr-qc-component.component";
 import { DtrFgtResultComponentComponent } from "./views/dks/dtr-fgt-result-component/dtr-fgt-result-component.component";
+import { DtrFgtResultReportComponent } from "./views/dks/dtr-fgt-result-report/dtr-fgt-result-report.component";
 
 
 //載入 "/assets/i18n/[lang].json" 語系檔
@@ -114,6 +115,7 @@ export function createTranslateLoader(http: HttpClient) {
     F340PpdComponent,
     DtrQcComponentComponent,
     DtrFgtResultComponentComponent,
+    DtrFgtResultReportComponent,
     F428Component,
     F428EditComponent,
     DictionaryComponent,

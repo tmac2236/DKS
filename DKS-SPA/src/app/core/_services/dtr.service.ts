@@ -9,6 +9,7 @@ import { DevDtrFgtResultDto } from "../_models/dev-dtr-fgt-result-dto";
 import { DevSysSet } from "../_models/dev-sys-set";
 import { PaginatedResult } from "../_models/pagination";
 import { SDevDtrFgtResult } from "../_models/s-dev-dtr-fgt-result";
+import { SDevDtrFgtResultReport } from "../_models/s-dev-dtr-fgt-result-report";
 
 @Injectable({
   providedIn: "root",
@@ -79,9 +80,63 @@ export class DtrService {
         })
       );
   }
-  getArticle4Fgt(modelNo: string, article:string) {
+  getDevDtrFgtResultReport(
+    sDevDtrFgtResultReport: SDevDtrFgtResultReport
+  ): Observable<PaginatedResult<DevDtrFgtResultDto[]>> {
+    const paginatedResult: PaginatedResult<DevDtrFgtResultDto[]> =
+      new PaginatedResult<DevDtrFgtResultDto[]>();
+
+    let params = new HttpParams();
+    params = params.append("IsPaging", sDevDtrFgtResultReport.isPaging.toString());
+    if (
+      sDevDtrFgtResultReport.currentPage != null &&
+      sDevDtrFgtResultReport.itemsPerPage != null
+    ) {
+      params = params.append(
+        "pageNumber",
+        sDevDtrFgtResultReport.currentPage.toString()
+      );
+      params = params.append(
+        "pageSize",
+        sDevDtrFgtResultReport.itemsPerPage.toString()
+      );
+      //params = params.append('orderBy', sAttendance.orderBy);
+    }
+    params = params.append("devSeason", sDevDtrFgtResultReport.devSeason.toString());
+
+    params = params.append("buyPlanSeason", sDevDtrFgtResultReport.buyPlanSeason.toString());
+    params = params.append("factory", sDevDtrFgtResultReport.factory.toString());
+
+    params = params.append("reportType", sDevDtrFgtResultReport.reportType.toString());
+    params = params.append("article", sDevDtrFgtResultReport.article.toString());
+    params = params.append("cwaDateS", sDevDtrFgtResultReport.cwaDateS.toString());
+    params = params.append("cwaDateE", sDevDtrFgtResultReport.cwaDateE.toString());
+    params = params.append("modelNo", sDevDtrFgtResultReport.modelNo.toString());
+    params = params.append("modelName", sDevDtrFgtResultReport.modelName.toString());
+
+    return this.utility.http
+      .get<DevDtrFgtResultDto[]>(
+        this.utility.baseUrl + "dtr/getDevDtrFgtResultReport",
+        {
+          observe: "response",
+          params,
+        }
+      )
+      .pipe(
+        map((response) => {
+          paginatedResult.result = response.body;
+          if (response.headers.get("Pagination") != null) {
+            paginatedResult.pagination = JSON.parse(
+              response.headers.get("Pagination")
+            );
+          }
+          return paginatedResult;
+        })
+      );
+  }
+  getArticle4Fgt(modelNo: string, article:string, modelName:string) {
     return this.utility.http.get<object[]>(
-      this.utility.baseUrl + "dtr/getArticle4Fgt?modelNo=" + modelNo +"&article=" + article
+      this.utility.baseUrl + "dtr/getArticle4Fgt?modelNo=" + modelNo +"&article=" + article + "&modelName=" + modelName
     ).toPromise();
   }
   addDevDtrFgtResult(devDtrFgtResult: DevDtrFgtResult) {

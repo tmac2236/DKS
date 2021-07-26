@@ -25,10 +25,11 @@ namespace DKS_API.Controllers
         private readonly IArticledDAO _articledDAO;
         private readonly IDevDtrFgtStatsDAO _devDtrFgtStatsDAO;
         private readonly IFileService _fileService;
+        private readonly IExcelService _excelService;
 
         public DTRController(IMapper mapper, IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<PictureController> logger,
          IDKSDAO dKSDAO, IDevDtrFgtResultDAO devDtrFgtResultDAO, IArticledDAO articledDAO, IDevDtrFgtStatsDAO devDtrFgtStatsDAO,
-          IFileService fileService)
+          IFileService fileService, IExcelService excelService)
                 : base(config, webHostEnvironment, logger)
         {
             _mapper = mapper;
@@ -37,13 +38,14 @@ namespace DKS_API.Controllers
             _articledDAO = articledDAO;
             _devDtrFgtStatsDAO = devDtrFgtStatsDAO;
             _fileService = fileService;
+            _excelService = excelService;
         }
 
         [HttpGet("getArticle4Fgt")]
-        public async Task<IActionResult> GetArticle4Fgt(string modelNo, string article)
+        public async Task<IActionResult> GetArticle4Fgt(string modelNo, string article, string modelName)
         {
             _logger.LogInformation(String.Format(@"****** DTRController GetArticle4Fgt fired!! ******"));
-            var data = await _articledDAO.GetArticleModelNameDto(modelNo, article);
+            var data = await _articledDAO.GetArticleModelNameDto(modelNo, article, modelName);
             return Ok(data);
         }
         [HttpGet("getDevDtrFgtResultByModelArticle")]
@@ -52,7 +54,7 @@ namespace DKS_API.Controllers
             _logger.LogInformation(String.Format(@"****** DTRController GetDevDtrFgtResultByModelArticle fired!! ******"));
 
 
-            var data = await _dKSDAO.GetDevDtrFgtResultDto(sDevDtrFgtResult.article, sDevDtrFgtResult.modelNo);
+            var data = await _dKSDAO.GetDevDtrFgtResultDto(sDevDtrFgtResult.article, sDevDtrFgtResult.modelNo, sDevDtrFgtResult.modelName);
             PagedList<DevDtrFgtResultDto> result = PagedList<DevDtrFgtResultDto>.Create(data, sDevDtrFgtResult.PageNumber, sDevDtrFgtResult.PageSize, sDevDtrFgtResult.IsPaging);
             Response.AddPagination(result.CurrentPage, result.PageSize,
             result.TotalCount, result.TotalPages);
@@ -140,7 +142,7 @@ namespace DKS_API.Controllers
                         if (isUpdatePdf)
                         {  //overwrite pdf 
                            //won't update status
-                           _logger.LogInformation(String.Format(@"******DTRController EditPdfDevDtrFgtResult Overwrite a PDF: {0}!! ******", dtrFgtStats));
+                            _logger.LogInformation(String.Format(@"******DTRController EditPdfDevDtrFgtResult Overwrite a PDF: {0}!! ******", dtrFgtStats));
                         }
                         else
                         {   //same status but NEW LabNo   => update status
@@ -200,17 +202,17 @@ namespace DKS_API.Controllers
                 _devDtrFgtResultDAO.Remove(devDtrFgtResult);
                 await _devDtrFgtResultDAO.SaveAll();
                 //Step2: kill the pdf
-                    // save or delete file to server
-                    List<string> nastFileName = new List<string>();
-                    nastFileName.Add("QCTestResult");
-                    nastFileName.Add(devDtrFgtResult.ARTICLE);
-                    nastFileName.Add(devDtrFgtResult.FILENAME);
+                // save or delete file to server
+                List<string> nastFileName = new List<string>();
+                nastFileName.Add("QCTestResult");
+                nastFileName.Add(devDtrFgtResult.ARTICLE);
+                nastFileName.Add(devDtrFgtResult.FILENAME);
                 //Step3:( if it have pdf) recount the pass or fault and previous labNo
                 if (await _fileService.SaveFiletoServer(null, "F340PpdPic", nastFileName))
                 {
                     _logger.LogInformation(String.Format(@"******DTRController DeleteDevDtrFgtResult Delete a PDF: {0}!! ******", devDtrFgtResult.FILENAME));
-                    
-                    
+
+
                     //3.1 :find the status by article stage kind
                     var dtrFgtStats = _devDtrFgtStatsDAO.FindSingle(
                                     x => x.ARTICLE.Trim() == devDtrFgtResult.ARTICLE &&
@@ -220,16 +222,19 @@ namespace DKS_API.Controllers
                     if (devDtrFgtResult.RESULT == "FAIL") dtrFgtStats.FAIL -= 1;
                     //3.2 find previous (the)
                     var thePrevious = _devDtrFgtResultDAO
-                        .FindAll( x => x.ARTICLE.Trim() == devDtrFgtResult.ARTICLE &&
-                                    x.STAGE.Trim() == devDtrFgtResult.STAGE &&
-                                    x.KIND.Trim() == devDtrFgtResult.KIND &&
-                                    x.FILENAME.Trim() != "")
+                        .FindAll(x => x.ARTICLE.Trim() == devDtrFgtResult.ARTICLE &&
+                                   x.STAGE.Trim() == devDtrFgtResult.STAGE &&
+                                   x.KIND.Trim() == devDtrFgtResult.KIND &&
+                                   x.FILENAME.Trim() != "")
                         .OrderByDescending(x => x.LABNO).Take(1).ToList().FirstOrDefault();
                     _logger.LogInformation(String.Format(@"******DTRController DeleteDevDtrFgtResult the Previous Lab No is : {0}!! ******", devDtrFgtResult.FILENAME));
-                    if(thePrevious != null){
+                    if (thePrevious != null)
+                    {
                         dtrFgtStats.LABNO = thePrevious.LABNO;
-                    }else{
-                        dtrFgtStats.LABNO = "" ;
+                    }
+                    else
+                    {
+                        dtrFgtStats.LABNO = "";
                     }
                     _devDtrFgtStatsDAO.Update(dtrFgtStats);
                     await _devDtrFgtStatsDAO.SaveAll();
@@ -239,6 +244,36 @@ namespace DKS_API.Controllers
             }
             return Ok(false);
         }
+        [HttpGet("getDevDtrFgtResultReport")]
+        public async Task<IActionResult> GetDevDtrFgtResultReport([FromQuery] SDevDtrFgtResultReport sDevDtrFgtResultReport)
+        {
+            _logger.LogInformation(String.Format(@"****** DTRController GetDevDtrFgtResultReport fired!! ******"));
 
+            if (String.IsNullOrEmpty(sDevDtrFgtResultReport.cwaDateS)) sDevDtrFgtResultReport.cwaDateS = _config.GetSection("LogicSettings:MinDate").Value;
+            if (String.IsNullOrEmpty(sDevDtrFgtResultReport.cwaDateE)) sDevDtrFgtResultReport.cwaDateE = _config.GetSection("LogicSettings:MaxDate").Value;
+            sDevDtrFgtResultReport.cwaDateS = sDevDtrFgtResultReport.cwaDateS.Replace("-", "/");
+            sDevDtrFgtResultReport.cwaDateE = sDevDtrFgtResultReport.cwaDateE.Replace("-", "/");
+            var data = await _dKSDAO.GetDevDtrFgtResultReportDto(sDevDtrFgtResultReport);
+            PagedList<DevDtrFgtResultDto> result = PagedList<DevDtrFgtResultDto>.Create(data, sDevDtrFgtResultReport.PageNumber, sDevDtrFgtResultReport.PageSize, sDevDtrFgtResultReport.IsPaging);
+            Response.AddPagination(result.CurrentPage, result.PageSize,
+            result.TotalCount, result.TotalPages);
+            return Ok(result);
+
+        }
+
+        [HttpPost("exportDevDtrFgtResultReport")]
+        public async Task<IActionResult> ExportDevDtrFgtResultReport(SDevDtrFgtResultReport sDevDtrFgtResultReport)
+        {
+            _logger.LogInformation(String.Format(@"****** DTRController ExportDevDtrFgtResultReport fired!! ******"));
+            if (String.IsNullOrEmpty(sDevDtrFgtResultReport.cwaDateS)) sDevDtrFgtResultReport.cwaDateS = _config.GetSection("LogicSettings:MinDate").Value;
+            if (String.IsNullOrEmpty(sDevDtrFgtResultReport.cwaDateE)) sDevDtrFgtResultReport.cwaDateE = _config.GetSection("LogicSettings:MaxDate").Value;
+            sDevDtrFgtResultReport.cwaDateS = sDevDtrFgtResultReport.cwaDateS.Replace("-", "/");
+            sDevDtrFgtResultReport.cwaDateE = sDevDtrFgtResultReport.cwaDateE.Replace("-", "/");
+            var data = await _dKSDAO.GetDevDtrFgtResultReportDto(sDevDtrFgtResultReport);
+
+            byte[] result = _excelService.CommonExportReport(data, "TempDevDtrFgtResultReport.xlsx");
+
+            return File(result, "application/xlsx");
+        }
     }
 }

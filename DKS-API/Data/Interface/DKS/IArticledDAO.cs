@@ -8,6 +8,6 @@ namespace DKS_API.Data.Interface
 {
     public interface IArticledDAO : ICommonDAO<Articled>
     {
-        Task<List<ArticleModelNameDto>> GetArticleModelNameDto(string modelNo, string article);
+        Task<List<ArticleModelNameDto>> GetArticleModelNameDto(string modelNo, string article,string modelName);
     }
 }

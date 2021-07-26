@@ -17,21 +17,20 @@ namespace DFPS.API.Data.Repository
         public ArticledDAO(DKSContext context) : base(context)
         {
         }
-        public async Task<List<ArticleModelNameDto>> GetArticleModelNameDto(string modelNo,string article)
+        public async Task<List<ArticleModelNameDto>> GetArticleModelNameDto(string modelNo,string article,string modelName)
         {
             string strWhere = " WHERE 1=1 ";
             if (!(String.IsNullOrEmpty(article)))
                 strWhere += " AND t1.ARTICLE = N'" + article.Trim()  + "' " ;
             if (!(String.IsNullOrEmpty(modelNo)))
                 strWhere += " AND t1.MODELNO like N'" + modelNo.Trim()  + "%' " ;
+            if (!(String.IsNullOrEmpty(modelName)))
+                strWhere += " AND t2.MODELNAME = N'" + modelName.Trim()  + "' " ;                
             string strSQL = string.Format(@"
-SELECT 
+SELECT DISTINCT
        t1.ARTICLE   as Article
       ,t1.MODELNO   as ModelNo 
-      ,t1.STAGE	    as Stage
-      ,t1.[STATUS]  as [Status]
 	  ,t2.MODELNAME as ModelName
-
   FROM ARTICLED as t1
   LEFT JOIN MODELDAH as t2 on t1.MODELNO = t2.MODELNO ");
             strSQL += strWhere;

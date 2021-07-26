@@ -101,8 +101,9 @@
                         <th>Part Name</th>
                         <th>TreatMent(zh-TW)</th>
                         <th>TreatMent(En)</th>
-                        <th>Upload Time</th>
                         <th>Maintain Report</th>
+                        <th>Upload Time</th>
+                        <th>Upload User</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -130,7 +131,6 @@
                           <th>{{ item.partName }}</th>
                           <td>{{ item.treatmentZh }}</td>
                           <td>{{ item.treatmentEn }}</td>
-                          <td>{{ item.upday  | date: "yyyy/MM/dd HH:mm:ss"  }}</td>
                           <!--Maintain-->
                           <td [hidden]="false">
                             <img
@@ -175,6 +175,8 @@
                             />
                             -->
                           </td>
+                          <td>{{ item.upday  | date: "yyyy/MM/dd HH:mm:ss"  }}</td>
+                          <td>{{ item.upusr }}</td>
                         </tr>
                       </ng-container>
                     </tbody>

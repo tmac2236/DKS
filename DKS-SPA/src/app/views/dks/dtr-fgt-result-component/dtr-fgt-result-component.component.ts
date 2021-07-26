@@ -48,10 +48,10 @@ export class DtrFgtResultComponentComponent implements OnInit {
   async search() {
     //modelNo 或 Article 至少任一需輸入等於五個字元
     //if(!(this.sDevDtrFgtResult.modelNo.trim().length == 5 || this.sDevDtrFgtResult.article.trim().length == 6)) return;
-
+    this.cleanAll();
     await this.getArticleVerList();
     if (this.articleList == undefined || this.articleList.length == 0) {
-      this.cleanAll();
+      
       this.utility.alertify.confirm(
         "Sweet Alert",
         "These conditions didn't exist in F205 Article in DKS.",
@@ -65,7 +65,7 @@ export class DtrFgtResultComponentComponent implements OnInit {
       this.dtrService.searchDevDtrFgtResult(this.sDevDtrFgtResult).subscribe(
         (res: PaginatedResult<DevDtrFgtResultDto[]>) => {
           if (res.result.length < 1) {
-            this.cleanAll();
+            
             this.utility.alertify.confirm(
               "Sweet Alert",
               "No Data in these conditions of search, please try again.",
@@ -102,7 +102,8 @@ export class DtrFgtResultComponentComponent implements OnInit {
     await this.dtrService
       .getArticle4Fgt(
         this.sDevDtrFgtResult.modelNo,
-        this.sDevDtrFgtResult.article
+        this.sDevDtrFgtResult.article,
+        this.sDevDtrFgtResult.modelName
       )
       .then(
         (res) => {
@@ -119,6 +120,7 @@ export class DtrFgtResultComponentComponent implements OnInit {
   }
   //下拉選單帶出PartName
   async getPartName4DtrFgt() {
+    this.partNameList = [];//clear
     this.addAModel.partName = ""; //防呆
     if (this.addAModel.stage == "SMS" || this.addAModel.stage == "MCS") {
       this.utility.spinner.show();

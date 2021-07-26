@@ -19,6 +19,7 @@ namespace DKS_API.Data.Interface
         Task<List<F340_ProcessDto>> GetF340ProcessView(SF340Schedule sF340Schedule);
         //Task<List<F340_ProcessDto>> GetF340ProcessView4Excel(SF340Schedule sF340Schedule);
         Task<List<F340_PpdDto>> GetF340PPDView(SF340PPDSchedule sF340PPDSchedule);
-        Task<List<DevDtrFgtResultDto>> GetDevDtrFgtResultDto(string article,string modelNo);
+        Task<List<DevDtrFgtResultDto>> GetDevDtrFgtResultDto(string article,string modelNo,string modelName);
+        Task<List<DevDtrFgtResultDto>> GetDevDtrFgtResultReportDto(SDevDtrFgtResultReport sDevDtrFgtResultReport);
     }
 }

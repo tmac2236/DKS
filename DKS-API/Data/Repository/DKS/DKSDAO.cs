@@ -186,65 +186,34 @@ namespace DFPS.API.Data.Repository
             var data = await _context.UserRoleDto.FromSqlRaw(strSQL).ToListAsync();
             return data;
         }
-        public async Task<List<DevDtrFgtResultDto>> GetDevDtrFgtResultDto(string article,string modelNo)
+        public async Task<List<DevDtrFgtResultDto>> GetDevDtrFgtResultDto(string article,string modelNo,string modelName)
         {
-            string strWhere = " WHERE 1=1 ";
-            if (!(String.IsNullOrEmpty(article)))
-                strWhere += " AND t1.ARTICLE = N'" + article.Trim()  + "' " ;
-            if (!(String.IsNullOrEmpty(modelNo)))
-                strWhere += " AND t1.MODELNO like N'" + modelNo.Trim()  + "%' " ;
+            List<SqlParameter> pc = new List<SqlParameter>{
+                new SqlParameter("@Article",  String.IsNullOrEmpty(article) ? (object)DBNull.Value : article.Trim()),
+                new SqlParameter("@ModelNo",  String.IsNullOrEmpty(modelNo) ? (object)DBNull.Value : modelNo.Trim()),
+                new SqlParameter("@ModelName",String.IsNullOrEmpty(modelName) ? (object)DBNull.Value : modelName.Trim()),
+            };
+            var data = await _context.GetDevDtrFgtResultDto
+                   .FromSqlRaw("EXECUTE dbo.GetDTR_FGT_Result_Report @Article,@ModelNo,@ModelName", pc.ToArray())
+                   .ToListAsync();
 
-            string strSQL = string.Format(@"
-select t1.ARTICLE as Article,
-	   t1.STAGE as Stage,
-	   t1.KIND as Kind,
-	   t1.TYPE as [Type],
-	   t1.MODELNO as ModelNo,
-	   t1.MODELNAME as ModelName,
-	   t1.LABNO as LabNo,
-	   t1.RESULT as Result,
-	   t1.PARTNO as PartNo,
-	   t1.PARTNAME as PartName,
-	   t1.FILENAME as [FileName],
-	   isnull(t1.REMARK,'') as Remark,
-	   isnull(t1.UPDAY,'') as Upday,
-	   t1.UPUSR as Upusr,
-	   t2.TREATMENTCODE as TreatmentCode,
-	   t2.TreatmentZh,
-	   t2.TreatmentEn
- from DTR_FGT_RESULT as t1
-left join(
-	select 
-	       ARTICLE,
-	       PARTNO,
-		   PARTNAME,
-		   (case T1.RELEASE_TYPE when 'CWA' then 'MCS' else T1.RELEASE_TYPE  end) as RELEASE_TYPE,
-		   T1.TreatmentCode,
-		   T2.TreatmentZh,
-		   T2.TreatmentEn 
-	from DEV_TREATMENT as T1
-			left join (
-			select 
-				 (select RTRIM(MEMO1) from BASEIDB   where FKBASEHID=t1.PKBASEHID and LANGID='437') as TreatmentCode
-				 ,RTRIM( t1.TYPENO) as [Code]
-				 ,(select RTRIM(BASENAME) from BASEIDB where FKBASEHID=t1.PKBASEHID and LANGID='950') as TreatmentZh
-				 ,(select RTRIM(BASENAME) from BASEIDB where FKBASEHID=t1.PKBASEHID and LANGID='437') as TreatmentEn
-				 ,t1.DISABCODE
-			  from BASEIDH t1
-			  where t1.FKBASEFID='ABH000000959' and DISABCODE=1  --043
-			  	) as T2
-	ON T1.TREATMENTCODE = T2.TREATMENTCODE
-	where T1.TREATMENTCODE<>''
+            return data;
 
-) as t2 
-ON t1.PARTNO = t2.PARTNO 
-collate Chinese_Taiwan_Stroke_CI_AS
-and t1.STAGE=t2.RELEASE_TYPE
-and t1.ARTICLE=t2.ARTICLE ");
-            strSQL += strWhere;
-            string strOrderBy =" Order By PARTNO ASC ";
-            strSQL += strOrderBy;
-            var data = await _context.GetDevDtrFgtResultDto.FromSqlRaw(strSQL).ToListAsync();
+        }
+        public async Task<List<DevDtrFgtResultDto>> GetDevDtrFgtResultReportDto(SDevDtrFgtResultReport sDevDtrFgtResultReport)
+        {
+            //aven will give you
+            //aven will give you
+            //aven will give you
+            //aven will give you
+            List<SqlParameter> pc = new List<SqlParameter>{
+                new SqlParameter("@Article",  String.IsNullOrEmpty(sDevDtrFgtResultReport.article) ? (object)DBNull.Value : sDevDtrFgtResultReport.article.Trim()),
+                new SqlParameter("@ModelNo",  String.IsNullOrEmpty(sDevDtrFgtResultReport.modelNo) ? (object)DBNull.Value : sDevDtrFgtResultReport.modelNo.Trim()),
+                new SqlParameter("@ModelName",String.IsNullOrEmpty(sDevDtrFgtResultReport.modelName) ? (object)DBNull.Value : sDevDtrFgtResultReport.modelName.Trim()),
+            };
+            var data = await _context.GetDevDtrFgtResultDto
+                   .FromSqlRaw("EXECUTE dbo.GetDTR_FGT_Result_Report @Article,@ModelNo,@ModelName", pc.ToArray())
+                   .ToListAsync();
 
             return data;
 
