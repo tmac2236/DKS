@@ -1,13 +1,11 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { ModalDirective } from "ngx-bootstrap/modal";
-import { environment } from "../../../../environments/environment";
 import { Utility } from "../../../core/utility/utility";
 import { utilityConfig } from "../../../core/utility/utility-config";
 import { DevDtrFgtResult } from "../../../core/_models/dev-dtr-fgt-result";
 import { DevDtrFgtResultDto } from "../../../core/_models/dev-dtr-fgt-result-dto";
 import { PaginatedResult } from "../../../core/_models/pagination";
 import { SDevDtrFgtResult } from "../../../core/_models/s-dev-dtr-fgt-result";
-import { DksService } from "../../../core/_services/dks.service";
 import { DtrService } from "../../../core/_services/dtr.service";
 
 @Component({
@@ -23,9 +21,6 @@ export class DtrFgtResultComponentComponent implements OnInit {
   };
   uiControls: any = {
     uploadPicF340Ppd: utilityConfig.RolePpdPic,
-    uploadPdfF340Ppd: utilityConfig.RolePpdPic,
-    editMemo: utilityConfig.RoleSysAdm,
-    sendMemoMail: utilityConfig.RoleSysAdm,
   };
   sDevDtrFgtResult: SDevDtrFgtResult = new SDevDtrFgtResult();
   result: DevDtrFgtResultDto[] = [];
@@ -35,7 +30,6 @@ export class DtrFgtResultComponentComponent implements OnInit {
   addAModelTreatment: string = ""; //only let user see not save to db
   constructor(
     public utility: Utility,
-    private dksService: DksService,
     private dtrService: DtrService
   ) {}
 
@@ -204,37 +198,6 @@ export class DtrFgtResultComponentComponent implements OnInit {
       }
     );
   }
-  /*
-   //刪除F340 ppd Pdf  
-   removePdfDtrFgtResult(model: DevDtrFgtResult) {
-    var formData = new FormData(); 
-    formData.append("file", null);  // upload null present delete
-    formData.append("article",model.article);
-    formData.append("modelNo",model.modelNo);
-    formData.append("modelName",model.modelName);
-    formData.append("labNo",model.labNo);
-    formData.append("fileName", model.fileName);
-    formData.append("loginUser", this.sF340PpdSchedule.loginUser);
-    this.utility.alertify.confirm(
-      "Sweet Alert",
-      "Are you sure to Delete this pdf of article:" + model.article + ", treatment:" + model.treatMent + ", partName:" + model.partName + ".",
-      () => {
-        this.utility.spinner.show();
-        this.dksService.editPdfDevDtrFgtResult(formData).subscribe(
-          () => {
-            this.utility.spinner.hide();
-            this.utility.alertify.success("Delete succeed!");
-            model.pdf =''; 
-          },
-          (error) => {
-            this.utility.spinner.hide();
-            this.utility.alertify.error("Delete failed !!!!");
-          }
-        );
-      }
-    );
-  }
-  */
   viewPdf(item: DevDtrFgtResultDto) {
     let dataUrl =
       "../assets/F340PpdPic/QCTestResult/" + item.article + "/" + item.fileName;

@@ -4,7 +4,6 @@ import { utilityConfig } from '../../../core/utility/utility-config';
 import { DevDtrFgtResultDto } from '../../../core/_models/dev-dtr-fgt-result-dto';
 import { PaginatedResult } from '../../../core/_models/pagination';
 import { SDevDtrFgtResultReport } from '../../../core/_models/s-dev-dtr-fgt-result-report';
-import { DksService } from '../../../core/_services/dks.service';
 import { DtrService } from '../../../core/_services/dtr.service';
 
 @Component({
@@ -16,16 +15,12 @@ export class DtrFgtResultReportComponent implements OnInit {
 
   uiControls: any = {
     uploadPicF340Ppd: utilityConfig.RolePpdPic,
-    uploadPdfF340Ppd: utilityConfig.RolePpdPic,
-    editMemo: utilityConfig.RoleSysAdm,
-    sendMemoMail: utilityConfig.RoleSysAdm,
   };
   sDevDtrFgtResultReport: SDevDtrFgtResultReport = new SDevDtrFgtResultReport();
   result: DevDtrFgtResultDto[] = [];
 
   constructor(
     public utility: Utility,
-    private dksService: DksService,
     private dtrService: DtrService
   ) {}
 
