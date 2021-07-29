@@ -271,7 +271,12 @@ namespace DKS_API.Controllers
             sDevDtrFgtResultReport.cwaDateE = sDevDtrFgtResultReport.cwaDateE.Replace("-", "/");
             var data = await _dKSDAO.GetDevDtrFgtResultReportDto(sDevDtrFgtResultReport);
 
-            byte[] result = _excelService.CommonExportReport(data, "TempDevDtrFgtResultReport.xlsx");
+            byte[] result = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 };
+            if(sDevDtrFgtResultReport.reportType =="Dev"){              //DEV
+                result = _excelService.CommonExportReport(data, "TempDevDtrFgtResultReport_Dev.xlsx");
+            } else if(sDevDtrFgtResultReport.reportType =="Buy Plan"){
+                result = _excelService.CommonExportReport(data, "TempDevDtrFgtResultReport_BuyPlan.xlsx");
+            }
 
             return File(result, "application/xlsx");
         }

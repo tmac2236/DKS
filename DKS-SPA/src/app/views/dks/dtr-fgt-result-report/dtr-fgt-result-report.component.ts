@@ -68,9 +68,16 @@ export class DtrFgtResultReportComponent implements OnInit {
   }
   export() {
     const url = this.utility.baseUrl + "dtr/exportDevDtrFgtResultReport";
+    let fileName ="error";
+
+    if (this.sDevDtrFgtResultReport.reportType == "Dev") {
+      fileName  = "DTR_FGT_Report_Dev"
+    } else if (this.sDevDtrFgtResultReport.reportType == "Buy Plan") {
+      fileName  = "DTR_FGT_Report_BuyPlan"
+    } 
     this.utility.exportFactory(
       url,
-      "DTR_FGT_Result_Report",
+      fileName,
       this.sDevDtrFgtResultReport
     );
   }
