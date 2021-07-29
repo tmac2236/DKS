@@ -348,4 +348,15 @@ export class DtrFgtResultComponentComponent implements OnInit {
       }
     );
   }
+  //article modleNo modelName at least one field is required
+  checkSearchValid(){
+    if ((!this.utility.checkIsNullorEmpty(this.sDevDtrFgtResult.modelNo)) ||
+        (!this.utility.checkIsNullorEmpty(this.sDevDtrFgtResult.modelName)) ||
+        (!this.utility.checkIsNullorEmpty(this.sDevDtrFgtResult.article))  ){
+      return false;
+    }else{
+      return true;
+    }
+  }
+
 }

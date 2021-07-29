@@ -5,7 +5,7 @@
         <div class="card-header">
           <div class="row">
             <div class="col-3">
-              <strong>LAB Test Result</strong>
+              <strong>LAB Test Report Maintain</strong>
             </div>
             <div class="col-9">
               <div class="float-right">
@@ -29,7 +29,7 @@
             <!-- first column-->
             <div class="row">
               <div class="form-group col-6 mr-1">
-                <label>Model #</label>
+                <label>Model No</label>
                 <input
                   class="col-form-label"
                   type="text"
@@ -59,6 +59,7 @@
                 <button
                   class="btn btn-primary mr-1"
                   type="button"
+                  [disabled]='checkSearchValid()'
                   (click)="search()"
                 >
                   Search
@@ -397,5 +398,5 @@
   color="#fff"
   type="square-jelly-box"
   [fullScreen]="true"
-  ><p style="color: white">Loading F340 Shchdule...</p></ngx-spinner
+  ><p style="color: white">Loading LAB Test Report Maintain...</p></ngx-spinner
 >
