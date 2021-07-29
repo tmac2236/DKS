@@ -71,17 +71,29 @@
                 *ngIf="this.sDevDtrFgtResultReport.reportType === 'Buy Plan'"
               >
                 <label class="col-form-label col-6">Factory</label>
-                <select
+                <!--事業部帳號的選項-->
+                <select *ngIf="sDevDtrFgtResultReport.factoryId ==='2'; else elseFactory"
+                  name="factory"
+                  class="form-control col-6"
+                  [(ngModel)]="sDevDtrFgtResultReport.factory">
+                    <option value="C" selected>SHC</option>
+                    <option value="U" selected>TSH</option>
+                    <option value="E" selected>CB</option>
+                    <option value="D" selected>SPC</option>
+                </select>
+                 <!--各廠區帳號的選項-->
+                <ng-template #elseFactory>
+                  <select
                   name="factory"
                   class="form-control col-6"
                   [(ngModel)]="sDevDtrFgtResultReport.factory"
-                >
-                  <option value="All" selected>ALL</option>
-                  <option value="C" selected>SHC</option>
-                  <option value="U" selected>TSH</option>
-                  <option value="E" selected>CB</option>
-                  <option value="D" selected>SPC</option>
-                </select>
+                  disabled="disabled">
+                    <option value="C" selected>SHC</option>
+                    <option value="U" selected>TSH</option>
+                    <option value="E" selected>CB</option>
+                    <option value="D" selected>SPC</option>
+                  </select>                    
+                </ng-template>
               </div>
             </div>
             <!-- Second column-->
@@ -152,6 +164,9 @@
                     <!--套版分頁<table datatable id="f340Sche" class="table text-center table-striped">-->
                       <thead>
                         <tr class="table-info">
+                          <th *ngIf="this.sDevDtrFgtResultReport.reportType === 'Buy Plan'">Buy Plan</th>
+                          <th *ngIf="this.sDevDtrFgtResultReport.reportType === 'Buy Plan'">Dev Season</th>
+                          <th *ngIf="this.sDevDtrFgtResultReport.reportType === 'Buy Plan'">CWA Date</th>
                           <th>Model Name</th>
                           <th>Model No</th>
                           <th>Article</th>
@@ -174,6 +189,9 @@
                     <tbody>
                       <ng-container *ngFor="let item of result; let i = index">
                         <tr>
+                          <td *ngIf="this.sDevDtrFgtResultReport.reportType === 'Buy Plan'">{{ item.vern }}</td>
+                          <td *ngIf="this.sDevDtrFgtResultReport.reportType === 'Buy Plan'">{{ item.devSeason }}</td>
+                          <td *ngIf="this.sDevDtrFgtResultReport.reportType === 'Buy Plan'">{{ item.cwaDate }}</td>
                           <td>{{ item.modelName }}</td>
                           <td>{{ item.modelNo }}</td>
                           <td>{{ item.article }}</td>

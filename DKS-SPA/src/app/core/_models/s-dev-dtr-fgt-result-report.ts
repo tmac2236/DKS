@@ -2,13 +2,12 @@ import { utilityConfig } from "../utility/utility-config";
 import { Pagination } from "./pagination";
 
 export class SDevDtrFgtResultReport extends Pagination {
-
+  reportType: string;     //determine Dev or Buy plan
+  
   devSeason: string;      //DEV use
-
   buyPlanSeason: string;  //DHO use
   factory:string;         //DHO use
 
-  reportType: string;
   article: string;
   cwaDateS: string;
   cwaDateE: string;
@@ -22,7 +21,7 @@ export class SDevDtrFgtResultReport extends Pagination {
     this.devSeason = "";
 
     this.buyPlanSeason = "";
-    this.factory = utilityConfig.conditionAll; //預設翔鴻程
+    this.factory = ""; //預設翔鴻程
 
     this.reportType = "";
     this.article = "";

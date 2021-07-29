@@ -194,7 +194,7 @@ namespace DFPS.API.Data.Repository
                 new SqlParameter("@ModelName",String.IsNullOrEmpty(modelName) ? (object)DBNull.Value : modelName.Trim()),
             };
             var data = await _context.GetDevDtrFgtResultDto
-                   .FromSqlRaw("EXECUTE dbo.GetDTR_FGT_Result_Report @Article,@ModelNo,@ModelName", pc.ToArray())
+                   .FromSqlRaw("EXECUTE dbo.GetDTR_FGT_Result @Article,@ModelNo,@ModelName", pc.ToArray())
                    .ToListAsync();
 
             return data;
@@ -202,19 +202,30 @@ namespace DFPS.API.Data.Repository
         }
         public async Task<List<DevDtrFgtResultDto>> GetDevDtrFgtResultReportDto(SDevDtrFgtResultReport sDevDtrFgtResultReport)
         {
-            //aven will give you
-            //aven will give you
-            //aven will give you
-            //aven will give you
-            List<SqlParameter> pc = new List<SqlParameter>{
-                new SqlParameter("@Article",  String.IsNullOrEmpty(sDevDtrFgtResultReport.article) ? (object)DBNull.Value : sDevDtrFgtResultReport.article.Trim()),
-                new SqlParameter("@ModelNo",  String.IsNullOrEmpty(sDevDtrFgtResultReport.modelNo) ? (object)DBNull.Value : sDevDtrFgtResultReport.modelNo.Trim()),
-                new SqlParameter("@ModelName",String.IsNullOrEmpty(sDevDtrFgtResultReport.modelName) ? (object)DBNull.Value : sDevDtrFgtResultReport.modelName.Trim()),
-            };
-            var data = await _context.GetDevDtrFgtResultDto
-                   .FromSqlRaw("EXECUTE dbo.GetDTR_FGT_Result_Report @Article,@ModelNo,@ModelName", pc.ToArray())
-                   .ToListAsync();
 
+            List<SqlParameter> pc = new List<SqlParameter>{
+                new SqlParameter("@Article",  String.IsNullOrEmpty(sDevDtrFgtResultReport.article) ? (object)DBNull.Value : sDevDtrFgtResultReport.article.Trim().ToUpper()),
+                new SqlParameter("@ModelNo",  String.IsNullOrEmpty(sDevDtrFgtResultReport.modelNo) ? (object)DBNull.Value : sDevDtrFgtResultReport.modelNo.Trim().ToUpper()),
+                new SqlParameter("@ModelName",String.IsNullOrEmpty(sDevDtrFgtResultReport.modelName) ? (object)DBNull.Value : sDevDtrFgtResultReport.modelName.Trim().ToUpper()),
+                new SqlParameter("@CwaDateS",String.IsNullOrEmpty(sDevDtrFgtResultReport.cwaDateS) ? (object)DBNull.Value : sDevDtrFgtResultReport.cwaDateS ),
+                new SqlParameter("@CwaDateE",String.IsNullOrEmpty(sDevDtrFgtResultReport.cwaDateE) ? (object)DBNull.Value : sDevDtrFgtResultReport.cwaDateE ),
+            };
+            var data = new List<DevDtrFgtResultDto>();
+            if(sDevDtrFgtResultReport.reportType =="Dev"){              //DEV
+                pc.Add(new SqlParameter("@Season", String.IsNullOrEmpty(sDevDtrFgtResultReport.devSeason) ? (object)DBNull.Value : sDevDtrFgtResultReport.devSeason.Trim().ToUpper() ));
+                
+                 data = await _context.GetDevDtrFgtResultDto
+                   .FromSqlRaw("EXECUTE dbo.GetDTR_FGT_Result_Report_DEV @Article,@ModelNo,@ModelName,@CwaDateS,@CwaDateE,@Season", pc.ToArray())
+                   .ToListAsync();
+            } else if(sDevDtrFgtResultReport.reportType =="Buy Plan"){
+                pc.Add(new SqlParameter("@Season",  sDevDtrFgtResultReport.buyPlanSeason.Trim().ToUpper()) );
+                pc.Add(new SqlParameter("@Factory",  sDevDtrFgtResultReport.factory.Trim().ToUpper()) );
+                pc.Add(new SqlParameter("@VerNo",  (object)DBNull.Value) ); //because sp will find the biggest version of buy plan
+                
+                 data = await _context.GetDevDtrFgtResultDto
+                   .FromSqlRaw("EXECUTE dbo.GetDTR_FGT_Result_Report_BuyPlan @Article,@ModelNo,@ModelName,@CwaDateS,@CwaDateE,@Season,@Factory,@VerNo", pc.ToArray())
+                   .ToListAsync();            
+            }            
             return data;
 
         }

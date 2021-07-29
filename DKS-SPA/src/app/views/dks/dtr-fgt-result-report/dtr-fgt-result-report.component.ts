@@ -26,6 +26,11 @@ export class DtrFgtResultReportComponent implements OnInit {
 
   ngOnInit() {
     this.utility.initUserRole(this.sDevDtrFgtResultReport);
+    if(this.sDevDtrFgtResultReport.factoryId =='2'){
+      this.sDevDtrFgtResultReport.factory = utilityConfig.factory; //事業部帳號預設翔鴻程
+    }else{
+      this.sDevDtrFgtResultReport.factory = this.sDevDtrFgtResultReport.factoryId;
+    }
   }
 
   //搜尋
@@ -59,7 +64,11 @@ export class DtrFgtResultReportComponent implements OnInit {
       );
     
   }
-  
+  //分頁按鈕
+  pageChangeds(event: any): void {
+      this.sDevDtrFgtResultReport.currentPage = event.page;
+      this.search();
+  }
   export() {
     const url = this.utility.baseUrl + "dtr/exportDevDtrFgtResultReport";
     this.utility.exportFactory(url, "DTR_FGT_Result_Report", this.sDevDtrFgtResultReport);
