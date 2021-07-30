@@ -9,5 +9,5 @@ export var utilityConfig = {
   DevPreAssist: "GM0000000002",    //採購前段助理(但是當個人測試用)
   RolePpdPic: "GM0000000038",     //加工圖片維護                                                                                                                                                                                                                                          
   RolePpdLook: "GM0000000039",    //加工準備查詢 
-  RoleFgtLabReport: "GM0000000039",    //實驗室測試報告                                                                                                                                                                                                                                                    
+  RoleFgtLabReport: "GM0000000040",    //實驗室測試報告                                                                                                                                                                                                                                                    
 };
