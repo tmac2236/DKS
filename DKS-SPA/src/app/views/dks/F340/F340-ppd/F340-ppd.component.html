@@ -35,30 +35,6 @@
                   height="25"
                   (click)="this.utility.useLanguage('en')"
                 />
-                <img
-                  *ngIf="sF340PpdSchedule.isPaging === true"
-                  tooltip="pagination on"
-                  placement="bottom"
-                  src="../assets/systemImg/pagination.png"
-                  placement="bottom"
-                  width="25"
-                  height="25"
-                  (click)="
-                    this.utility.setPagination(false, this.sF340PpdSchedule)
-                  "
-                />
-                <img
-                  *ngIf="sF340PpdSchedule.isPaging === false"
-                  tooltip="pagination off"
-                  placement="bottom"
-                  src="../assets/systemImg/no-pagination.png"
-                  placement="bottom"
-                  width="25"
-                  height="25"
-                  (click)="
-                    this.utility.setPagination(true, this.sF340PpdSchedule)
-                  "
-                />
                 <!--<img src="../assets/systemImg/vietnam.png" width="25" height="25" />-->
                 <img
                   src="../assets/systemImg/exit.png"
@@ -658,7 +634,7 @@
                       *ngIf="this.sF340PpdSchedule.isPaging"
                       [boundaryLinks]="true"
                       [totalItems]="sF340PpdSchedule.totalItems"
-                      [maxSize]="100"
+                      [maxSize]="60"
                       [itemsPerPage]="sF340PpdSchedule.itemsPerPage"
                       [(ngModel)]="sF340PpdSchedule.currentPage"
                       (pageChanged)="pageChangeds($event)"

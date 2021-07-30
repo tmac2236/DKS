@@ -23,7 +23,6 @@ export class F340Component implements OnInit,OnDestroy   {
   constructor(public utility: Utility, private dksService: DksService) {}
 
   ngOnInit() {
-    debugger;
     this.utility.initUserRole(this.sF340Schedule);
     //console.log((<HTMLInputElement>document.getElementById("idDataType")));
     //this.sF340Schedule.cwaDateS = this.utility.datepiper.transform(new Date(), 'yyyy-MM-dd');

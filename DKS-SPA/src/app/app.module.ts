@@ -77,6 +77,8 @@ export function createTranslateLoader(http: HttpClient) {
     NgxSpinnerModule,
     BrowserModule,
     HttpClientModule,
+    BrowserAnimationsModule,   //ngx-dropdown
+    BsDropdownModule.forRoot(),//ngx-dropdown
     TranslateModule.forRoot({  // I18N
       loader: {
         provide: TranslateLoader,

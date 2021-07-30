@@ -4,25 +4,18 @@
       <div class="card">
         <div class="card-header">
           <div class="row">
-            <div class="col-3">
-              <strong>LAB Test Report</strong>
+            <strong class ="col-11" style="font-size: 20px;color:#000000;">LAB Test Report</strong>
+              <div class="col-1 btn-group" dropdown>
+                <button id="button-basic" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
+                        aria-controls="dropdown-basic">
+                        <strong *ngIf="this.sDevDtrFgtResultReport.loginUser">{{ this.sDevDtrFgtResultReport.loginUser }}</strong> <span class="caret"></span>
+                </button>
+                <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
+                    role="menu" aria-labelledby="button-basic">
+                  <li role="menuitem"><a class="dropdown-item" href="javascript:;" (click)="this.utility.logout()"><img src="../assets/systemImg/exit.png" class="topImg" width="25" height="25"/>  Log Out</a></li>
+                </ul>                
             </div>
-            <div class="col-9">
-              <div class="float-right">
-                <strong *ngIf="this.sDevDtrFgtResultReport.loginUser"
-                  >{{ "Common.hello" | translate }}
-                  {{ this.sDevDtrFgtResultReport.loginUser }}</strong
-                >
-                <img
-                  src="../assets/systemImg/exit.png"
-                  tooltip="Logout"
-                  width="25"
-                  height="25"
-                  (click)="this.utility.logout()"
-                />
-              </div>
-            </div>
-          </div>
+          </div>   
         </div>
         <div class="card-body">
           <form class="form" #addQueryReportDataForm="ngForm">
@@ -228,7 +221,7 @@
                     <pagination *ngIf="this.sDevDtrFgtResultReport.isPaging" 
                       [boundaryLinks]="true" 
                       [totalItems]="sDevDtrFgtResultReport.totalItems"
-                      [maxSize]="100"
+                      [maxSize]="60"
                       [itemsPerPage]="sDevDtrFgtResultReport.itemsPerPage"
                       [(ngModel)]="sDevDtrFgtResultReport.currentPage"
                       (pageChanged) = "pageChangeds($event)"

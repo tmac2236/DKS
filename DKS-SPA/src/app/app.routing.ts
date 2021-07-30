@@ -72,7 +72,11 @@ export const routes: Routes = [
   },
   {
     path: "DTR-FGT-Result",
+    canActivate: [AuthGuardRole],
     component: DtrFgtResultComponentComponent,
+    data: {
+      roles: [utilityConfig.RoleFgtLabReport],
+    },
   },
   {
     path: "DTR-FGT-Result-Report",

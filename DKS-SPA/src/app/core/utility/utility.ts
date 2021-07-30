@@ -29,8 +29,14 @@ export class Utility {
   ) {}
 
   logout() {
-    localStorage.removeItem("token");
-    this.alertify.message("logged out");
+    this.alertify.confirm(
+      "Sweet Alert",
+      "Are you sure you want to log out? System is going to redirect to DKS.",
+      () => {
+        localStorage.removeItem("token");
+        window.location.href ="http://10.4.0.39:8080/ArcareEng/login.jsp";
+      }
+    );
   }
   //匯出excel
   exportFactory(url: string, nameParam: string, params: Pagination) {
