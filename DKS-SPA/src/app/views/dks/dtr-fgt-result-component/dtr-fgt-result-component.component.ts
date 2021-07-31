@@ -20,12 +20,13 @@ export class DtrFgtResultComponentComponent implements OnInit {
     uploadPdf: "Please upload jpg file and size cannot over 2 Mb.",
   };
   uiControls: any = {
-    uploadPicF340Ppd: utilityConfig.RolePpdPic,
+    editModel: utilityConfig.RoleSysAdm,
   };
   sDevDtrFgtResult: SDevDtrFgtResult = new SDevDtrFgtResult();
   result: DevDtrFgtResultDto[] = [];
   articleList: object[]; //ArticleModelNameDto
   partNameList: object[]; //F340PartNoTreatmemtDto
+
   addAModel: DevDtrFgtResult = new DevDtrFgtResult(); //use in addFgtResultModal
   addAModelTreatment: string = ""; //only let user see not save to db
   constructor(
@@ -42,7 +43,8 @@ export class DtrFgtResultComponentComponent implements OnInit {
   async search() {
     //modelNo 或 Article 至少任一需輸入等於五個字元
     //if(!(this.sDevDtrFgtResult.modelNo.trim().length == 5 || this.sDevDtrFgtResult.article.trim().length == 6)) return;
-    this.cleanAll();
+    this.result = [];
+    this.articleList = [];
     await this.getArticleVerList();
     if (this.articleList == undefined || this.articleList.length == 0) {
       
@@ -147,6 +149,29 @@ export class DtrFgtResultComponentComponent implements OnInit {
         );
     }
   }
+  //下拉選單帶出PartName-更新用沒有alert提醒
+  async getPartName4DtrFgt4Update() {
+    this.partNameList = [];//clear
+    this.addAModel.partName = ""; //防呆
+    if (this.addAModel.stage == "SMS" || this.addAModel.stage == "MCS") {
+      this.utility.spinner.show();
+      await this.dtrService
+        .getPartName4DtrFgt(this.addAModel.article, this.addAModel.stage)
+        .then(
+          (res) => {
+            this.utility.spinner.hide();
+            this.partNameList = res;
+          },
+          (error) => {
+            this.utility.alertify.confirm(
+              "System Notice",
+              "Syetem is busy, please try later.",
+              () => {}
+            );
+          }
+        );
+    }
+  }
   showPartNameDetail() {
     var model = this.partNameList.find(
       (x) => x["partName"] == this.addAModel.partName
@@ -203,12 +228,40 @@ export class DtrFgtResultComponentComponent implements OnInit {
       "../assets/F340PpdPic/QCTestResult/" + item.article + "/" + item.fileName;
     window.open(dataUrl);
   }
-  //Add a result of fgt
-  openAddFgtResultModal() {
-    this.openModal("addFgtResult");
+  //Add or update a result of fgt
+   openAddFgtResultModal(type:string, editModel?:DevDtrFgtResultDto) {
+    this.cleanModel();
+
+    if(type == "addFgtResult"){
+      this.openModal("addFgtResult");
+    }else if (type == "editFgtResult"){
+      
+      this.addAModel.article = editModel.article ;
+      this.addAModel.stage = editModel.stage ;
+      this.getPartName4DtrFgt4Update();
+      this.addAModel.kind = editModel.kind ;
+      this.addAModel.type = editModel.type ;
+      this.addAModel.modelNo = editModel.modelNo ;
+
+      this.addAModel.modelName = editModel.modelName ;
+      this.addAModel.labNo = editModel.labNo ;
+      this.addAModel.result = editModel.result ;
+      this.addAModel.partNo = editModel.partNo ;
+      this.addAModel.partName = editModel.partName ;
+
+      this.addAModel.fileName = editModel.fileName ;
+      this.addAModel.remark = editModel.remark ;
+      if (!this.utility.checkIsNullorEmpty(this.addAModel.partName)){
+        let treatmentCode = editModel.treatmentCode;
+        let treatmentEn = editModel.treatmentEn;
+        let treatmentZh = editModel.treatmentZh;
+        this.addAModelTreatment = `${treatmentCode} ${treatmentZh} (${treatmentEn})`;
+      }
+      this.openModal("addFgtResult");
+    }
+
   }
   openModal(type: string) {
-    this.addAModel = new DevDtrFgtResult();
     if (type == "addFgtResult") this.addFgtResultModal.show();
   }
   closeModal(type: string) {
@@ -316,10 +369,9 @@ export class DtrFgtResultComponentComponent implements OnInit {
     this.addAModel.modelName = model["modelName"];
   }
 
-  cleanAll() {
-    this.result = [];
-    this.articleList = [];
+  cleanModel() {
     this.addAModel = new DevDtrFgtResult();
+    this.addAModel.upusr = this.sDevDtrFgtResult.loginUser;
     this.addAModelTreatment = "";
   }
   deleteDevDtrFgtResult(model:DevDtrFgtResult) {

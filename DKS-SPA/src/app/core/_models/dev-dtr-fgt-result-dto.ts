@@ -5,7 +5,7 @@ export class DevDtrFgtResultDto implements ModelInterface {
   stage: string;
   kind: string;
   type: string;
-  modelNo: Date;
+  modelNo: string;
 
   modelName: string;
   labNo: string;

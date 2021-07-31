@@ -60,7 +60,7 @@
                 <button
                   class="btn btn-primary mr-1"
                   type="button"
-                  (click)="openAddFgtResultModal()"
+                  (click)="openAddFgtResultModal('addFgtResult')"
                   [disabled]="!(articleList?.length > 0)"
                 >
                   Add A Report
@@ -104,6 +104,13 @@
                       <ng-container *ngFor="let item of result; let i = index">
                         <tr>
                           <td>
+                            <!--
+                            <img
+                              src="../assets/systemImg/edit.png"
+                              width="35"
+                              height="35"
+                              (click)="openAddFgtResultModal('editFgtResult',item)"/>
+                            -->                                
                             <img
                               src="../assets/systemImg/delete.png"
                               width="35"
