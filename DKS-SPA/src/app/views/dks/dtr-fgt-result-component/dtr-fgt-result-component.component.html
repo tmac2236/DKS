@@ -241,6 +241,7 @@
               class="form-control"
               [(ngModel)]="addAModel.article"
               (change)="selectArticle()"
+              (change)="getPartName4DtrFgt()"
               >
                 <option
                 *ngFor="let atc of articleList"
@@ -279,6 +280,7 @@
               id="modalKind"
               class="form-control"
               [(ngModel)]="addAModel.kind"
+              (change)="getPartName4DtrFgt()"
               >
                 <option value = "FGT" selected>FGT</option>
                 <option value = "CMA" selected>CMA</option>
@@ -330,7 +332,7 @@
               </select>
             </div>
           </div>
-          <div class="col-4">
+          <div class="col-4" *ngIf="this.partNameList?.length > 0 ">
             <div class="form-group">
               <input type="text" class="form-control" id="modalPartNo" [(ngModel)]="addAModel.partNo" [hidden]="true"/>
               <label for="modalPartName" class="col-form-label">Part Name</label>
@@ -350,7 +352,7 @@
               </select>
             </div>
           </div>
-          <div class="col-4">
+          <div class="col-4" *ngIf="this.partNameList?.length > 0 ">
             <div class="form-group">
               <label for="modalTreatMent" class="col-form-label"
                 >TreatMent</label>

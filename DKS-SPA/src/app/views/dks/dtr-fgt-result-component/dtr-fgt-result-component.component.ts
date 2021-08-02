@@ -118,7 +118,8 @@ export class DtrFgtResultComponentComponent implements OnInit {
   async getPartName4DtrFgt() {
     this.partNameList = [];//clear
     this.addAModel.partName = ""; //防呆
-    if (this.addAModel.stage == "SMS" || this.addAModel.stage == "MCS") {
+    //有選Component Test時, 才需要去檢查有沒有PartName
+    if (this.addAModel.kind == "CT" && (this.addAModel.stage == "SMS" || this.addAModel.stage == "MCS")) {
       this.utility.spinner.show();
       await this.dtrService
         .getPartName4DtrFgt(this.addAModel.article, this.addAModel.stage)
@@ -153,7 +154,8 @@ export class DtrFgtResultComponentComponent implements OnInit {
   async getPartName4DtrFgt4Update() {
     this.partNameList = [];//clear
     this.addAModel.partName = ""; //防呆
-    if (this.addAModel.stage == "SMS" || this.addAModel.stage == "MCS") {
+    //有選Component Test時, 才需要去檢查有沒有PartName
+    if (this.addAModel.kind == "CT" && (this.addAModel.stage == "SMS" || this.addAModel.stage == "MCS")) {
       this.utility.spinner.show();
       await this.dtrService
         .getPartName4DtrFgt(this.addAModel.article, this.addAModel.stage)
@@ -304,7 +306,7 @@ export class DtrFgtResultComponentComponent implements OnInit {
       alertStr += " Test Result、";
     }
 
-    if (this.partNameList != null) {
+    if (this.partNameList?.length > 0) {
       if (this.utility.checkIsNullorEmpty(this.addAModel.partName)) {
         isAlert = true;
         alertStr += " Part Name、";

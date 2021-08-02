@@ -182,6 +182,8 @@ namespace DKS_API.Controllers
             if (devDtrFgtResult != null)
             {
                 devDtrFgtResult.FILENAME = "";
+                if(String.IsNullOrEmpty(devDtrFgtResult.PARTNO))devDtrFgtResult.PARTNO = "";
+                if(String.IsNullOrEmpty(devDtrFgtResult.PARTNAME))devDtrFgtResult.PARTNAME = "";
                 devDtrFgtResult.UPUSR = "";
                 devDtrFgtResult.UPDAY = null;
                 _devDtrFgtResultDAO.Add(devDtrFgtResult);
