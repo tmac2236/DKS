@@ -28,8 +28,8 @@ namespace DKS.API.Models.DKS
         public string TreatmentZh { get; set; }
         public string TreatmentEn { get; set; }
         
-        public string Vern { get; set; }  //配合和新增畫面一樣物件
-        public string DevSeason { get; set; }  //配合和新增畫面一樣物件
-        public string CwaDate { get; set; }  //配合和新增畫面一樣物件
+        public string Vern { get; set; }  //配合和新增畫面一樣物件(Buy Plan)
+        public string DevSeason { get; set; }  //配合和新增畫面一樣物件(Buy Plan、Dev)
+        public string CwaDate { get; set; }  //配合和新增畫面一樣物件(Buy Plan)
     }
 }

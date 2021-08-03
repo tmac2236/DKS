@@ -184,8 +184,8 @@ namespace DKS_API.Controllers
                 devDtrFgtResult.FILENAME = "";
                 if(String.IsNullOrEmpty(devDtrFgtResult.PARTNO))devDtrFgtResult.PARTNO = "";
                 if(String.IsNullOrEmpty(devDtrFgtResult.PARTNAME))devDtrFgtResult.PARTNAME = "";
-                devDtrFgtResult.UPUSR = "";
-                devDtrFgtResult.UPDAY = null;
+                devDtrFgtResult.UPUSR = devDtrFgtResult.UPUSR;
+                devDtrFgtResult.UPDAY = DateTime.Now;
                 _devDtrFgtResultDAO.Add(devDtrFgtResult);
                 await _devDtrFgtResultDAO.SaveAll();
 
