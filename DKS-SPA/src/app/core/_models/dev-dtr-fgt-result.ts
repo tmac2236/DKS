@@ -18,5 +18,8 @@ export class DevDtrFgtResult implements ModelInterface {
   upday: Date;
   upusr: string;
 
-  constructor(){}
+  constructor(){
+    this.labNo = "";
+    this.remark = "";
+  }
 }

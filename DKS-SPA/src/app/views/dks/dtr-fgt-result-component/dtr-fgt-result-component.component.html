@@ -90,14 +90,15 @@
                         <th>Kind</th>
                         <th>Test Result</th>
                         <th>Test Report</th>
-                        <th>Remark</th>
-
                         <th>Part Name</th>
+
                         <th>TreatMent(zh-TW)</th>
                         <th>TreatMent(En)</th>
                         <th>Maintain Report</th>
                         <th>Upload Time</th>
                         <th>Upload User</th>
+
+                        <th>Remark</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -127,9 +128,8 @@
                           <td>{{ item.kind }}</td>
                           <td>{{ item.result }}</td>
                           <td>{{ item.fileName }}</td>
-                          <td>{{ item.remark }}</td>
-
                           <td>{{ item.partName }}</td>
+
                           <td>{{ item.treatmentZh }}</td>
                           <td>{{ item.treatmentEn }}</td>
                           <!--Maintain-->
@@ -147,9 +147,9 @@
                             <label
                               class="btn btn-success mt-2"
                               for="fileUpload{{ item.labNo }}"
-                              tooltip="{{ this.hintMsg.uploadPic }}"
+                              tooltip="{{ this.hintMsg.uploadPdf }}"
                               placement="right"
-                              >+</label
+                              >Upload Report</label
                             >
                             <input
                               id="fileUpload{{ item.labNo }}"
@@ -178,6 +178,8 @@
                           </td>
                           <td>{{ item.upday  | date: "yyyy/MM/dd HH:mm:ss"  }}</td>
                           <td>{{ item.upusr }}</td>
+
+                          <td>{{ item.remark }}</td>
                         </tr>
                       </ng-container>
                     </tbody>
@@ -195,7 +197,8 @@
 <div
   bsModal
   #addFgtResultModal="bs-modal"
-  class="modal fade"
+  class="modal hide fade in"
+  [config]="{backdrop: 'static'}"
   tabindex="-1"
   role="dialog"
   aria-labelledby="myModalLabel"
@@ -204,7 +207,7 @@
   <div class="modal-dialog modal-info modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">Pleas add a FGT result</h4>
+        <h4 class="modal-title">Please add a FGT result</h4>
         <button
           type="button"
           class="close"
@@ -347,7 +350,7 @@
                 <option
                 *ngFor="let ptn of partNameList"
                 value="{{ ptn.partName }}">
-                {{ ptn.partName }}
+                {{ ptn.partNo }} {{ ptn.partName }}
                 </option>
               </select>
             </div>
@@ -369,26 +372,42 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="modal-footer">
+        <!-- Four column-->
         <div class="row">
-          <div class="col-12">
-            <button
+          <div class="col-10"></div>
+
+          <!--新增一筆頁面上傳PDF用-->
+          <div class="col-2" *ngIf="isValidUpload;else elseUploadBtn">
+            <label
+            class="btn btn-primary btn-lg mt-2"
+            for="pdfUploadInAdd"
+            tooltip="{{ this.hintMsg.uploadPdf }}"
+            placement="right"
+            >+</label>
+            <input
+            id="pdfUploadInAdd"
+            type="file"
+            accept=".pdf"
+            style="display: none"
+            (click)="this.utility.reset($event)"
+            (change)="
+              uploadPdfDtrFgtResult($event.target.files, addAModel)
+            "/>     
+          </div>
+          <ng-template #elseUploadBtn>
+            <div class="col-2">
+              <button
               type="button"
-              class="btn btn-success btn-lg mt-2 mr-4"
-              (click)="saveAFgtResult()"
-            >
+              class="btn btn-success btn-lg mt-2"
+              (click)="saveAFgtResult()">
               Save
             </button>
-            <button
-              type="button"
-              class="btn btn-secondary btn-lg mt-2"
-              (click)="closeModal('addFgtResult')"
-            >
-              Close
-            </button>
-          </div>
+            </div>
+          </ng-template>
+
         </div>
+      </div>
+      <div class="modal-footer">
       </div>
     </div>
   </div>

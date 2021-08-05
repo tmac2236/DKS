@@ -17,7 +17,7 @@ export class DtrFgtResultComponentComponent implements OnInit {
   @ViewChild("addFgtResultModal") public addFgtResultModal: ModalDirective;
   //for hint
   hintMsg: any = {
-    uploadPdf: "Please upload jpg file and size cannot over 2 Mb.",
+    uploadPdf: "Please upload pdf file and size cannot over 2 Mb.",
   };
   uiControls: any = {
     editModel: utilityConfig.RoleSysAdm,
@@ -29,10 +29,9 @@ export class DtrFgtResultComponentComponent implements OnInit {
 
   addAModel: DevDtrFgtResult = new DevDtrFgtResult(); //use in addFgtResultModal
   addAModelTreatment: string = ""; //only let user see not save to db
-  constructor(
-    public utility: Utility,
-    private dtrService: DtrService
-  ) {}
+  isValidUpload:boolean = false;  //卡控新增畫面的上傳PDF按鈕
+
+  constructor(public utility: Utility, private dtrService: DtrService) {}
 
   ngOnInit() {
     this.utility.initUserRole(this.sDevDtrFgtResult);
@@ -47,7 +46,6 @@ export class DtrFgtResultComponentComponent implements OnInit {
     this.articleList = [];
     await this.getArticleVerList();
     if (this.articleList == undefined || this.articleList.length == 0) {
-      
       this.utility.alertify.confirm(
         "Sweet Alert",
         "These conditions didn't exist in F205 Article in DKS.",
@@ -61,7 +59,6 @@ export class DtrFgtResultComponentComponent implements OnInit {
       this.dtrService.searchDevDtrFgtResult(this.sDevDtrFgtResult).subscribe(
         (res: PaginatedResult<DevDtrFgtResultDto[]>) => {
           if (res.result.length < 1) {
-            
             this.utility.alertify.confirm(
               "Sweet Alert",
               "No Data in these conditions of search, please try again.",
@@ -116,10 +113,13 @@ export class DtrFgtResultComponentComponent implements OnInit {
   }
   //下拉選單帶出PartName
   async getPartName4DtrFgt() {
-    this.partNameList = [];//clear
+    this.partNameList = []; //clear
     this.addAModel.partName = ""; //防呆
     //有選Component Test時, 才需要去檢查有沒有PartName
-    if (this.addAModel.kind == "CT" && (this.addAModel.stage == "SMS" || this.addAModel.stage == "MCS")) {
+    if (
+      this.addAModel.kind == "CT" &&
+      (this.addAModel.stage == "SMS" || this.addAModel.stage == "MCS")
+    ) {
       this.utility.spinner.show();
       await this.dtrService
         .getPartName4DtrFgt(this.addAModel.article, this.addAModel.stage)
@@ -152,10 +152,13 @@ export class DtrFgtResultComponentComponent implements OnInit {
   }
   //下拉選單帶出PartName-更新用沒有alert提醒
   async getPartName4DtrFgt4Update() {
-    this.partNameList = [];//clear
+    this.partNameList = []; //clear
     this.addAModel.partName = ""; //防呆
     //有選Component Test時, 才需要去檢查有沒有PartName
-    if (this.addAModel.kind == "CT" && (this.addAModel.stage == "SMS" || this.addAModel.stage == "MCS")) {
+    if (
+      this.addAModel.kind == "CT" &&
+      (this.addAModel.stage == "SMS" || this.addAModel.stage == "MCS")
+    ) {
       this.utility.spinner.show();
       await this.dtrService
         .getPartName4DtrFgt(this.addAModel.article, this.addAModel.stage)
@@ -216,8 +219,9 @@ export class DtrFgtResultComponentComponent implements OnInit {
       (res) => {
         this.utility.spinner.hide();
         //找到該筆model 把資料回填
-        console.log("res dpf" + res.fileName);
-        model.fileName = res.fileName;
+        console.log("res dpf" + res["filename"]);
+        model.fileName = res["filename"]; //為了讓新增後顯示PDF icon
+        this.closeModal('addFgtResult');  //新增一筆record後上傳pdf成功關閉modal
       },
       (error) => {
         this.utility.spinner.hide();
@@ -231,29 +235,28 @@ export class DtrFgtResultComponentComponent implements OnInit {
     window.open(dataUrl);
   }
   //Add or update a result of fgt
-   openAddFgtResultModal(type:string, editModel?:DevDtrFgtResultDto) {
+  openAddFgtResultModal(type: string, editModel?: DevDtrFgtResultDto) {
     this.cleanModel();
 
-    if(type == "addFgtResult"){
+    if (type == "addFgtResult") {
       this.openModal("addFgtResult");
-    }else if (type == "editFgtResult"){
-      
-      this.addAModel.article = editModel.article ;
-      this.addAModel.stage = editModel.stage ;
+    } else if (type == "editFgtResult") {
+      this.addAModel.article = editModel.article;
+      this.addAModel.stage = editModel.stage;
       this.getPartName4DtrFgt4Update();
-      this.addAModel.kind = editModel.kind ;
-      this.addAModel.type = editModel.type ;
-      this.addAModel.modelNo = editModel.modelNo ;
+      this.addAModel.kind = editModel.kind;
+      this.addAModel.type = editModel.type;
+      this.addAModel.modelNo = editModel.modelNo;
 
-      this.addAModel.modelName = editModel.modelName ;
-      this.addAModel.labNo = editModel.labNo ;
-      this.addAModel.result = editModel.result ;
-      this.addAModel.partNo = editModel.partNo ;
-      this.addAModel.partName = editModel.partName ;
+      this.addAModel.modelName = editModel.modelName;
+      this.addAModel.labNo = editModel.labNo;
+      this.addAModel.result = editModel.result;
+      this.addAModel.partNo = editModel.partNo;
+      this.addAModel.partName = editModel.partName;
 
-      this.addAModel.fileName = editModel.fileName ;
-      this.addAModel.remark = editModel.remark ;
-      if (!this.utility.checkIsNullorEmpty(this.addAModel.partName)){
+      this.addAModel.fileName = editModel.fileName;
+      this.addAModel.remark = editModel.remark;
+      if (!this.utility.checkIsNullorEmpty(this.addAModel.partName)) {
         let treatmentCode = editModel.treatmentCode;
         let treatmentEn = editModel.treatmentEn;
         let treatmentZh = editModel.treatmentZh;
@@ -261,7 +264,6 @@ export class DtrFgtResultComponentComponent implements OnInit {
       }
       this.openModal("addFgtResult");
     }
-
   }
   openModal(type: string) {
     if (type == "addFgtResult") this.addFgtResultModal.show();
@@ -320,45 +322,61 @@ export class DtrFgtResultComponentComponent implements OnInit {
         return;
       });
     } else {
-      //Step 2: check is labNo valid
-      let model = this.result.find(
-        (x) => x["labNo"] == this.addAModel.labNo.trim()
-      );
-      if (model) {
+      debugger;
+      //Step 2: check is labNo length is 6 and the value is number
+      let isGoodLength =  this.addAModel.labNo.length == 6;
+      let isNumber = this.utility.checkIsNumber(this.addAModel.labNo);
+      if ( !isGoodLength || !isNumber ) {
         this.utility.alertify.confirm(
           "Sweet Alert",
-          "The Lab No is exist please use another one!",
+          "The length of Lab have to be 6 and number!",
           () => {
             return;
           }
         );
       } else {
-        //Step 3: call api save to db
 
-        this.utility.spinner.show();
-        this.dtrService.addDevDtrFgtResult(this.addAModel).subscribe(
-          (res: boolean) => {
-            this.utility.spinner.hide();
-            if (!res) {
+        //Step 3: check is labNo valid
+        let model = this.result.find(
+          (x) => x["labNo"] == this.addAModel.labNo.trim()
+        );
+        if (model) {
+          this.utility.alertify.confirm(
+            "Sweet Alert",
+            "The Lab No is exist please use another one!",
+            () => {
+              return;
+            }
+          );
+        } else {
+          //Step 4: call api save to db
+
+          this.utility.spinner.show();
+          this.dtrService.addDevDtrFgtResult(this.addAModel).subscribe(
+            (res: boolean) => {
+              this.utility.spinner.hide();
+              if (!res) {
+                this.utility.alertify.confirm(
+                  "Sweet Alert",
+                  "Save fault please refresh browser and try again!",
+                  () => {}
+                );
+              } else {
+                //Step 4: refresh the page
+                this.search();
+                this.isValidUpload = true; //let add pdf button show
+              }
+            },
+            (error) => {
+              this.utility.spinner.hide();
               this.utility.alertify.confirm(
-                "Sweet Alert",
-                "Save fault please refresh browser and try again!",
+                "System Notice",
+                "Syetem is busy, please try later.",
                 () => {}
               );
-            } else {
-              //Step 4: refresh the page
-              this.search();
             }
-          },
-          (error) => {
-            this.utility.spinner.hide();
-            this.utility.alertify.confirm(
-              "System Notice",
-              "Syetem is busy, please try later.",
-              () => {}
-            );
-          }
-        );
+          );
+        }
       }
     }
   }
@@ -375,8 +393,9 @@ export class DtrFgtResultComponentComponent implements OnInit {
     this.addAModel = new DevDtrFgtResult();
     this.addAModel.upusr = this.sDevDtrFgtResult.loginUser;
     this.addAModelTreatment = "";
+    this.isValidUpload = false;
   }
-  deleteDevDtrFgtResult(model:DevDtrFgtResult) {
+  deleteDevDtrFgtResult(model: DevDtrFgtResult) {
     this.utility.spinner.show();
     this.dtrService.deleteDevDtrFgtResult(model).subscribe(
       (res: boolean) => {
@@ -403,14 +422,22 @@ export class DtrFgtResultComponentComponent implements OnInit {
     );
   }
   //article modleNo modelName at least one field is required
-  checkSearchValid(){
-    if ((!this.utility.checkIsNullorEmpty(this.sDevDtrFgtResult.modelNo)) ||
-        (!this.utility.checkIsNullorEmpty(this.sDevDtrFgtResult.modelName)) ||
-        (!this.utility.checkIsNullorEmpty(this.sDevDtrFgtResult.article))  ){
+  checkSearchValid() {
+    if (
+      !this.utility.checkIsNullorEmpty(this.sDevDtrFgtResult.modelNo) ||
+      !this.utility.checkIsNullorEmpty(this.sDevDtrFgtResult.modelName) ||
+      !this.utility.checkIsNullorEmpty(this.sDevDtrFgtResult.article)
+    ) {
       return false;
-    }else{
+    } else {
       return true;
     }
   }
-
+  uploadPdf(){
+    let target = "";
+    let id = (<HTMLInputElement>document.getElementById("name")).value
+  }
+  firePdfUploadInAdd(){
+    document.getElementById('pdfUploadInAdd').click();
+  }
 }
