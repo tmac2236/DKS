@@ -22,8 +22,11 @@ export class DevDtrFgtResultDto implements ModelInterface {
   treatmentZh: string;
   treatmentEn: string;
 
-  vern: string;       //配合和新增畫面一樣物件
-  devSeason: string;  //配合和新增畫面一樣物件
-  cwaDate: string;    //配合和新增畫面一樣物件
+  vern: string;             //配合和新增畫面一樣物件
+  devSeason: string;        //配合和新增畫面一樣物件
+  cwaDate: string;          //配合和新增畫面一樣物件
+  factory: string;          //配合和新增畫面一樣物件
+  buyPlanSeason: string;    //配合和新增畫面一樣物件
+
   constructor(){}
 }

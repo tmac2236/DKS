@@ -159,6 +159,9 @@
                     <!--套版分頁<table datatable id="f340Sche" class="table text-center table-striped">-->
                       <thead>
                         <tr class="table-info">
+                          <th *ngIf="this.sDevDtrFgtResultReport.reportType === 'Dev'">Dev Season</th>
+                          <th *ngIf="this.sDevDtrFgtResultReport.reportType === 'Buy Plan'">Factory</th>
+                          <th *ngIf="this.sDevDtrFgtResultReport.reportType === 'Buy Plan'">Buy Plan Season</th>
                           <th *ngIf="this.sDevDtrFgtResultReport.reportType === 'Buy Plan'">Buy Plan</th>
                           <th *ngIf="this.sDevDtrFgtResultReport.reportType === 'Buy Plan'">Dev Season</th>
                           <th *ngIf="this.sDevDtrFgtResultReport.reportType === 'Buy Plan'">CWA Date</th>
@@ -172,18 +175,21 @@
                           <th>Kind</th>
                           <th>Test Result</th>
                           <th>Test Report</th>
-                          <th>Remark</th>
-  
                           <th>Part Name</th>
+
                           <th>TreatMent(zh-TW)</th>
                           <th>TreatMent(En)</th>
                           <th>Upload Time</th>
                           <th>Upload User</th>
+                          <th>Remark</th>
                         </tr>
                       </thead>
                     <tbody>
                       <ng-container *ngFor="let item of result; let i = index">
                         <tr>
+                          <td *ngIf="this.sDevDtrFgtResultReport.reportType === 'Dev'">{{ item.devSeason }}</td>
+                          <td *ngIf="this.sDevDtrFgtResultReport.reportType === 'Buy Plan'">{{ item.factory }}</td>
+                          <td *ngIf="this.sDevDtrFgtResultReport.reportType === 'Buy Plan'">{{ item.buyPlanSeason }}</td>                          
                           <td *ngIf="this.sDevDtrFgtResultReport.reportType === 'Buy Plan'">{{ item.vern }}</td>
                           <td *ngIf="this.sDevDtrFgtResultReport.reportType === 'Buy Plan'">{{ item.devSeason }}</td>
                           <td *ngIf="this.sDevDtrFgtResultReport.reportType === 'Buy Plan'">{{ item.cwaDate }}</td>
@@ -197,13 +203,13 @@
                           <td>{{ item.kind }}</td>
                           <td>{{ item.result }}</td>
                           <td>{{ item.fileName }}</td>
-                          <td>{{ item.remark }}</td>
-
                           <td>{{ item.partName }}</td>
+
                           <td>{{ item.treatmentZh }}</td>
                           <td>{{ item.treatmentEn }}</td>
                           <td>{{ item.upday  | date: "yyyy/MM/dd HH:mm:ss"  }}</td>
                           <td>{{ item.upusr }}</td>
+                          <td>{{ item.remark }}</td>
                         </tr>
                       </ng-container>
                     </tbody>

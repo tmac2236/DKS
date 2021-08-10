@@ -31,5 +31,8 @@ namespace DKS.API.Models.DKS
         public string Vern { get; set; }  //配合和新增畫面一樣物件(Buy Plan)
         public string DevSeason { get; set; }  //配合和新增畫面一樣物件(Buy Plan、Dev)
         public string CwaDate { get; set; }  //配合和新增畫面一樣物件(Buy Plan)
+        public string Factory { get; set; }  //配合和新增畫面一樣物件(Buy Plan)
+        public string BuyPlanSeason { get; set; }  //配合和新增畫面一樣物件(Buy Plan)
+
     }
 }
