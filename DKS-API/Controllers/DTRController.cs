@@ -274,13 +274,52 @@ namespace DKS_API.Controllers
             var data = await _dKSDAO.GetDevDtrFgtResultReportDto(sDevDtrFgtResultReport);
 
             byte[] result = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 };
-            if(sDevDtrFgtResultReport.reportType =="Dev"){              //DEV
+            if(sDevDtrFgtResultReport.reportType =="Dev")
+            {              //DEV
                 result = _excelService.CommonExportReport(data, "TempDevDtrFgtResultReport_Dev.xlsx");
-            } else if(sDevDtrFgtResultReport.reportType =="Buy Plan"){
+            }
+            else if(sDevDtrFgtResultReport.reportType =="Buy Plan")
+            {
                 result = _excelService.CommonExportReport(data, "TempDevDtrFgtResultReport_BuyPlan.xlsx");
             }
 
             return File(result, "application/xlsx");
+        }
+        [HttpPost("addVSfile")]
+        public async Task<IActionResult> AddVSfile([FromForm] DevDtrVisStandard devDtrVisStandard)
+        {
+
+            _logger.LogInformation(String.Format(@"******DTRController AddVSfile fired!! ******"));
+
+
+            //記得修改DAO 
+            DevDtrFgtResult model = _devDtrFgtResultDAO.FindSingle(
+                                 x => x.ARTICLE.Trim() == devDtrVisStandard.Article);
+
+            //if (model == null) return NoContent();
+
+            //Article + Stage + Kind + Test Result + LAB No .pdf
+            var fileName = string.Format("{0}_{1}_{2}.pdf", devDtrVisStandard.Season,devDtrVisStandard.Article,devDtrVisStandard.Id);
+
+
+            // save or delete file to server
+            List<string> nastFileName = new List<string>();
+            nastFileName.Add("DTRVS");
+            nastFileName.Add(devDtrVisStandard.Season);
+            nastFileName.Add(devDtrVisStandard.Article);
+            nastFileName.Add(fileName);
+
+            if (devDtrVisStandard.File.Length > 0)       //save to server
+            {
+                if (await _fileService.SaveFiletoServer(devDtrVisStandard.File, "F340PpdPic", nastFileName))
+                {
+                    _logger.LogInformation(String.Format(@"******DTRController AddVSfile Add a PDF: {0}!! ******", fileName));
+                    //save to DAO
+                }
+            }
+
+
+            return Ok(model);
         }
     }
 }

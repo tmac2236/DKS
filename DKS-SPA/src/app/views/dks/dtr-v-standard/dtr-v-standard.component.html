@@ -1,0 +1,186 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <strong class ="col-11" style="font-size: 20px;color:#000000;">DTR Visual Standard List</strong>
+              <div class="col-1 btn-group" dropdown>
+                <button id="button-basic" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
+                        aria-controls="dropdown-basic">
+                        <strong *ngIf="this.sDevDtrVisStandard.loginUser">{{ this.sDevDtrVisStandard.loginUser }}</strong> <span class="caret"></span>
+                </button>
+                <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
+                    role="menu" aria-labelledby="button-basic">
+                  <li role="menuitem"><a class="dropdown-item" href="javascript:;" (click)="this.utility.logout()"><img src="../assets/systemImg/exit.png" class="topImg" width="25" height="25"/>  Log Out</a></li>
+                </ul>                
+            </div>
+          </div>          
+        </div>
+        <div class="card-body">
+          <form class="form" #addQueryReportDataForm="ngForm">
+            <!-- first column-->
+            <div class="row">
+              <div class="form-group col-6 mr-1">
+                <label>Season</label>
+                <input
+                  class="col-form-label"
+                  type="text"
+                  name="season"
+                  (change) ="initAddBtn()"
+                  [(ngModel)]="sDevDtrVisStandard.season"
+                />
+                <label>Article</label>
+                <input
+                  class="col-form-label"
+                  type="text"
+                  name="article"
+                  (change) ="initAddBtn()"
+                  [(ngModel)]="sDevDtrVisStandard.article"
+                />
+              </div>
+              <div class="form-group col-6"></div>
+            </div>
+            <!-- Second column-->
+            <div class="row">
+              <div class="form-group col-6 mr-1">
+                <button
+                  class="btn btn-primary mr-1"
+                  type="button"
+                  (click)="search()"
+                >
+                  Search
+                </button>
+                <button
+                  class="btn btn-primary mr-1"
+                  type="button"
+                  (click)="openAddVisStandardModal('addDtrVSModal')"
+                  [disabled]="!validArticle"
+                >
+                  Add A Report
+                </button>
+              </div>
+              <div class="form-group col-6"></div>
+            </div>
+          </form>
+        </div>
+        <div class="row" *ngIf="result?.length > 0">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table text-center text-nowrap table-striped">
+                    <!--text-nowrap不換行-->
+                    <!--套版分頁<table datatable id="f340Sche" class="table text-center table-striped">-->
+                    <thead>
+                      <tr class="table-info">
+                        <th>Id</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container *ngFor="let item of result; let i = index">
+                        <tr>
+                          <td>{{ item.id }}</td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--addDtrVSModal-->
+<div
+  bsModal
+  #addDtrVSModal="bs-modal"
+  class="modal hide fade in"
+  [config]="{backdrop: 'static'}"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+<div class="modal-dialog modal-info modal-xl" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Please upload Pdf and type comment.</h4>
+      <button
+        type="button"
+        class="close"
+        (click)="closeModal('addDtrVSModal')"
+        aria-label="Close"
+      >
+        <!--右上角的 X 符號-->
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-8">
+          <div class="form-inline">
+            <label class="col-form-label mr-4">Season : {{addAModel.season}}</label>
+            <label class="col-form-label mr-4">Article : {{addAModel.article}}</label>
+            <label class="col-form-label mr-4">Id : {{addAModel.id}}</label>             
+          </div>
+        </div>
+        <div class="col-4">
+
+        </div>
+      </div>    
+      <div class="row">
+        <div class="col-12">
+          <div class="form-group">
+            <label
+            class="btn btn-primary btn-lg mt-2"
+            for="pdfUploadInAdd"
+            tooltip="{{ this.hintMsg.uploadPdf }}"
+            placement="right">+
+            </label>
+            <span>{{bufferFile?.name}}</span>
+            <input
+            id="pdfUploadInAdd"
+            type="file"
+            accept=".pdf"
+            style="display: none"
+            (click)="this.utility.reset($event)"
+            (change)="handleFileInput($event.target.files)"
+            [(ngModel)]="bufferFile"
+            />
+            <textarea
+              class="form-control"
+              name="photoComment"
+              rows="2"
+              maxlength="300"
+              placeholder="Please type memo here!"
+              [hidden]="false"
+              [(ngModel)]="addAModel.remark"
+            ></textarea>
+            <button
+              type="button"
+              [hidden]="false"
+              class="btn btn-primary btn-lg mt-2"
+              (click)="savePdfNComment()"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<!--addDtrVSModal-->
+<ngx-spinner
+  bdColor="rgba(0, 0, 0, 0.8)"
+  size="large"
+  color="#fff"
+  type="square-jelly-box"
+  [fullScreen]="true"
+  ><p style="color: white">DTR Visual Standard List...</p></ngx-spinner
+>

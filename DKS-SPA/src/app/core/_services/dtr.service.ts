@@ -151,4 +151,11 @@ export class DtrService {
       devDtrFgtResult
     );
   }
+  addVSfile(dtrVS: FormData) {
+    console.log("dtr.service addVSfile:", dtrVS);
+    return this.utility.http.post<boolean>(
+      this.utility.baseUrl + "dtr/addVSfile",
+      dtrVS
+    );
+  }
 }

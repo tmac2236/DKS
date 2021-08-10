@@ -29,7 +29,7 @@ export class DtrFgtResultComponentComponent implements OnInit {
 
   addAModel: DevDtrFgtResult = new DevDtrFgtResult(); //use in addFgtResultModal
   addAModelTreatment: string = ""; //only let user see not save to db
-  isValidUpload:boolean = false;  //卡控新增畫面的上傳PDF按鈕
+  isValidUpload: boolean = false; //卡控新增畫面的上傳PDF按鈕
 
   constructor(public utility: Utility, private dtrService: DtrService) {}
 
@@ -221,7 +221,7 @@ export class DtrFgtResultComponentComponent implements OnInit {
         //找到該筆model 把資料回填
         console.log("res dpf" + res["filename"]);
         model.fileName = res["filename"]; //為了讓新增後顯示PDF icon
-        this.closeModal('addFgtResult');  //新增一筆record後上傳pdf成功關閉modal
+        this.closeModal("addFgtResult"); //新增一筆record後上傳pdf成功關閉modal
       },
       (error) => {
         this.utility.spinner.hide();
@@ -262,7 +262,7 @@ export class DtrFgtResultComponentComponent implements OnInit {
         let treatmentZh = editModel.treatmentZh;
         this.addAModelTreatment = `${treatmentCode} ${treatmentZh} (${treatmentEn})`;
       }
-      this.openModal("addFgtResult");
+      this.openModal("addFgtResult"); //暫時和add開同一個，有時間再改
     }
   }
   openModal(type: string) {
@@ -324,9 +324,9 @@ export class DtrFgtResultComponentComponent implements OnInit {
     } else {
       debugger;
       //Step 2: check is labNo length is 6 and the value is number
-      let isGoodLength =  this.addAModel.labNo.length == 6;
+      let isGoodLength = this.addAModel.labNo.length == 6;
       let isNumber = this.utility.checkIsNumber(this.addAModel.labNo);
-      if ( !isGoodLength || !isNumber ) {
+      if (!isGoodLength || !isNumber) {
         this.utility.alertify.confirm(
           "Sweet Alert",
           "The length of Lab have to be 6 and number!",
@@ -335,7 +335,6 @@ export class DtrFgtResultComponentComponent implements OnInit {
           }
         );
       } else {
-
         //Step 3: check is labNo valid
         let model = this.result.find(
           (x) => x["labNo"] == this.addAModel.labNo.trim()
@@ -433,11 +432,11 @@ export class DtrFgtResultComponentComponent implements OnInit {
       return true;
     }
   }
-  uploadPdf(){
+  uploadPdf() {
     let target = "";
-    let id = (<HTMLInputElement>document.getElementById("name")).value
+    let id = (<HTMLInputElement>document.getElementById("name")).value;
   }
-  firePdfUploadInAdd(){
-    document.getElementById('pdfUploadInAdd').click();
+  firePdfUploadInAdd() {
+    document.getElementById("pdfUploadInAdd").click();
   }
 }
