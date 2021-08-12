@@ -219,9 +219,10 @@ export class DtrFgtResultComponentComponent implements OnInit {
       (res) => {
         this.utility.spinner.hide();
         //找到該筆model 把資料回填
-        console.log("res dpf" + res["filename"]);
-        model.fileName = res["filename"]; //為了讓新增後顯示PDF icon
+        this.utility.alertify.success("Add Pdf success!");
         this.closeModal("addFgtResult"); //新增一筆record後上傳pdf成功關閉modal
+        // refresh the page
+        this.search();
       },
       (error) => {
         this.utility.spinner.hide();
@@ -363,6 +364,7 @@ export class DtrFgtResultComponentComponent implements OnInit {
               } else {
                 //Step 4: refresh the page
                 this.search();
+                this.utility.alertify.success("Save success. Please upload pdf!");
                 this.isValidUpload = true; //let add pdf button show
               }
             },

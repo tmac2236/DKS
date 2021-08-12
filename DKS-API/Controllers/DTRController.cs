@@ -24,11 +24,12 @@ namespace DKS_API.Controllers
         private readonly IDevDtrFgtResultDAO _devDtrFgtResultDAO;
         private readonly IArticledDAO _articledDAO;
         private readonly IDevDtrFgtStatsDAO _devDtrFgtStatsDAO;
+        private readonly IDevDtrVsFileDAO _devDtrVsFileDAO;
         private readonly IFileService _fileService;
         private readonly IExcelService _excelService;
 
         public DTRController(IMapper mapper, IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<PictureController> logger,
-         IDKSDAO dKSDAO, IDevDtrFgtResultDAO devDtrFgtResultDAO, IArticledDAO articledDAO, IDevDtrFgtStatsDAO devDtrFgtStatsDAO,
+         IDKSDAO dKSDAO, IDevDtrFgtResultDAO devDtrFgtResultDAO, IArticledDAO articledDAO, IDevDtrFgtStatsDAO devDtrFgtStatsDAO, IDevDtrVsFileDAO devDtrVsFileDAO,
           IFileService fileService, IExcelService excelService)
                 : base(config, webHostEnvironment, logger)
         {
@@ -39,6 +40,7 @@ namespace DKS_API.Controllers
             _devDtrFgtStatsDAO = devDtrFgtStatsDAO;
             _fileService = fileService;
             _excelService = excelService;
+            _devDtrVsFileDAO = devDtrVsFileDAO;
         }
 
         [HttpGet("getArticle4Fgt")]
@@ -182,8 +184,8 @@ namespace DKS_API.Controllers
             if (devDtrFgtResult != null)
             {
                 devDtrFgtResult.FILENAME = "";
-                if(String.IsNullOrEmpty(devDtrFgtResult.PARTNO))devDtrFgtResult.PARTNO = "";
-                if(String.IsNullOrEmpty(devDtrFgtResult.PARTNAME))devDtrFgtResult.PARTNAME = "";
+                if (String.IsNullOrEmpty(devDtrFgtResult.PARTNO)) devDtrFgtResult.PARTNO = "";
+                if (String.IsNullOrEmpty(devDtrFgtResult.PARTNAME)) devDtrFgtResult.PARTNAME = "";
                 devDtrFgtResult.UPUSR = devDtrFgtResult.UPUSR;
                 devDtrFgtResult.UPDAY = DateTime.Now;
                 _devDtrFgtResultDAO.Add(devDtrFgtResult);
@@ -274,52 +276,98 @@ namespace DKS_API.Controllers
             var data = await _dKSDAO.GetDevDtrFgtResultReportDto(sDevDtrFgtResultReport);
 
             byte[] result = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 };
-            if(sDevDtrFgtResultReport.reportType =="Dev")
+            if (sDevDtrFgtResultReport.reportType == "Dev")
             {              //DEV
                 result = _excelService.CommonExportReport(data, "TempDevDtrFgtResultReport_Dev.xlsx");
             }
-            else if(sDevDtrFgtResultReport.reportType =="Buy Plan")
+            else if (sDevDtrFgtResultReport.reportType == "Buy Plan")
             {
                 result = _excelService.CommonExportReport(data, "TempDevDtrFgtResultReport_BuyPlan.xlsx");
             }
 
             return File(result, "application/xlsx");
         }
+        [HttpGet("getDevDtrVsReport")]
+        public async Task<IActionResult> GetDevDtrVsReport([FromQuery] SDevDtrVsReport sDevDtrVsReport)
+        {
+            _logger.LogInformation(String.Format(@"****** DTRController GetDevDtrVsReport fired!! ******"));
+
+
+            var data = await _devDtrVsFileDAO.FindAll(x => x.SEASON == sDevDtrVsReport.Season &&
+                                                           x.ARTICLE == sDevDtrVsReport.Article).ToListAsync();
+            PagedList<DevDtrVsFile> result = PagedList<DevDtrVsFile>.Create(data, sDevDtrVsReport.PageNumber, sDevDtrVsReport.PageSize, sDevDtrVsReport.IsPaging);
+            Response.AddPagination(result.CurrentPage, result.PageSize,
+            result.TotalCount, result.TotalPages);
+            return Ok(result);
+
+        }        
         [HttpPost("addVSfile")]
-        public async Task<IActionResult> AddVSfile([FromForm] DevDtrVisStandard devDtrVisStandard)
+        public async Task<IActionResult> AddVSfile([FromForm] DevDtrVisStandardDto devDtrVisStandardDto)
         {
 
             _logger.LogInformation(String.Format(@"******DTRController AddVSfile fired!! ******"));
 
 
-            //記得修改DAO 
-            DevDtrFgtResult model = _devDtrFgtResultDAO.FindSingle(
-                                 x => x.ARTICLE.Trim() == devDtrVisStandard.Article);
+            // Season + Article + Id .pdf
+            var fileName = string.Format("{0}_{1}_{2}.pdf", devDtrVisStandardDto.Season, devDtrVisStandardDto.Article, devDtrVisStandardDto.Id);
 
-            //if (model == null) return NoContent();
-
-            //Article + Stage + Kind + Test Result + LAB No .pdf
-            var fileName = string.Format("{0}_{1}_{2}.pdf", devDtrVisStandard.Season,devDtrVisStandard.Article,devDtrVisStandard.Id);
-
-
-            // save or delete file to server
+            // save file to server
             List<string> nastFileName = new List<string>();
             nastFileName.Add("DTRVS");
-            nastFileName.Add(devDtrVisStandard.Season);
-            nastFileName.Add(devDtrVisStandard.Article);
+            nastFileName.Add(devDtrVisStandardDto.Season);
+            nastFileName.Add(devDtrVisStandardDto.Article);
             nastFileName.Add(fileName);
 
-            if (devDtrVisStandard.File.Length > 0)       //save to server
+            DevDtrVsFile model = new DevDtrVsFile();
+            if (devDtrVisStandardDto.File.Length > 0)       //save to server
             {
-                if (await _fileService.SaveFiletoServer(devDtrVisStandard.File, "F340PpdPic", nastFileName))
+                if (await _fileService.SaveFiletoServer(devDtrVisStandardDto.File, "F340PpdPic", nastFileName))
                 {
                     _logger.LogInformation(String.Format(@"******DTRController AddVSfile Add a PDF: {0}!! ******", fileName));
                     //save to DAO
+                    model.SEASON = devDtrVisStandardDto.Season.Trim();
+                    model.ARTICLE = devDtrVisStandardDto.Article.Trim();
+                    model.ID = devDtrVisStandardDto.Id.Trim();
+                    model.FILENAME = fileName;
+                    if(String.IsNullOrEmpty(devDtrVisStandardDto.Remark)){
+                        model.REMARK ="";
+                    }else{
+                        model.REMARK = devDtrVisStandardDto.Remark.Trim();
+                    }
+                    model.UPUSR = devDtrVisStandardDto.LoginUser;
+                    model.UPDAY = DateTime.Now;
+                    _devDtrVsFileDAO.Add(model);
+                    await _devDtrVsFileDAO.SaveAll();
                 }
             }
 
-
             return Ok(model);
+        }
+
+        [HttpPost("deleteVSResult")]
+        public async Task<IActionResult> DeleteVSResult(DevDtrVsFile devDtrVsFile)
+        {
+            _logger.LogInformation(String.Format(@"****** DTRController DeleteVSResult fired!! ******"));
+            if (devDtrVsFile != null)
+            {
+
+                //Step1: kill the pdf
+                List<string> nastFileName = new List<string>();
+                nastFileName.Add("DTRVS");
+                nastFileName.Add(devDtrVsFile.SEASON);
+                nastFileName.Add(devDtrVsFile.ARTICLE);
+                nastFileName.Add(devDtrVsFile.FILENAME);
+                if (await _fileService.SaveFiletoServer(null, "F340PpdPic", nastFileName))
+                {
+                    _logger.LogInformation(String.Format(@"******DTRController DeleteVSResult Delete a PDF: {0}!! ******", devDtrVsFile.FILENAME));
+                     //Step2: kill fgt result
+                    _devDtrVsFileDAO.Remove(devDtrVsFile);
+                    await _devDtrVsFileDAO.SaveAll();
+
+                    return Ok(true);
+                }
+            }
+            return Ok(false);
         }
     }
 }

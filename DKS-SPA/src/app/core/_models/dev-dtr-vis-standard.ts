@@ -5,7 +5,7 @@ export class DevDtrVisStandard implements ModelInterface {
   article: string;
   id: string;
   remark: string;
-  pdf:string;
+  filename:string;
 
   upday: Date;
   upusr: string;

@@ -21,5 +21,6 @@ export class DevDtrFgtResult implements ModelInterface {
   constructor(){
     this.labNo = "";
     this.remark = "";
+    this.fileName ="";
   }
 }

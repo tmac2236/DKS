@@ -27,6 +27,8 @@
                   class="col-form-label"
                   type="text"
                   name="season"
+                  size ="4"
+                  maxlength="4"
                   (change) ="initAddBtn()"
                   [(ngModel)]="sDevDtrVisStandard.season"
                 />
@@ -35,6 +37,8 @@
                   class="col-form-label"
                   type="text"
                   name="article"
+                  size ="6"
+                  maxlength="6"
                   (change) ="initAddBtn()"
                   [(ngModel)]="sDevDtrVisStandard.article"
                 />
@@ -74,13 +78,43 @@
                     <!--套版分頁<table datatable id="f340Sche" class="table text-center table-striped">-->
                     <thead>
                       <tr class="table-info">
+                        <th>Season</th>
+                        <th>Article</th>
                         <th>Id</th>
+                        <th>FIle</th>
+                        <th>Upload Time</th>
+                        <th>Upload User</th>
+                        <th>Remark</th>
                       </tr>
                     </thead>
                     <tbody>
                       <ng-container *ngFor="let item of result; let i = index">
                         <tr>
+                          <td>
+                            <img
+                            src="../assets/systemImg/delete.png"
+                            width="35"
+                            height="35"
+                            (click)="deleteVSResult(item)"/>
+                            {{ item.season }}
+                          </td>
+                          <td>{{ item.article }}</td>
                           <td>{{ item.id }}</td>
+                          <td>
+                            <img
+                            src="../assets/systemImg/download-pdf.png"
+                            class="mr-1"
+                            width="40"
+                            height="40"
+                            [style.visibility]="
+                              item.filename?.length < 1 ? 'hidden' : 'visible'
+                            "
+                            (click)="viewPdf(item)"
+                            />
+                          </td>
+                          <td>{{ item.upday | date: "yyyy/MM/dd HH:mm:ss" }}</td>
+                          <td>{{ item.upusr }}</td>
+                          <td>{{ item.remark }}</td>
                         </tr>
                       </ng-container>
                     </tbody>
@@ -135,22 +169,6 @@
       <div class="row">
         <div class="col-12">
           <div class="form-group">
-            <label
-            class="btn btn-primary btn-lg mt-2"
-            for="pdfUploadInAdd"
-            tooltip="{{ this.hintMsg.uploadPdf }}"
-            placement="right">+
-            </label>
-            <span>{{bufferFile?.name}}</span>
-            <input
-            id="pdfUploadInAdd"
-            type="file"
-            accept=".pdf"
-            style="display: none"
-            (click)="this.utility.reset($event)"
-            (change)="handleFileInput($event.target.files)"
-            [(ngModel)]="bufferFile"
-            />
             <textarea
               class="form-control"
               name="photoComment"
@@ -160,17 +178,42 @@
               [hidden]="false"
               [(ngModel)]="addAModel.remark"
             ></textarea>
-            <button
-              type="button"
-              [hidden]="false"
-              class="btn btn-primary btn-lg mt-2"
-              (click)="savePdfNComment()"
-            >
-              Save
-            </button>
+
           </div>
         </div>
       </div>
+      <div class="row">
+        <div class="col-8">
+        </div>
+        <div class="col-2">
+          <span>{{bufferFile?.name}}</span>
+        </div>
+        <div class="col-2">
+          <label
+          class="btn btn-primary btn-lg mt-3 mr-4"
+          for="pdfUploadInAdd"
+          tooltip="{{ this.hintMsg.uploadPdf }}"
+          placement="right">+
+          </label>
+          <input
+          id="pdfUploadInAdd"
+          type="file"
+          accept=".pdf"
+          style="display: none"
+          (click)="this.utility.reset($event)"
+          (change)="handleFileInput($event.target.files)"
+          [(ngModel)]="bufferFile"
+          />            
+          <button
+            type="button"
+            [hidden]="false"
+            class="btn btn-primary btn-lg mt-2"
+            (click)="savePdfNComment()"
+          >
+            Save
+          </button>
+        </div>
+      </div>  
     </div>
   </div>
 </div>

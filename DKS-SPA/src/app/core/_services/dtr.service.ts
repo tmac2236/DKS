@@ -6,10 +6,12 @@ import { Utility } from "../utility/utility";
 import { utilityConfig } from "../utility/utility-config";
 import { DevDtrFgtResult } from "../_models/dev-dtr-fgt-result";
 import { DevDtrFgtResultDto } from "../_models/dev-dtr-fgt-result-dto";
+import { DevDtrVisStandard } from "../_models/dev-dtr-vis-standard";
 import { DevSysSet } from "../_models/dev-sys-set";
 import { PaginatedResult } from "../_models/pagination";
 import { SDevDtrFgtResult } from "../_models/s-dev-dtr-fgt-result";
 import { SDevDtrFgtResultReport } from "../_models/s-dev-dtr-fgt-result-report";
+import { SDevDtrVisStandard } from "../_models/s-dev-dtr-vis-standard";
 
 @Injectable({
   providedIn: "root",
@@ -151,11 +153,62 @@ export class DtrService {
       devDtrFgtResult
     );
   }
+  getDevDtrVsReport(
+    sDevDtrVisStandard: SDevDtrVisStandard
+  ): Observable<PaginatedResult<DevDtrVisStandard[]>> {
+    const paginatedResult: PaginatedResult<DevDtrVisStandard[]> =
+      new PaginatedResult<DevDtrVisStandard[]>();
+
+    let params = new HttpParams();
+    params = params.append("IsPaging", sDevDtrVisStandard.isPaging.toString());
+    if (
+      sDevDtrVisStandard.currentPage != null &&
+      sDevDtrVisStandard.itemsPerPage != null
+    ) {
+      params = params.append(
+        "pageNumber",
+        sDevDtrVisStandard.currentPage.toString()
+      );
+      params = params.append(
+        "pageSize",
+        sDevDtrVisStandard.itemsPerPage.toString()
+      );
+      //params = params.append('orderBy', sAttendance.orderBy);
+    }
+    params = params.append("season", sDevDtrVisStandard.season.toString());
+    params = params.append("article", sDevDtrVisStandard.article.toString());
+
+    return this.utility.http
+      .get<DevDtrVisStandard[]>(
+        this.utility.baseUrl + "dtr/getDevDtrVsReport",
+        {
+          observe: "response",
+          params,
+        }
+      )
+      .pipe(
+        map((response) => {
+          paginatedResult.result = response.body;
+          if (response.headers.get("Pagination") != null) {
+            paginatedResult.pagination = JSON.parse(
+              response.headers.get("Pagination")
+            );
+          }
+          return paginatedResult;
+        })
+      );
+  }
   addVSfile(dtrVS: FormData) {
     console.log("dtr.service addVSfile:", dtrVS);
     return this.utility.http.post<boolean>(
       this.utility.baseUrl + "dtr/addVSfile",
       dtrVS
+    );
+  }
+  deleteVSResult(devDtrVisStandard: DevDtrVisStandard) {
+    return this.utility.http.post<boolean>(
+      this.utility.baseUrl + 'dtr/deleteVSResult',
+      devDtrVisStandard
     );
   }
 }
