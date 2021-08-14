@@ -4,19 +4,27 @@ C# Web  3 Layered Architecture（Controller+Service+Dao）
 ######## Info ########
 ### API ###
 * .NET Core : 3.1
+
 * EntityFrameworkCore : 3.1
+
 ## 3rd Nuget
-*AutoMapper : 7.0.0
-*Aspose.Cells : 20.1.0
-*Aspose.PDF : 20.1.0
-*Serilog : 2.8.0
-*Quartz: 3.0.7
+* AutoMapper : 7.0.0
+
+* Aspose.Cells : 20.1.0
+
+* Aspose.PDF : 20.1.0
+
+* Serilog : 2.8.0
+
+* Quartz: 3.0.7
 
 ### SPA ###
 * Angular :9.1.12
 
 * UI Template : CoreUI Free Angular 2+ Admin Template (version 2.9.5) based on Bootstrap 4.5.0
-*ngx-bootstrap: 5.6.1
+
+* ngx-bootstrap: 5.6.1
+
 ## 3rd party npm
 ###### Angular CLI
 Install the Angular CLI globally using a terminal/console window.
