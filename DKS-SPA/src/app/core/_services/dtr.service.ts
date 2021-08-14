@@ -141,6 +141,11 @@ export class DtrService {
       this.utility.baseUrl + "dtr/getArticle4Fgt?modelNo=" + modelNo +"&article=" + article + "&modelName=" + modelName
     ).toPromise();
   }
+  getArticleSeason(season: string, article:string) {
+    return this.utility.http.get<object[]>(
+      this.utility.baseUrl + "dtr/getArticleSeason?season=" + season +"&article=" + article
+    ).toPromise();
+  }
   addDevDtrFgtResult(devDtrFgtResult: DevDtrFgtResult) {
     return this.utility.http.post<boolean>(
       this.utility.baseUrl + 'dtr/addDevDtrFgtResult',

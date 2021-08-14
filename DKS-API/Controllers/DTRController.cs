@@ -50,6 +50,13 @@ namespace DKS_API.Controllers
             var data = await _articledDAO.GetArticleModelNameDto(modelNo, article, modelName);
             return Ok(data);
         }
+        [HttpGet("getArticleSeason")]
+        public async Task<IActionResult> GetArticleSeason(string season, string article)
+        {
+            _logger.LogInformation(String.Format(@"****** DTRController GetArticleSeason fired!! ******"));
+            var data = await _articledDAO.GetArticleSeasonDto(season, article);
+            return Ok(data);
+        }        
         [HttpGet("getDevDtrFgtResultByModelArticle")]
         public async Task<IActionResult> GetDevDtrFgtResultByModelArticle([FromQuery] SDevDtrFgtResult sDevDtrFgtResult)
         {

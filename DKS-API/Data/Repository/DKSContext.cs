@@ -40,7 +40,8 @@ namespace DKS_API.Data.Repository
         public DbSet<DevDtrFgtResultDto> GetDevDtrFgtResultDto { get; set; }
         public DbSet<F340PartNoTreatmemtDto> GetF340PartNoTreatmemtDto { get; set; }
         public DbSet<ArticleModelNameDto> GetArticleModelNameDto { get; set; }
-
+        public DbSet<ArticleSeasonDto> GetArticleSeasonDto { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Ordsumoh>().HasKey(x => new { x.PRSUMNO });
@@ -82,6 +83,8 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<F340PartNoTreatmemtDto>()
             .HasNoKey();
             modelBuilder.Entity<ArticleModelNameDto>()
+            .HasNoKey();
+            modelBuilder.Entity<ArticleSeasonDto>()
             .HasNoKey();
             
         }

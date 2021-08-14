@@ -37,5 +37,26 @@ SELECT DISTINCT
             var data = await _context.GetArticleModelNameDto.FromSqlRaw(strSQL).ToListAsync();
             return data;
         }
+
+        public async Task<List<ArticleSeasonDto>> GetArticleSeasonDto(string season, string article)
+        {
+            string strWhere = " WHERE 1=1 ";
+            if (!(String.IsNullOrEmpty(article)))
+                strWhere += " AND t1.ARTICLE = N'" + article.Trim()  + "' " ;
+            if (!(String.IsNullOrEmpty(season)))
+                strWhere += " AND t2.SEASON = N'" + season.Trim()  + "' " ;
+             
+            string strSQL = string.Format(@"
+SELECT DISTINCT
+       t2.SEASON    as Season
+      ,t1.ARTICLE   as Article
+      ,t1.MODELNO   as ModelNo 
+	  ,t2.MODELNAME as ModelName
+  FROM ARTICLED as t1
+  LEFT JOIN MODELDAH as t2 on t1.MODELNO = t2.MODELNO ");
+            strSQL += strWhere;
+            var data = await _context.GetArticleSeasonDto.FromSqlRaw(strSQL).ToListAsync();
+            return data;
+        }
     }
 }

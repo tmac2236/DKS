@@ -31,7 +31,7 @@ export class DtrVStandardComponent implements OnInit {
   }
   //搜尋
   async search() {
-    debugger;
+
     if (this.utility.checkIsNullorEmpty(this.sDevDtrVisStandard.season)){
       this.utility.alertify.error("Season is required !!!!");
       return;
@@ -48,6 +48,13 @@ export class DtrVStandardComponent implements OnInit {
       this.utility.alertify.error("Artilce must be 6 characters  !!!!");
       return;
     }
+    this.result = [];
+    this.initAddBtn();
+    await this.getArticleSeason();
+    if(!this.validArticle){
+      this.utility.alertify.error("It doesn't exist with this season and article  !!!!");
+      return;
+    } 
     this.utility.spinner.show();
     this.dtrService
       .getDevDtrVsReport(this.sDevDtrVisStandard)
@@ -63,7 +70,6 @@ export class DtrVStandardComponent implements OnInit {
               }
             );
           }
-          this.validArticle = true;
           this.result = res.result;
           this.sDevDtrVisStandard.setPagination(res.pagination);
           this.utility.spinner.hide();
@@ -193,5 +199,26 @@ export class DtrVStandardComponent implements OnInit {
         );
       }
     );
+  }
+  async getArticleSeason() {
+    await this.dtrService
+      .getArticleSeason(
+        this.sDevDtrVisStandard.season,
+        this.sDevDtrVisStandard.article
+      )
+      .then(
+        (res) => {
+          if (res.length > 0) {
+            this.validArticle = true;
+          }
+        },
+        (error) => {
+          this.utility.alertify.confirm(
+            "System Notice",
+            "Syetem is busy, please try later.",
+            () => {}
+          );
+        }
+      );
   }
 }
