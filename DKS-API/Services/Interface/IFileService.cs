@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Threading.Tasks;
 using Aspose.Pdf;
@@ -20,6 +22,8 @@ namespace DKS_API.Services.Interface
         byte[] AddWatermarkPdf(string stanIsBig,string stanLoveU);
         Task<string> UploadExcel(string dataUrl);
         byte[] ConvertPDFtoWord(byte[] pdfByte);
+        byte[] GeneratePDFExample();
+        byte[] GenerateWordByTemp(string tempPath,DataTable dt);
     }
 
 }

@@ -12,18 +12,22 @@ using Microsoft.Extensions.Logging;
 using DKS_API.Services.Interface;
 using DKS_API.Helpers;
 using Microsoft.AspNetCore.Http;
+using System.Data;
 
 namespace DKS_API.Controllers
 {
     public class PictureController : ApiController
     {
         private readonly IDKSDAO _dksDao;
+        private readonly IDevDtrFgtResultDAO _devDtrFgtResultDAO;
         private readonly IFileService _fileService;
 
-        public PictureController(IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<PictureController> logger, IDKSDAO dksDao, IFileService fileService)
+        public PictureController(IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<PictureController> logger, IDKSDAO dksDao, IDevDtrFgtResultDAO devDtrFgtResultDAO
+                                , IFileService fileService)
                 : base(config, webHostEnvironment, logger)
         {
             _dksDao = dksDao;
+            _devDtrFgtResultDAO = devDtrFgtResultDAO;
             _fileService = fileService;
         }
 
@@ -150,6 +154,29 @@ namespace DKS_API.Controllers
             return NoContent();
 
         }
+        [HttpGet("testPdf")]
+        public IActionResult TestPdf()
+        {
+            _logger.LogInformation(String.Format(@"****** PictureController TestPdf fired!! ******"));
+
+            byte[] pdfByte = _fileService.GeneratePDFExample();
+            return File(pdfByte, "application/pdf");
+
+        }
+        [HttpGet("testWord")]
+        public async Task<IActionResult> TestWord()
+        {
+            _logger.LogInformation(String.Format(@"****** PictureController TestWord fired!! ******"));
+            string rootdir = Directory.GetCurrentDirectory();
+            string tempPath = rootdir + "\\Resources\\Temp.docx";
+            var data = await _devDtrFgtResultDAO.GetPartName4DtrFgt("GZ4284", "MCS");
+            DataTable dt = data.ToDataTable();
+            dt.TableName = "DataList";
+
+            byte[] pdfByte = _fileService.GenerateWordByTemp(tempPath, dt);
+            return File(pdfByte, "application/msword");
+
+        }
         private Image HorizontalMergeImages(Image img1, Image img2)
         {
             _logger.LogInformation(String.Format(@"****** PictureController HorizontalMergeImages fired!! ******"));
@@ -185,5 +212,6 @@ namespace DKS_API.Controllers
             img.Save(ms, System.Drawing.Imaging.ImageFormat.Gif);
             return ms.ToArray();
         }
+
     }
 }

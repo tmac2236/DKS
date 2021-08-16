@@ -22,16 +22,24 @@ namespace DFPS.API
                 .Build();
             try
             {
-                //Aspoe
+                //Aspoe-Excel
                 Aspose.Cells.License cellLicense = new Aspose.Cells.License();
                 string filePath = rootdir + "\\Resources\\" + "Aspose.Total.lic";
                 FileStream fileStream = new FileStream(filePath, FileMode.Open);
                 cellLicense.SetLicense(fileStream);
                 fileStream.Close();
+                //Aspoe-Pdf
                 Aspose.Pdf.License pdfLicense = new Aspose.Pdf.License();
                 FileStream fileStreampdf = new FileStream(filePath, FileMode.Open);
                 pdfLicense.SetLicense(fileStreampdf);
                 fileStreampdf.Close();
+                //Aspoe-Word
+                
+                Aspose.Words.License wordLicense = new Aspose.Words.License();
+                FileStream fileStreamword = new FileStream(filePath, FileMode.Open);
+                wordLicense.SetLicense(fileStreamword);
+                fileStreamword.Close();
+                             
                 //Initialize Logger
                 Log.Logger = new LoggerConfiguration()
                     .ReadFrom.Configuration(config)

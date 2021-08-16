@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -269,6 +271,105 @@ namespace DKS_API.Services.Implement
                     outputBytes = outputStream.ToArray();
                 }
             }
+            return outputBytes;
+        }
+
+        public byte[] GeneratePDFExample()
+        {
+            // Initialize document object
+            Document document = new Document();
+            // Add page
+            Page page = document.Pages.Add();
+
+            // -------------------------------------------------------------
+            // Add image
+            string rootdir = Directory.GetCurrentDirectory();
+            string imageFileName = rootdir + "\\Resources\\taiwan.png"; //讀取API的那張鳥圖
+            page.AddImage(imageFileName, new Aspose.Pdf.Rectangle(20, 730, 120, 830));
+
+            // -------------------------------------------------------------
+            // Add Header
+            var header = new TextFragment("New ferry routes in Fall 2020");
+            header.TextState.Font = FontRepository.FindFont("Arial");
+            header.TextState.FontSize = 24;
+            header.HorizontalAlignment = HorizontalAlignment.Center;
+            header.Position = new Position(130, 720);
+            page.Paragraphs.Add(header);
+
+            // Add description
+            var descriptionText = "Visitors must buy tickets online and tickets are limited to 5,000 per day. Ferry service is operating at half capacity and on a reduced schedule. Expect lineups.";
+            var description = new TextFragment(descriptionText);
+            description.TextState.Font = FontRepository.FindFont("Times New Roman");
+            description.TextState.FontSize = 14;
+            description.HorizontalAlignment = HorizontalAlignment.Left;
+            page.Paragraphs.Add(description);
+
+
+            // Add table
+            var table = new Table
+            {
+                ColumnWidths = "200",
+                Border = new BorderInfo(BorderSide.Box, 1f, Aspose.Pdf.Color.DarkSlateGray),
+                DefaultCellBorder = new BorderInfo(BorderSide.Box, 0.5f, Aspose.Pdf.Color.Black),
+                DefaultCellPadding = new MarginInfo(4.5, 4.5, 4.5, 4.5),
+                Margin =
+                {
+                    Bottom = 10
+                },
+                DefaultCellTextState =
+                {
+                    Font =  FontRepository.FindFont("Helvetica")
+                }
+            };
+
+            var headerRow = table.Rows.Add();
+            headerRow.Cells.Add("Departs City");
+            headerRow.Cells.Add("Departs Island");
+            foreach (Aspose.Pdf.Cell headerRowCell in headerRow.Cells)
+            {
+                headerRowCell.BackgroundColor = Aspose.Pdf.Color.Gray;
+                headerRowCell.DefaultCellTextState.ForegroundColor = Aspose.Pdf.Color.WhiteSmoke;
+            }
+
+            var time = new TimeSpan(6, 0, 0);
+            var incTime = new TimeSpan(0, 30, 0);
+            for (int i = 0; i < 10; i++)
+            {
+                var dataRow = table.Rows.Add();
+                dataRow.Cells.Add(time.ToString(@"hh\:mm"));
+                time = time.Add(incTime);
+                dataRow.Cells.Add(time.ToString(@"hh\:mm"));
+            }
+
+            page.Paragraphs.Add(table);
+
+            Byte[] outputBytes;
+            using (var outputStream = new MemoryStream())
+            {
+                document.Save(outputStream, Aspose.Pdf.SaveFormat.Pdf);
+                outputBytes = outputStream.ToArray();
+            }
+
+            return outputBytes;
+        }
+
+        public byte[] GenerateWordByTemp(string tempPath,DataTable dt)
+        {
+            
+            // For complete examples and data files, please go to https://github.com/aspose-words/Aspose.Words-for-.NET
+            // The path to the documents directory.
+
+            Aspose.Words.Document doc = new Aspose.Words.Document(tempPath);
+
+            doc.Range.Replace("$NAME", "Hello World");
+            doc.MailMerge.ExecuteWithRegions(dt);
+            Byte[] outputBytes;
+            using (var outputStream = new MemoryStream())
+            {
+                doc.Save(outputStream, Aspose.Words.SaveFormat.WordML);
+                outputBytes = outputStream.ToArray();
+            }
+
             return outputBytes;
         }
     }
