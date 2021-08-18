@@ -70,7 +70,7 @@ SELECT DISTINCT
             if (!(String.IsNullOrEmpty(sDevDtrVsList.Season)))
                 strWhere += " AND t2.SEASON = N'" + sDevDtrVsList.Season.Trim()  + "' " ;
             if (!(String.IsNullOrEmpty(sDevDtrVsList.ModelNo)))
-                strWhere += " AND t1.MODELNO = N'" + sDevDtrVsList.ModelNo.Trim()  + "' " ;
+                strWhere += " AND t1.MODELNO like N'" + sDevDtrVsList.ModelNo.Trim()  + "%' " ;
             if (!(String.IsNullOrEmpty(sDevDtrVsList.ModelName)))
                 strWhere += " AND t2.MODELNAME = N'" + sDevDtrVsList.ModelName.Trim()  + "' " ;
             if (!(String.IsNullOrEmpty(sDevDtrVsList.DeveloperId)))

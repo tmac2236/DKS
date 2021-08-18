@@ -7,6 +7,7 @@ import { SF340PpdSchedule } from "../../../../core/_models/s_f340-ppd-schedule";
 import { F340SchedulePpd } from "../../../../core/_models/f340-schedule-ppd";
 import { ModalDirective } from "ngx-bootstrap/modal";
 import { environment } from "../../../../../environments/environment";
+import { CommonService } from "../../../../core/_services/common.service";
 
 @Component({
   selector: "app-F340",
@@ -36,7 +37,7 @@ export class F340PpdComponent implements OnInit {
   };
   editModel: F340SchedulePpd = new F340SchedulePpd(); //onlt use in photoCommentModal
 
-  constructor(public utility: Utility, private dksService: DksService) {}
+  constructor(public utility: Utility, private dksService: DksService, private commonService: CommonService) {}
 
   ngOnInit() {
     this.utility.initUserRole(this.sF340PpdSchedule);
@@ -110,7 +111,7 @@ export class F340PpdComponent implements OnInit {
   changeBPVerList() {
     if (this.sF340PpdSchedule.season === "") return;
     this.utility.spinner.show();
-    this.dksService
+    this.commonService
       .searchBPVerList(
         this.sF340PpdSchedule.season,
         this.sF340PpdSchedule.factory

@@ -6,6 +6,7 @@ import { DevDtrFgtResult } from "../../../core/_models/dev-dtr-fgt-result";
 import { DevDtrFgtResultDto } from "../../../core/_models/dev-dtr-fgt-result-dto";
 import { PaginatedResult } from "../../../core/_models/pagination";
 import { SDevDtrFgtResult } from "../../../core/_models/s-dev-dtr-fgt-result";
+import { CommonService } from "../../../core/_services/common.service";
 import { DtrService } from "../../../core/_services/dtr.service";
 
 @Component({
@@ -31,7 +32,7 @@ export class DtrFgtResultComponentComponent implements OnInit {
   addAModelTreatment: string = ""; //only let user see not save to db
   isValidUpload: boolean = false; //卡控新增畫面的上傳PDF按鈕
 
-  constructor(public utility: Utility, private dtrService: DtrService) {}
+  constructor(public utility: Utility, private dtrService: DtrService, private commonService: CommonService) {}
 
   ngOnInit() {
     this.utility.initUserRole(this.sDevDtrFgtResult);
@@ -92,8 +93,8 @@ export class DtrFgtResultComponentComponent implements OnInit {
 
   //下拉選單帶出Article
   async getArticleVerList() {
-    await this.dtrService
-      .getArticle4Fgt(
+    await this.commonService
+      .getArticle(
         this.sDevDtrFgtResult.modelNo,
         this.sDevDtrFgtResult.article,
         this.sDevDtrFgtResult.modelName
@@ -121,8 +122,8 @@ export class DtrFgtResultComponentComponent implements OnInit {
       (this.addAModel.stage == "SMS" || this.addAModel.stage == "MCS")
     ) {
       this.utility.spinner.show();
-      await this.dtrService
-        .getPartName4DtrFgt(this.addAModel.article, this.addAModel.stage)
+      await this.commonService
+        .getPartName(this.addAModel.article, this.addAModel.stage)
         .then(
           (res) => {
             this.utility.spinner.hide();
@@ -160,8 +161,8 @@ export class DtrFgtResultComponentComponent implements OnInit {
       (this.addAModel.stage == "SMS" || this.addAModel.stage == "MCS")
     ) {
       this.utility.spinner.show();
-      await this.dtrService
-        .getPartName4DtrFgt(this.addAModel.article, this.addAModel.stage)
+      await this.commonService
+        .getPartName(this.addAModel.article, this.addAModel.stage)
         .then(
           (res) => {
             this.utility.spinner.hide();

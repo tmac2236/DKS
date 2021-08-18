@@ -20,15 +20,6 @@ import { SDevDtrVsList } from "../_models/s-dev-dtr-vs-list";
 export class DtrService {
   constructor(private utility: Utility) {}
 
-  getPartName4DtrFgt(article: string, stage: string) {
-    return this.utility.http.get<object[]>(
-      this.utility.baseUrl +
-        "dtr/getPartName4DtrFgt?article=" +
-        article +
-        "&stage=" +
-        stage
-    ).toPromise();
-  }
 
   editPdfDevDtrFgtResult(devDtrFgtResult: FormData) {
     console.log("dtr.service editPdfDevDtrFgtResult:", devDtrFgtResult);
@@ -137,16 +128,7 @@ export class DtrService {
         })
       );
   }
-  getArticle4Fgt(modelNo: string, article:string, modelName:string) {
-    return this.utility.http.get<object[]>(
-      this.utility.baseUrl + "dtr/getArticle4Fgt?modelNo=" + modelNo +"&article=" + article + "&modelName=" + modelName
-    ).toPromise();
-  }
-  getArticleSeason(season: string, article:string) {
-    return this.utility.http.get<object[]>(
-      this.utility.baseUrl + "dtr/getArticleSeason?season=" + season +"&article=" + article
-    ).toPromise();
-  }
+
   addDevDtrFgtResult(devDtrFgtResult: DevDtrFgtResult) {
     return this.utility.http.post<boolean>(
       this.utility.baseUrl + 'dtr/addDevDtrFgtResult',

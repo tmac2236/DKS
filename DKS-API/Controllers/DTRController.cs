@@ -43,20 +43,7 @@ namespace DKS_API.Controllers
             _devDtrVsFileDAO = devDtrVsFileDAO;
         }
 
-        [HttpGet("getArticle4Fgt")]
-        public async Task<IActionResult> GetArticle4Fgt(string modelNo, string article, string modelName)
-        {
-            _logger.LogInformation(String.Format(@"****** DTRController GetArticle4Fgt fired!! ******"));
-            var data = await _articledDAO.GetArticleModelNameDto(modelNo, article, modelName);
-            return Ok(data);
-        }
-        [HttpGet("getArticleSeason")]
-        public async Task<IActionResult> GetArticleSeason(string season, string article)
-        {
-            _logger.LogInformation(String.Format(@"****** DTRController GetArticleSeason fired!! ******"));
-            var data = await _articledDAO.GetArticleSeasonDto(season, article);
-            return Ok(data);
-        }        
+       
         [HttpGet("getDevDtrFgtResultByModelArticle")]
         public async Task<IActionResult> GetDevDtrFgtResultByModelArticle([FromQuery] SDevDtrFgtResult sDevDtrFgtResult)
         {
@@ -70,14 +57,6 @@ namespace DKS_API.Controllers
             return Ok(result);
         }
 
-        [HttpGet("getPartName4DtrFgt")]
-        public async Task<IActionResult> GetPartName4DtrFgt(string article, string stage)
-        {
-            _logger.LogInformation(String.Format(@"****** DTRController GetPartName4DtrFgt fired!! ******"));
-            var data = await _devDtrFgtResultDAO.GetPartName4DtrFgt(article, stage);
-
-            return Ok(data);
-        }
 
         [HttpPost("editPdfDevDtrFgtResult")]
         public async Task<IActionResult> EditPdfDevDtrFgtResult()

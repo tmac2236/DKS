@@ -80,24 +80,7 @@ namespace DKS_API.Controllers
             result.TotalCount, result.TotalPages);
             return Ok(result);
         }
-        [HttpGet("getBPVersionBySeason")]
-        public async Task<IActionResult> GetBPVersionBySeason(string season, string factory)
-        {
-            _logger.LogInformation(String.Format(@"******DKSController GetBPVersionBySeason fired!! ******"));
 
-            var result = await _devBuyPlanDAO.FindAll(x => x.SEASON.Trim() == season.ToUpper().Trim()
-                                                    && x.MANUF.Trim() == factory.ToUpper().Trim())
-                                    .Select(x => new
-                                    {
-                                        VERN = x.VERN
-                                    }).Distinct()
-                                    .ToListAsync();
-
-            List<string> bpVern = result.Select(x => x.VERN.ToString()).ToList();
-
-            return Ok(bpVern);
-
-        }
         [HttpPost("checkF420Valid")]
         public IActionResult CheckF420Valid([FromForm] ArticlePic excel)
         {

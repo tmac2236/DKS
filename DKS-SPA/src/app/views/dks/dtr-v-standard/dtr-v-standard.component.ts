@@ -6,6 +6,7 @@ import { SDevDtrVisStandard } from "../../../core/_models/s-dev-dtr-vis-standard
 import { DevDtrVisStandard } from "../../../core/_models/dev-dtr-vis-standard";
 import { PaginatedResult } from "../../../core/_models/pagination";
 import { ActivatedRoute } from "@angular/router";
+import { CommonService } from "../../../core/_services/common.service";
 
 @Component({
   selector: "app-dtr-v-standard",
@@ -24,7 +25,8 @@ export class DtrVStandardComponent implements OnInit {
   addAModel: DevDtrVisStandard = new DevDtrVisStandard();
   bufferFile: File | null = null; // upload
 
-  constructor(public utility: Utility, private activeRouter: ActivatedRoute, private dtrService: DtrService) {
+  constructor(public utility: Utility, private activeRouter: ActivatedRoute
+            , private dtrService: DtrService, private commonService:CommonService) {
     this.activeRouter.queryParams.subscribe((params) => {
       this.sDevDtrVisStandard.season = params.season;
       this.sDevDtrVisStandard.article = params.article;
@@ -210,7 +212,7 @@ export class DtrVStandardComponent implements OnInit {
   }
   //check is the season article is exist in Article、Model
   async getArticleSeason() {
-    await this.dtrService
+    await this.commonService
       .getArticleSeason(
         this.sDevDtrVisStandard.season,
         this.sDevDtrVisStandard.article

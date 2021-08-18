@@ -91,15 +91,6 @@ export class DksService {
       f420Excel
     );
   }
-  searchBPVerList(season: string, factory: string) {
-    return this.utility.http.get<string[]>(
-      this.utility.baseUrl +
-        "dks/getBPVersionBySeason?season=" +
-        season +
-        "&factory=" +
-        factory
-    );
-  }
 
   searchF340PpdProcess(
     sF340PpdSchedule: SF340PpdSchedule
