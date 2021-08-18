@@ -21,5 +21,6 @@ namespace DKS_API.Data.Interface
         Task<List<F340_PpdDto>> GetF340PPDView(SF340PPDSchedule sF340PPDSchedule);
         Task<List<DevDtrFgtResultDto>> GetDevDtrFgtResultDto(string article,string modelNo,string modelName);
         Task<List<DevDtrFgtResultDto>> GetDevDtrFgtResultReportDto(SDevDtrFgtResultReport sDevDtrFgtResultReport);
+        Task<List<BasicCodeDto>> GetBasicCodeDto(string typeNo);
     }
 }

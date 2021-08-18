@@ -94,36 +94,6 @@ namespace DFPS.API.Data.Repository
             });
             return data;
         }
-        /*
-        public PagedList<F340_ProcessDto> GetF340ProcessView(SF340Schedule sF340Schedule)
-        {
-            //Stored Procedure A、B、C共用
-            List<SqlParameter> pc = new List<SqlParameter>{
-                new SqlParameter("@Season",sF340Schedule.season.Trim().ToUpper()),
-                new SqlParameter("@CwaDateS",sF340Schedule.cwaDateS),
-                new SqlParameter("@CwaDateE",sF340Schedule.cwaDateE)
-            };
-            string SQL ="";
-            if(sF340Schedule.dataType =="DHO"){
-                SQL =string.Format("EXECUTE dbo.GetF340Process_BuyPlan_C{0} @Season,@CwaDateS,@CwaDateE",spCode);
-            }else if(sF340Schedule.dataType =="FHO"){
-
-                pc.Add(new SqlParameter("@FactoryId", sF340Schedule.factory != null ? sF340Schedule.factory.Trim().ToUpper() : (object)DBNull.Value));
-                pc.Add(new SqlParameter("@BuyPlanVer", sF340Schedule.bpVer.Trim()));
-                SQL =string.Format("EXECUTE dbo.GetF340Process_BuyPlan_B{0} @FactoryId,@Season,@BuyPlanVer,@CwaDateS,@CwaDateE",spCode);
-            }else if(sF340Schedule.dataType =="DEV"){
-
-                SQL =string.Format("EXECUTE dbo.GetF340Process_BuyPlan_A{0} @Season,@CwaDateS,@CwaDateE",spCode);
-            }
-
-            var data = _context.GetF340ProcessView
-                   .FromSqlRaw(SQL, pc.ToArray())
-                   .ToList();
-
-            return PagedList<F340_ProcessDto>
-           .Create(data, sF340Schedule.PageNumber, sF340Schedule.PageSize, sF340Schedule.IsPaging);
-        }
-        */
 
         public async Task<List<F340_PpdDto>> GetF340PPDView(SF340PPDSchedule sF340PPDSchedule)
         {
@@ -229,6 +199,35 @@ namespace DFPS.API.Data.Repository
             return data;
 
         }
-        
+
+        public async Task<List<BasicCodeDto>> GetBasicCodeDto(string typeNo)
+        {
+            string strWhere = " WHERE t1.DISABCODE = 1 ";   //禁用碼
+            if (!(String.IsNullOrEmpty(typeNo)))
+                strWhere += " AND t1.FKBASEFID IN (select PKBASEHID from BASEIDH where TYPENO = N'" + typeNo.Trim() + "' " ;
+                                                              
+            string strSQL = string.Format(@"
+SELECT 
+	t1.VALUE as [Param],
+	t1.TYPENO as [Key],
+	t2.BASENAME as ValueZh,
+	t3.BASENAME as ValueEn,
+	t2.MEMO1    as MemoZh1,
+	t2.MEMO2    as MemoZh2,
+	t2.MEMO3    as MemoZh3,
+	t2.MEMO4    as MemoZh4,
+	t3.MEMO1    as MemoEn1,
+	t3.MEMO2    as MemoEn2,
+	t3.MEMO3    as MemoEn3,
+	t3.MEMO4    as MemoEn4
+FROM BASEIDH t1
+INNER JOIN BASEIDB t2
+ON t1.PKBASEHID=t2.FKBASEHID and t2.LANGID='437'
+INNER JOIN BASEIDB t3
+ON t1.PKBASEHID=t3.FKBASEHID and t3.LANGID='950' ");
+            strSQL += strWhere;
+            var data = await _context.GetBasicCodeDto.FromSqlRaw(strSQL).ToListAsync();
+            return data;
+        }
     }
 }

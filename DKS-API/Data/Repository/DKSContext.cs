@@ -42,7 +42,8 @@ namespace DKS_API.Data.Repository
         public DbSet<ArticleModelNameDto> GetArticleModelNameDto { get; set; }
         public DbSet<ArticleSeasonDto> GetArticleSeasonDto { get; set; }
         public DbSet<DevDtrVsListDto> GetDevDtrVsListDto { get; set; }
-
+        public DbSet<BasicCodeDto> GetBasicCodeDto { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Ordsumoh>().HasKey(x => new { x.PRSUMNO });
@@ -88,6 +89,8 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<ArticleSeasonDto>()
             .HasNoKey();
             modelBuilder.Entity<DevDtrVsListDto>()
+            .HasNoKey();
+            modelBuilder.Entity<BasicCodeDto>()
             .HasNoKey();
             
         }

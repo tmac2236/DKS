@@ -27,24 +27,33 @@ namespace DKS_API.Controllers
             _devDtrFgtResultDAO = devDtrFgtResultDAO;
             _devBuyPlanDAO = devBuyPlanDAO;
         }
+
+        [HttpGet("getBasicCodeDto")]
+        public async Task<IActionResult> GetBasicCodeDto(string typeNo)
+        {
+            _logger.LogInformation(String.Format(@"****** CommonController GetBasicCodeDto fired!! ******"));
+            var data = await _dKSDAO.GetBasicCodeDto(typeNo);
+            return Ok(data);
+        }
+
         [HttpGet("getArticle")]
         public async Task<IActionResult> GetArticle(string modelNo, string article, string modelName)
         {
-            _logger.LogInformation(String.Format(@"****** DTRController GetArticle fired!! ******"));
+            _logger.LogInformation(String.Format(@"****** CommonController GetArticle fired!! ******"));
             var data = await _articledDAO.GetArticleModelNameDto(modelNo, article, modelName);
             return Ok(data);
         }
         [HttpGet("getArticleSeason")]
         public async Task<IActionResult> GetArticleSeason(string season, string article)
         {
-            _logger.LogInformation(String.Format(@"****** DTRController GetArticleSeason fired!! ******"));
+            _logger.LogInformation(String.Format(@"****** CommonController GetArticleSeason fired!! ******"));
             var data = await _articledDAO.GetArticleSeasonDto(season, article);
             return Ok(data);
         }
         [HttpGet("getPartName")]
         public async Task<IActionResult> GetPartName(string article, string stage)
         {
-            _logger.LogInformation(String.Format(@"****** DTRController GetPartName fired!! ******"));
+            _logger.LogInformation(String.Format(@"****** CommonController GetPartName fired!! ******"));
             var data = await _devDtrFgtResultDAO.GetPartName4DtrFgt(article, stage);
 
             return Ok(data);
@@ -52,7 +61,7 @@ namespace DKS_API.Controllers
         [HttpGet("getBPVersionBySeason")]
         public async Task<IActionResult> GetBPVersionBySeason(string season, string factory)
         {
-            _logger.LogInformation(String.Format(@"******DKSController GetBPVersionBySeason fired!! ******"));
+            _logger.LogInformation(String.Format(@"******CommonController GetBPVersionBySeason fired!! ******"));
 
             var result = await _devBuyPlanDAO.FindAll(x => x.SEASON.Trim() == season.ToUpper().Trim()
                                                     && x.MANUF.Trim() == factory.ToUpper().Trim())
