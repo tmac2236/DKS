@@ -7,11 +7,12 @@ import { utilityConfig } from "../utility/utility-config";
 import { DevDtrFgtResult } from "../_models/dev-dtr-fgt-result";
 import { DevDtrFgtResultDto } from "../_models/dev-dtr-fgt-result-dto";
 import { DevDtrVisStandard } from "../_models/dev-dtr-vis-standard";
-import { DevSysSet } from "../_models/dev-sys-set";
+import { DevDtrVsList } from "../_models/dev-dtr-vs-list";
 import { PaginatedResult } from "../_models/pagination";
 import { SDevDtrFgtResult } from "../_models/s-dev-dtr-fgt-result";
 import { SDevDtrFgtResultReport } from "../_models/s-dev-dtr-fgt-result-report";
 import { SDevDtrVisStandard } from "../_models/s-dev-dtr-vis-standard";
+import { SDevDtrVsList } from "../_models/s-dev-dtr-vs-list";
 
 @Injectable({
   providedIn: "root",
@@ -203,6 +204,54 @@ export class DtrService {
         })
       );
   }
+  getDevDtrList(
+    sDevDtrVsList: SDevDtrVsList
+  ): Observable<PaginatedResult<DevDtrVsList[]>> {
+    const paginatedResult: PaginatedResult<DevDtrVsList[]> =
+      new PaginatedResult<DevDtrVsList[]>();
+
+    let params = new HttpParams();
+    params = params.append("IsPaging", sDevDtrVsList.isPaging.toString());
+    if (
+      sDevDtrVsList.currentPage != null &&
+      sDevDtrVsList.itemsPerPage != null
+    ) {
+      params = params.append(
+        "pageNumber",
+        sDevDtrVsList.currentPage.toString()
+      );
+      params = params.append(
+        "pageSize",
+        sDevDtrVsList.itemsPerPage.toString()
+      );
+      //params = params.append('orderBy', sAttendance.orderBy);
+    }
+    params = params.append("season", sDevDtrVsList.season.toString());
+    params = params.append("article", sDevDtrVsList.article.toString());
+    params = params.append("modelNo", sDevDtrVsList.modelNo.toString());
+    params = params.append("modelName", sDevDtrVsList.modelName.toString());
+    params = params.append("developerId", sDevDtrVsList.developerId.toString());
+    params = params.append("devTeamId", sDevDtrVsList.devTeamId.toString());
+    return this.utility.http
+      .get<DevDtrVsList[]>(
+        this.utility.baseUrl + "dtr/getDevDtrList",
+        {
+          observe: "response",
+          params,
+        }
+      )
+      .pipe(
+        map((response) => {
+          paginatedResult.result = response.body;
+          if (response.headers.get("Pagination") != null) {
+            paginatedResult.pagination = JSON.parse(
+              response.headers.get("Pagination")
+            );
+          }
+          return paginatedResult;
+        })
+      );
+  }  
   addVSfile(dtrVS: FormData) {
     console.log("dtr.service addVSfile:", dtrVS);
     return this.utility.http.post<boolean>(

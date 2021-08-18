@@ -1,6 +1,6 @@
 namespace DKS_API.DTOs
 {
-    public class ArticleSeasonDto
+    public class DevDtrVsListDto
     {
 
         public string Article { get; set; }

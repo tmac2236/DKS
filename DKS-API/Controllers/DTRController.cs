@@ -307,7 +307,21 @@ namespace DKS_API.Controllers
             result.TotalCount, result.TotalPages);
             return Ok(result);
 
-        }        
+        } 
+        [HttpGet("getDevDtrList")]
+        public async Task<IActionResult> GetDevDtrList([FromQuery] SDevDtrVsList sDevDtrVsList)
+        {
+            _logger.LogInformation(String.Format(@"****** DTRController GetDevDtrList fired!! ******"));
+
+
+            var data = await _articledDAO.GetDevDtrVsListDto(sDevDtrVsList);
+            PagedList<DevDtrVsListDto> result = PagedList<DevDtrVsListDto>.Create(data, sDevDtrVsList.PageNumber, sDevDtrVsList.PageSize, sDevDtrVsList.IsPaging);
+            Response.AddPagination(result.CurrentPage, result.PageSize,
+            result.TotalCount, result.TotalPages);
+            return Ok(result);
+
+        } 
+               
         [HttpPost("addVSfile")]
         public async Task<IActionResult> AddVSfile([FromForm] DevDtrVisStandardDto devDtrVisStandardDto)
         {

@@ -9,6 +9,7 @@ import { AuthGuardRole } from "./core/_guards/auth.guard-role";
 import { DictionaryComponent } from "./views/dictionary/dictionary.component";
 import { DtrFgtResultComponentComponent } from "./views/dks/dtr-fgt-result-component/dtr-fgt-result-component.component";
 import { DtrFgtResultReportComponent } from "./views/dks/dtr-fgt-result-report/dtr-fgt-result-report.component";
+import { DtrVStandardListComponent } from "./views/dks/dtr-v-standard-list/dtr-v-standard-list.component";
 import { DtrVStandardComponent } from "./views/dks/dtr-v-standard/dtr-v-standard.component";
 import { F340PpdComponent } from "./views/dks/F340/F340-ppd/F340-ppd.component";
 import { F340Component } from "./views/dks/F340/F340.component";
@@ -88,9 +89,17 @@ export const routes: Routes = [
     },
   },
   {
-    path: "DTR-Vis-Standard",
+    path: "DTR-Vs-Maintain",
     canActivate: [AuthGuardRole],
     component: DtrVStandardComponent,
+    data: {
+      roles: [utilityConfig.RoleSysAdm],
+    },
+  },
+  {
+    path: "DTR-Vs-List",
+    canActivate: [AuthGuardRole],
+    component: DtrVStandardListComponent,
     data: {
       roles: [utilityConfig.RoleSysAdm],
     },

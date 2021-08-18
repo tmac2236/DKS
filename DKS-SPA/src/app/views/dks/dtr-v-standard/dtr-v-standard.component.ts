@@ -5,6 +5,7 @@ import { DtrService } from "../../../core/_services/dtr.service";
 import { SDevDtrVisStandard } from "../../../core/_models/s-dev-dtr-vis-standard";
 import { DevDtrVisStandard } from "../../../core/_models/dev-dtr-vis-standard";
 import { PaginatedResult } from "../../../core/_models/pagination";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: "app-dtr-v-standard",
@@ -23,7 +24,14 @@ export class DtrVStandardComponent implements OnInit {
   addAModel: DevDtrVisStandard = new DevDtrVisStandard();
   bufferFile: File | null = null; // upload
 
-  constructor(public utility: Utility, private dtrService: DtrService) {}
+  constructor(public utility: Utility, private activeRouter: ActivatedRoute, private dtrService: DtrService) {
+    this.activeRouter.queryParams.subscribe((params) => {
+      this.sDevDtrVisStandard.season = params.season;
+      this.sDevDtrVisStandard.article = params.article;
+      if(!this.utility.checkIsNullorEmpty(this.sDevDtrVisStandard.season)) this.search();
+
+    });
+  }
 
   ngOnInit() {
     this.utility.initUserRole(this.sDevDtrVisStandard);
@@ -63,7 +71,7 @@ export class DtrVStandardComponent implements OnInit {
           if (res.result.length < 1) {
             this.utility.alertify.confirm(
               "Sweet Alert",
-              "No Data in these conditions of search, please try again.",
+              "No Data in these conditions of search, Please click Add A Report.",
               () => {
                 this.utility.spinner.hide();
                 return;
@@ -200,6 +208,7 @@ export class DtrVStandardComponent implements OnInit {
       }
     );
   }
+  //check is the season article is exist in Article、Model
   async getArticleSeason() {
     await this.dtrService
       .getArticleSeason(

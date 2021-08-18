@@ -1,0 +1,148 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <strong class ="col-11" style="font-size: 20px;color:#000000;">DTR Visual Standard List</strong>
+              <div class="col-1 btn-group" dropdown>
+                <button id="button-basic" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
+                        aria-controls="dropdown-basic">
+                        <strong *ngIf="this.sDevDtrVsList.loginUser">{{ this.sDevDtrVsList.loginUser }}</strong> <span class="caret"></span>
+                </button>
+                <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
+                    role="menu" aria-labelledby="button-basic">
+                  <li role="menuitem"><a class="dropdown-item" href="javascript:;" (click)="this.utility.logout()"><img src="../assets/systemImg/exit.png" class="topImg" width="25" height="25"/>  Log Out</a></li>
+                </ul>                
+            </div>
+          </div>          
+        </div>
+        <div class="card-body">
+          <form class="form" #addQueryReportDataForm="ngForm">
+            <!-- first column-->
+            <div class="row">
+              <div class="form-group col-12">
+                <label>Season</label>
+                <input
+                  class="col-form-label"
+                  type="text"
+                  name="season"
+                  size ="4"
+                  maxlength="4"
+                  [(ngModel)]="sDevDtrVsList.season"
+                />
+                <label>Article</label>
+                <input
+                  class="col-form-label"
+                  type="text"
+                  name="article"
+                  size ="6"
+                  maxlength="6"
+                  [(ngModel)]="sDevDtrVsList.article"
+                />
+                <label>Model No</label>
+                <input
+                  class="col-form-label"
+                  type="text"
+                  name="modelNo"
+                  size ="5"
+                  maxlength="5"
+                  [(ngModel)]="sDevDtrVsList.modelNo"
+                />
+                <label>Model Name</label>
+                <input
+                  class="col-form-label"
+                  type="text"
+                  name="modelName"
+                  size ="10"
+                  [(ngModel)]="sDevDtrVsList.modelName"
+                />
+                <!-- 
+                <label>Developer Id</label>
+                <input
+                  class="col-form-label"
+                  type="text"
+                  name="developerId"
+                  size ="6"
+                  maxlength="6"
+                  [(ngModel)]="sDevDtrVsList.developerId"
+                /> 
+                <label>DevTeam Id</label>
+                <input
+                  class="col-form-label"
+                  type="text"
+                  name="devTeamId"
+                  size ="6"
+                  maxlength="6"
+                  [(ngModel)]="sDevDtrVsList.devTeamId"
+                />
+                -->
+                <button
+                class="btn btn-primary ml-4 mr-1 mb-1"
+                type="button"
+                (click)="search()"
+                >
+                Search
+                </button>                                                                  
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="row" *ngIf="result?.length > 0">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table text-center text-nowrap table-striped">
+                    <!--text-nowrap不換行-->
+                    <!--套版分頁<table datatable id="f340Sche" class="table text-center table-striped">-->
+                    <thead>
+                      <tr class="table-info">
+                        <th>Record</th>
+                        <th>Season</th>
+                        <th>Article</th>
+                        <th>ModelNo</th>
+                        <th>ModelName</th>
+                        <th>Developer Name</th>
+                        <th>DevTeam Id</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container *ngFor="let item of result; let i = index">
+                        <tr>
+                          <td><img
+                            src="../assets/systemImg/visible.png"
+                            class="mr-1"
+                            width="40"
+                            height="40"
+                            (click)="viewRecord(item)"
+                            />
+                          </td>
+                          <td>{{ item.season }}</td>
+                          <td>{{ item.article }}</td>
+                          <td>{{ item.modelNo }}</td>
+                          <td>{{ item.modelName }}</td>
+                          <td>{{ item.developerId}}</td>
+                          <td>{{ item.devTeamId }}</td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ngx-spinner
+  bdColor="rgba(0, 0, 0, 0.8)"
+  size="large"
+  color="#fff"
+  type="square-jelly-box"
+  [fullScreen]="true"
+  ><p style="color: white">DTR Visual Standard List...</p></ngx-spinner
+>
