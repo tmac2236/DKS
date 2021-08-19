@@ -5,6 +5,7 @@ import { DksService } from "../../../core/_services/dks.service";
 import { F340Schedule } from "../../../core/_models/f340-schedule.ts";
 import { SF340Schedule } from "../../../core/_models/s_f340-schedule";
 import { PaginatedResult } from "../../../core/_models/pagination";
+import { CommonService } from "../../../core/_services/common.service";
 
 @Component({
   selector: "app-F340",
@@ -20,7 +21,7 @@ export class F340Component implements OnInit,OnDestroy   {
   sF340Schedule: SF340Schedule = new SF340Schedule();
   result: F340Schedule[] = [];
   bpVerList: string[];
-  constructor(public utility: Utility, private dksService: DksService) {}
+  constructor(public utility: Utility, private dksService: DksService, private commonService: CommonService) {}
 
   ngOnInit() {
     this.utility.initUserRole(this.sF340Schedule);
@@ -102,10 +103,10 @@ export class F340Component implements OnInit,OnDestroy   {
   }
 
   //下拉選單帶出版本
-  changeBPVerList() {
+  async changeBPVerList() {
     if(this.sF340Schedule.season ==="") return;
     this.utility.spinner.show();
-    this.dksService.searchBPVerList(this.sF340Schedule.season,this.sF340Schedule.factory).subscribe(
+    await this.commonService.searchBPVerList(this.sF340Schedule.season,this.sF340Schedule.factory).then(
       (res) => {
         this.utility.spinner.hide();
         this.bpVerList = res;

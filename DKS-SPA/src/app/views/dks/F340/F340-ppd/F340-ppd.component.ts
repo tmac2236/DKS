@@ -108,15 +108,15 @@ export class F340PpdComponent implements OnInit {
   }
 
   //下拉選單帶出版本
-  changeBPVerList() {
+  async changeBPVerList() {
     if (this.sF340PpdSchedule.season === "") return;
     this.utility.spinner.show();
-    this.commonService
+    await this.commonService
       .searchBPVerList(
         this.sF340PpdSchedule.season,
         this.sF340PpdSchedule.factory
       )
-      .subscribe(
+      .then(
         (res) => {
           this.utility.spinner.hide();
           this.bpVerList = res;

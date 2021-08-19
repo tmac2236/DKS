@@ -204,7 +204,7 @@ namespace DFPS.API.Data.Repository
         {
             string strWhere = " WHERE t1.DISABCODE = 1 ";   //禁用碼
             if (!(String.IsNullOrEmpty(typeNo)))
-                strWhere += " AND t1.FKBASEFID IN (select PKBASEHID from BASEIDH where TYPENO = N'" + typeNo.Trim() + "' " ;
+                strWhere += " AND t1.FKBASEFID IN (select PKBASEHID from BASEIDH where TYPENO = N'" + typeNo.Trim() + "' ) " ;
                                                               
             string strSQL = string.Format(@"
 SELECT 

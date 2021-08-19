@@ -66,8 +66,21 @@
                   size ="6"
                   maxlength="6"
                   [(ngModel)]="sDevDtrVsList.developerId"
-                /> 
+                />
+                --> 
                 <label>DevTeam Id</label>
+                <select
+                  class="col-form-label"
+                  name="devTeamId"
+                  [(ngModel)]="sDevDtrVsList.devTeamId"
+                  (focus)="getBasicCodeDto()"
+                >
+                  <option value=""></option>
+                  <option *ngFor="let devTeam of code017" value="{{ devTeam.key }}">
+                    {{ devTeam.valueEn }}
+                  </option>
+                </select>                
+                <!--
                 <input
                   class="col-form-label"
                   type="text"

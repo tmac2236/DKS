@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Utility } from "../utility/utility";
+import { BasicCodeDto } from "../_models/basic-code-dto";
 
 
 @Injectable({
@@ -27,7 +28,7 @@ export class CommonService {
         season +
         "&factory=" +
         factory
-    );
+    ).toPromise();
   }
   //get article、modelNo、modelName
   getArticle(modelNo: string, article:string, modelName:string) {
@@ -39,6 +40,12 @@ export class CommonService {
   getArticleSeason(season: string, article:string) {
     return this.utility.http.get<object[]>(
       this.utility.baseUrl + "common/getArticleSeason?season=" + season +"&article=" + article
+    ).toPromise();
+  }
+  //get F104 Basic code detail by typeNo
+  getBasicCodeDto(typeNo: string) {
+    return this.utility.http.get<BasicCodeDto[]>(
+      this.utility.baseUrl + "common/getBasicCodeDto?typeNo=" + typeNo 
     ).toPromise();
   }
 }
