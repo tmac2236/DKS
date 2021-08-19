@@ -20,9 +20,10 @@ export class DtrVStandardListComponent implements OnInit {
   sDevDtrVsList: SDevDtrVsList = new SDevDtrVsList();
   result: DevDtrVsList[] = [];
   code017: BasicCodeDto[] = [];
-
+  
   ngOnInit() {
     this.utility.initUserRole(this.sDevDtrVsList);
+    this.getBasicCodeDto();
   }
   //搜尋
   async search() {

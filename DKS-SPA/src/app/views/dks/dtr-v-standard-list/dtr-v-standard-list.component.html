@@ -57,7 +57,7 @@
                   size ="10"
                   [(ngModel)]="sDevDtrVsList.modelName"
                 />
-                <!-- 
+                <!-- Developer Id(LOGIN帳號查詢)
                 <label>Developer Id</label>
                 <input
                   class="col-form-label"
@@ -68,6 +68,7 @@
                   [(ngModel)]="sDevDtrVsList.developerId"
                 />
                 --> 
+                <!--使用ng-select 第一層註解可用下拉選單
                 <label>DevTeam Id</label>
                 <select
                   class="col-form-label"
@@ -79,22 +80,24 @@
                   <option *ngFor="let devTeam of code017" value="{{ devTeam.key }}">
                     {{ devTeam.valueEn }}
                   </option>
-                </select>                
-                <!--
-                <input
-                  class="col-form-label"
-                  type="text"
-                  name="devTeamId"
-                  size ="6"
-                  maxlength="6"
-                  [(ngModel)]="sDevDtrVsList.devTeamId"
-                />
+                </select>
                 -->
+                <!--使用ng-select 第二層註解可用ngselect下拉選單
+                <label>DevTeam Id</label>  
+                <ng-select [items]="code017"
+                name="valueZh"
+                bindLabel="valueZh"
+                bindValue="key"
+                size="10"
+                [clearable]="false"
+                [(ngModel)]="sDevDtrVsList.developerId"
+                >
+                </ng-select>   
+                -->             
                 <button
                 class="btn btn-primary ml-4 mr-1 mb-1"
                 type="button"
-                (click)="search()"
-                >
+                (click)="search()">
                 Search
                 </button>                                                                  
               </div>
