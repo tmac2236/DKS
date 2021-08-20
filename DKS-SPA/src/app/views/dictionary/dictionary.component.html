@@ -7,6 +7,10 @@
           <form class="form-horizontal" #F428DataForm="ngForm">
             <div class="form-row">
               <div class="form-group col-2">
+                <label>Model Name</label>
+              <input type="text" class="form-control" id="modalModelName"/>
+              </div>
+              <div class="form-group col-2">
                 <label>下載報表類型</label>
                 <ng-select [items]="excelTypeList"
                 name="excelTypeList"

@@ -32,7 +32,11 @@ export class DtrFgtResultComponentComponent implements OnInit {
   addAModelTreatment: string = ""; //only let user see not save to db
   isValidUpload: boolean = false; //卡控新增畫面的上傳PDF按鈕
 
-  constructor(public utility: Utility, private dtrService: DtrService, private commonService: CommonService) {}
+  constructor(
+    public utility: Utility,
+    private dtrService: DtrService,
+    private commonService: CommonService
+  ) {}
 
   ngOnInit() {
     this.utility.initUserRole(this.sDevDtrFgtResult);
@@ -327,58 +331,69 @@ export class DtrFgtResultComponentComponent implements OnInit {
       debugger;
       //Step 2: check is labNo length is 6 and the value is number
       let isGoodLength = this.addAModel.labNo.length == 6;
+
+      let nowyear2 = new Date().getFullYear().toString(); 
+      let lastyear2 = (new Date().getFullYear()-1).toString();
+
+      let isNoValid = nowyear2.slice(2, 4) == this.addAModel.labNo.slice(0, 2); // get 2021 --> 21 == the first 2 char of labNo
+      if(!isNoValid) isNoValid = lastyear2.slice(2, 4) == this.addAModel.labNo.slice(0, 2); // get 2020 --> 20 == the first 2 char of labNo
+
       let isNumber = this.utility.checkIsNumber(this.addAModel.labNo);
-      if (!isGoodLength || !isNumber) {
+      if (!isGoodLength) {
+        this.utility.alertify.error("The length of Lab No have to be 6 !");
+        return;
+      }
+      if (!isNumber) {
+        this.utility.alertify.error("The Lab No have to be a number !");
+        return;
+      }
+      if (!isNoValid) {
+        this.utility.alertify.error(
+          "The first 2 char of Lab No have to be " + nowyear2.slice(2, 4) + " or " + lastyear2.slice(2, 4) + " !"
+        );
+        return;
+      }
+      //Step 3: check is labNo valid
+      let model = this.result.find(
+        (x) => x["labNo"] == this.addAModel.labNo.trim()
+      );
+      if (model) {
         this.utility.alertify.confirm(
           "Sweet Alert",
-          "The length of Lab have to be 6 and number!",
+          "The Lab No is exist please use another one!",
           () => {
             return;
           }
         );
       } else {
-        //Step 3: check is labNo valid
-        let model = this.result.find(
-          (x) => x["labNo"] == this.addAModel.labNo.trim()
-        );
-        if (model) {
-          this.utility.alertify.confirm(
-            "Sweet Alert",
-            "The Lab No is exist please use another one!",
-            () => {
-              return;
-            }
-          );
-        } else {
-          //Step 4: call api save to db
+        //Step 4: call api save to db
 
-          this.utility.spinner.show();
-          this.dtrService.addDevDtrFgtResult(this.addAModel).subscribe(
-            (res: boolean) => {
-              this.utility.spinner.hide();
-              if (!res) {
-                this.utility.alertify.confirm(
-                  "Sweet Alert",
-                  "Save fault please refresh browser and try again!",
-                  () => {}
-                );
-              } else {
-                //Step 4: refresh the page
-                this.search();
-                this.utility.alertify.success("Save success. Please upload pdf!");
-                this.isValidUpload = true; //let add pdf button show
-              }
-            },
-            (error) => {
-              this.utility.spinner.hide();
+        this.utility.spinner.show();
+        this.dtrService.addDevDtrFgtResult(this.addAModel).subscribe(
+          (res: boolean) => {
+            this.utility.spinner.hide();
+            if (!res) {
               this.utility.alertify.confirm(
-                "System Notice",
-                "Syetem is busy, please try later.",
+                "Sweet Alert",
+                "Save fault please refresh browser and try again!",
                 () => {}
               );
+            } else {
+              //Step 4: refresh the page
+              this.search();
+              this.utility.alertify.success("Save success. Please upload pdf!");
+              this.isValidUpload = true; //let add pdf button show
             }
-          );
-        }
+          },
+          (error) => {
+            this.utility.spinner.hide();
+            this.utility.alertify.confirm(
+              "System Notice",
+              "Syetem is busy, please try later.",
+              () => {}
+            );
+          }
+        );
       }
     }
   }
