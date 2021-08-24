@@ -7,6 +7,7 @@ import { DevDtrVisStandard } from "../../../core/_models/dev-dtr-vis-standard";
 import { PaginatedResult } from "../../../core/_models/pagination";
 import { ActivatedRoute } from "@angular/router";
 import { CommonService } from "../../../core/_services/common.service";
+import { utilityConfig } from "../../../core/utility/utility-config";
 
 @Component({
   selector: "app-dtr-v-standard",
@@ -24,12 +25,24 @@ export class DtrVStandardComponent implements OnInit {
   result: DevDtrVisStandard[] = [];
   addAModel: DevDtrVisStandard = new DevDtrVisStandard();
   bufferFile: File | null = null; // upload
-
+  uiControls:any = {
+    addAReport: utilityConfig.RoleSysAdm,
+    deleteAReport: utilityConfig.RoleSysAdm,
+  };
   constructor(public utility: Utility, private activeRouter: ActivatedRoute
             , private dtrService: DtrService, private commonService:CommonService) {
     this.activeRouter.queryParams.subscribe((params) => {
-      this.sDevDtrVisStandard.season = params.season;
-      this.sDevDtrVisStandard.article = params.article;
+      
+      if(params.homeParam !== undefined){
+        //SS22$GV7864
+        let paramArray = params.homeParam.split("$");
+        this.sDevDtrVisStandard.season = paramArray[0];
+        this.sDevDtrVisStandard.article = paramArray[1];
+      }else{
+        this.sDevDtrVisStandard.season = params.season;
+        this.sDevDtrVisStandard.article = params.article;
+      }
+
       if(!this.utility.checkIsNullorEmpty(this.sDevDtrVisStandard.season)) this.search();
 
     });
@@ -60,7 +73,7 @@ export class DtrVStandardComponent implements OnInit {
     }
     this.result = [];
     this.initAddBtn();
-    await this.getArticleSeason();
+    await this.getArticleSeason();  // check the season and article is existed?
     if(!this.validArticle){
       this.utility.alertify.error("It doesn't exist with this season and article  !!!!");
       return;
@@ -73,7 +86,7 @@ export class DtrVStandardComponent implements OnInit {
           if (res.result.length < 1) {
             this.utility.alertify.confirm(
               "Sweet Alert",
-              "No Data in these conditions of search, Please click Add A Report.",
+              "No Data in these conditions of search.",
               () => {
                 this.utility.spinner.hide();
                 return;

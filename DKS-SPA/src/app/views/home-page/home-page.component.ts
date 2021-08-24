@@ -19,8 +19,9 @@ import { AuthService } from "../../core/_services/auth.service";
 export class HomePageComponent implements OnInit {
   loginModel: any = {};
   photoUrl: string;
-  param1: string;
-  param2: string;
+  param1: string; //userID or LOGIN
+  param2: string; //Path
+  param3: string; //Parameters
 
   constructor(
     public authService: AuthService,
@@ -33,12 +34,13 @@ export class HomePageComponent implements OnInit {
 
       this.param1 = params.A0Lfn93DlC; //userID or LOGIN
       this.param2 = params.DWgu5gtmmT; //Path
+      this.param3 = params.Z7kXu2OaRm; //Parameters
     });
   }
 
   ngOnInit() {
     if (typeof this.param1 !== "undefined") {
-      this.loginByDKS(this.param1,this.param2);
+      this.loginByDKS(this.param1,this.param2,this.param3);
     }
     //this.router.navigate(["/F340"], {
     //  queryParams: { param1: this.param1 },
@@ -61,16 +63,28 @@ export class HomePageComponent implements OnInit {
       }
     );
   }
-  loginByDKS(userID: string, path: string) {
+  loginByDKS(userID: string, path: string, parameters?:string) {
 
     this.spinner.show();
     this.loginModel.account = userID;
     this.authService.login(this.loginModel).subscribe(
       (next) => {
         this.spinner.hide();
-        let PathCode = '/' + path;
-        //this.alertify.success(PathCode);
-        this.router.navigate([PathCode]);
+        let PathCode = '/' + path; 
+
+        if (typeof this.param3 !== "undefined") { //url have parameters
+          var navigationExtras = {
+            queryParams: {
+              homeParam : parameters
+            },
+            skipLocationChange: false,
+          };
+          this.router.navigate([PathCode], navigationExtras);
+        }else{
+
+          this.router.navigate([PathCode]);
+        }
+
       },
       (error) => {
         this.spinner.hide();
