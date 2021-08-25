@@ -68,6 +68,7 @@ import { DtrFgtResultComponentComponent } from "./views/dks/dtr-fgt-result-compo
 import { DtrFgtResultReportComponent } from "./views/dks/dtr-fgt-result-report/dtr-fgt-result-report.component";
 import { DtrVStandardComponent } from "./views/dks/dtr-v-standard/dtr-v-standard.component";
 import { DtrVStandardListComponent } from "./views/dks/dtr-v-standard-list/dtr-v-standard-list.component";
+import { CovidComponent } from "./views/covid/covid.component";
 
 
 //載入 "/assets/i18n/[lang].json" 語系檔
@@ -124,6 +125,7 @@ export function createTranslateLoader(http: HttpClient) {
     F428EditComponent,
     DictionaryComponent,
     HomePageComponent,
+    CovidComponent,
   ],
   providers: [
     AuthService,

@@ -6,6 +6,7 @@ import { DefaultLayoutComponent } from "./containers";
 import { utilityConfig } from "./core/utility/utility-config";
 import { AuthGuard } from "./core/_guards/auth.guard";
 import { AuthGuardRole } from "./core/_guards/auth.guard-role";
+import { CovidComponent } from "./views/covid/covid.component";
 import { DictionaryComponent } from "./views/dictionary/dictionary.component";
 import { DtrFgtResultComponentComponent } from "./views/dks/dtr-fgt-result-component/dtr-fgt-result-component.component";
 import { DtrFgtResultReportComponent } from "./views/dks/dtr-fgt-result-report/dtr-fgt-result-report.component";
@@ -42,6 +43,10 @@ export const routes: Routes = [
       title: "Page 500",
     },
   },
+  {
+    path: "Covid",
+    component: CovidComponent,
+  },  
   {
     path: "picture",
     component: PictureComponent,
