@@ -135,10 +135,15 @@ export class DtrVStandardComponent implements OnInit {
   closeModal(type: string) {
     if (type == "addDtrVSModal") this.addDtrVSModal.hide();
   }
+
   initAddBtn() {
     this.validArticle = false;
   }
-  cleanModel() {}
+  cleanModel() {
+    this.addAModel = new DevDtrVisStandard();
+    this.addAModel.upusr = this.sDevDtrVisStandard.loginUser;
+    this.bufferFile = null;
+  }
   //save the file to memory
   handleFileInput(files: FileList) {
     //"application/pdf" "image/jpeg"
@@ -176,7 +181,7 @@ export class DtrVStandardComponent implements OnInit {
       (res) => {
         this.utility.spinner.hide();
         //找到該筆model 把資料回填
-        this.closeModal("addFgtResult"); //新增一筆record後上傳pdf成功關閉modal
+        this.closeModal("addDtrVSModal"); //新增一筆record後上傳pdf成功關閉modal
         //refresh the page
         this.search();
         this.utility.alertify.success("Save success !");
@@ -198,30 +203,38 @@ export class DtrVStandardComponent implements OnInit {
     window.open(dataUrl);
   }
   deleteVSResult(model: DevDtrVisStandard) {
-    this.utility.spinner.show();
-    this.dtrService.deleteVSResult(model).subscribe(
-      (res: boolean) => {
-        this.utility.spinner.hide();
-        if (!res) {
-          this.utility.alertify.confirm(
-            "Sweet Alert",
-            "Delete fault please refresh browser and try again!",
-            () => {}
-          );
-        } else {
-          //Step 2: refresh the page
-          this.search();
-        }
-      },
-      (error) => {
-        this.utility.spinner.hide();
-        this.utility.alertify.confirm(
-          "System Notice",
-          "Syetem is busy, please try later.",
-          () => {}
+
+    this.utility.alertify.confirm(
+      "Sweet Alert",
+      "Are you sure to Delete the pdf of this season:" + model.season + " , article : " + model.article + ".",
+      () => {
+        this.utility.spinner.show();
+        this.dtrService.deleteVSResult(model).subscribe(
+          (res: boolean) => {
+            this.utility.spinner.hide();
+            if (!res) {
+              this.utility.alertify.confirm(
+                "Sweet Alert",
+                "Delete fault please refresh browser and try again!",
+                () => {}
+              );
+            } else {
+              //Step 2: refresh the page
+              this.search();
+            }
+          },
+          (error) => {
+            this.utility.spinner.hide();
+            this.utility.alertify.confirm(
+              "System Notice",
+              "Syetem is busy, please try later.",
+              () => {}
+            );
+          }
         );
       }
     );
+
   }
   //check is the season article is exist in Article、Model
   async getArticleSeason() {
