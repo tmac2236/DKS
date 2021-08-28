@@ -111,12 +111,21 @@ namespace DKS_API.Services.Implement
                         {
                             string hyperlink = (string)ws.Cells["V" + i].Value;
                             ws.Cells["V" + i].PutValue("Click Me");
-                            //Adding a hyperlink to a URL at "U"? cell
+                            //Adding a hyperlink to a URL at "V"? cell
                             ws.Hyperlinks.Add("V" + i, 1, 1, hyperlink);
                         }
+                        string fgtFileName = (string)ws.Cells["Y" + i].Value; //If FgtFileName Column is not empty or null
+                        if (!String.IsNullOrEmpty(fgtFileName))
+                        {
+                            string hyperlink = (string)ws.Cells["Y" + i].Value;
+                            string fgtResult = (string)ws.Cells["X" + i].Value;
+                            ws.Cells["Y" + i].PutValue(fgtResult);
+                            //Adding a hyperlink to a URL at "X"? cell
+                            ws.Hyperlinks.Add("Y" + i, 1, 1, hyperlink);
+                        }
 
-                        string article = (string)ws.Cells["F" + i].Value; //If Pdf Column is not empty or null
-                        if (String.IsNullOrEmpty(article))
+                        string article = (string)ws.Cells["F" + i].Value; 
+                        if (String.IsNullOrEmpty(article))  //In order to exit loop, don't delete
                         {
                             break;
                         }

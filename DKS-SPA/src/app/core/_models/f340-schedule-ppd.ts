@@ -30,6 +30,10 @@ export class F340SchedulePpd implements ModelInterface {
   photo:string;
   photoComment:string;
   pdf:string;
+
+  fgtHyperLink :string;
+  fgtFileName :string;
+  fgtReMark :string;
   
 
   isDisplay: number; //only use in front end

@@ -107,7 +107,10 @@
             "cardDate": "面部實物卡",
 
             "proStatusId":"ProStatusId",
-            "photoComment":"PhotoComment"
+            "photoComment":"PhotoComment",
+            "fgtHyperLink":"Fgt Result",
+            "fgtFileName":"Fgt FileName",
+            "fgtReMark":"Fgt Remark"
         }
     }
 }

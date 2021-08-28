@@ -6,6 +6,6 @@
 export const environment = {
   production: false,
   apiUrl:  "http://localhost:5000/api/",
-  spaUrl: "http://localhost:4200/#/"
+  spaUrl: "http://localhost:4200"
 
 };

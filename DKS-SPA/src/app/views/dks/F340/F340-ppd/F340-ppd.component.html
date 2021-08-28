@@ -396,7 +396,8 @@
                         <!---->
                         <th
                           style="background-color: #23d954"
-                          placement="開發人員維護"
+                          tooltip="開發人員維護"
+                          placement="bottom"
                         >
                           PDF
                         </th>
@@ -408,14 +409,15 @@
                           "
                           style="background-color: #23d954"
                           tooltip="開發人員維護"
-                          placement="right"
+                          placement="bottom"
                         >
                           PDF{{ "F340-PPD.mantainPic" | translate }}
                         </th>
                         <!---->
                         <th
                           style="background-color: #23d954"
-                          placement="開發人員維護"
+                          tooltip="開發人員維護"
+                          placement="bottom"
                         >
                           Shoe{{ "F340-PPD.picture" | translate }}
                         </th>
@@ -427,16 +429,38 @@
                           "
                           style="background-color: #23d954"
                           tooltip="開發人員維護"
-                          placement="right"
+                          placement="bottom"
                         >
                           Shoe{{ "F340-PPD.mantainPic" | translate }}
                         </th>
                         <th
                           style="background-color: #23d954"
+                          tooltip="開發人員維護"
                           placement="bottom"
                         >
                           {{ "F340-PPD.titleList.photoComment" | translate }}
                         </th>
+                        <th
+                          style="background-color: #23d954"
+                          tooltip="DTR-Fgt-Report"
+                          placement="bottom"
+                        >
+                          {{ "F340-PPD.titleList.fgtHyperLink" | translate }}
+                        </th>
+                        <th
+                          style="background-color: #23d954"
+                          tooltip="DTR-Fgt-Report"
+                          placement="bottom"
+                        >
+                          {{ "F340-PPD.titleList.fgtFileName" | translate }}
+                        </th>
+                        <th
+                          style="background-color: #23d954"
+                          tooltip="DTR-Fgt-Report"
+                          placement="bottom"
+                        >
+                          {{ "F340-PPD.titleList.fgtReMark" | translate }}
+                        </th>                                                
                       </tr>
                     </thead>
                     <tbody>
@@ -614,6 +638,17 @@
                             />
                           </td>
                           <td>{{ item.photoComment }}</td>
+                          <td>{{ item.fgtHyperLink }}</td>
+                          <td>
+                            <img
+                            src="../assets/systemImg/download-pdf.png"
+                            class="mt-2"
+                            width="35"
+                            height="35"
+                            [style.visibility]="item.fgtFileName ?.length < 1 ? 'hidden' : 'visible'"
+                            (click)="viewFGT(item)"/>
+                          </td>
+                          <td>{{ item.fgtReMark }}</td>
                         </tr>
                       </ng-container>
                     </tbody>

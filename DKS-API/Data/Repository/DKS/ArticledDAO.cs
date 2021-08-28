@@ -93,5 +93,42 @@ SELECT DISTINCT
             var data = await _context.GetDevDtrVsListDto.FromSqlRaw(strSQL).ToListAsync();
             return data;
         }
+
+        public async Task<List<TupleDto>> GetSeasonNumDto()
+        {
+            //string strWhere = " WHERE 1=1 ";
+            //if (!(String.IsNullOrEmpty(article)))
+            //    strWhere += " AND t1.ARTICLE = N'" + article.Trim()  + "' " ;            
+            string strSQL = string.Format(@"
+SELECT
+	DevSeason as [K]
+	,Cast(count(DevSeason) as nvarchar) as [V]
+	FROM(
+	SELECT 
+		t2.SEASON as DevSeason,
+		t2.DEVTEAMID,
+		t1.ARTICLE,
+		t1.PROSTATUSID,
+		t1.PKARTBID,
+		isnull(convert(varchar,t1.ACTDATE,111),'1911/01/01') as CWADEADL,
+		t1.MODELNO,
+		t2.MODELNAME,
+		t3.DEVSTATUS,--是否有轉單
+		isnull(convert(varchar,t3.DROPDATE,111),'') as DROPDATE,
+		ROW_NUMBER() OVER (PARTITION BY t1.ARTICLE ORDER BY t1.CHANGDATE DESC) AS id --給序號從1開始
+	FROM ARTICLED t1
+	inner join MODELDAH t2
+	on	t2.BRANDCATE in ('1','2','3','6' ) --Brand Category = 1,2,3
+		and  t1.MODELNO=t2.MODELNO
+		inner join  RDBOMDAH t3
+	on t1.PKARTBID=t3.FKARTICID 
+		and t3.DEVSTATUS in (' ', '2') --排除DROP = 1 的Article
+) as t1
+WHERE t1.id = 1
+GROUP BY DevSeason ");
+            //strSQL += strWhere;
+            var data = await _context.GetTupleDto.FromSqlRaw(strSQL).ToListAsync();
+            return data;
+        }
     }
 }

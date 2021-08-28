@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Utility } from "../utility/utility";
 import { BasicCodeDto } from "../_models/basic-code-dto";
+import { TupleDto } from "../_models/tuple-dto";
 
 
 @Injectable({
@@ -46,6 +47,12 @@ export class CommonService {
   getBasicCodeDto(typeNo: string) {
     return this.utility.http.get<BasicCodeDto[]>(
       this.utility.baseUrl + "common/getBasicCodeDto?typeNo=" + typeNo 
+    ).toPromise();
+  }
+  //get F104 Basic code detail by typeNo
+  getSeasonNumDto() {
+    return this.utility.http.get<TupleDto[]>(
+      this.utility.baseUrl + "test/getSeasonNum"
     ).toPromise();
   }
 }

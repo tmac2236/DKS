@@ -32,6 +32,10 @@ namespace DKS_API.DTOs
         public string Photo { get; set; }
         public string PhotoComment { get; set; }
         public string Pdf { get; set; }
-
+        
+        public string FgtHyperLink { get; set; }
+        public string FgtFileName { get; set; }
+        public string FgtReMark { get; set; }
+        
     }
 }

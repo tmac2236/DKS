@@ -21,10 +21,13 @@ namespace DFPS.API.Controllers
     public class TestController : ApiController
     {
         private readonly IArticledLdtmDAO _dao;
-        public TestController(IConfiguration config, IWebHostEnvironment webHostEnvironment,ILogger<TestController> logger,IArticledLdtmDAO dao)
+        private readonly IArticledDAO _articledDAO;
+        public TestController(IConfiguration config, IWebHostEnvironment webHostEnvironment,ILogger<TestController> logger,
+                IArticledLdtmDAO dao, IArticledDAO articledDAO)
         : base(config, webHostEnvironment,logger)
         {
             _dao = dao;
+            _articledDAO = articledDAO;
         }
         
         [AllowAnonymous]
@@ -38,7 +41,15 @@ namespace DFPS.API.Controllers
 
             return File(result, "",model.ATTACHED_DATA_NAME);
         }
+        [AllowAnonymous]
+        [HttpGet("getSeasonNum")]
+        public async Task<IActionResult>  GetSeasonNum()
+        {
+            _logger.LogInformation(String.Format(@"****** TestController GetSeasonNum fired!! ******"));
 
+            var data =  await _articledDAO.GetSeasonNumDto();
+            return Ok(data);
+        }
 
     }
 }

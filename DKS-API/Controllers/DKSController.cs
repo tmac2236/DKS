@@ -220,6 +220,32 @@ namespace DKS_API.Controllers
                     x.Pdf = dataUrl;
 
                 }
+                if (x.FgtFileName.Length > 1)
+                {
+                    var factoryApi = "";
+
+                    switch (sF340PPDSchedule.factory)
+                    {
+                        case "C": //SHC
+                            factoryApi = "http://10.4.0.39:6970/assets/F340PpdPic/QCTestResult/";
+                            break;
+                        case "E": //CB
+                            factoryApi = "http://10.9.0.35/material/Upload/F340CmptMatPic/QCTestResult/";
+                            break;
+                        case "D": //SPC
+                            factoryApi = "http://10.10.0.21/material/Upload/F340CmptMatPic/QCTestResult/";
+                            break;
+                        case "U": //TSH
+                            factoryApi = "http://10.11.0.22/material/Upload/F340CmptMatPic/QCTestResult/";
+                            break;
+                        default:
+                            factoryApi = "http://10.4.0.39:6970/assets/F340PpdPic/QCTestResult/";
+                            break;
+                    }
+
+                    var dataUrl = string.Format(@"{0}{1}/{2}",factoryApi, x.Article,x.FgtFileName);
+                    x.FgtFileName = dataUrl;
+                }
             });
             var upper = data.Where(x => x.HpPartNo != "2016").ToList();
             var bottom = data.Where(x => x.HpPartNo == "2016").ToList();

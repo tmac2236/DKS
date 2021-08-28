@@ -11,5 +11,7 @@ namespace DKS_API.Data.Interface
         Task<List<ArticleModelNameDto>> GetArticleModelNameDto(string modelNo, string article, string modelName);
         Task<List<ArticleSeasonDto>> GetArticleSeasonDto(string season, string article);
         Task<List<DevDtrVsListDto>> GetDevDtrVsListDto(SDevDtrVsList sDevDtrVsList);
+        Task<List<TupleDto>> GetSeasonNumDto();
+
     }
 }

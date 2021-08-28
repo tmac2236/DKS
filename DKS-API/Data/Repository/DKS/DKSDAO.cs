@@ -109,7 +109,7 @@ namespace DFPS.API.Data.Repository
                 new SqlParameter("@Article",(sF340PPDSchedule.article == null || sF340PPDSchedule.article == "" ) ? (object)DBNull.Value : sF340PPDSchedule.article.Trim()),
             };
             var data = await _context.GetF340PpdView
-                   .FromSqlRaw(string.Format("EXECUTE dbo.GetF340_BuyPlan_PPD{0} @FactoryId,@Season,@BuyPlanVer,@CwaDateS,@CwaDateE,@ModelNo,@ModelName,@Article",spCode), pc.ToArray())
+                   .FromSqlRaw(string.Format("EXECUTE dbo.GetF340_BuyPlan_PPD_FGT @FactoryId,@Season,@BuyPlanVer,@CwaDateS,@CwaDateE,@ModelNo,@ModelName,@Article"), pc.ToArray())
                    .ToListAsync();
             //tranfer minDate to ''
             string minDate = _config.GetSection("LogicSettings:MinDate").Value;

@@ -393,4 +393,29 @@ export class F340PpdComponent implements OnInit {
       }
     );
   }
+  viewFGT(model: F340SchedulePpd){
+    //http://10.4.0.39:6970/assets/F340PpdPic/QCTestResult/GV7909/GV7909_CS1_FGT_PASS_001767.pdf
+
+    let factoryApi = "";
+    switch (this.sF340PpdSchedule.factory) {
+      case "C": //SHC
+          factoryApi = environment.spaUrl + "/assets/F340PpdPic/QCTestResult/";
+          break;
+      case "E": //CB
+          factoryApi = "http://10.9.0.35/material/Upload/F340CmptMatPic/QCTestResult/";
+          break;
+      case "D": //SPC
+          factoryApi = "http://10.10.0.21/material/Upload/F340CmptMatPic/QCTestResult/";
+          break;
+      case "U": //TSH
+          factoryApi = "http://10.11.0.22/material/Upload/F340CmptMatPic/QCTestResult/";
+          break;                                
+      default: { 
+          factoryApi = environment.spaUrl + "/assets/F340PpdPic/QCTestResult/";
+          break;
+         } 
+    }
+   let dataUrl = factoryApi + model.article + '/' + model.fgtFileName;
+   window.open(dataUrl);
+  }
 }
