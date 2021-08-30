@@ -114,14 +114,15 @@ namespace DKS_API.Services.Implement
                             //Adding a hyperlink to a URL at "V"? cell
                             ws.Hyperlinks.Add("V" + i, 1, 1, hyperlink);
                         }
-                        string fgtFileName = (string)ws.Cells["Y" + i].Value; //If FgtFileName Column is not empty or null
+                        string fgtFileName = (string)ws.Cells["X" + i].Value; //If FgtFileName Column is not empty or null
                         if (!String.IsNullOrEmpty(fgtFileName))
                         {
-                            string hyperlink = (string)ws.Cells["Y" + i].Value;
-                            string fgtResult = (string)ws.Cells["X" + i].Value;
-                            ws.Cells["Y" + i].PutValue(fgtResult);
+                            string hyperlink = (string)ws.Cells["X" + i].Value;
+                            string fgtResult = (string)ws.Cells["AZ" + i].Value;  //get the result string then empty AZ column  
+                            ws.Cells["AZ" + i].PutValue("");                      //empty AZ column
+                            ws.Cells["X" + i].PutValue(fgtResult);              
                             //Adding a hyperlink to a URL at "X"? cell
-                            ws.Hyperlinks.Add("Y" + i, 1, 1, hyperlink);
+                            ws.Hyperlinks.Add("X" + i, 1, 1, hyperlink);
                         }
 
                         string article = (string)ws.Cells["F" + i].Value; 
