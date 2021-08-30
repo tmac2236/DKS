@@ -65,14 +65,16 @@ export class CovidComponent implements OnInit {
         ()=> console.log("Api Compelete!")
     );
     */
-
+    document.getElementById("covidTest").innerHTML = this.getCountTime().toString();  
     interval(1000).subscribe((x) => {
-      document.getElementById("timer").innerHTML = this.getCountDay();
+      //days + " Day " + hours + " Hour " + minutes + " Min " + sec + " Sec "
+      let array = this.getCountDay("2021-06-01T00:00:00");
+      document.getElementById("timer").innerHTML = `${array[0]} Day ${array[1]} Hour ${array[2]} Min ${array[3]} Sec`;
     });
   }
 
-  getCountDay() {
-    let ms = new Date().getTime() - new Date("2021-06-01T00:00:00").getTime();
+  getCountDay(fromDate:string) {
+    let ms = new Date().getTime() - new Date(fromDate).getTime();
     let days = Math.floor(ms / (24 * 60 * 60 * 1000));
     let daysms = ms % (24 * 60 * 60 * 1000);
     let hours = Math.floor(daysms / (60 * 60 * 1000));
@@ -80,7 +82,20 @@ export class CovidComponent implements OnInit {
     let minutes = Math.floor(hoursms / (60 * 1000));
     let minutesms = ms % (60 * 1000);
     let sec = Math.floor(minutesms / 1000);
-    return  days + " Day " + hours + " Hour " + minutes + " Min " + sec + " Sec ";
+    let result = [];
+    result.push(days,hours,minutes,sec)
+    
+    return  result;
+  }
+
+  getCountTime() {
+    let days  = this.getCountDay("2021-07-19T00:00:00")[0];
+    let weeks = Math.floor(days / 7);
+    let leftDays = days % 7 ;
+
+    let times = weeks * 2;
+    if( leftDays >=3 ) times +=1 ;
+    return times;
   }
   async getSeasonNumDto(){
     await this.commonService
