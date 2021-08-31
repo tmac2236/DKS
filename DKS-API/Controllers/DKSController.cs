@@ -250,7 +250,7 @@ namespace DKS_API.Controllers
             var upper = data.Where(x => x.HpPartNo != "2016").ToList();
             var bottom = data.Where(x => x.HpPartNo == "2016").ToList();
 
-            List<object> dataList = new List<object>(){
+            List<List<F340_PpdDto>> dataList = new List<List<F340_PpdDto>>(){
                 upper,
                 bottom
             };

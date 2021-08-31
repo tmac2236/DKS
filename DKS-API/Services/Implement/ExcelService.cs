@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
+using DKS_API.DTOs;
 using DKS_API.Services.Interface;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -71,7 +72,7 @@ namespace DKS_API.Services.Implement
             }
             return stream.ToArray(); ;
         }
-        public byte[] CommonExportReportTabs4F340PPD(List<object> dataList, string templateName)
+        public byte[] CommonExportReportTabs4F340PPD(List<List<F340_PpdDto>> dataList, string templateName)
         {
             MemoryStream stream = new MemoryStream();
             try
@@ -90,11 +91,11 @@ namespace DKS_API.Services.Implement
                 }
                 designer.Process();
                 index = 0;
-                foreach (object data in dataList)
+                foreach (List<F340_PpdDto> data in dataList)
                 {
                     Worksheet ws = designer.Workbook.Worksheets[index];
                     //ws.Cells["W1"].PutValue("hello world");
-                    int maxRow = dataList.Count + 2; //title have 2 rows
+                    int maxRow = data.Count + 2; //title have 2 rows
                     for (int i = 3; i <= maxRow; i++)
                     {
 
