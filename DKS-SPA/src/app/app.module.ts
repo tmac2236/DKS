@@ -69,7 +69,7 @@ import { DtrFgtResultReportComponent } from "./views/dks/dtr-fgt-result-report/d
 import { DtrVStandardComponent } from "./views/dks/dtr-v-standard/dtr-v-standard.component";
 import { DtrVStandardListComponent } from "./views/dks/dtr-v-standard-list/dtr-v-standard-list.component";
 import { CovidComponent } from "./views/covid/covid.component";
-
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 //載入 "/assets/i18n/[lang].json" 語系檔
 export function createTranslateLoader(http: HttpClient) {
@@ -108,6 +108,7 @@ export function createTranslateLoader(http: HttpClient) {
     NgImageSliderModule,
     PaginationModule.forRoot(), //分頁用
     NgSelectModule, //selection
+    BsDatepickerModule.forRoot(), //datepicker
   ],
   declarations: [
     AppComponent,
