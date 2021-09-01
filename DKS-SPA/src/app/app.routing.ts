@@ -98,7 +98,7 @@ export const routes: Routes = [
     canActivate: [AuthGuardRole],
     component: DtrVStandardComponent,
     data: {
-      roles: [utilityConfig.RoleSysAdm],
+      roles: [utilityConfig.RoleSysAdm, utilityConfig.DevAssist],
     },
   },
   {
