@@ -89,12 +89,20 @@ export class CovidComponent implements OnInit {
   }
 
   getCountTime() {
-    let days  = this.getCountDay("2021-07-19T00:00:00")[0];
+    let tested = 13 ; //from 07/19~8/30
+    let days  = this.getCountDay("2021-08-30T08:30:00")[0]; //count from 09/06 AM:8:30 minus 1 week...
+  
     let weeks = Math.floor(days / 7);
     let leftDays = days % 7 ;
-
+    // test 1 time a week
+    let times = weeks
+    // test 2 times a week
+    /*
     let times = weeks * 2;
     if( leftDays >=3 ) times +=1 ;
+    */
+    times += tested;
+
     return times;
   }
   async getSeasonNumDto(){

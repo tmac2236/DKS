@@ -26,8 +26,8 @@ export class DtrVStandardComponent implements OnInit {
   addAModel: DevDtrVisStandard = new DevDtrVisStandard();
   bufferFile: File | null = null; // upload
   uiControls:any = {
-    addAReport: utilityConfig.RoleSysAdm,
-    deleteAReport: utilityConfig.RoleSysAdm,
+    addAReport: utilityConfig.DevAssist,
+    deleteAReport: utilityConfig.DevAssist,
   };
   constructor(public utility: Utility, private activeRouter: ActivatedRoute
             , private dtrService: DtrService, private commonService:CommonService) {

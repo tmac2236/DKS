@@ -95,11 +95,7 @@ export const routes: Routes = [
   },
   {
     path: "DTR-Vs-Maintain",
-    canActivate: [AuthGuardRole],
     component: DtrVStandardComponent,
-    data: {
-      roles: [utilityConfig.RoleSysAdm, utilityConfig.DevAssist],
-    },
   },
   {
     path: "DTR-Vs-List",
