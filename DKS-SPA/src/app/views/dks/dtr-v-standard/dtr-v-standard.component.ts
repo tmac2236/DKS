@@ -165,6 +165,10 @@ export class DtrVStandardComponent implements OnInit {
   }
   //上傳pdf and Comment
   savePdfNComment() {
+    if(this.utility.checkIsNullorEmpty(this.addAModel.remark)){
+      this.utility.alertify.error("You must type some remark !!!!");
+      return;
+    }
     if(!this.bufferFile){
       this.utility.alertify.error("Please upload a pdf file !!!!");
       return;
