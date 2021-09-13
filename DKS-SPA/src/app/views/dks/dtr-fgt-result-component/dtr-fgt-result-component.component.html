@@ -88,7 +88,7 @@
                         <th>Lab No</th>
 
                         <th>Type</th>
-                        <th>Kind</th>
+                        <th>Test</th>
                         <th>Test Result</th>
                         <th>Test Report</th>
                         <th>Part Name</th>
@@ -226,13 +226,13 @@
               <label for="modalModelName" class="col-form-label"
                 >Model Name</label
               >
-              <input type="text" class="form-control" id="modalModelName" [(ngModel)]="addAModel.modelName" readonly/>
+              <input type="text" class="form-control" id="modalModelName" [(ngModel)]="addAModel.modelName" [readonly]="true"/>
             </div>
           </div>
           <div class="col-2">
             <div class="form-group">
               <label for="modalModelNo" class="col-form-label">Model No</label>
-              <input type="text" class="form-control" id="modalModelNo" [(ngModel)]="addAModel.modelNo" readonly/>
+              <input type="text" class="form-control" id="modalModelNo" [(ngModel)]="addAModel.modelNo" [readonly]="true"/>
             </div>
           </div>
           <div class="col-2">
@@ -246,6 +246,7 @@
               [(ngModel)]="addAModel.article"
               (change)="selectArticle()"
               (change)="getPartName4DtrFgt()"
+              [disabled]="!this.utility.checkIsNullorEmpty(addAModel.article)"
               >
                 <option
                 *ngFor="let atc of articleList"
@@ -268,7 +269,7 @@
               >
                 <option value = "CR2" selected>CR2</option>
                 <option value = "SMS" selected>SMS</option>
-                <option value = "MCS" selected>MCS</option>
+                <!--<option value = "MCS" selected>MCS</option>-->
                 <option value = "CS1" selected>CS1</option>
                 <option value = "CS2" selected>CS2</option>
                 <option value = "CS3" selected>CS3</option>
@@ -277,17 +278,18 @@
           </div>
           <div class="col-2">
             <div class="form-group">
-              <label for="modalKind" class="col-form-label">Kind</label>
+              <label for="modalKind" class="col-form-label">Test</label>
               <label style="color:red;">*</label>
               <div class="w-100"></div>
               <select
               id="modalKind"
               class="form-control"
               [(ngModel)]="addAModel.kind"
+              [disabled]="this.utility.checkIsNullorEmpty(addAModel.article)"
               (change)="getPartName4DtrFgt()"
               >
                 <option value = "FGT" selected>FGT</option>
-                <option value = "CMA" selected>CMA</option>
+                <!--<option value = "CMA" selected>CMA</option>-->
                 <option value = "FIT" selected>FIT</option>
                 <option value = "WEAR" selected>WEAR</option>
                 <option value = "CT" selected>Component Test</option>
@@ -313,12 +315,18 @@
         </div>
         <!-- Second column-->
         <div class="row">
+          <div class="col-1">
+            <div class="form-group">
+              <label for="modalFactory" class="col-form-label">Factory</label>
+              <input type="text" class="form-control" id="modalFactory" size ="1" value ="{{sDevDtrFgtResult.factoryId}}" [readonly]="true" />
+            </div>
+          </div>          
           <div class="col-2">
             <div class="form-group">
               <label for="modalLabNo" class="col-form-label">Lab No</label>
               <label style="color:red;">*</label>
               <input type="text" class="form-control" id="modalLabNo" size ="6"
-              maxlength="6" [(ngModel)]="addAModel.labNo" />
+              maxlength="6" [(ngModel)]="addAModel.labNo" [readonly]="checkKind4Input(this.addAModel)"/>
             </div>
           </div>
           <div class="col-2">
@@ -357,7 +365,7 @@
               </select>
             </div>
           </div>
-          <div class="col-4" *ngIf="this.partNameList?.length > 0 ">
+          <div class="col-3" *ngIf="this.partNameList?.length > 0 ">
             <div class="form-group">
               <label for="modalTreatMent" class="col-form-label"
                 >TreatMent</label>

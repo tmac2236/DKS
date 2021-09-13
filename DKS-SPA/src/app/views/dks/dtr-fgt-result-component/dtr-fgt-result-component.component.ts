@@ -153,6 +153,8 @@ export class DtrFgtResultComponentComponent implements OnInit {
             );
           }
         );
+    }else if (this.checkKind4Input(this.addAModel)){ //v1.2 labNo = factory + Article
+      this.addAModel.labNo =  this.addAModel.article
     }
   }
   //下拉選單帶出PartName-更新用沒有alert提醒
@@ -369,6 +371,8 @@ export class DtrFgtResultComponentComponent implements OnInit {
         //Step 4: call api save to db
 
         this.utility.spinner.show();
+        //v1.2 labNo = Factory + labNo
+        this.addAModel.labNo =  this.sDevDtrFgtResult.factoryId + this.addAModel.labNo
         this.dtrService.addDevDtrFgtResult(this.addAModel).subscribe(
           (res: boolean) => {
             this.utility.spinner.hide();
@@ -456,5 +460,11 @@ export class DtrFgtResultComponentComponent implements OnInit {
   }
   firePdfUploadInAdd() {
     document.getElementById("pdfUploadInAdd").click();
+  }
+  //check test(kind) is 'FIT' or 'WEAR'
+  checkKind4Input(addAModel:DevDtrFgtResult){
+    let result =  false;
+    if(addAModel.kind == 'FIT' || addAModel.kind == 'WEAR') result = true;
+    return result;
   }
 }
