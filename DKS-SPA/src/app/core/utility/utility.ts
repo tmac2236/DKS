@@ -156,6 +156,14 @@ export class Utility {
     if (file.size >= maxVal) isLegal = false; //最大上傳1MB
     return isLegal;
   }
+  //check max file
+  //e.g  maxValue: 1128659 = 1MB
+  checkFileMaxMultiFormat(file: File, maxVal: number, types: string[]) {
+    var isLegal = true;
+    if (!types.includes(file.type)) isLegal = false;
+    if (file.size >= maxVal) isLegal = false; //最大上傳1MB
+    return isLegal;
+  }
   initUserRole(s: Pagination) {
     s.loginUser = this.getToken("unique_name");
     s.role = this.getToken("role");

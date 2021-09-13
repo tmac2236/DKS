@@ -156,7 +156,7 @@
                               id="fileUpload{{ item.labNo }}"
                               type="file"
                               style="display: none"
-                              accept=".pdf"
+                              accept=".pdf,.xlsx,.xls"
                               (click)="this.utility.reset($event)"
                               (change)="
                                 uploadPdfDtrFgtResult($event.target.files, item)
@@ -397,7 +397,7 @@
             <input
             id="pdfUploadInAdd"
             type="file"
-            accept=".pdf"
+            accept=".pdf,.xlsx,.xls"
             style="display: none"
             (click)="this.utility.reset($event)"
             (change)="

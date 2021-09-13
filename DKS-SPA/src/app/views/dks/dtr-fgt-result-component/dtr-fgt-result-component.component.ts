@@ -18,7 +18,7 @@ export class DtrFgtResultComponentComponent implements OnInit {
   @ViewChild("addFgtResultModal") public addFgtResultModal: ModalDirective;
   //for hint
   hintMsg: any = {
-    uploadPdf: "Please upload pdf file and size cannot over 2 Mb.",
+    uploadPdf: "Please upload pdf or excel file and size cannot over 2 Mb.",
   };
   uiControls: any = {
     editModel: utilityConfig.RoleSysAdm,
@@ -198,12 +198,12 @@ export class DtrFgtResultComponentComponent implements OnInit {
   //上傳pdf
   uploadPdfDtrFgtResult(files: FileList, model: DevDtrFgtResult) {
     console.log(model);
-    //"application/pdf" "image/jpeg"
+    //accept pdf, xls , xlsx and below 2Mb
     if (
-      !this.utility.checkFileMaxFormat(
+      !this.utility.checkFileMaxMultiFormat(
         files.item(0),
         1128659 * 2,
-        "application/pdf"
+        ["application/pdf","application/vnd.ms-excel","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"]
       )
     ) {
       this.utility.alertify.confirm(
@@ -345,16 +345,18 @@ export class DtrFgtResultComponentComponent implements OnInit {
         this.utility.alertify.error("The length of Lab No have to be 6 !");
         return;
       }
-      if (!isNumber) {
-        this.utility.alertify.error("The Lab No have to be a number !");
-        return;
-      }
-      if (!isNoValid) {
-        this.utility.alertify.error(
-          "The first 2 char of Lab No have to be " + nowyear2.slice(2, 4) + " or " + lastyear2.slice(2, 4) + " !"
-        );
-        return;
-      }
+      if((!this.checkKind4Input(this.addAModel))){  // if test(kind) is fit or wear, labNo don't check
+        if (!isNumber) {
+          this.utility.alertify.error("The Lab No have to be a number !");
+          return;
+        }
+        if (!isNoValid) {
+          this.utility.alertify.error(
+            "The first 2 char of Lab No have to be " + nowyear2.slice(2, 4) + " or " + lastyear2.slice(2, 4) + " !"
+          );
+          return;
+        }
+      }  
       //Step 3: check is labNo valid
       let model = this.result.find(
         (x) => x["labNo"] == this.addAModel.labNo.trim()
