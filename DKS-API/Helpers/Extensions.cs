@@ -361,6 +361,23 @@ namespace DKS_API.Helpers
             }
             return table;
         }
-
+        //Generate Extension by A file
+        public static string GenerateExtension(string dataType)
+        {
+            var result = "";
+            switch (dataType)
+            {
+                case "application/pdf": 
+                    result = "pdf";
+                    break;
+                case "application/vnd.ms-excel": 
+                    result = "xls";
+                    break;
+                case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                    result = "xlsx";
+                    break;
+            }
+            return result;
+        }
     }
 }

@@ -81,6 +81,9 @@
                     <!--套版分頁<table datatable id="f340Sche" class="table text-center table-striped">-->
                     <thead>
                       <tr class="table-info">
+                        <th>Upgrade</th><!--Upgrade-->
+                        <th>Edit</th><!--Edit-->
+                        <th>Delete</th><!--Delete-->
                         <th>Model Name</th>
                         <th>Model No</th>
                         <th>Article</th>
@@ -106,20 +109,30 @@
                       <ng-container *ngFor="let item of result; let i = index">
                         <tr>
                           <td>
-                            <!--
                             <img
+                              [style.visibility]="item?.result == 'PASS' ? 'visible' : 'hidden'"                            
+                              src="../assets/systemImg/up-arrow.png"
+                              width="35"
+                              height="35"
+                              (click)="upgrade(item)"/>
+                          </td>
+                          <td>
+                            <img
+                            [style.visibility]="item?.result == 'PASS' ? 'hidden' : 'visible'" 
                               src="../assets/systemImg/edit.png"
                               width="35"
                               height="35"
                               (click)="openAddFgtResultModal('editFgtResult',item)"/>
-                            -->                                
+                          </td>
+                          <td>
                             <img
+                              [style.visibility]="item?.result == 'PASS' ? 'hidden' : 'visible'" 
                               src="../assets/systemImg/delete.png"
                               width="35"
                               height="35"
-                              (click)="deleteDevDtrFgtResult(item)"/>                            
-                            {{ item.modelName }}
+                              (click)="deleteDevDtrFgtResult(item)"/>  
                           </td>
+                          <td>{{ item.modelName }}</td>
                           <td>{{ item.modelNo }}</td>
                           <td>{{ item.article }}</td>
                           <td>{{ item.stage }}</td>
@@ -136,17 +149,16 @@
                           <!--Maintain-->
                           <td [hidden]="false">
                             <img
-                            src="../assets/systemImg/download-pdf.png"
-                            class="mr-1"
+                            src="../assets/systemImg/attach-file.png"
+                            class="mr-1 mb-3"
                             width="40"
                             height="40"
-                            [style.visibility]="
-                              item.fileName?.length < 1 ? 'hidden' : 'visible'
-                            "
+                            [style.visibility]="item.fileName?.length < 1 ? 'hidden' : 'visible'"
                             (click)="viewPdf(item)"
                             />
                             <label
-                              class="btn btn-success mt-2"
+                              [style.visibility]="item?.result == 'PASS' ? 'hidden' : 'visible'"
+                              class="btn btn-success mb-3"
                               for="fileUpload{{ item.labNo }}"
                               tooltip="{{ this.hintMsg.uploadPdf }}"
                               placement="right"
@@ -423,6 +435,77 @@
   </div>
 </div>
 <!--addFgtResultModal-->
+
+
+<!--editFgtResultModal-->
+<div
+  bsModal
+  #editFgtResultModal="bs-modal"
+  class="modal hide fade in"
+  [config]="{backdrop: 'static'}"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-info modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Please Update the FGT result</h4>
+        <button
+          type="button"
+          class="close"
+          (click)="closeModal('editFgtResult')"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">  
+        <!-- First column-->
+        <div class="row">     
+          <div class="col-2">
+            <div class="form-group">
+              <label for="modalTestResult" class="col-form-label"
+                >Test Result</label>
+              <div class="w-100"></div>
+              <select
+              id="modalTestResult"
+              class="form-control"
+              [(ngModel)]="addAModel.result"
+              >
+                <option value = "PASS" selected>PASS</option>
+                <option value = "FAIL" selected>FAIL</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <!-- Second column-->
+        <div class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <label for="modalRemark" class="col-form-label">Remark</label>
+                <textarea class="form-control" id="modalRemark" [(ngModel)]="addAModel.remark"></textarea>
+              </div>
+            </div>
+        </div>
+        <!-- Third column-->
+        <div class="row">
+          <div class="col-12">
+            <button
+            type="button"
+            class="btn btn-success btn-lg mt-2"
+            (click)="updateTheFgtResult()">
+            Update</button>
+          </div>
+      </div>        
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+<!--editFgtResultModal-->
 <ngx-spinner
   bdColor="rgba(0, 0, 0, 0.8)"
   size="large"

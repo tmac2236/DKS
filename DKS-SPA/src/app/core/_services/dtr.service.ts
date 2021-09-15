@@ -135,6 +135,12 @@ export class DtrService {
       devDtrFgtResult
     );
   }
+  updateDevDtrFgtResult(devDtrFgtResult: DevDtrFgtResult) {
+    return this.utility.http.post<boolean>(
+      this.utility.baseUrl + 'dtr/updateDevDtrFgtResult',
+      devDtrFgtResult
+    );
+  }  
   deleteDevDtrFgtResult(devDtrFgtResult: DevDtrFgtResult) {
     return this.utility.http.post<boolean>(
       this.utility.baseUrl + 'dtr/deleteDevDtrFgtResult',

@@ -16,6 +16,7 @@ import { DtrService } from "../../../core/_services/dtr.service";
 })
 export class DtrFgtResultComponentComponent implements OnInit {
   @ViewChild("addFgtResultModal") public addFgtResultModal: ModalDirective;
+  @ViewChild("editFgtResultModal") public editFgtResultModal: ModalDirective;
   //for hint
   hintMsg: any = {
     uploadPdf: "Please upload pdf or excel file and size cannot over 2 Mb.",
@@ -28,7 +29,7 @@ export class DtrFgtResultComponentComponent implements OnInit {
   articleList: object[]; //ArticleModelNameDto
   partNameList: object[]; //F340PartNoTreatmemtDto
 
-  addAModel: DevDtrFgtResult = new DevDtrFgtResult(); //use in addFgtResultModal
+  addAModel: DevDtrFgtResult = new DevDtrFgtResult(); //use in addFgtResultModal、editFgtResultModal
   addAModelTreatment: string = ""; //only let user see not save to db
   isValidUpload: boolean = false; //卡控新增畫面的上傳PDF按鈕
 
@@ -157,33 +158,6 @@ export class DtrFgtResultComponentComponent implements OnInit {
       this.addAModel.labNo =  this.addAModel.article
     }
   }
-  //下拉選單帶出PartName-更新用沒有alert提醒
-  async getPartName4DtrFgt4Update() {
-    this.partNameList = []; //clear
-    this.addAModel.partName = ""; //防呆
-    //有選Component Test時, 才需要去檢查有沒有PartName
-    if (
-      this.addAModel.kind == "CT" &&
-      (this.addAModel.stage == "SMS" || this.addAModel.stage == "MCS")
-    ) {
-      this.utility.spinner.show();
-      await this.commonService
-        .getPartName(this.addAModel.article, this.addAModel.stage)
-        .then(
-          (res) => {
-            this.utility.spinner.hide();
-            this.partNameList = res;
-          },
-          (error) => {
-            this.utility.alertify.confirm(
-              "System Notice",
-              "Syetem is busy, please try later.",
-              () => {}
-            );
-          }
-        );
-    }
-  }
   showPartNameDetail() {
     var model = this.partNameList.find(
       (x) => x["partName"] == this.addAModel.partName
@@ -219,7 +193,6 @@ export class DtrFgtResultComponentComponent implements OnInit {
     formData.append("modelNo", model.modelNo);
     formData.append("modelName", model.modelName);
     formData.append("labNo", model.labNo);
-    formData.append("fileName", model.fileName);
     formData.append("loginUser", this.sDevDtrFgtResult.loginUser);
     this.utility.spinner.show();
     this.dtrService.editPdfDevDtrFgtResult(formData).subscribe(
@@ -243,41 +216,28 @@ export class DtrFgtResultComponentComponent implements OnInit {
     window.open(dataUrl);
   }
   //Add or update a result of fgt
-  openAddFgtResultModal(type: string, editModel?: DevDtrFgtResultDto) {
+ openAddFgtResultModal(type: string, editModel?: DevDtrFgtResultDto) {
     this.cleanModel();
 
     if (type == "addFgtResult") {
       this.openModal("addFgtResult");
     } else if (type == "editFgtResult") {
-      this.addAModel.article = editModel.article;
-      this.addAModel.stage = editModel.stage;
-      this.getPartName4DtrFgt4Update();
-      this.addAModel.kind = editModel.kind;
-      this.addAModel.type = editModel.type;
-      this.addAModel.modelNo = editModel.modelNo;
-
-      this.addAModel.modelName = editModel.modelName;
-      this.addAModel.labNo = editModel.labNo;
-      this.addAModel.result = editModel.result;
-      this.addAModel.partNo = editModel.partNo;
-      this.addAModel.partName = editModel.partName;
-
-      this.addAModel.fileName = editModel.fileName;
-      this.addAModel.remark = editModel.remark;
-      if (!this.utility.checkIsNullorEmpty(this.addAModel.partName)) {
-        let treatmentCode = editModel.treatmentCode;
-        let treatmentEn = editModel.treatmentEn;
-        let treatmentZh = editModel.treatmentZh;
-        this.addAModelTreatment = `${treatmentCode} ${treatmentZh} (${treatmentEn})`;
-      }
-      this.openModal("addFgtResult"); //暫時和add開同一個，有時間再改
+      this.addAModel.article = editModel.article; //PK
+      this.addAModel.modelNo = editModel.modelNo; //PK
+      this.addAModel.modelName = editModel.modelName; //PK
+      this.addAModel.labNo = editModel.labNo; //PK
+      this.addAModel.result = editModel.result;   //Can edit 1
+      this.addAModel.remark = editModel.remark;   //Can edit 2
+      this.openModal("editFgtResult");
     }
   }
   openModal(type: string) {
     if (type == "addFgtResult") this.addFgtResultModal.show();
+    if (type == "editFgtResult") this.editFgtResultModal.show();
   }
   closeModal(type: string) {
     if (type == "addFgtResult") this.addFgtResultModal.hide();
+    if (type == "editFgtResult") this.editFgtResultModal.hide();
   }
 
   saveAFgtResult() {
@@ -403,6 +363,32 @@ export class DtrFgtResultComponentComponent implements OnInit {
       }
     }
   }
+  updateTheFgtResult(){
+    this.dtrService.updateDevDtrFgtResult(this.addAModel).subscribe(
+      (res: boolean) => {
+        this.utility.spinner.hide();
+        if (!res) {
+          this.utility.alertify.confirm(
+            "Sweet Alert",
+            "Update fault please refresh browser and try again!",
+            () => {}
+          );
+        } else {
+          // refresh the page
+          this.search();
+          this.closeModal("editFgtResult"); //關閉modal
+        }
+      },
+      (error) => {
+        this.utility.spinner.hide();
+        this.utility.alertify.confirm(
+          "System Notice",
+          "Syetem is busy, please try later.",
+          () => {}
+        );
+      }
+    );
+  }
   selectArticle() {
     this.addAModel.stage = ""; //防呆
     var model = this.articleList.find(
@@ -419,27 +405,33 @@ export class DtrFgtResultComponentComponent implements OnInit {
     this.isValidUpload = false;
   }
   deleteDevDtrFgtResult(model: DevDtrFgtResult) {
-    this.utility.spinner.show();
-    this.dtrService.deleteDevDtrFgtResult(model).subscribe(
-      (res: boolean) => {
-        this.utility.spinner.hide();
-        if (!res) {
-          this.utility.alertify.confirm(
-            "Sweet Alert",
-            "Delete fault please refresh browser and try again!",
-            () => {}
-          );
-        } else {
-          //Step 2: refresh the page
-          this.search();
-        }
-      },
-      (error) => {
-        this.utility.spinner.hide();
-        this.utility.alertify.confirm(
-          "System Notice",
-          "Syetem is busy, please try later.",
-          () => {}
+    this.utility.alertify.confirm(
+      "Sweet Alert",
+      "Are you sure to Delete this file of article:" + model.article + ", stage:" + model.stage + ".",
+      () => {
+        this.utility.spinner.show();
+        this.dtrService.deleteDevDtrFgtResult(model).subscribe(
+          (res: boolean) => {
+            this.utility.spinner.hide();
+            if (!res) {
+              this.utility.alertify.confirm(
+                "Sweet Alert",
+                "Delete fault please refresh browser and try again!",
+                () => {}
+              );
+            } else {
+              //Step 2: refresh the page
+              this.search();
+            }
+          },
+          (error) => {
+            this.utility.spinner.hide();
+            this.utility.alertify.confirm(
+              "System Notice",
+              "Syetem is busy, please try later.",
+              () => {}
+            );
+          }
         );
       }
     );
@@ -469,4 +461,10 @@ export class DtrFgtResultComponentComponent implements OnInit {
     if(addAModel.kind == 'FIT' || addAModel.kind == 'WEAR') result = true;
     return result;
   }
+  //upgrade Version
+  upgrade(model: DevDtrFgtResultDto) {
+
+    alert("Upgrade!" + model.article);
+  }
+  
 }
