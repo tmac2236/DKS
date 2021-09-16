@@ -68,12 +68,14 @@ namespace DKS_API.Controllers
             var modelNo = HttpContext.Request.Form["modelNo"].ToString().Trim();
             var modelName = HttpContext.Request.Form["modelName"].ToString().Trim();
             var labNo = HttpContext.Request.Form["labNo"].ToString().Trim();
+            var stage = HttpContext.Request.Form["stage"].ToString().Trim();
             var loginUser = HttpContext.Request.Form["loginUser"].ToString().Trim();
             DevDtrFgtResult model = _devDtrFgtResultDAO.FindSingle(
                                  x => x.ARTICLE.Trim() == article &&
                                  x.MODELNO.Trim() == modelNo &&
                                  x.MODELNAME.Trim() == modelName &&
-                                 x.LABNO.Trim() == labNo);
+                                 x.LABNO.Trim() == labNo &&
+                                 x.STAGE.Trim() == stage);
 
             if (model == null) return NoContent();
             if (HttpContext.Request.Form.Files.Count == 0) return NoContent();
@@ -166,8 +168,8 @@ namespace DKS_API.Controllers
             var devDtrFgtResult = _mapper.Map<DevDtrFgtResult>(addDevDtrFgtResultDto);
             if (devDtrFgtResult != null)
             {
-                devDtrFgtResult.FILENAME = "";
-                if (String.IsNullOrEmpty(devDtrFgtResult.PARTNO)) devDtrFgtResult.PARTNO = "";
+                if (String.IsNullOrEmpty(devDtrFgtResult.FILENAME)) devDtrFgtResult.FILENAME = "";
+                if (String.IsNullOrEmpty(devDtrFgtResult.PARTNO))   devDtrFgtResult.PARTNO = "";
                 if (String.IsNullOrEmpty(devDtrFgtResult.PARTNAME)) devDtrFgtResult.PARTNAME = "";
                 devDtrFgtResult.UPUSR = devDtrFgtResult.UPUSR;
                 devDtrFgtResult.UPDAY = DateTime.Now;

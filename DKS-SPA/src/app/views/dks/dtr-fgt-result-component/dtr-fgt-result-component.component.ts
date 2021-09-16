@@ -17,6 +17,7 @@ import { DtrService } from "../../../core/_services/dtr.service";
 export class DtrFgtResultComponentComponent implements OnInit {
   @ViewChild("addFgtResultModal") public addFgtResultModal: ModalDirective;
   @ViewChild("editFgtResultModal") public editFgtResultModal: ModalDirective;
+  @ViewChild("upgradeModal") public upgradeModal: ModalDirective;
   //for hint
   hintMsg: any = {
     uploadPdf: "Please upload pdf or excel file and size cannot over 2 Mb.",
@@ -28,10 +29,20 @@ export class DtrFgtResultComponentComponent implements OnInit {
   result: DevDtrFgtResultDto[] = [];
   articleList: object[]; //ArticleModelNameDto
   partNameList: object[]; //F340PartNoTreatmemtDto
+  stageList: { id: number, name: string }[] =[];
+  oStageList: { id: number, name: string }[] = [
+    { "id": 1, "name": "CR2" },
+    { "id": 2, "name": "SMS" },
+    { "id": 3, "name": "CS1" },
+    { "id": 4, "name": "CS2" },
+    { "id": 5, "name": "CS3" }
+];
 
   addAModel: DevDtrFgtResult = new DevDtrFgtResult(); //use in addFgtResultModal、editFgtResultModal
   addAModelTreatment: string = ""; //only let user see not save to db
   isValidUpload: boolean = false; //卡控新增畫面的上傳PDF按鈕
+  upgradeModel: DevDtrFgtResult = new DevDtrFgtResult(); //use in upgradeModelModal
+
 
   constructor(
     public utility: Utility,
@@ -124,7 +135,7 @@ export class DtrFgtResultComponentComponent implements OnInit {
     //有選Component Test時, 才需要去檢查有沒有PartName
     if (
       this.addAModel.kind == "CT" &&
-      (this.addAModel.stage == "SMS" || this.addAModel.stage == "MCS")
+      (this.addAModel.stage == "SMS" || this.addAModel.stage == "CS1")
     ) {
       this.utility.spinner.show();
       await this.commonService
@@ -193,6 +204,7 @@ export class DtrFgtResultComponentComponent implements OnInit {
     formData.append("modelNo", model.modelNo);
     formData.append("modelName", model.modelName);
     formData.append("labNo", model.labNo);
+    formData.append("stage", model.stage);
     formData.append("loginUser", this.sDevDtrFgtResult.loginUser);
     this.utility.spinner.show();
     this.dtrService.editPdfDevDtrFgtResult(formData).subscribe(
@@ -234,10 +246,12 @@ export class DtrFgtResultComponentComponent implements OnInit {
   openModal(type: string) {
     if (type == "addFgtResult") this.addFgtResultModal.show();
     if (type == "editFgtResult") this.editFgtResultModal.show();
+    if (type == "upgrade") this.upgradeModal.show();
   }
   closeModal(type: string) {
     if (type == "addFgtResult") this.addFgtResultModal.hide();
     if (type == "editFgtResult") this.editFgtResultModal.hide();
+    if (type == "upgrade") this.upgradeModal.hide();
   }
 
   saveAFgtResult() {
@@ -404,6 +418,10 @@ export class DtrFgtResultComponentComponent implements OnInit {
     this.addAModelTreatment = "";
     this.isValidUpload = false;
   }
+  cleanUpgrade(){
+    this.upgradeModel = new DevDtrFgtResult();
+    this.upgradeModel.upusr = this.sDevDtrFgtResult.loginUser;
+  }
   deleteDevDtrFgtResult(model: DevDtrFgtResult) {
     this.utility.alertify.confirm(
       "Sweet Alert",
@@ -463,8 +481,47 @@ export class DtrFgtResultComponentComponent implements OnInit {
   }
   //upgrade Version
   upgrade(model: DevDtrFgtResultDto) {
+    this.cleanUpgrade();
+    this.upgradeModel = model;
+    this.upgradeModel.upusr = this.sDevDtrFgtResult.loginUser;
 
-    alert("Upgrade!" + model.article);
+    if(model.stage =="MCS"){  //因為舊資料還有MCS
+      this.stageList = this.oStageList;
+    }else{
+      let a = this.oStageList.find( (x)=> x.name == model.stage );
+      this.stageList = this.oStageList.filter( (x)=> x.id > a.id );
+    }
+
+    this.openModal("upgrade");
+  }
+  saveAFgtResultByUpgrade(){
+
+    this.utility.spinner.show();
+    this.dtrService.addDevDtrFgtResult(this.upgradeModel).subscribe(
+      (res: boolean) => {
+        this.utility.spinner.hide();
+        if (!res) {
+          this.utility.alertify.confirm(
+            "Sweet Alert",
+            "Save fault please refresh browser and try again!",
+            () => {}
+          );
+        } else {
+          //Step1: close the modal
+          this.closeModal('upgrade');
+          //Step2: refresh the page
+          this.search();
+        }
+      },
+      (error) => {
+        this.utility.spinner.hide();
+        this.utility.alertify.confirm(
+          "System Notice",
+          "Syetem is busy, please try later.",
+          () => {}
+        );
+      }
+    );
   }
   
 }

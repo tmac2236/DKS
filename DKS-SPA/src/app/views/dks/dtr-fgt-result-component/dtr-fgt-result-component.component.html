@@ -279,12 +279,11 @@
               [(ngModel)]="addAModel.stage"
               (change)="getPartName4DtrFgt()"
               >
-                <option value = "CR2" selected>CR2</option>
-                <option value = "SMS" selected>SMS</option>
-                <!--<option value = "MCS" selected>MCS</option>-->
-                <option value = "CS1" selected>CS1</option>
-                <option value = "CS2" selected>CS2</option>
-                <option value = "CS3" selected>CS3</option>
+              <option
+              *ngFor="let stage of oStageList"
+              value="{{ stage.name }}">
+              {{ stage.name }}
+            </option>
               </select>
             </div>
           </div>
@@ -506,6 +505,93 @@
   </div>
 </div>
 <!--editFgtResultModal-->
+
+<!--upgradeModal-->
+<div
+  bsModal
+  #upgradeModal="bs-modal"
+  class="modal hide fade in"
+  [config]="{backdrop: 'static'}"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-info modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Upgrade</h4>
+        <button
+          type="button"
+          class="close"
+          (click)="closeModal('upgrade')"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body"> 
+        <!-- First column-->
+        <div class="row">
+          <div class="col-8">
+            <div class="form-inline">
+              <label class="col-form-label mr-4">Article : {{upgradeModel.article}}</label>
+              <label class="col-form-label mr-4">Stage from : {{upgradeModel.stage}}</label>         
+            </div>
+          </div>
+          <div class="col-4">
+  
+          </div>
+        </div>          
+        <!-- Second column-->
+        <div class="row">     
+          <div class="col-8">
+            <div class="form-group">
+              <label for="modalTestResult" class="col-form-label">Stage to : </label>
+              <div class="w-100"></div>
+              <select
+              id="modalTestResult"
+              class="form-control"
+              [(ngModel)]="upgradeModel.stage"
+              >
+                <option
+                  *ngFor="let stage of stageList"
+                  value="{{ stage.name }}">
+                  {{ stage.name }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="col-4">
+
+          </div>
+        </div>
+        <!-- Third column-->
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group">
+              <label for="upgradeModalRemark" class="col-form-label">Remark</label>
+              <textarea class="form-control" id="upgradeModalRemark" [(ngModel)]="upgradeModel.remark"></textarea>
+            </div>
+          </div>
+        </div>                 
+      </div>
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col-4">
+            <button
+            type="button"
+            class="btn btn-success btn-lm"
+            style="margin-top: 35px;"
+            (click)="saveAFgtResultByUpgrade()">Upgrade
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--upgradeModal-->
 <ngx-spinner
   bdColor="rgba(0, 0, 0, 0.8)"
   size="large"
