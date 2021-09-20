@@ -84,6 +84,7 @@
                         <th>Upgrade</th><!--Upgrade-->
                         <th>Edit</th><!--Edit-->
                         <th>Delete</th><!--Delete-->
+                        <th>Maintain Report</th>
                         <th>Model Name</th>
                         <th>Model No</th>
                         <th>Article</th>
@@ -98,10 +99,8 @@
 
                         <th>TreatMent(zh-TW)</th>
                         <th>TreatMent(En)</th>
-                        <th>Maintain Report</th>
                         <th>Upload Time</th>
                         <th>Upload User</th>
-
                         <th>Remark</th>
                       </tr>
                     </thead>
@@ -132,6 +131,37 @@
                               height="35"
                               (click)="deleteDevDtrFgtResult(item)"/>  
                           </td>
+                          <!--Maintain-->
+                          <td [hidden]="false">
+                            <img
+                            src="../assets/systemImg/attach-file.png"
+                            class="mr-1 mb-3"
+                            width="40"
+                            height="40"
+                            [style.visibility]="item.fileName?.length < 1 ? 'hidden' : 'visible'"
+                            (click)="viewPdf(item)"
+                            />
+                            <button class="btn btn-success mb-3" type="button"
+                            (click)="isUploadableBtn(item)">+</button>
+                            <label
+                              [style.visibility]="'hidden'"
+                              class="btn btn-success mb-3"
+                              for="fileUpload{{ item.article }}{{ item.stage }}{{ item.labNo }}"
+                              tooltip="{{ this.hintMsg.uploadPdf }}"
+                              placement="right"
+                              >+</label
+                            >
+                            <input
+                              id="fileUpload{{ item.article }}{{ item.stage }}{{ item.labNo }}"
+                              type="file"
+                              style="display: none"
+                              accept=".pdf,.xlsx,.xls"
+                              (click)="this.utility.reset($event)"
+                              (change)="
+                                uploadPdfDtrFgtResult($event.target.files, item)
+                              "
+                            />
+                          </td>                          
                           <td>{{ item.modelName }}</td>
                           <td>{{ item.modelNo }}</td>
                           <td>{{ item.article }}</td>
@@ -146,49 +176,7 @@
 
                           <td>{{ item.treatmentZh }}</td>
                           <td>{{ item.treatmentEn }}</td>
-                          <!--Maintain-->
-                          <td [hidden]="false">
-                            <img
-                            src="../assets/systemImg/attach-file.png"
-                            class="mr-1 mb-3"
-                            width="40"
-                            height="40"
-                            [style.visibility]="item.fileName?.length < 1 ? 'hidden' : 'visible'"
-                            (click)="viewPdf(item)"
-                            />
-                            <label
-                              [style.visibility]="item?.result == 'PASS' ? 'hidden' : 'visible'"
-                              class="btn btn-success mb-3"
-                              for="fileUpload{{ item.labNo }}"
-                              tooltip="{{ this.hintMsg.uploadPdf }}"
-                              placement="right"
-                              >+</label
-                            >
-                            <input
-                              id="fileUpload{{ item.labNo }}"
-                              type="file"
-                              style="display: none"
-                              accept=".pdf,.xlsx,.xls"
-                              (click)="this.utility.reset($event)"
-                              (change)="
-                                uploadPdfDtrFgtResult($event.target.files, item)
-                              "
-                            />
-                            <!--Delete Btn
-                            <img
-                              [style.visibility]="
-                                item.fileName == undefined ||
-                                item.fileName == null
-                                  ? 'hidden'
-                                  : 'visible'
-                              "
-                              src="../assets/systemImg/delete.png"
-                              width="35"
-                              height="35"
-                              (click)="removePdfDtrFgtResult(item)"
-                            />
-                            -->
-                          </td>
+
                           <td>{{ item.upday  | date: "yyyy/MM/dd HH:mm:ss"  }}</td>
                           <td>{{ item.upusr }}</td>
 
@@ -389,7 +377,7 @@
           <div class="col-12">
             <div class="form-group">
               <label for="modalRemark" class="col-form-label">Remark</label>
-              <textarea class="form-control" id="modalRemark" [(ngModel)]="addAModel.remark"></textarea>
+              <textarea rows="10" cols="40" class="form-control" id="modalRemark" [(ngModel)]="addAModel.remark"></textarea>
             </div>
           </div>
         </div>
@@ -397,7 +385,7 @@
         <div class="row">
           <div class="col-10"></div>
 
-          <!--新增一筆頁面上傳PDF用-->
+          <!--新增一筆頁面上傳File用 Start-->
           <div class="col-2" *ngIf="isValidUpload;else elseUploadBtn">
             <label
             class="btn btn-primary btn-lg mt-2"
@@ -425,7 +413,7 @@
             </button>
             </div>
           </ng-template>
-
+          <!--新增一筆頁面上傳File用 End-->
         </div>
       </div>
       <div class="modal-footer">
@@ -484,7 +472,7 @@
             <div class="col-12">
               <div class="form-group">
                 <label for="modalRemark" class="col-form-label">Remark</label>
-                <textarea class="form-control" id="modalRemark" [(ngModel)]="addAModel.remark"></textarea>
+                <textarea rows="10" cols="40" class="form-control" id="modalRemark" [(ngModel)]="addAModel.remark"></textarea>
               </div>
             </div>
         </div>
@@ -497,7 +485,7 @@
             (click)="updateTheFgtResult()">
             Update</button>
           </div>
-      </div>        
+        </div>                
       </div>
       <div class="modal-footer">
       </div>
@@ -517,7 +505,7 @@
   aria-labelledby="myModalLabel"
   aria-hidden="true"
 >
-  <div class="modal-dialog modal-info modal-sm" role="document">
+  <div class="modal-dialog modal-info modal-sm " role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">Upgrade</h4>
@@ -571,7 +559,7 @@
           <div class="col-12">
             <div class="form-group">
               <label for="upgradeModalRemark" class="col-form-label">Remark</label>
-              <textarea class="form-control" id="upgradeModalRemark" [(ngModel)]="upgradeModel.remark"></textarea>
+              <textarea rows="10" cols="40" class="form-control" id="upgradeModalRemark" [(ngModel)]="upgradeModel.remark"></textarea>
             </div>
           </div>
         </div>                 

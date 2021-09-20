@@ -40,9 +40,9 @@ export class DtrFgtResultComponentComponent implements OnInit {
 
   addAModel: DevDtrFgtResult = new DevDtrFgtResult(); //use in addFgtResultModal、editFgtResultModal
   addAModelTreatment: string = ""; //only let user see not save to db
-  isValidUpload: boolean = false; //卡控新增畫面的上傳PDF按鈕
+  isValidUpload: boolean = false; //卡控新增畫面的上傳按鈕(Add和Upgrade都會用到)
   upgradeModel: DevDtrFgtResult = new DevDtrFgtResult(); //use in upgradeModelModal
-
+  isUploadable: boolean = false;  //只用於外層的上傳按鈕，為了卡控用而已
 
   constructor(
     public utility: Utility,
@@ -180,7 +180,25 @@ export class DtrFgtResultComponentComponent implements OnInit {
     this.addAModelTreatment = `${treatmentCode} ${treatmentZh} (${treatmentEn})`;
     this.addAModel.partNo = model["partNo"];
   }
-  //上傳pdf
+  //上傳pdf、excel step1
+  isUploadableBtn(model: DevDtrFgtResult){
+    //"fileUpload{{ model.article }}{{ model.stage }}{{ model.labNo }}"
+    let id = `fileUpload${model.article}${model.stage}${model.labNo}`; 
+    console.log(id);
+    if(model.result == 'PASS'){
+      this.utility.alertify.confirm(
+        `Article: ${model.article}  Stage: ${model.stage}  LabNo: ${model.labNo}`,
+        "The status of the labNo is PASS , are you sure to overwrite the file in server, the previous will permanent disappear !",
+        () => {
+          document.getElementById(id).click();
+        }
+      );
+    }else{
+      document.getElementById(id).click();
+    }
+
+  }
+  //上傳pdf、excel step2
   uploadPdfDtrFgtResult(files: FileList, model: DevDtrFgtResult) {
     console.log(model);
     //accept pdf, xls , xlsx and below 2Mb
@@ -232,6 +250,7 @@ export class DtrFgtResultComponentComponent implements OnInit {
     this.cleanModel();
 
     if (type == "addFgtResult") {
+      this.addAModel.type = "Article"; // default is Article
       this.openModal("addFgtResult");
     } else if (type == "editFgtResult") {
       this.addAModel.article = editModel.article; //PK
@@ -361,7 +380,7 @@ export class DtrFgtResultComponentComponent implements OnInit {
             } else {
               //Step 4: refresh the page
               this.search();
-              this.utility.alertify.success("Save success. Please upload pdf!");
+              this.utility.alertify.success("Save success. Please upload pdf or excel!");
               this.isValidUpload = true; //let add pdf button show
             }
           },
@@ -481,6 +500,13 @@ export class DtrFgtResultComponentComponent implements OnInit {
   }
   //upgrade Version
   upgrade(model: DevDtrFgtResultDto) {
+    if (model.stage == 'CS3') {
+      this.utility.alertify.error(
+        "Can not upgrade stage from CS3!"
+      );
+      return;
+    }
+
     this.cleanUpgrade();
     this.upgradeModel = model;
     this.upgradeModel.upusr = this.sDevDtrFgtResult.loginUser;
