@@ -7,6 +7,8 @@ export class DevDtrVisStandard implements ModelInterface {
   remark: string;
   filename:string;
 
+  factoryid:string;
+
   upday: Date;
   upusr: string;
 

@@ -29,18 +29,18 @@ export class DtrVStandardComponent implements OnInit {
     addAReport: utilityConfig.DevAssist,
     deleteAReport: utilityConfig.DevAssist,
   };
+  factoryIdUrl: string; 
+
   constructor(public utility: Utility, private activeRouter: ActivatedRoute
             , private dtrService: DtrService, private commonService:CommonService) {
     this.activeRouter.queryParams.subscribe((params) => {
       
-      if(params.homeParam !== undefined){
-        //SS22$GV7864
+      if(params.homeParam !== undefined){ //from aven excel
+        //SS22$GV7864$C
         let paramArray = params.homeParam.split("$");
         this.sDevDtrVisStandard.season = paramArray[0];
         this.sDevDtrVisStandard.article = paramArray[1];
-      }else{
-        this.sDevDtrVisStandard.season = params.season;
-        this.sDevDtrVisStandard.article = params.article;
+        this.factoryIdUrl = paramArray[2];
       }
 
       if(!this.utility.checkIsNullorEmpty(this.sDevDtrVisStandard.season)) this.search();
@@ -49,8 +49,10 @@ export class DtrVStandardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.utility.initUserRole(this.sDevDtrVisStandard);
-    this.addAModel.upusr = this.sDevDtrVisStandard.loginUser;
+      
+      this.utility.initUserRole(this.sDevDtrVisStandard);
+      this.addAModel.upusr = this.sDevDtrVisStandard.loginUser;
+      if(this.utility.checkIsNullorEmpty(this.sDevDtrVisStandard.factoryId))  this.sDevDtrVisStandard.factoryId = this.factoryIdUrl;
   }
   //搜尋
   async search() {
@@ -180,6 +182,7 @@ export class DtrVStandardComponent implements OnInit {
     formData.append("id", this.addAModel.id);
     formData.append("remark", this.addAModel.remark);
     formData.append("loginUser", this.sDevDtrVisStandard.loginUser);
+    formData.append("factoryId", this.sDevDtrVisStandard.factoryId);
     this.utility.spinner.show();
     this.dtrService.addVSfile(formData).subscribe(
       (res) => {
@@ -210,7 +213,7 @@ export class DtrVStandardComponent implements OnInit {
 
     this.utility.alertify.confirm(
       "Sweet Alert",
-      "Are you sure to Delete the pdf of this season:" + model.season + " , article : " + model.article + ".",
+      "Are you sure to Delete the pdf of this Season:" + model.season + " , Article : " + model.article + " , Factory: " + this.sDevDtrVisStandard.factoryId + ".",
       () => {
         this.utility.spinner.show();
         this.dtrService.deleteVSResult(model).subscribe(

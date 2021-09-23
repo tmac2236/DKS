@@ -82,7 +82,7 @@ export class DtrVStandardListComponent implements OnInit {
   }
   viewRecord( model: DevDtrVsList){
     let dataUrl =
-    environment.spaUrl + '/#/DTR-Vs-Maintain?season=' + model.season + "&article=" + model.article;
+    environment.spaUrl + '/#/DTR-Vs-Maintain?homeParam=' + model.season + "$" + model.article + '$' + this.sDevDtrVsList.factoryId;
     window.open(dataUrl);
   }
 

@@ -64,7 +64,7 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<DevDtrFgt>().HasKey(x => new { x.ARTICLE, x.STAGE, x.KIND, x.VERN });
             modelBuilder.Entity<DevDtrFgtResult>().HasKey(x => new { x.ARTICLE, x.MODELNO, x.MODELNAME, x.LABNO, x.STAGE });
             modelBuilder.Entity<DevDtrFgtStats>().HasKey(x => new { x.ARTICLE, x.STAGE, x.KIND });
-            modelBuilder.Entity<DevDtrVsFile>().HasKey(x => new { x.ARTICLE, x.SEASON, x.ID });
+            modelBuilder.Entity<DevDtrVsFile>().HasKey(x => new { x.FACTORYID,x.ARTICLE, x.SEASON, x.ID });
             
             //DTO(Stored Procedure)
             modelBuilder.Entity<F418_F420Dto>()

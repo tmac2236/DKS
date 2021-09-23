@@ -7,6 +7,8 @@ namespace DKS.API.Models.DKS
     public class DevDtrVsFile
     {
         [Key]
+        public string FACTORYID { get; set; }
+        [Key]
         [StringLength(6)]
         public string ARTICLE { get; set; }
 

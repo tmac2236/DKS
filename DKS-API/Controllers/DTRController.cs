@@ -300,7 +300,8 @@ namespace DKS_API.Controllers
 
 
             var data = await _devDtrVsFileDAO.FindAll(x => x.SEASON == sDevDtrVsReport.Season &&
-                                                           x.ARTICLE == sDevDtrVsReport.Article).ToListAsync();
+                                                           x.ARTICLE == sDevDtrVsReport.Article &&
+                                                           x.FACTORYID == sDevDtrVsReport.FactoryId).ToListAsync();
             PagedList<DevDtrVsFile> result = PagedList<DevDtrVsFile>.Create(data, sDevDtrVsReport.PageNumber, sDevDtrVsReport.PageSize, sDevDtrVsReport.IsPaging);
             Response.AddPagination(result.CurrentPage, result.PageSize,
             result.TotalCount, result.TotalPages);
@@ -328,8 +329,8 @@ namespace DKS_API.Controllers
             _logger.LogInformation(String.Format(@"******DTRController AddVSfile fired!! ******"));
 
 
-            // Season + Article + Id .pdf
-            var fileName = string.Format("{0}_{1}_{2}.pdf", devDtrVisStandardDto.Season, devDtrVisStandardDto.Article, devDtrVisStandardDto.Id);
+            // FactoryId + Season + Article + Id .pdf
+            var fileName = string.Format("{0}_{1}_{2}_{3}.pdf", devDtrVisStandardDto.FactoryId,devDtrVisStandardDto.Season, devDtrVisStandardDto.Article, devDtrVisStandardDto.Id);
 
             // save file to server
             List<string> nastFileName = new List<string>();
@@ -345,6 +346,7 @@ namespace DKS_API.Controllers
                 {
                     _logger.LogInformation(String.Format(@"******DTRController AddVSfile Add a PDF: {0}!! ******", fileName));
                     //save to DAO
+                    model.FACTORYID = devDtrVisStandardDto.FactoryId;
                     model.SEASON = devDtrVisStandardDto.Season.Trim();
                     model.ARTICLE = devDtrVisStandardDto.Article.Trim();
                     model.ID = devDtrVisStandardDto.Id.Trim();

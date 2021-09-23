@@ -31,8 +31,8 @@
                   size ="4"
                   maxlength="4"
                   (change) ="initAddBtn()"
-                  [(ngModel)]="sDevDtrVisStandard.season"
-                  [readonly] ="true"
+                  [(ngModel)] = "sDevDtrVisStandard.season"
+                  [readonly] = "true"
                 />
                 <label>Article</label>
                 <input
@@ -43,22 +43,31 @@
                   maxlength="6"
                   (change) ="initAddBtn()"
                   [(ngModel)]="sDevDtrVisStandard.article"
-                  [readonly] ="true"
+                  [readonly] = "true"
                 />
-                <!--
+                <label>Factory</label>
+                <input
+                  class="col-form-label mr-2"
+                  type="text"
+                  name="factoryId"
+                  size ="1"
+                  maxlength="1"
+                  [(ngModel)]="sDevDtrVisStandard.factoryId"
+                  [readonly] ="true"
+                />                
                 <button
                   class="btn btn-primary mr-2 mb-1"
                   type="button"
                   (click)="search()"
+                  [hidden] = "true"
                 >
                   Search
                 </button>
-                -->
                 <button
                   class="btn btn-primary mr-2 mb-1"
                   type="button"
                   (click)="openAddVisStandardModal('addDtrVSModal')"
-                  [hidden]="(!this.sDevDtrVisStandard.role.includes(uiControls.addAReport) || !validArticle)"
+                  [hidden]="(!this.sDevDtrVisStandard.role?.includes(uiControls.addAReport) || !validArticle)"
                 >
                   Add A Report
                 </button>                
@@ -78,7 +87,7 @@
                     <!--套版分頁<table datatable id="f340Sche" class="table text-center table-striped">-->
                     <thead>
                       <tr class="table-info">
-                        <th [hidden]="!this.sDevDtrVisStandard.role.includes(uiControls.deleteAReport)">Delete</th>
+                        <th [hidden]="!this.sDevDtrVisStandard.role?.includes(uiControls.deleteAReport)">Delete</th>
                         <th>Season</th>
                         <th>Article</th>
                         <th>Id</th>
@@ -91,7 +100,7 @@
                     <tbody>
                       <ng-container *ngFor="let item of result; let i = index">
                         <tr>
-                          <td [hidden]="!this.sDevDtrVisStandard.role.includes(uiControls.deleteAReport)">
+                          <td [hidden]="!this.sDevDtrVisStandard.role?.includes(uiControls.deleteAReport)">
                             <img
                             src="../assets/systemImg/delete.png"
                             width="35"

@@ -171,6 +171,7 @@ export class DtrService {
     }
     params = params.append("season", sDevDtrVisStandard.season.toString());
     params = params.append("article", sDevDtrVisStandard.article.toString());
+    params = params.append("factoryId", sDevDtrVisStandard.factoryId.toString());
 
     return this.utility.http
       .get<DevDtrVisStandard[]>(

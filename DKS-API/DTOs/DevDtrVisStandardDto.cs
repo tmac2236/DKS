@@ -9,6 +9,7 @@ namespace DKS_API.DTOs
         public string Id { get; set; }
         public string Remark { get; set; }
         public string LoginUser { get; set; }
+        public string FactoryId { get; set; }
         public IFormFile File { get; set; }
     }
 }

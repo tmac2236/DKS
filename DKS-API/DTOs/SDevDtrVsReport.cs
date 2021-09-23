@@ -8,5 +8,8 @@ namespace DKS_API.DTOs
         public string Season { get; set; }
 
         public string Article { get; set; }
+        
+        public string FactoryId { get; set; }
+        
     }
 }
