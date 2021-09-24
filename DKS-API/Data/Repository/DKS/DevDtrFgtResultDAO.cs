@@ -33,7 +33,7 @@ namespace DFPS.API.Data.Repository
             string strWhere = " WHERE T1.TREATMENTCODE<> '' AND T1.RELEASE_LOGIN<>'' " ;//--已放行(T1.RELEASE_LOGIN<>'')
             if (!(String.IsNullOrEmpty(article))) strWhere += " AND T1.ARTICLE = '" + article.Trim() +"' " ;
             if (!(String.IsNullOrEmpty(stage))) {
-                if(stage.Trim() == "MCS") stage = "CWA";    // because the CWA of DKS = the MSC offgt
+                if(stage.Trim() == "CS1") stage = "CWA";    // because the CWA of DKS = the MSC offgt
                 strWhere += " AND T1.RELEASE_TYPE = '" + stage.Trim() +"' " ;
             }
             string strSQL = string.Format(@"
