@@ -156,15 +156,16 @@ namespace DFPS.API.Data.Repository
             var data = await _context.UserRoleDto.FromSqlRaw(strSQL).ToListAsync();
             return data;
         }
-        public async Task<List<DevDtrFgtResultDto>> GetDevDtrFgtResultDto(string article,string modelNo,string modelName)
+        public async Task<List<DevDtrFgtResultDto>> GetDevDtrFgtResultDto(string article,string modelNo,string modelName, string factoryId)
         {
             List<SqlParameter> pc = new List<SqlParameter>{
                 new SqlParameter("@Article",  String.IsNullOrEmpty(article) ? (object)DBNull.Value : article.Trim()),
                 new SqlParameter("@ModelNo",  String.IsNullOrEmpty(modelNo) ? (object)DBNull.Value : modelNo.Trim()),
-                new SqlParameter("@ModelName",String.IsNullOrEmpty(modelName) ? (object)DBNull.Value : modelName.Trim()),
+                new SqlParameter("@ModelName",  String.IsNullOrEmpty(modelName) ? (object)DBNull.Value : modelName.Trim()),
+                new SqlParameter("@Factory",  String.IsNullOrEmpty(factoryId) ? (object)DBNull.Value : factoryId.Trim()),
             };
             var data = await _context.GetDevDtrFgtResultDto
-                   .FromSqlRaw("EXECUTE dbo.GetDTR_FGT_Result @Article,@ModelNo,@ModelName", pc.ToArray())
+                   .FromSqlRaw("EXECUTE dbo.GetDTR_FGT_Result @Article,@ModelNo,@ModelName,@Factory", pc.ToArray())
                    .ToListAsync();
 
             return data;

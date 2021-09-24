@@ -53,6 +53,7 @@ export class DtrService {
     params = params.append("article", sDevDtrFgtResult.article.toString());
     params = params.append("modelNo", sDevDtrFgtResult.modelNo.toString());
     params = params.append("modelName", sDevDtrFgtResult.modelName.toString());
+    params = params.append("factoryId", sDevDtrFgtResult.factoryId.toString());
 
     return this.utility.http
       .get<DevDtrFgtResultDto[]>(

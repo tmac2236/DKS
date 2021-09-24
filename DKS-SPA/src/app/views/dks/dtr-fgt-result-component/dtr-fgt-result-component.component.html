@@ -37,6 +37,16 @@
                   name="article"
                   [(ngModel)]="sDevDtrFgtResult.article"
                 />
+                <label>Factory</label>
+                <input
+                  class="col-form-label"
+                  type="text"
+                  name="factoryId"
+                  size ="1"
+                  maxlength="1"
+                  [(ngModel)]="sDevDtrFgtResult.factoryId"
+                  [readonly] ="true"
+                /> 
               </div>
               <div class="form-group col-6"></div>
             </div>
