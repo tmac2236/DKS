@@ -32,9 +32,9 @@ export class CommonService {
     ).toPromise();
   }
   //get article、modelNo、modelName
-  getArticle(modelNo: string, article:string, modelName:string) {
+  getArticle(modelNo: string, article:string, modelName:string, factoryId:string) {
     return this.utility.http.get<object[]>(
-      this.utility.baseUrl + "common/getArticle?modelNo=" + modelNo +"&article=" + article + "&modelName=" + modelName
+      this.utility.baseUrl + "common/getArticle?modelNo=" + modelNo +"&article=" + article + "&modelName=" + modelName +"&factoryId=" + factoryId
     ).toPromise();
   }
   //get article、modelNo、modelName、season、develperName、devTeamId

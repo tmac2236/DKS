@@ -17,7 +17,7 @@ namespace DFPS.API.Data.Repository
         public ArticledDAO(DKSContext context) : base(context)
         {
         }
-        public async Task<List<ArticleModelNameDto>> GetArticleModelNameDto(string modelNo,string article,string modelName)
+        public async Task<List<ArticleModelNameDto>> GetArticleModelNameDto(string modelNo,string article,string modelName, string factoryId)
         {
             string strWhere = " WHERE 1=1 ";
             if (!(String.IsNullOrEmpty(article)))
@@ -25,7 +25,9 @@ namespace DFPS.API.Data.Repository
             if (!(String.IsNullOrEmpty(modelNo)))
                 strWhere += " AND t1.MODELNO like N'" + modelNo.Trim()  + "%' " ;
             if (!(String.IsNullOrEmpty(modelName)))
-                strWhere += " AND t2.MODELNAME = N'" + modelName.Trim()  + "' " ;                
+                strWhere += " AND t2.MODELNAME = N'" + modelName.Trim()  + "' " ;
+            if (!(String.IsNullOrEmpty(factoryId)))
+                strWhere += " AND t1.FACTORYID = N'" + factoryId.Trim()  + "' " ;                                 
             string strSQL = string.Format(@"
 SELECT DISTINCT
        t1.ARTICLE   as Article

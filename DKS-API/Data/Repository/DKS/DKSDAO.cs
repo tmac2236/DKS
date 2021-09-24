@@ -183,9 +183,10 @@ namespace DFPS.API.Data.Repository
             var data = new List<DevDtrFgtResultDto>();
             if(sDevDtrFgtResultReport.reportType =="Dev"){              //DEV
                 pc.Add(new SqlParameter("@Season", String.IsNullOrEmpty(sDevDtrFgtResultReport.devSeason) ? (object)DBNull.Value : sDevDtrFgtResultReport.devSeason.Trim().ToUpper() ));
-                
+                pc.Add(new SqlParameter("@Factory",  sDevDtrFgtResultReport.factory.Trim().ToUpper()) );
+
                  data = await _context.GetDevDtrFgtResultDto
-                   .FromSqlRaw("EXECUTE dbo.GetDTR_FGT_Result_Report_DEV @Article,@ModelNo,@ModelName,@CwaDateS,@CwaDateE,@Season", pc.ToArray())
+                   .FromSqlRaw("EXECUTE dbo.GetDTR_FGT_Result_Report_DEV @Article,@ModelNo,@ModelName,@CwaDateS,@CwaDateE,@Season,@Factory", pc.ToArray())
                    .ToListAsync();
             } else if(sDevDtrFgtResultReport.reportType =="Buy Plan"){
                 pc.Add(new SqlParameter("@Season",  sDevDtrFgtResultReport.buyPlanSeason.Trim().ToUpper()) );

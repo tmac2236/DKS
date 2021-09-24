@@ -59,11 +59,7 @@
                   [(ngModel)]="sDevDtrFgtResultReport.buyPlanSeason"
                 />
               </div>
-              <!--Data Type == Buy Plan 才顯示 Factory-->
-              <div
-                class="col-2 form-group"
-                *ngIf="this.sDevDtrFgtResultReport.reportType === 'Buy Plan'"
-              >
+              <div class="col-2 form-group">
                 <label class="col-form-label col-6">Factory</label>
                 <!--事業部帳號的選項-->
                 <select *ngIf="sDevDtrFgtResultReport.factoryId ==='2'; else elseFactory"

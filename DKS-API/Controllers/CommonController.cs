@@ -37,10 +37,10 @@ namespace DKS_API.Controllers
         }
 
         [HttpGet("getArticle")]
-        public async Task<IActionResult> GetArticle(string modelNo, string article, string modelName)
+        public async Task<IActionResult> GetArticle(string modelNo, string article, string modelName, string factoryId)
         {
             _logger.LogInformation(String.Format(@"****** CommonController GetArticle fired!! ******"));
-            var data = await _articledDAO.GetArticleModelNameDto(modelNo, article, modelName);
+            var data = await _articledDAO.GetArticleModelNameDto(modelNo, article, modelName, factoryId);
             return Ok(data);
         }
         [HttpGet("getArticleSeason")]

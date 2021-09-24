@@ -113,7 +113,8 @@ export class DtrFgtResultComponentComponent implements OnInit {
       .getArticle(
         this.sDevDtrFgtResult.modelNo,
         this.sDevDtrFgtResult.article,
-        this.sDevDtrFgtResult.modelName
+        this.sDevDtrFgtResult.modelName,
+        this.sDevDtrFgtResult.factoryId
       )
       .then(
         (res) => {
