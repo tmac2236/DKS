@@ -293,6 +293,16 @@ namespace DKS_API.Controllers
 
             return File(result, "application/xlsx");
         }
+        [HttpGet("getAFgtByLabNo")]
+        public IActionResult GetAFgtByLabNo(string labNo)
+        {
+            _logger.LogInformation(String.Format(@"****** DTRController GetAFgtByLabNo fired!! ******"));
+
+            DevDtrFgtResult model = _devDtrFgtResultDAO.FindSingle(
+                                 x => x.LABNO.Trim() == labNo );
+
+            return Ok(model);
+        }        
         [HttpGet("getDevDtrVsReport")]
         public async Task<IActionResult> GetDevDtrVsReport([FromQuery] SDevDtrVsReport sDevDtrVsReport)
         {

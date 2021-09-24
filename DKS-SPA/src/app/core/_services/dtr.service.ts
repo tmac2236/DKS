@@ -255,4 +255,9 @@ export class DtrService {
       devDtrVisStandard
     );
   }
+  getAFgtByLabNo(labNo: string) {
+    return this.utility.http.get<DevDtrFgtResult>(
+      this.utility.baseUrl + 'dtr/getAFgtByLabNo?labNo='+ labNo
+    );
+  }
 }

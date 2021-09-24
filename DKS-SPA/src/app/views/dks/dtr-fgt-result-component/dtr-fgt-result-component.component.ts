@@ -550,5 +550,31 @@ export class DtrFgtResultComponentComponent implements OnInit {
       }
     );
   }
+  checkLabNoIsExist(){
+    this.utility.spinner.show();
+    let labNo =  this.sDevDtrFgtResult.factoryId + this.addAModel.labNo;
+    this.dtrService.getAFgtByLabNo(labNo).subscribe(
+      (res: DevDtrFgtResult) => {
+        this.utility.spinner.hide();
+        if (res) {
+          this.addAModel.labNo =""; //empty the labNo
+          this.utility.alertify.confirm(
+            "System Alert",
+            "This LabNo is exist in server, using in Article: " + res.article + ", Stage: " + res.stage + ", Update User: "+ res.upusr + ", Udate Time: " + res.upday.toString().split('T')[0],
+            () => {}
+          );
+        } 
+      },
+      (error) => {
+        this.utility.spinner.hide();
+        this.utility.alertify.confirm(
+          "System Notice",
+          "Syetem is busy, please try later.",
+          () => {}
+        );
+      }
+    );
+    
+  }
   
 }
