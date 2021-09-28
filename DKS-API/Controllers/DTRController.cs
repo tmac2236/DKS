@@ -98,13 +98,6 @@ namespace DKS_API.Controllers
             {
                 _logger.LogInformation(String.Format(@"******DTRController EditPdfDevDtrFgtResult Add a File: {0}!! ******", fileName));
                 model.FILENAME = fileName;
-
-                //delete the elder file from server
-                nastFileName[2] = elderFileName;
-                if (await _fileService.SaveFiletoServer(null, "F340PpdPic", nastFileName))
-                {
-                    _logger.LogInformation(String.Format(@"******DTRController EditPdfDevDtrFgtResult Delete a PDF: {0}!! ******", fileName));
-                }
                 
                 //Cancel FgtStats 2021/09/14 Aven
                 /*
