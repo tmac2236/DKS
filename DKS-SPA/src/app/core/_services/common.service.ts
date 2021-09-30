@@ -38,9 +38,9 @@ export class CommonService {
     ).toPromise();
   }
   //get article、modelNo、modelName、season、develperName、devTeamId
-  getArticleSeason(season: string, article:string) {
+  getArticleSeason(season: string, article:string, factoryId:string ) {
     return this.utility.http.get<object[]>(
-      this.utility.baseUrl + "common/getArticleSeason?season=" + season +"&article=" + article
+      this.utility.baseUrl + "common/getArticleSeason?season=" + season +"&article=" + article +"&factoryId=" + factoryId
     ).toPromise();
   }
   //get F104 Basic code detail by typeNo

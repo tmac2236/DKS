@@ -44,10 +44,10 @@ namespace DKS_API.Controllers
             return Ok(data);
         }
         [HttpGet("getArticleSeason")]
-        public async Task<IActionResult> GetArticleSeason(string season, string article)
+        public async Task<IActionResult> GetArticleSeason(string season, string article, string factoryId)
         {
             _logger.LogInformation(String.Format(@"****** CommonController GetArticleSeason fired!! ******"));
-            var data = await _articledDAO.GetArticleSeasonDto(season, article);
+            var data = await _articledDAO.GetArticleSeasonDto(season, article,factoryId);
             return Ok(data);
         }
         [HttpGet("getPartName")]

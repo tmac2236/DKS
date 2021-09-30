@@ -40,14 +40,16 @@ SELECT DISTINCT
             return data;
         }
 
-        public async Task<List<ArticleSeasonDto>> GetArticleSeasonDto(string season, string article)
+        public async Task<List<ArticleSeasonDto>> GetArticleSeasonDto(string season, string article, string factoryId)
         {
             string strWhere = " WHERE 1=1 ";
             if (!(String.IsNullOrEmpty(article)))
                 strWhere += " AND t1.ARTICLE = N'" + article.Trim()  + "' " ;
             if (!(String.IsNullOrEmpty(season)))
                 strWhere += " AND t2.SEASON = N'" + season.Trim()  + "' " ;
-             
+            if (!(String.IsNullOrEmpty(factoryId)))
+                strWhere += " AND t1.FACTORYID = N'" + factoryId.Trim()  + "' " ;
+                             
             string strSQL = string.Format(@"
 SELECT DISTINCT
        t2.SEASON    as Season
@@ -55,7 +57,8 @@ SELECT DISTINCT
       ,t1.MODELNO   as ModelNo 
 	  ,t2.MODELNAME as ModelName
 	  ,t2.DEVELOPERID as DeveloperId
-	  ,t2.DEVTEAMID   as DevTeamId      
+	  ,t2.DEVTEAMID   as DevTeamId  
+      ,t1.FACTORYID   as FactoryId    
   FROM ARTICLED as t1
   LEFT JOIN MODELDAH as t2 on t1.MODELNO = t2.MODELNO
    ");

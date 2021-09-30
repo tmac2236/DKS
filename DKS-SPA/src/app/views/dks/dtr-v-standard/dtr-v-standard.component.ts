@@ -42,7 +42,7 @@ export class DtrVStandardComponent implements OnInit {
         this.sDevDtrVisStandard.article = paramArray[1];
         this.factoryIdUrl = paramArray[2];
       }
-
+      this.sDevDtrVisStandard.factoryId = this.factoryIdUrl;
       if(!this.utility.checkIsNullorEmpty(this.sDevDtrVisStandard.season)) this.search();
 
     });
@@ -248,7 +248,8 @@ export class DtrVStandardComponent implements OnInit {
     await this.commonService
       .getArticleSeason(
         this.sDevDtrVisStandard.season,
-        this.sDevDtrVisStandard.article
+        this.sDevDtrVisStandard.article,
+        this.sDevDtrVisStandard.factoryId
       )
       .then(
         (res) => {
