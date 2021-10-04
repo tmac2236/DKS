@@ -10,6 +10,8 @@ namespace DKS_API.DTOs
         public string DeveloperId { get; set; }
         public string DevTeamId { get; set; }
         public string FactoryId { get; set; }
+        public string PkArticle {get;set;}
+        public string Stage {get;set;}
 
     }
 }

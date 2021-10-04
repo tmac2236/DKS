@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Utility } from "../utility/utility";
+import { ArticleSeason } from "../_models/article-season";
 import { BasicCodeDto } from "../_models/basic-code-dto";
 import { TupleDto } from "../_models/tuple-dto";
 
@@ -39,7 +40,7 @@ export class CommonService {
   }
   //get article、modelNo、modelName、season、develperName、devTeamId
   getArticleSeason(season: string, article:string, factoryId:string ) {
-    return this.utility.http.get<object[]>(
+    return this.utility.http.get<ArticleSeason[]>(
       this.utility.baseUrl + "common/getArticleSeason?season=" + season +"&article=" + article +"&factoryId=" + factoryId
     ).toPromise();
   }

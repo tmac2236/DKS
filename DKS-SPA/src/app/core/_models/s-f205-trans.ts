@@ -1,23 +1,17 @@
 import { Pagination } from "./pagination";
 
-export class SDevDtrVsList extends Pagination {
+export class SF205Trans extends Pagination {
 
   article: string;
-  season: string;
-  modelNo: string;
-  modelName: string;
-  developerId: string;
-  devTeamId: string;
+  stage: string;
+
 
   constructor() {
     super();
-    this.isPaging = true; // 開分頁
+    this.isPaging = false; // 不開分頁
     this.article ="";
-    this.season ="";
-    this.modelNo ="";
-    this.modelName ="";
-    this.developerId ="";
-    this.devTeamId ="";
+    this.stage ="";
+
   }
   
   public setPagination(pagination: Pagination) {

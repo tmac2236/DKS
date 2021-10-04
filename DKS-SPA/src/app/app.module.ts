@@ -22,10 +22,12 @@ import { DefaultLayoutComponent } from "./containers";
 import { P404Component } from "./views/error/404.component";
 import { P500Component } from "./views/error/500.component";
 import { PictureComponent } from "./views/picture/picture.component";
+import { F205TransComponent } from "./views/dks/F205/F205-trans/F205-trans.component";
 import { F340Component } from "./views/dks/F340/F340.component";
+import { F340PpdComponent } from "./views/dks/F340/F340-ppd/F340-ppd.component";
 import { F428Component } from "./views/dks/F428/F428.component";
 import { F428EditComponent } from "./views/dks/F428/F428-edit/F428-edit.component";
-import { F340PpdComponent } from "./views/dks/F340/F340-ppd/F340-ppd.component";
+
 
 import { AuthService } from "../../src/app/core/_services/auth.service";
 import { AlertifyService } from "../../src/app/core/_services/alertify.service";
@@ -116,14 +118,15 @@ export function createTranslateLoader(http: HttpClient) {
     P404Component,
     P500Component,
     PictureComponent,
+    F205TransComponent,
     F340Component,
     F340PpdComponent,
+    F428Component,
+    F428EditComponent,
     DtrFgtResultComponentComponent,
     DtrFgtResultReportComponent,
     DtrVStandardComponent,
     DtrVStandardListComponent,
-    F428Component,
-    F428EditComponent,
     DictionaryComponent,
     HomePageComponent,
     CovidComponent,

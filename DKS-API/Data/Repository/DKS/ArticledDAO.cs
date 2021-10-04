@@ -58,7 +58,9 @@ SELECT DISTINCT
 	  ,t2.MODELNAME as ModelName
 	  ,t2.DEVELOPERID as DeveloperId
 	  ,t2.DEVTEAMID   as DevTeamId  
-      ,t1.FACTORYID   as FactoryId    
+      ,t1.FACTORYID   as FactoryId
+      ,t1.PKARTBID    as PkArticle
+      ,t1.STAGE       as Stage
   FROM ARTICLED as t1
   LEFT JOIN MODELDAH as t2 on t1.MODELNO = t2.MODELNO
    ");

@@ -1,0 +1,190 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <strong class ="col-11" style="font-size: 20px;color:#000000;">F205 Transit Page</strong>
+              <div class="col-1 btn-group" dropdown>
+                <button id="button-basic" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
+                        aria-controls="dropdown-basic">
+                        <strong *ngIf="this.sF205Trans.loginUser">{{ this.sF205Trans.loginUser }}</strong> <span class="caret"></span>
+                </button>
+                <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
+                    role="menu" aria-labelledby="button-basic">
+                    <li role="menuitem"><a class="dropdown-item" href="../assets/manual/實驗室測試告報操作手冊V1.0.pdf" target="_blank"><img src="../assets/systemImg/question.png" class="topImg" width="25" height="25"/>  Help </a></li>  
+                  <li role="menuitem"><a class="dropdown-item" href="javascript:;" (click)="this.utility.logout()"><img src="../assets/systemImg/exit.png" class="topImg" width="25" height="25"/>  Log Out</a></li>
+                </ul>                
+            </div>
+          </div>          
+        </div>
+        <div class="card-body">
+          <form class="form" #addQueryReportDataForm="ngForm">
+            <!-- first column-->
+            <div class="row">
+              <div class="form-group col-12">
+                <label>Article</label>
+                <input
+                  class="col-form-label"
+                  type="text"
+                  name="article"
+                  size ="6"
+                  maxlength="6"
+                  [(ngModel)]="sF205Trans.article"
+                />
+                <label>Stage</label>
+                <input
+                  class="col-form-label"
+                  type="text"
+                  name="stage"
+                  size ="3"
+                  maxlength="3"
+                  [(ngModel)]="sF205Trans.stage"
+                />                              
+                <button
+                class="btn btn-primary ml-1 mr-1 mb-1"
+                type="button"
+                (click)="search()">
+                Search
+                </button>
+                <button
+                  class="btn btn-primary ml-1 mr-1 mb-1"
+                  type="button"
+                  (click)="transit()"
+                  [disabled]="!(result?.length > 0)"
+                >
+                  Transit Article
+                </button>                                                                                  
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="row" *ngIf="result?.length > 0">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table text-center text-nowrap table-striped">
+                    <!--text-nowrap不換行-->
+                    <!--套版分頁<table datatable id="f340Sche" class="table text-center table-striped">-->
+                    <thead>
+                      <tr class="table-info">
+                        <th>Factory</th>
+                        <th>Season</th>
+                        <th>Stage</th>
+                        <th>Article</th>
+                        <th>ModelNo</th>
+                        <th>ModelName</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container *ngFor="let item of result; let i = index">
+                        <tr>
+                          <td>{{ item.factoryId }}</td>
+                          <td>{{ item.season }}</td>
+                          <td>{{ item.stage }}</td>
+                          <td>{{ item.article }}</td>
+                          <td>{{ item.modelNo }}</td>
+                          <td>{{ item.modelName }}</td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--transitModal-->
+<div
+  bsModal
+  #transitModal="bs-modal"
+  class="modal hide fade in"
+  [config]="{backdrop: 'static'}"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-info modal-sm " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Transit Article</h4>
+        <button
+          type="button"
+          class="close"
+          (click)="closeModal('transit')"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body"> 
+        <!-- First column-->
+        <div class="row">
+          <div class="col-8">
+            <div class="form-inline">
+              <label class="col-form-label mr-4">Article : {{sF205Trans.article}}</label>
+              <label class="col-form-label mr-4">Stage : {{sF205Trans.stage}}</label>
+              <label class="col-form-label mr-4">Factory from : {{sF205Trans.factoryId}}</label>         
+            </div>
+          </div>
+          <div class="col-4">
+  
+          </div>
+        </div>          
+        <!-- Second column-->
+        <div class="row">     
+          <div class="col-6">
+            <div class="form-group">
+              <label for="modalTestResult" class="col-form-label">Transit to : </label>
+              <div class="w-100"></div>
+              <select
+              id="modalTestResult"
+              class="form-control"
+              [(ngModel)]="transitModel.stage"
+              >
+                <option
+                  *ngFor="let stage of stageList"
+                  value="{{ stage.name }}">
+                  {{ stage.code }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="col-6">
+
+          </div>
+        </div>
+               
+      </div>
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col-4">
+            <button
+            type="button"
+            class="btn btn-success btn-lm"
+            style="margin-top: 35px;"
+            (click)="transitArticle()">Transit
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--transitModal-->
+<ngx-spinner
+  bdColor="rgba(0, 0, 0, 0.8)"
+  size="large"
+  color="#fff"
+  type="square-jelly-box"
+  [fullScreen]="true"
+  ><p style="color: white">F205 Transit Page Loading...</p></ngx-spinner
+>
