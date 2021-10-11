@@ -62,7 +62,7 @@ SELECT DISTINCT
       ,t1.PKARTBID    as PkArticle
       ,t1.STAGE       as Stage
   FROM ARTICLED as t1
-  LEFT JOIN MODELDAH as t2 on t1.MODELNO = t2.MODELNO
+  LEFT JOIN MODELDAH as t2 on t1.MODELNO = t2.MODELNO  AND t1.FACTORYID =t2.FACTORYID
    ");
             strSQL += strWhere;
             var data = await _context.GetArticleSeasonDto.FromSqlRaw(strSQL).ToListAsync();

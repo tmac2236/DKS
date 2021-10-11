@@ -23,6 +23,7 @@ namespace DKS_API.Data.Repository
         public DbSet<DevTreatmentFile> DEV_TREATMENT_FILE { get; set; }
         public DbSet<DevSysSet> DEV_SYSSET { get; set; }
         public DbSet<ArticledLdtm> ARTICLED_LDTM { get; set; }
+        public DbSet<ArticlePicture> ARTICLE_PICTURE { get; set; }
         public DbSet<DevDtrFgt> DTR_FGT { get; set; }
         public DbSet<DevDtrFgtResult> DTR_FGT_RESULT { get; set; }
         public DbSet<DevDtrFgtStats> DTR_FGT_STATS { get; set; }
@@ -53,7 +54,7 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<Pracdath>().HasKey(x => new { x.PROACCNO });
             modelBuilder.Entity<Pracdatb>().HasKey(x => new { x.PKPRACBID, x.PROACCNO });
             modelBuilder.Entity<Proporh>().HasKey(x => new { x.PROORDNO });
-            modelBuilder.Entity<ModelDah>().HasKey(x => new { x.MODELNO });
+            modelBuilder.Entity<ModelDah>().HasKey(x => new { x.MODELNO,x.FACTORYID });
             modelBuilder.Entity<Articled>().HasKey(x => new { x.PKARTBID });
             modelBuilder.Entity<DevBuyPlan>().HasKey(x => new { x.MANUF, x.SEASON, x.MODELNO, x.SCOLOR, x.ARTICLE, x.VERN });
             modelBuilder.Entity<SamPartB>().HasKey(x => new { x.PARTNO, x.SAMPLENO });
@@ -61,6 +62,7 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<DevTreatmentFile>().HasKey(x => new { x.ARTICLE, x.PARTNO, x.TREATMENTCODE, x.UPTIME });
             modelBuilder.Entity<DevSysSet>().HasKey(x => new { x.SYSKEY });
             modelBuilder.Entity<ArticledLdtm>().HasKey(x => new { x.PKARTBID });
+            modelBuilder.Entity<ArticlePicture>().HasKey(x => new { x.FKARTICID });
             modelBuilder.Entity<DevDtrFgt>().HasKey(x => new { x.ARTICLE, x.STAGE, x.KIND, x.VERN });
             modelBuilder.Entity<DevDtrFgtResult>().HasKey(x => new { x.ARTICLE, x.MODELNO, x.MODELNAME, x.LABNO, x.STAGE });
             modelBuilder.Entity<DevDtrFgtStats>().HasKey(x => new { x.ARTICLE, x.STAGE, x.KIND });

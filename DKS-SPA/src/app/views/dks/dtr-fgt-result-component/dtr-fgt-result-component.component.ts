@@ -107,14 +107,14 @@ export class DtrFgtResultComponentComponent implements OnInit {
   }
   */
 
-  //下拉選單帶出Article
+  //下拉選單帶出Article 
   async getArticleVerList() {
     await this.commonService
       .getArticle(
         this.sDevDtrFgtResult.modelNo,
         this.sDevDtrFgtResult.article,
         this.sDevDtrFgtResult.modelName,
-        this.sDevDtrFgtResult.factoryId
+        ''//this.sDevDtrFgtResult.factoryId  10/6:Aven表示下拉的Article要不分廠別
       )
       .then(
         (res) => {
@@ -230,14 +230,14 @@ export class DtrFgtResultComponentComponent implements OnInit {
       (res) => {
         this.utility.spinner.hide();
         //找到該筆model 把資料回填
-        this.utility.alertify.success("Add Pdf success!");
+        this.utility.alertify.success("Add file success!");
         this.closeModal("addFgtResult"); //新增一筆record後上傳pdf成功關閉modal
         // refresh the page
         this.search();
       },
       (error) => {
         this.utility.spinner.hide();
-        this.utility.alertify.error("Add failed !!!!");
+        this.utility.alertify.error("Add file failed !!!!");
       }
     );
   }

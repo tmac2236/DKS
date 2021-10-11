@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using DKS_API.Helpers;
+using DKS_API.Services.Interface;
 
 namespace DKS_API.Controllers
 {
@@ -17,15 +19,17 @@ namespace DKS_API.Controllers
         private readonly IArticledDAO _articledDAO;
         private readonly IDevDtrFgtResultDAO _devDtrFgtResultDAO;
         private readonly IDevBuyPlanDAO _devBuyPlanDAO;
-
+        private readonly ICommonService _commonService;
         public CommonController(IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<PictureController> logger,
-         IDKSDAO dKSDAO, IArticledDAO articledDAO, IDevDtrFgtResultDAO devDtrFgtResultDAO, IDevBuyPlanDAO devBuyPlanDAO)
+         IDKSDAO dKSDAO, IArticledDAO articledDAO, IDevDtrFgtResultDAO devDtrFgtResultDAO, IDevBuyPlanDAO devBuyPlanDAO,
+         ICommonService commonService)
                 : base(config, webHostEnvironment, logger)
         {
             _dKSDAO = dKSDAO;
             _articledDAO = articledDAO;
             _devDtrFgtResultDAO = devDtrFgtResultDAO;
             _devBuyPlanDAO = devBuyPlanDAO;
+            _commonService = commonService;
         }
 
         [HttpGet("getBasicCodeDto")]
@@ -75,6 +79,13 @@ namespace DKS_API.Controllers
 
             return Ok(bpVern);
 
+        }
+        //Get the serial No. of PKARTBID in Table ARTICLED
+        [HttpGet("getPKARTBID")]
+        public IActionResult GetPKARTBID()
+        {
+            var result = _commonService.GetPKARTBID();
+            return Ok(result);
         }
 
     }

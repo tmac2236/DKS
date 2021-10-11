@@ -100,7 +100,7 @@ namespace DKS.API.Models.DKS
 
         public DateTime? CHANGDATE { get; set; }
 
-        [Required]
+        [Key]
         [StringLength(1)]
         public string FACTORYID { get; set; }
     }

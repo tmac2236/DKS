@@ -80,6 +80,7 @@ namespace DKS_API
             services.AddScoped<IDevTreatmentFileDAO,DevTreatmentFileDAO>();
             services.AddScoped<IDevSysSetDAO,DevSysSetDAO>();
             services.AddScoped<IArticledLdtmDAO,ArticledLdtmDAO>();
+            services.AddScoped<IArticlePictureDAO,ArticlePictureDAO>();
             services.AddScoped<IDevDtrFgtDAO,DevDtrFgtDAO>();
             services.AddScoped<IDevDtrFgtResultDAO,DevDtrFgtResultDAO>();
             services.AddScoped<IDevDtrFgtStatsDAO,DevDtrFgtStatsDAO>();
@@ -92,7 +93,7 @@ namespace DKS_API
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IExcelService, ExcelService>();
             services.AddScoped<IF340CheckService, F340CheckService>();
-
+            services.AddScoped<ICommonService, CommonService>();
             //Add Quartz Service
             //services.AddSingleton<IJobFactory, SingletonJobFactory>();
             //services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();

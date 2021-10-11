@@ -26,12 +26,15 @@
                 <label>Article</label>
                 <input
                   class="col-form-label"
+                  style="background-color: #F2F2F2;"
                   type="text"
                   name="article"
                   size ="6"
                   maxlength="6"
                   [(ngModel)]="sF205Trans.article"
+                  [readonly] = "true"
                 />
+                <!--
                 <label>Stage</label>
                 <input
                   class="col-form-label"
@@ -47,6 +50,7 @@
                 (click)="search()">
                 Search
                 </button>
+                -->
                 <button
                   class="btn btn-primary ml-1 mr-1 mb-1"
                   type="button"
@@ -112,7 +116,7 @@
   aria-labelledby="myModalLabel"
   aria-hidden="true"
 >
-  <div class="modal-dialog modal-info modal-sm " role="document">
+  <div class="modal-dialog modal-info " role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">Transit Article</h4>
@@ -130,9 +134,8 @@
         <div class="row">
           <div class="col-8">
             <div class="form-inline">
-              <label class="col-form-label mr-4">Article : {{sF205Trans.article}}</label>
-              <label class="col-form-label mr-4">Stage : {{sF205Trans.stage}}</label>
-              <label class="col-form-label mr-4">Factory from : {{sF205Trans.factoryId}}</label>         
+              <label class="col-form-label mr-4">Article : {{transitModel.article}}</label>
+              <label class="col-form-label mr-4">Stage : {{transitModel.stage}}</label>
             </div>
           </div>
           <div class="col-4">
@@ -141,28 +144,50 @@
         </div>          
         <!-- Second column-->
         <div class="row">     
-          <div class="col-6">
-            <div class="form-group">
-              <label for="modalTestResult" class="col-form-label">Transit to : </label>
-              <div class="w-100"></div>
+          <div class="col-12">
+            <div class="form-inline">
+              <label class="col-form-label mr-2">Factory from : {{oriArticle?.factoryId}}&emsp;&emsp; &emsp; to :</label> 
+              <div class="ml-2"></div>
               <select
               id="modalTestResult"
               class="form-control"
-              [(ngModel)]="transitModel.stage"
+              [(ngModel)]="transitModel.factoryId"
+              (change)="getNewModelNo()"
               >
                 <option
-                  *ngFor="let stage of stageList"
-                  value="{{ stage.name }}">
-                  {{ stage.code }}
+                  *ngFor="let fac of facList"
+                  value="{{ fac.name }}">
+                  {{ fac.code }}
+                </option>
+              </select>
+              <label class="col-form-label mr-2 ml-2">DevTeam Id :</label>
+              <div class="ml-2"></div>
+              <select
+                class="form-control"
+                name="devTeamId"
+                [(ngModel)]="transitModel.devTeamId"
+              >
+                <option value=""></option>
+                <option *ngFor="let devTeam of code017" value="{{ devTeam.key }}">
+                  {{ devTeam.valueEn }}
                 </option>
               </select>
             </div>
           </div>
-          <div class="col-6">
-
-          </div>
         </div>
-               
+        <!-- 3 column-->
+        <div class="row">
+          <div class="col-8">
+            <div class="form-inline">
+              <label class="col-form-label mr-4">Model No from: {{oriArticle?.modelNo}}&emsp; &emsp; to:&emsp;&emsp;{{transitModel?.modelNo}}</label>       
+            </div>
+          </div>
+          <div class="col-4">
+  
+          </div>
+        </div> 
+        
+
       </div>
       <div class="modal-footer">
         <div class="row">

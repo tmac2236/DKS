@@ -13,6 +13,7 @@ import { SDevDtrFgtResult } from "../_models/s-dev-dtr-fgt-result";
 import { SDevDtrFgtResultReport } from "../_models/s-dev-dtr-fgt-result-report";
 import { SDevDtrVisStandard } from "../_models/s-dev-dtr-vis-standard";
 import { SDevDtrVsList } from "../_models/s-dev-dtr-vs-list";
+import { TransitArticle } from "../_models/transit-article";
 
 @Injectable({
   providedIn: "root",
@@ -260,4 +261,11 @@ export class DtrService {
       this.utility.baseUrl + 'dtr/getAFgtByLabNo?labNo='+ labNo
     );
   }
+  transitArticle(transitArticle: TransitArticle) {
+    console.log("dtr.service transitArticle:", transitArticle);
+    return this.utility.http.post<string>(
+      this.utility.baseUrl + "dtr/transitArticle",
+      transitArticle
+    );
+  }  
 }

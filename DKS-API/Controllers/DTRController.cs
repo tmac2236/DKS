@@ -22,25 +22,32 @@ namespace DKS_API.Controllers
         private readonly IMapper _mapper;
         private readonly IDKSDAO _dKSDAO;
         private readonly IDevDtrFgtResultDAO _devDtrFgtResultDAO;
+        private readonly IModelDahDAO _modelDahDAO;
         private readonly IArticledDAO _articledDAO;
+        private readonly IArticlePictureDAO _articlePictureDAO;
         private readonly IDevDtrFgtStatsDAO _devDtrFgtStatsDAO;
         private readonly IDevDtrVsFileDAO _devDtrVsFileDAO;
         private readonly IFileService _fileService;
         private readonly IExcelService _excelService;
+        private readonly ICommonService _commonService;
 
         public DTRController(IMapper mapper, IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<PictureController> logger,
          IDKSDAO dKSDAO, IDevDtrFgtResultDAO devDtrFgtResultDAO, IArticledDAO articledDAO, IDevDtrFgtStatsDAO devDtrFgtStatsDAO, IDevDtrVsFileDAO devDtrVsFileDAO,
-          IFileService fileService, IExcelService excelService)
+         IArticlePictureDAO articlePictureDAO,IModelDahDAO modelDahDAO,
+         IFileService fileService, IExcelService excelService,ICommonService commonService)
                 : base(config, webHostEnvironment, logger)
         {
             _mapper = mapper;
             _dKSDAO = dKSDAO;
             _devDtrFgtResultDAO = devDtrFgtResultDAO;
             _articledDAO = articledDAO;
+            _modelDahDAO = modelDahDAO;
             _devDtrFgtStatsDAO = devDtrFgtStatsDAO;
             _fileService = fileService;
             _excelService = excelService;
+            _commonService = commonService;            
             _devDtrVsFileDAO = devDtrVsFileDAO;
+            _articlePictureDAO = articlePictureDAO;
         }
 
            
@@ -397,5 +404,54 @@ namespace DKS_API.Controllers
             }
             return Ok(false);
         }
+        //轉單
+        [HttpPost("transitArticle")]
+        public async Task<IActionResult> TransitArticle(TransitArticleDto transitArticleDto)
+        {
+            string status = "0";
+            string errMsg = "";
+            _logger.LogInformation(String.Format(@"****** DKSController TransitArticle fired!! ******"));
+            Articled fromArt = _articledDAO.FindSingle(
+                             x => x.PKARTBID.Trim() == transitArticleDto.PkArticle.Trim());
+
+            // Step1: save fromArt to db (status =0 )
+            fromArt.FACTORYID = transitArticleDto.FactoryId;
+            fromArt.STATUS = status;
+            fromArt.MDUSERID =  transitArticleDto.UpdateUser.ToDecimal();
+            fromArt.CHANGDATE = DateTime.Now;
+
+                //fromArt.REMARK = string.Format("Transit From Factory: {0} ,Update User: {1}", transitArticleDto.FactoryIdFrom,transitArticleDto.UpdateUser);       
+                //get new PKARTICLE
+            var newPkArticle = _commonService.GetPKARTBID();
+                    fromArt.PKARTBID = newPkArticle;
+            _articledDAO.Add(fromArt);
+            await _articledDAO.SaveAll();      
+            // Step2: copy ARTICLE_PICTURE and save to DB
+            ArticlePicture fromArtPic = _articlePictureDAO.FindSingle(
+                             x => x.FKARTICID.Trim() == transitArticleDto.PkArticle.Trim()); 
+            fromArtPic.FKARTICID = newPkArticle; 
+            _articlePictureDAO.Add(fromArtPic);                           
+            await _articlePictureDAO.SaveAll();  
+
+            // Step3: if the new article don't have model in db copy one.
+            ModelDah toModel = _modelDahDAO.FindSingle(
+                             x => x.MODELNO.Trim() == transitArticleDto.ModelNo.Trim() &&
+                                  x.FACTORYID.Trim() == transitArticleDto.FactoryId.Trim() );            
+            if(toModel == null){
+                ModelDah fromModel = _modelDahDAO.FindSingle(
+                             x => x.MODELNO.Trim() == transitArticleDto.ModelNoFrom.Trim() &&
+                                  x.FACTORYID.Trim() == transitArticleDto.FactoryIdFrom.Trim() );
+                fromModel.DEVTEAMID = transitArticleDto.DevTeamId;
+                fromModel.DEVELOPERID = "";
+                fromModel.FACTORYID =  transitArticleDto.FactoryId;
+                fromModel.STATUS = status;
+                fromModel.MDUSERID =  transitArticleDto.UpdateUser.ToDecimal();
+                fromModel.CHANGDATE = DateTime.Now;                 
+                _modelDahDAO.Add(fromModel);                           
+                await _modelDahDAO.SaveAll();  
+            }
+            
+            return  Ok(errMsg);
+        }        
     }
 }

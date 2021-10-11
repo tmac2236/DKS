@@ -6,6 +6,7 @@ namespace DKS.API.Models.DKS
 {
     public class Articled
     {
+        public DateTime? ACTDATE { get; set; }
         [Required]
         [StringLength(6)]
         public string ARTICLE { get; set; }
@@ -19,7 +20,9 @@ namespace DKS.API.Models.DKS
         [Required]
         [StringLength(40)]
         public string CWNAME { get; set; }
-
+        [StringLength(50)]
+        public string MEMO { get; set; }
+        
         [Required]
         [StringLength(15)]
         public string MODELNO { get; set; }
