@@ -30,11 +30,12 @@ namespace DKS_API.Controllers
         private readonly IFileService _fileService;
         private readonly IExcelService _excelService;
         private readonly ICommonService _commonService;
+        private readonly ISendMailService _sendMailService;
 
         public DTRController(IMapper mapper, IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<PictureController> logger,
          IDKSDAO dKSDAO, IDevDtrFgtResultDAO devDtrFgtResultDAO, IArticledDAO articledDAO, IDevDtrFgtStatsDAO devDtrFgtStatsDAO, IDevDtrVsFileDAO devDtrVsFileDAO,
          IArticlePictureDAO articlePictureDAO,IModelDahDAO modelDahDAO,
-         IFileService fileService, IExcelService excelService,ICommonService commonService)
+         IFileService fileService, IExcelService excelService,ICommonService commonService, ISendMailService sendMailService)
                 : base(config, webHostEnvironment, logger)
         {
             _mapper = mapper;
@@ -45,6 +46,7 @@ namespace DKS_API.Controllers
             _devDtrFgtStatsDAO = devDtrFgtStatsDAO;
             _fileService = fileService;
             _excelService = excelService;
+            _sendMailService = sendMailService;
             _commonService = commonService;            
             _devDtrVsFileDAO = devDtrVsFileDAO;
             _articlePictureDAO = articlePictureDAO;
@@ -425,14 +427,16 @@ namespace DKS_API.Controllers
             var newPkArticle = _commonService.GetPKARTBID();
                     fromArt.PKARTBID = newPkArticle;
             _articledDAO.Add(fromArt);
-            await _articledDAO.SaveAll();      
+            await _articledDAO.SaveAll();
+
+            _logger.LogInformation(String.Format(@"****** Save ARTICLED Success!! PKARTICLE: {0} ******",newPkArticle));      
             // Step2: copy ARTICLE_PICTURE and save to DB
             ArticlePicture fromArtPic = _articlePictureDAO.FindSingle(
                              x => x.FKARTICID.Trim() == transitArticleDto.PkArticle.Trim()); 
             fromArtPic.FKARTICID = newPkArticle; 
             _articlePictureDAO.Add(fromArtPic);                           
             await _articlePictureDAO.SaveAll();  
-
+            _logger.LogInformation(String.Format(@"****** Save ARTICLEPICTURE Success!! FKARTICID: {0} ******",newPkArticle)); 
             // Step3: if the new article don't have model in db copy one.
             ModelDah toModel = _modelDahDAO.FindSingle(
                              x => x.MODELNO.Trim() == transitArticleDto.ModelNo.Trim() &&
@@ -448,9 +452,20 @@ namespace DKS_API.Controllers
                 fromModel.MDUSERID =  transitArticleDto.UpdateUser.ToDecimal();
                 fromModel.CHANGDATE = DateTime.Now;                 
                 _modelDahDAO.Add(fromModel);                           
-                await _modelDahDAO.SaveAll();  
+                await _modelDahDAO.SaveAll(); 
+                _logger.LogInformation(String.Format(@"****** Save ModelDah Success!! ModelNo: {0}, FactoryId: {1} ******", fromModel.MODELNO, fromModel.FACTORYID) );  
             }
+            //step4: stend email
+            /*
+            var dksSignature = _config.GetSection("DksSignatureLine").Value;
+            var content = string.Format(@"The Article : {0} was Transit from factory: {1}, please check it in F205 Article of the below website.{2}", transitArticleDto.Article, transitArticleDto.FactoryIdFrom , dksSignature);
+
+            var toMails = new List<string>();
             
+            toMails.Add(transitArticleDto.Email);
+            await _sendMailService.SendListMailAsync(toMails, null, "A Article was Transit Please check it in F205 !", content, null);
+             _logger.LogInformation(String.Format(@"******Sent Mail F205 Article Transit to : {0} ******", transitArticleDto.Email));
+            */
             return  Ok(errMsg);
         }        
     }

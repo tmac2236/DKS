@@ -189,6 +189,8 @@ export class F205TransComponent implements OnInit {
       this.utility.alertify.error("You have to choose a Dev TeamId to transit the aritcle !!!!");
       return;
     }
+    this.transitModel.email = this.code017.find((x) => x.key == this.transitModel.devTeamId).memoEn1;
+    
     this.utility.spinner.show();
     this.dtrService.transitArticle(this.transitModel).subscribe(
       (res) => {

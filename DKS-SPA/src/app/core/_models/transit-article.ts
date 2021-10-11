@@ -6,6 +6,7 @@ export class TransitArticle implements ModelInterface {
   modelNo: string;
   modelNoFrom: string;
   devTeamId:string;
+  email: string;
   factoryId: string;
   factoryIdFrom: string;
   pkArticle: string;

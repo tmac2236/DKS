@@ -7,6 +7,7 @@ namespace DKS_API.DTOs
         public string ModelNo { get; set; }
         public string ModelNoFrom { get; set; }
         public string DevTeamId { get; set; }
+        public string Email { get; set; }
         public string FactoryId { get; set; }
         public string FactoryIdFrom { get; set; } 
         public string PkArticle {get;set;}

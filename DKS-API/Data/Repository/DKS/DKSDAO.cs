@@ -224,9 +224,9 @@ SELECT
 	t3.MEMO4    as MemoEn4
 FROM BASEIDH t1
 INNER JOIN BASEIDB t2
-ON t1.PKBASEHID=t2.FKBASEHID and t2.LANGID='437'
+ON t1.PKBASEHID=t2.FKBASEHID and t2.LANGID='950'
 INNER JOIN BASEIDB t3
-ON t1.PKBASEHID=t3.FKBASEHID and t3.LANGID='950' ");
+ON t1.PKBASEHID=t3.FKBASEHID and t3.LANGID='437' ");
             strSQL += strWhere;
             var data = await _context.GetBasicCodeDto.FromSqlRaw(strSQL).ToListAsync();
             return data;
