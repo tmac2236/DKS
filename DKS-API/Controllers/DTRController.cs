@@ -445,6 +445,7 @@ namespace DKS_API.Controllers
                 ModelDah fromModel = _modelDahDAO.FindSingle(
                              x => x.MODELNO.Trim() == transitArticleDto.ModelNoFrom.Trim() &&
                                   x.FACTORYID.Trim() == transitArticleDto.FactoryIdFrom.Trim() );
+                fromModel.MODELNO = transitArticleDto.ModelNo.Trim();
                 fromModel.DEVTEAMID = transitArticleDto.DevTeamId;
                 fromModel.DEVELOPERID = "";
                 fromModel.FACTORYID =  transitArticleDto.FactoryId;
