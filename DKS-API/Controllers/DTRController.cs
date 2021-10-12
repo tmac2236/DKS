@@ -417,6 +417,7 @@ namespace DKS_API.Controllers
                              x => x.PKARTBID.Trim() == transitArticleDto.PkArticle.Trim());
 
             // Step1: save fromArt to db (status =0 )
+            fromArt.MODELNO = transitArticleDto.ModelNo.Trim();
             fromArt.FACTORYID = transitArticleDto.FactoryId;
             fromArt.STATUS = status;
             fromArt.MDUSERID =  transitArticleDto.UpdateUser.ToDecimal();
