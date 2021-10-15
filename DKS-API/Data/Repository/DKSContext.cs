@@ -28,7 +28,7 @@ namespace DKS_API.Data.Repository
         public DbSet<DevDtrFgtResult> DTR_FGT_RESULT { get; set; }
         public DbSet<DevDtrFgtStats> DTR_FGT_STATS { get; set; }
         public DbSet<DevDtrVsFile> DTR_VS_FILE { get; set; }
-        
+        public DbSet<DtrLoginHistory> DTR_LOGIN_HISTORY { get; set; }
 
         //DTO(Stored Procedure)
         public DbSet<F418_F420Dto> GetF420F418View { get; set; }
@@ -63,6 +63,7 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<DevSysSet>().HasKey(x => new { x.SYSKEY });
             modelBuilder.Entity<ArticledLdtm>().HasKey(x => new { x.PKARTBID });
             modelBuilder.Entity<ArticlePicture>().HasKey(x => new { x.FKARTICID });
+            modelBuilder.Entity<DtrLoginHistory>().HasKey(x => new { x.ID });
             modelBuilder.Entity<DevDtrFgt>().HasKey(x => new { x.ARTICLE, x.STAGE, x.KIND, x.VERN });
             modelBuilder.Entity<DevDtrFgtResult>().HasKey(x => new { x.ARTICLE, x.MODELNO, x.MODELNAME, x.LABNO, x.STAGE });
             modelBuilder.Entity<DevDtrFgtStats>().HasKey(x => new { x.ARTICLE, x.STAGE, x.KIND });

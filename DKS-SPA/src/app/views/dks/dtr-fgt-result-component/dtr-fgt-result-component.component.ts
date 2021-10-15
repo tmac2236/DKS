@@ -4,6 +4,7 @@ import { Utility } from "../../../core/utility/utility";
 import { utilityConfig } from "../../../core/utility/utility-config";
 import { DevDtrFgtResult } from "../../../core/_models/dev-dtr-fgt-result";
 import { DevDtrFgtResultDto } from "../../../core/_models/dev-dtr-fgt-result-dto";
+import { DtrLoginHistoryDto } from "../../../core/_models/dtr-login-history-dto";
 import { PaginatedResult } from "../../../core/_models/pagination";
 import { SDevDtrFgtResult } from "../../../core/_models/s-dev-dtr-fgt-result";
 import { CommonService } from "../../../core/_services/common.service";
@@ -25,6 +26,7 @@ export class DtrFgtResultComponentComponent implements OnInit {
   uiControls: any = {
     editModel: utilityConfig.RoleSysAdm,
   };
+  title = "LAB Test Report Maintain";
   sDevDtrFgtResult: SDevDtrFgtResult = new SDevDtrFgtResult();
   result: DevDtrFgtResultDto[] = [];
   articleList: object[]; //ArticleModelNameDto
@@ -53,6 +55,7 @@ export class DtrFgtResultComponentComponent implements OnInit {
   ngOnInit() {
     this.utility.initUserRole(this.sDevDtrFgtResult);
     this.addAModel.upusr = this.sDevDtrFgtResult.loginUser;
+    this.loginReord();
   }
 
   //搜尋
@@ -575,6 +578,22 @@ export class DtrFgtResultComponentComponent implements OnInit {
       }
     );
     
+  }
+  loginReord(){
+    var record = new DtrLoginHistoryDto();
+    record.systemName = this.title;
+    record.account = this.sDevDtrFgtResult?.loginUser;
+    if (this.utility.checkIsNullorEmpty(record.account)){
+      return;
+    }
+    this.dtrService.dtrLoginHistory(record).subscribe(
+      (res) => {
+        console.log("Add a DtrLoginReord :" + record.account);
+      },
+      (error) => {
+        this.utility.alertify.error(error);
+      }
+    );
   }
   
 }

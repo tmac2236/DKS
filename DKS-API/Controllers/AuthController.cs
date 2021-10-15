@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using DKS.API.Models.DKS;
 
 namespace DKS_API.Controllers
 {
@@ -21,10 +22,13 @@ namespace DKS_API.Controllers
     {
 
         private readonly IDKSDAO _dksDAO;
-        public AuthController(IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<AuthController> logger, IDKSDAO dksDAO)
+        private readonly IDtrLoginHistoryDAO _dtrLoginHistoryDAO;
+        public AuthController(IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<AuthController> logger,
+         IDKSDAO dksDAO,IDtrLoginHistoryDAO dtrLoginHistoryDAO)
                  : base(config, webHostEnvironment,logger)
         {
             _dksDAO = dksDAO;
+            _dtrLoginHistoryDAO = dtrLoginHistoryDAO;
         }
 
         [HttpPost("login")]
@@ -77,6 +81,19 @@ namespace DKS_API.Controllers
                 token = tokenHandler.WriteToken(token)
             });
 
+        }
+        [HttpPost("loginRecord")]
+        public async Task<IActionResult> LoginRecord(DtrLoginHistoryDto dtrLoginHistoryDto)
+        {
+            DtrLoginHistory aRecord = new DtrLoginHistory();
+            aRecord.Account = dtrLoginHistoryDto.Account;
+            aRecord.SystemName = dtrLoginHistoryDto.SystemName;
+            aRecord.PcName ="";
+            aRecord.IP = HttpContext.Connection.RemoteIpAddress.ToString();
+            aRecord.LoginTime = DateTime.Now;
+            _dtrLoginHistoryDAO.Add(aRecord);
+            await _dtrLoginHistoryDAO.SaveAll();
+            return Ok();
         }
     }
 }

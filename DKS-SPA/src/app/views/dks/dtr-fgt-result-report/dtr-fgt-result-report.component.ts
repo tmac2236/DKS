@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { Utility } from "../../../core/utility/utility";
 import { utilityConfig } from "../../../core/utility/utility-config";
 import { DevDtrFgtResultDto } from "../../../core/_models/dev-dtr-fgt-result-dto";
+import { DtrLoginHistoryDto } from "../../../core/_models/dtr-login-history-dto";
 import { PaginatedResult } from "../../../core/_models/pagination";
 import { SDevDtrFgtResultReport } from "../../../core/_models/s-dev-dtr-fgt-result-report";
 import { DtrService } from "../../../core/_services/dtr.service";
@@ -15,6 +16,7 @@ export class DtrFgtResultReportComponent implements OnInit {
   uiControls: any = {
     uploadPicF340Ppd: utilityConfig.RolePpdPic,
   };
+  title = "LAB Test Report";
   sDevDtrFgtResultReport: SDevDtrFgtResultReport = new SDevDtrFgtResultReport();
   result: DevDtrFgtResultDto[] = [];
 
@@ -28,6 +30,7 @@ export class DtrFgtResultReportComponent implements OnInit {
       this.sDevDtrFgtResultReport.factory =
         this.sDevDtrFgtResultReport.factoryId;
     }
+    this.loginReord();
   }
 
   //搜尋
@@ -99,5 +102,21 @@ export class DtrFgtResultReportComponent implements OnInit {
       } 
     } 
     return disable;
+  }
+  loginReord(){
+    var record = new DtrLoginHistoryDto();
+    record.systemName = this.title;
+    record.account = this.sDevDtrFgtResultReport?.loginUser;
+    if (this.utility.checkIsNullorEmpty(record.account)){
+      return;
+    }
+    this.dtrService.dtrLoginHistory(record).subscribe(
+      (res) => {
+        console.log("Add a DtrLoginReord :" + record.account);
+      },
+      (error) => {
+        this.utility.alertify.error(error);
+      }
+    );
   }
 }

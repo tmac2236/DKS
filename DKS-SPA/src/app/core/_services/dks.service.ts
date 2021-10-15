@@ -162,6 +162,7 @@ export class DksService {
       f340Ppds
     );
   }
+  //post two parameter to http post
   editF340Ppd(f340Ppd: F340SchedulePpd,type: string) {
     console.log("dks.service editPicF340Ppd:", f340Ppd);
     return this.utility.http.post(

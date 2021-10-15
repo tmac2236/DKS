@@ -8,6 +8,7 @@ import { DevDtrFgtResult } from "../_models/dev-dtr-fgt-result";
 import { DevDtrFgtResultDto } from "../_models/dev-dtr-fgt-result-dto";
 import { DevDtrVisStandard } from "../_models/dev-dtr-vis-standard";
 import { DevDtrVsList } from "../_models/dev-dtr-vs-list";
+import { DtrLoginHistoryDto } from "../_models/dtr-login-history-dto";
 import { PaginatedResult } from "../_models/pagination";
 import { SDevDtrFgtResult } from "../_models/s-dev-dtr-fgt-result";
 import { SDevDtrFgtResultReport } from "../_models/s-dev-dtr-fgt-result-report";
@@ -267,5 +268,9 @@ export class DtrService {
       this.utility.baseUrl + "dtr/transitArticle",
       transitArticle
     );
+  }
+  dtrLoginHistory(model: DtrLoginHistoryDto) {
+    console.log("dtr.service dtrLoginHistory:", model);
+    return this.utility.http.post(this.utility.baseUrl + "auth/loginRecord", model);
   }  
 }
