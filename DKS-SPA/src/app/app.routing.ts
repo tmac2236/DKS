@@ -10,6 +10,7 @@ import { CovidComponent } from "./views/covid/covid.component";
 import { DictionaryComponent } from "./views/dictionary/dictionary.component";
 import { DtrFgtResultComponentComponent } from "./views/dks/dtr-fgt-result-component/dtr-fgt-result-component.component";
 import { DtrFgtResultReportComponent } from "./views/dks/dtr-fgt-result-report/dtr-fgt-result-report.component";
+import { DtrLoginHistoryComponent } from "./views/dks/dtr-login-history/dtr-login-history.component";
 import { DtrVStandardListComponent } from "./views/dks/dtr-v-standard-list/dtr-v-standard-list.component";
 import { DtrVStandardComponent } from "./views/dks/dtr-v-standard/dtr-v-standard.component";
 import { F205TransComponent } from "./views/dks/F205/F205-trans/F205-trans.component";
@@ -110,6 +111,10 @@ export const routes: Routes = [
       roles: [utilityConfig.RoleSysAdm],
     },
   },
+  {
+    path: "DTR-Login-History",
+    component: DtrLoginHistoryComponent,
+  },  
   {
     path: "",
     component: DefaultLayoutComponent,

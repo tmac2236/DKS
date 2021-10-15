@@ -469,6 +469,8 @@ namespace DKS_API.Controllers
             await _sendMailService.SendListMailAsync(toMails, null, "A Article was Transit Please check it in F205 !", content, null);
              _logger.LogInformation(String.Format(@"******Sent Mail F205 Article Transit to : {0} ******", transitArticleDto.Email));
             */
+            //step5 : insert to dtr_excel and dtr_cwa date
+            _dKSDAO.GetTransferToDTR(transitArticleDto.FactoryIdFrom,transitArticleDto.FactoryId,transitArticleDto.Article.Trim());
             return  Ok(errMsg);
         }        
     }

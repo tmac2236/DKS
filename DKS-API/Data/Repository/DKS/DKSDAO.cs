@@ -231,5 +231,16 @@ ON t1.PKBASEHID=t3.FKBASEHID and t3.LANGID='437' ");
             var data = await _context.GetBasicCodeDto.FromSqlRaw(strSQL).ToListAsync();
             return data;
         }
+
+        public void  GetTransferToDTR(string factoryIdFrom,string factoryIdTo,string article)
+        {
+            List<SqlParameter> pc = new List<SqlParameter>{
+                new SqlParameter("@FactoryIdFrom", factoryIdFrom),
+                new SqlParameter("@FactoryIdTo", factoryIdTo),
+                new SqlParameter("@Article", article),
+            };
+            var data =  _context.Database.ExecuteSqlRaw("EXEC GetTransferToDTR @FactoryIdFrom,@FactoryIdTo,@Article", pc.ToArray());
+
+        }
     }
 }

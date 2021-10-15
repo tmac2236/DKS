@@ -22,12 +22,14 @@ namespace DFPS.API.Controllers
     {
         private readonly IArticledLdtmDAO _dao;
         private readonly IArticledDAO _articledDAO;
+        private readonly IDKSDAO _dksDao;
         public TestController(IConfiguration config, IWebHostEnvironment webHostEnvironment,ILogger<TestController> logger,
-                IArticledLdtmDAO dao, IArticledDAO articledDAO)
+                IArticledLdtmDAO dao, IArticledDAO articledDAO, IDKSDAO dksDao)
         : base(config, webHostEnvironment,logger)
         {
             _dao = dao;
             _articledDAO = articledDAO;
+            _dksDao = dksDao;
         }
         
         [AllowAnonymous]
@@ -50,6 +52,15 @@ namespace DFPS.API.Controllers
             var data =  await _articledDAO.GetSeasonNumDto();
             return Ok(data);
         }
+        [AllowAnonymous]
+        [HttpGet("getTransferToDTR")]
+        public  IActionResult GetTransferToDTR()
+        {
+            _dksDao.GetTransferToDTR("C","U","ART005");
+            return Ok();
+        }
+
+        
 
     }
 }

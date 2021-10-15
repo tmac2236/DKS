@@ -1,0 +1,224 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <strong class ="col-11" style="font-size: 20px;color:#000000;">{{title}}</strong>
+              <div class="col-1 btn-group" dropdown>
+                <button id="button-basic" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
+                        aria-controls="dropdown-basic">
+                        <strong *ngIf="this.sF340Schedule.loginUser">{{ this.sF205Trans.loginUser }}</strong> <span class="caret"></span>
+                </button>
+                <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
+                    role="menu" aria-labelledby="button-basic">
+                    <li role="menuitem"><a class="dropdown-item" href="../assets/manual/實驗室測試告報操作手冊V1.0.pdf" target="_blank"><img src="../assets/systemImg/question.png" class="topImg" width="25" height="25"/>  Help </a></li>  
+                  <li role="menuitem"><a class="dropdown-item" href="javascript:;" (click)="this.utility.logout()"><img src="../assets/systemImg/exit.png" class="topImg" width="25" height="25"/>  Log Out</a></li>
+                </ul>                
+            </div>
+          </div> 
+        </div>
+        <form class="form-horizontal" #addQueryReportDataForm="ngForm">
+          <div class="card-body">
+            <div class="form-group row">
+              <div class="col-md-12">
+                <div class="col">
+                  <label class="col-form-label mr-1">Data Type</label>
+                  <select
+                  class="col-form-label mr-1"
+                  name="dataType"
+                  [(ngModel)]="sF340Schedule.dataType">
+                  <option value = "DHO" selected>DIV</option>
+                  <option value = "FHO" selected>FTY</option>
+                  <option value = "DEV" selected>DEV</option>
+                </select>
+                  <!--Data Type == DHO 才顯示 Factory-->                   
+                  <label class="col-form-label mr-1" *ngIf="this.sF340Schedule.dataType==='FHO'">Factory</label>
+                  <select
+                  *ngIf="this.sF340Schedule.dataType==='FHO'"
+                  class="col-form-label mr-1"
+                  name="factory"
+                  [(ngModel)]="sF340Schedule.factory"
+                  (change)="cleanBP()">
+                  <option value = "C" selected>SHC</option>
+                  <option value = "U" selected>TSH</option>
+                  <option value = "E" selected>CB</option>
+                  <option value = "D" selected>SPC</option>
+                </select>               
+                  <label class="col-form-label mr-1">Season</label>
+                  <input
+                    class="col-form-label mr-1"
+                    type="text"
+                    name="season"
+                    size="4"
+                    [(ngModel)]="sF340Schedule.season"
+                    required/>
+                  <!--Data Type == DHO 才顯示 Buy Plan Version-->  
+                  <label class="col-form-label mr-1" *ngIf="this.sF340Schedule.dataType==='FHO'">Buy Plan Version</label>
+                  <select
+                  *ngIf="this.sF340Schedule.dataType==='FHO'"
+                  class="col-form-label mr-1"
+                  name="bpVer"
+                  [(ngModel)]="sF340Schedule.bpVer"
+                  (focus)="changeBPVerList()">
+                  <option
+                    *ngFor="let bpVer of bpVerList"
+                    value="{{ bpVer }}">
+                    {{ bpVer }}
+                  </option>
+                </select>
+                <label class="col-form-label mr-1">CWA Date Start</label>
+                <input
+                  class="col-form-label mr-1"
+                  type="date"
+                  name="cwaDateS"
+                  [(ngModel)]="sF340Schedule.cwaDateS"/>
+                <label class="col-form-label mr-1">CWA Date End</label>
+                <input
+                  class="col-form-label mr-1"
+                  type="date"
+                  name="cwaDateE"
+                  [(ngModel)]="sF340Schedule.cwaDateE"/>                
+                  <button
+                    class="btn btn-primary mr-1"
+                    type="button"
+                    (click)="search()"
+                    [disabled]="!addQueryReportDataForm.valid">
+                  {{ 'Common.btnList.search' | translate }}
+                  </button>
+                  <button
+                    class="btn btn-primary mr-1"
+                    type="button"
+                    (click)="export()"
+                    [disabled]="!addQueryReportDataForm.valid">
+                  {{ 'Common.btnList.export' | translate }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table text-center text-nowrap table-striped"><!--text-nowrap不換行-->
+                  <!--套版分頁<table datatable id="f340Sche" class="table text-center table-striped">-->
+                    <thead>
+                      <tr class="table-info">
+                        <th style="background-color:#FF7F50;" tooltip="From HP" placement="bottom">{{ 'F340.titleList.factory' | translate }}</th>
+                        <th style="background-color:#FF7F50;" tooltip="From HP" placement="bottom">{{ 'F340.titleList.buyPlanSeason' | translate }}</th>
+                        <th style="background-color:#FF7F50;" tooltip="From HP" placement="bottom">{{ 'F340.titleList.versionNo' | translate }}</th>
+                        <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.devSeason' | translate }}</th>
+                        <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.devTeam' | translate }}</th>
+                        <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.article' | translate }}</th>
+                        
+                        <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.activationDate' | translate }}</th>
+                        <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.modelNo' | translate }}</th>
+                        <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.modelName' | translate }}</th>
+                        <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.orderStag' | translate }}</th>
+                        <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.sampleNo' | translate }}</th>
+
+                        <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.smsSampleNo' | translate }}</th>                        
+                        <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.memo' | translate }}</th> 
+                        <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.devStatus' | translate }}</th>
+                        <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.dropDate' | translate }}</th>
+                        <th style="background-color:#FF7F50;" tooltip="From HP" placement="bottom">{{ 'F340.titleList.hpFlag' | translate }}</th>
+                        
+                        <th style="background-color:#FF7F50;" tooltip="From HP" placement="bottom">{{ 'F340.titleList.hpSampleNo' | translate }}</th>
+                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.f340SampleNo' | translate }}</th>
+                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.releaseType' | translate }}</th>
+                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.createDate' | translate }}</th>
+                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.pdmDate' | translate }}</th>
+                        
+                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.devUpDate' | translate }}</th>
+                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.devBtmDate' | translate }}</th>
+                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.ttUpDate' | translate }}</th>
+                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.ttBtmDate' | translate }}</th>
+                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.releaseDate' | translate }}</th>
+                        
+                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.ttRejectReason' | translate }}</th>
+                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.ttRejectDate' | translate }}</th>   
+                        <th style="background-color:#23D954;" tooltip="From F340" placement="bottom">{{ 'F340.titleList.ttRejectCount' | translate }}</th>
+
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container *ngFor="let item of result; let i = index">
+                        <tr>
+                          <td>{{ item.factory }}</td>
+                          <td>{{ item.buyPlanSeason }}</td>
+                          <td>{{ item.versionNo }}</td>
+                          <td>{{ item.devSeason }}</td>
+                          <td>{{ item.devTeam }}</td>
+                          <td>{{ item.article }}</td>
+
+                          <td>{{ item.activationDate }}</td>
+                          <td>{{ item.modelNo }}</td>
+                          <td>{{ item.modelName }}</td>
+                          <td>{{ item.orderStag }}</td>
+                          <td>{{ item.sampleNo }}</td>
+
+                          <td>{{ item.smsSampleNo }}</td>
+                          <td>{{ item.memo }}</td>
+                          <td>{{ item.devStatus }}</td>
+                          <td>{{ item.dropDate }}</td>
+                          <td>{{ item.hpFlag }}</td>
+
+                          <td>{{ item.hpSampleNo }}</td>             
+                          <td>{{ item.f340SampleNo }}</td>
+                          <td>{{ item.releaseType }}</td>
+                          <td>{{ item.createDate }}</td>
+                          <td>{{ item.pdmDate }}</td>
+
+                          <td>{{ item.devUpDate }}</td>
+                          <td>{{ item.devBtmDate }}</td>
+                          <td>{{ item.ttUpDate }}</td>
+                          <td>{{ item.ttBtmDate }}</td>
+                          <td>{{ item.ReleaseDate }}</td>
+
+                          <td>{{ item.ttRejectReason }}</td>
+                          <td>{{ item.ttRejectDate }}</td>
+                          <td>{{ item.ttRejectCount }}</td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                  <div class ="d-flex justify-content-start">
+                    <select
+                    style="height:35px;width:45px;"
+                    name="itemsPerPage"
+                    [(ngModel)]="sF340Schedule.itemsPerPage">
+                    <option value = 10 selected>10</option>
+                    <option value = 25 selected>25</option>
+                    <option value = 50 selected>50</option>
+                    <option value = 100 selected>100</option>
+                    </select> 
+                    <pagination *ngIf="this.sF340Schedule.isPaging" 
+                      [boundaryLinks]="true" 
+                      [totalItems]="sF340Schedule.totalItems"
+                      [maxSize]="60"
+                      [itemsPerPage]="sF340Schedule.itemsPerPage"
+                      [(ngModel)]="sF340Schedule.currentPage"
+                      (pageChanged) = "pageChangeds($event)"
+                      previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+                    </pagination>
+                  </div>                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ngx-spinner
+  bdColor="rgba(0, 0, 0, 0.8)"
+  size="large"
+  color="#fff"
+  type="square-jelly-box"
+  [fullScreen]="true"
+  ><p style="color: white">Loading {{title}}...</p></ngx-spinner
+>

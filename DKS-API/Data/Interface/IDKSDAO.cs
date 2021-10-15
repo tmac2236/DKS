@@ -22,5 +22,6 @@ namespace DKS_API.Data.Interface
         Task<List<DevDtrFgtResultDto>> GetDevDtrFgtResultDto(string article,string modelNo,string modelName, string factoryId);
         Task<List<DevDtrFgtResultDto>> GetDevDtrFgtResultReportDto(SDevDtrFgtResultReport sDevDtrFgtResultReport);
         Task<List<BasicCodeDto>> GetBasicCodeDto(string typeNo);
+        void GetTransferToDTR(string factoryIdFrom,string factoryIdTo,string article);
     }
 }
