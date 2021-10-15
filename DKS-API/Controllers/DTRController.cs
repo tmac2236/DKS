@@ -418,6 +418,7 @@ namespace DKS_API.Controllers
 
             // Step1: save fromArt to db (status =0 )
             fromArt.MODELNO = transitArticleDto.ModelNo.Trim();
+            fromArt.STAGE = transitArticleDto.Stage.Trim();
             fromArt.FACTORYID = transitArticleDto.FactoryId;
             fromArt.STATUS = status;
             fromArt.MDUSERID =  transitArticleDto.UpdateUser.ToDecimal();

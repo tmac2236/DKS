@@ -37,6 +37,7 @@ export class F205TransComponent implements OnInit {
 
     });
   }
+  title = "Transfer Article";
   factoryIdUrl: string; 
   sF205Trans: SF205Trans = new SF205Trans();
   result: ArticleSeason[] = [];
@@ -50,6 +51,12 @@ export class F205TransComponent implements OnInit {
     { "id": 3, "name": "D","code":"SPC" },
     { "id": 4, "name": "E","code":"CB" },
   ];
+  stageList: { id: number, name: string, code: string}[] =[];
+  oStageList: { id: number, name: string, code: string }[] = [
+    { "id": 1, "name": "CR2","code":"CR2" },
+    { "id": 2, "name": "SMS","code":"SMS" },
+    { "id": 3, "name": "MCS","code":"MCS" }
+  ];  
   code017: BasicCodeDto[] = [];
   ngOnInit() {
     this.utility.initUserRole(this.sF205Trans);
@@ -111,7 +118,6 @@ export class F205TransComponent implements OnInit {
   cleanTransit(){
     this.transitModel = new TransitArticle();
     this.transitModel.article = this.oriArticle.article;
-    this.transitModel.stage = this.oriArticle.stage;
     this.transitModel.pkArticle = this.oriArticle.pkArticle;
     this.transitModel.modelNo = this.oriArticle.modelNo;
     this.transitModel.modelNoFrom = this.oriArticle.modelNo;
@@ -123,7 +129,8 @@ export class F205TransComponent implements OnInit {
     this.cleanTransit();
     let usedfacArray = this.result.map(x => x.factoryId);
     this.facList = this.oFacList.filter( (x)=> !usedfacArray.includes(x.name) );
-
+    let usedStage = this.oStageList.find((x) => x.name == this.oriArticle.stage);
+    this.stageList = this.oStageList.filter( (x)=> x.id >= usedStage.id );
     this.openModal("transit");
   }
   async getNewModelNo(){

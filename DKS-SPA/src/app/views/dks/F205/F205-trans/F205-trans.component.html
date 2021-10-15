@@ -4,7 +4,7 @@
       <div class="card">
         <div class="card-header">
           <div class="row">
-            <strong class ="col-11" style="font-size: 20px;color:#000000;">F205 Transit Page</strong>
+            <strong class ="col-11" style="font-size: 20px;color:#000000;">F205 {{title}}</strong>
               <div class="col-1 btn-group" dropdown>
                 <button id="button-basic" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
                         aria-controls="dropdown-basic">
@@ -25,14 +25,14 @@
               <div class="form-group col-12">
                 <label>Article</label>
                 <input
-                  class="col-form-label"
-                  style="background-color: #F2F2F2;"
+                  class="col-form-label rounded"
+                  style="background-color: #FBFBFB;"
                   type="text"
                   name="article"
                   size ="6"
                   maxlength="6"
                   [(ngModel)]="sF205Trans.article"
-                  [readonly] = "true"
+                  disabled="disabled"
                 />
                 <!--
                 <label>Stage</label>
@@ -57,7 +57,7 @@
                   (click)="transit()"
                   [disabled]="!(result?.length > 0)"
                 >
-                  Transit Article
+                Transfer
                 </button>                                                                                  
               </div>
             </div>
@@ -119,7 +119,7 @@
   <div class="modal-dialog modal-info " role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">Transit Article</h4>
+        <h4 class="modal-title">{{title}}</h4>
         <button
           type="button"
           class="close"
@@ -131,26 +131,43 @@
       </div>
       <div class="modal-body"> 
         <!-- First column-->
-        <div class="row">
+        <div class="row mb-2">
           <div class="col-8">
             <div class="form-inline">
-              <label class="col-form-label mr-4">Article : {{transitModel.article}}</label>
-              <label class="col-form-label mr-4">Stage : {{transitModel.stage}}</label>
+              <label class="col-form-label mr-2">Article from :</label>
+              <input
+              class="col-form-label rounded mr-2"
+              style="background-color: #FBFBFB;"
+              type="text"
+              size ="6"
+              maxlength="6"
+              value="{{transitModel.article}}"
+              disabled="disabled"
+              />
             </div>
           </div>
-          <div class="col-4">
+          <div class="col-2">
   
           </div>
         </div>          
         <!-- Second column-->
-        <div class="row">     
+        <div class="row mb-2">     
           <div class="col-12">
             <div class="form-inline">
-              <label class="col-form-label mr-2">Factory from : {{oriArticle?.factoryId}}&emsp;&emsp; &emsp; to :</label> 
-              <div class="ml-2"></div>
+              <label class="col-form-label mr-2">Factory from :</label> 
+                <select
+                  class="col-form-label rounded mr-2"
+                  value="{{oriArticle?.factoryId}}"
+                  disabled="disabled">
+                <option value="C" selected>SHC</option>
+                <option value="U" selected>TSH</option>
+                <option value="E" selected>CB</option>
+                <option value="D" selected>SPC</option>
+                </select>             
+              <label class="col-form-label mr-2">to:</label>
               <select
               id="modalTestResult"
-              class="form-control"
+              class="form-control mr-2 rounded border border-danger"
               [(ngModel)]="transitModel.factoryId"
               (change)="getNewModelNo()"
               >
@@ -160,10 +177,9 @@
                   {{ fac.code }}
                 </option>
               </select>
-              <label class="col-form-label mr-2 ml-2">DevTeam Id :</label>
-              <div class="ml-2"></div>
+              <label class="col-form-label mr-2">DevTeam Id :</label>
               <select
-                class="form-control"
+                class="col-form-label rounded border border-danger "
                 name="devTeamId"
                 [(ngModel)]="transitModel.devTeamId"
               >
@@ -176,17 +192,66 @@
           </div>
         </div>
         <!-- 3 column-->
-        <div class="row">
-          <div class="col-8">
+        <div class="row mb-2">
+          <div class="col-10">
             <div class="form-inline">
-              <label class="col-form-label mr-4">Model No from: {{oriArticle?.modelNo}}&emsp; &emsp; to:&emsp;&emsp;{{transitModel?.modelNo}}</label>       
+              <label class="col-form-label mr-2">Model No from:</label>       
+              <input
+              class="col-form-label rounded mr-2"
+              style="background-color: #FBFBFB;"
+              type="text"
+              size ="6"
+              maxlength="6"
+              value="{{oriArticle?.modelNo}}"
+              disabled="disabled"
+              />
+              <label class="col-form-label mr-2">to:</label>  
+              <input
+              class="col-form-label rounded mr-2"
+              style="background-color: #FBFBFB;"
+              type="text"
+              size ="7"
+              maxlength="7"
+              value="{{transitModel?.modelNo}}"
+              disabled="disabled"
+              />                            
             </div>
           </div>
-          <div class="col-4">
+          <div class="col-2">
   
           </div>
         </div> 
-        
+        <!-- 4 column-->
+        <div class="row mb-2">
+          <div class="col-8">
+            <div class="form-inline">
+              <label class="col-form-label mr-2">Stage from:</label>
+              <input
+              class="col-form-label rounded mr-2"
+              style="background-color: #FBFBFB;"
+              type="text"
+              size ="3"
+              maxlength="3"
+              value="{{oriArticle.stage}}"
+              disabled="disabled"
+              />
+              <label class="col-form-label mr-2">to:</label>  
+              <select
+              class="form-control mr-2 rounded border border-danger"
+              [(ngModel)]="transitModel.stage"
+              >
+                <option
+                  *ngFor="let stage of stageList"
+                  value="{{ stage.name }}">
+                  {{ stage.code }}
+                </option>
+              </select>              
+            </div>
+          </div>
+          <div class="col-2">
+  
+          </div>
+        </div>         
 
       </div>
       <div class="modal-footer">
@@ -211,5 +276,5 @@
   color="#fff"
   type="square-jelly-box"
   [fullScreen]="true"
-  ><p style="color: white">F205 Transit Page Loading...</p></ngx-spinner
+  ><p style="color: white">F205 {{title}} Loading...</p></ngx-spinner
 >
