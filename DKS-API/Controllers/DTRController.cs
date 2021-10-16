@@ -413,6 +413,15 @@ namespace DKS_API.Controllers
             string status = "0";
             string errMsg = "";
             _logger.LogInformation(String.Format(@"****** DKSController TransitArticle fired!! ******"));
+            Articled checkArt = _articledDAO.FindSingle(
+                             x => x.ARTICLE.Trim() == transitArticleDto.Article.Trim()&&
+                                    x.STAGE.Trim() == transitArticleDto.Stage.Trim()&&
+                                    x.FACTORYID.Trim() == transitArticleDto.FactoryId.Trim());            
+            if (checkArt != null){
+                errMsg ="The Article、Stage、Factory is exist. Please refresh page and try again.";
+                return  Ok(errMsg);
+            }
+            
             Articled fromArt = _articledDAO.FindSingle(
                              x => x.PKARTBID.Trim() == transitArticleDto.PkArticle.Trim());
 
@@ -434,10 +443,14 @@ namespace DKS_API.Controllers
             _logger.LogInformation(String.Format(@"****** Save ARTICLED Success!! PKARTICLE: {0} ******",newPkArticle));      
             // Step2: copy ARTICLE_PICTURE and save to DB
             ArticlePicture fromArtPic = _articlePictureDAO.FindSingle(
-                             x => x.FKARTICID.Trim() == transitArticleDto.PkArticle.Trim()); 
-            fromArtPic.FKARTICID = newPkArticle; 
-            _articlePictureDAO.Add(fromArtPic);                           
-            await _articlePictureDAO.SaveAll();  
+                             x => x.FKARTICID.Trim() == transitArticleDto.PkArticle.Trim());
+                             
+            if(fromArtPic != null){
+                fromArtPic.FKARTICID = newPkArticle; 
+                _articlePictureDAO.Add(fromArtPic);                           
+                await _articlePictureDAO.SaveAll();  
+            } 
+
             _logger.LogInformation(String.Format(@"****** Save ARTICLEPICTURE Success!! FKARTICID: {0} ******",newPkArticle)); 
             // Step3: if the new article don't have model in db copy one.
             ModelDah toModel = _modelDahDAO.FindSingle(

@@ -204,9 +204,15 @@ export class F205TransComponent implements OnInit {
         this.utility.spinner.hide();
         //找到該筆model 把資料回填
         this.closeModal('transit'); //新增一筆成功後關閉modal
-        //refresh the page
-        this.search();
-        this.utility.alertify.success("Transit success !");
+        if(this.utility.checkIsNullorEmpty(res)){
+          //refresh the page
+          this.search();
+          this.utility.alertify.success("Transit success !");
+        }else{
+          this.utility.alertify.error(res);
+          return;
+        }
+
       },
       (error) => {
         this.utility.spinner.hide();
