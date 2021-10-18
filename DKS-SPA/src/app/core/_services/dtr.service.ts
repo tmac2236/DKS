@@ -8,12 +8,14 @@ import { DevDtrFgtResult } from "../_models/dev-dtr-fgt-result";
 import { DevDtrFgtResultDto } from "../_models/dev-dtr-fgt-result-dto";
 import { DevDtrVisStandard } from "../_models/dev-dtr-vis-standard";
 import { DevDtrVsList } from "../_models/dev-dtr-vs-list";
+import { DtrLoginHistory } from "../_models/dtr-login-history";
 import { DtrLoginHistoryDto } from "../_models/dtr-login-history-dto";
 import { PaginatedResult } from "../_models/pagination";
 import { SDevDtrFgtResult } from "../_models/s-dev-dtr-fgt-result";
 import { SDevDtrFgtResultReport } from "../_models/s-dev-dtr-fgt-result-report";
 import { SDevDtrVisStandard } from "../_models/s-dev-dtr-vis-standard";
 import { SDevDtrVsList } from "../_models/s-dev-dtr-vs-list";
+import { SDtrLoginHistory } from "../_models/s_dtr-login-history";
 import { TransitArticle } from "../_models/transit-article";
 
 @Injectable({
@@ -243,7 +245,50 @@ export class DtrService {
           return paginatedResult;
         })
       );
-  }  
+  }
+  searchDtrLoginHistory(
+    sCondition: SDtrLoginHistory
+  ): Observable<PaginatedResult<DtrLoginHistory[]>> {
+    const paginatedResult: PaginatedResult<DtrLoginHistory[]> =
+      new PaginatedResult<DtrLoginHistory[]>();
+
+    let params = new HttpParams();
+    params = params.append("IsPaging", sCondition.isPaging.toString());
+    if (
+      sCondition.currentPage != null &&
+      sCondition.itemsPerPage != null
+    ) {
+      params = params.append(
+        "pageNumber",
+        sCondition.currentPage.toString()
+      );
+      params = params.append("pageSize", sCondition.itemsPerPage.toString());
+    }
+    params = params.append("systemName", sCondition.systemName.toString());
+    params = params.append("account", sCondition.account.toString());
+
+    params = params.append("loginTimeS", sCondition.loginTimeS.toString());
+    params = params.append("loginTimeE", sCondition.loginTimeE.toString());
+
+    return this.utility.http
+      .get<DtrLoginHistory[]>(this.utility.baseUrl + "dtr/getDtrLoginHistory", {
+        observe: "response",
+        params,
+      })
+      .pipe(
+        timeout(utilityConfig.httpTimeOut),
+        map((response) => {
+          paginatedResult.result = response.body;
+          if (response.headers.get("Pagination") != null) {
+            paginatedResult.pagination = JSON.parse(
+              response.headers.get("Pagination")
+            );
+          }
+          return paginatedResult;
+        })
+      );
+  }
+      
   addVSfile(dtrVS: FormData) {
     console.log("dtr.service addVSfile:", dtrVS);
     return this.utility.http.post<boolean>(

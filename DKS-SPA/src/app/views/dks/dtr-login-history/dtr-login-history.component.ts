@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Utility } from '../../../core/utility/utility';
+import { DtrLoginHistory } from '../../../core/_models/dtr-login-history';
 import { F340Schedule } from '../../../core/_models/f340-schedule.ts';
 import { PaginatedResult } from '../../../core/_models/pagination';
-import { SF340Schedule } from '../../../core/_models/s_f340-schedule';
+import { SDtrLoginHistory } from '../../../core/_models/s_dtr-login-history';
 import { CommonService } from '../../../core/_services/common.service';
 import { DksService } from '../../../core/_services/dks.service';
+import { DtrService } from '../../../core/_services/dtr.service';
 
 @Component({
   selector: 'app-dtr-login-history',
@@ -14,35 +16,32 @@ import { DksService } from '../../../core/_services/dks.service';
 export class DtrLoginHistoryComponent implements OnInit {
 
   title = "Dtr Login History";
-  sF340Schedule: SF340Schedule = new SF340Schedule();
-  result: F340Schedule[] = [];
+  systemNameList: { id: number, name: string, code: string }[] = [
+    { "id": 1, "name": "CWA_LIST","code":"CWA List" },
+    { "id": 2, "name": "DTR_LIST","code":"DTR List" },
+    { "id": 3, "name": "LAB Test Report Maintain","code":"LAB Test Report Maintain" }
+  ]; 
+  sCondition: SDtrLoginHistory = new SDtrLoginHistory();
+  result: DtrLoginHistory[] = [];
   constructor(public utility: Utility,
-               private dksService: DksService, private commonService: CommonService
-               ) {}
+               private dksService: DksService,private dtrService: DtrService,
+              private commonService: CommonService) {}
 
   ngOnInit() {
-    this.utility.initUserRole(this.sF340Schedule);
+    this.utility.initUserRole(this.sCondition);
   }
   //分頁按鈕
   pageChangeds(event: any): void {
-    this.sF340Schedule.currentPage = event.page;
+    this.sCondition.currentPage = event.page;
     this.search();
   }
   //搜尋
   search() {
-    if(this.sF340Schedule.dataType =="FHO"&&this.sF340Schedule.bpVer ==""){
-      this.utility.alertify.confirm(
-        "Sweet Alert",
-        "Please choose Buy Plan before click !",
-        () => {}
-      );
-      return;
-    }
     this.utility.spinner.show();
-    this.dksService.searchF340Process(this.sF340Schedule).subscribe(
-      (res: PaginatedResult<F340Schedule[]>) => {
+    this.dtrService.searchDtrLoginHistory(this.sCondition).subscribe(
+      (res: PaginatedResult<DtrLoginHistory[]>) => {
         this.result = res.result;
-        this.sF340Schedule.setPagination(res.pagination);
+        this.sCondition.setPagination(res.pagination);
         this.utility.spinner.hide();
         if (res.result.length < 1) {
           this.utility.alertify.confirm(
@@ -63,16 +62,8 @@ export class DtrLoginHistoryComponent implements OnInit {
     );
   }
   export(){
-    if(this.sF340Schedule.dataType =="FHO"&&this.sF340Schedule.bpVer ==""){
-      this.utility.alertify.confirm(
-        "Sweet Alert",
-        "Please choose Buy Plan before click !",
-        () => {}
-      );
-      return;
-    }
-    const url =this.utility.baseUrl +"dks/exportF340_Process";
-    this.utility.exportFactory(url,"F340_Schedule",this.sF340Schedule);
+    const url =this.utility.baseUrl +"dtr/exportDtrLoginHistory";
+    this.utility.exportFactory(url,this.title,this.sCondition);
   }
 
 }

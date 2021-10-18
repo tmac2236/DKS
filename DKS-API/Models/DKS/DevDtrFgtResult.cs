@@ -15,7 +15,7 @@ namespace DKS.API.Models.DKS
         [StringLength(10)]
         public string STAGE { get; set; }
 
-        [Required]
+        [Key]
         [StringLength(10)]
         public string KIND { get; set; }
 

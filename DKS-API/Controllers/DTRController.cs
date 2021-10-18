@@ -27,6 +27,8 @@ namespace DKS_API.Controllers
         private readonly IArticlePictureDAO _articlePictureDAO;
         private readonly IDevDtrFgtStatsDAO _devDtrFgtStatsDAO;
         private readonly IDevDtrVsFileDAO _devDtrVsFileDAO;
+        private readonly IDtrLoginHistoryDAO _dtrLoginHistoryDAO;
+
         private readonly IFileService _fileService;
         private readonly IExcelService _excelService;
         private readonly ICommonService _commonService;
@@ -34,7 +36,7 @@ namespace DKS_API.Controllers
 
         public DTRController(IMapper mapper, IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<PictureController> logger,
          IDKSDAO dKSDAO, IDevDtrFgtResultDAO devDtrFgtResultDAO, IArticledDAO articledDAO, IDevDtrFgtStatsDAO devDtrFgtStatsDAO, IDevDtrVsFileDAO devDtrVsFileDAO,
-         IArticlePictureDAO articlePictureDAO,IModelDahDAO modelDahDAO,
+         IArticlePictureDAO articlePictureDAO,IModelDahDAO modelDahDAO,IDtrLoginHistoryDAO dtrLoginHistoryDAO,
          IFileService fileService, IExcelService excelService,ICommonService commonService, ISendMailService sendMailService)
                 : base(config, webHostEnvironment, logger)
         {
@@ -50,6 +52,7 @@ namespace DKS_API.Controllers
             _commonService = commonService;            
             _devDtrVsFileDAO = devDtrVsFileDAO;
             _articlePictureDAO = articlePictureDAO;
+            _dtrLoginHistoryDAO = dtrLoginHistoryDAO;
         }
 
            
@@ -485,6 +488,51 @@ namespace DKS_API.Controllers
             //step5 : insert to dtr_excel and dtr_cwa date
             _dKSDAO.GetTransferToDTR(transitArticleDto.FactoryIdFrom,transitArticleDto.FactoryId,transitArticleDto.Article.Trim());
             return  Ok(errMsg);
-        }        
+        }
+        [HttpGet("getDtrLoginHistory")]
+        public IActionResult GetDtrLoginHistory([FromQuery] SDtrLoginHistory sDtrLoginHistory)
+        {
+            _logger.LogInformation(String.Format(@"****** DTRController GetDtrLoginHistory fired!! ******"));
+
+
+            var data =  _dtrLoginHistoryDAO.FindAll(x => x.SystemName.Contains(sDtrLoginHistory.systemName));
+            if (!(String.IsNullOrEmpty(sDtrLoginHistory.account))){
+                data = data.Where( x=>x.Account == sDtrLoginHistory.account);
+            }            
+            if (!(String.IsNullOrEmpty(sDtrLoginHistory.loginTimeS))){
+                data = data.Where( x=>x.LoginTime >= sDtrLoginHistory.loginTimeS.ToDateTime());
+            }
+            if (!(String.IsNullOrEmpty(sDtrLoginHistory.loginTimeE))){
+                data = data.Where( x=>x.LoginTime <= sDtrLoginHistory.loginTimeE.ToDateTime());
+            }     
+
+            PagedList<DtrLoginHistory> result = PagedList<DtrLoginHistory>.Create(data, sDtrLoginHistory.PageNumber, sDtrLoginHistory.PageSize, sDtrLoginHistory.IsPaging);
+            Response.AddPagination(result.CurrentPage, result.PageSize,
+            result.TotalCount, result.TotalPages);
+            return Ok(result);
+
+        }   
+              
+        [HttpPost("exportDtrLoginHistory")]
+        public IActionResult ExportDtrLoginHistory(SDtrLoginHistory sDtrLoginHistory)
+        {
+            _logger.LogInformation(String.Format(@"****** DKSController ExportDtrLoginHistory fired!! ******"));
+
+            // query data from database  
+            var data =  _dtrLoginHistoryDAO.FindAll(x => x.SystemName.Contains(sDtrLoginHistory.systemName));
+            if (!(String.IsNullOrEmpty(sDtrLoginHistory.account))){
+                data = data.Where( x=>x.Account == sDtrLoginHistory.account);
+            }            
+            if (!(String.IsNullOrEmpty(sDtrLoginHistory.loginTimeS))){
+                data = data.Where( x=>x.LoginTime >= sDtrLoginHistory.loginTimeS.ToDateTime());
+            }
+            if (!(String.IsNullOrEmpty(sDtrLoginHistory.loginTimeE))){
+                data = data.Where( x=>x.LoginTime <= sDtrLoginHistory.loginTimeE.ToDateTime());
+            }  
+
+            byte[] result = _excelService.CommonExportReport(data.ToList(), "TempDtrLoginHistory.xlsx");
+
+            return File(result, "application/xlsx");
+        }               
     }
 }

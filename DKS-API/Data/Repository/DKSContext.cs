@@ -65,7 +65,7 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<ArticlePicture>().HasKey(x => new { x.FKARTICID });
             modelBuilder.Entity<DtrLoginHistory>().HasKey(x => new { x.ID });
             modelBuilder.Entity<DevDtrFgt>().HasKey(x => new { x.ARTICLE, x.STAGE, x.KIND, x.VERN });
-            modelBuilder.Entity<DevDtrFgtResult>().HasKey(x => new { x.ARTICLE, x.MODELNO, x.MODELNAME, x.LABNO, x.STAGE });
+            modelBuilder.Entity<DevDtrFgtResult>().HasKey(x => new { x.ARTICLE, x.MODELNO, x.MODELNAME, x.LABNO, x.STAGE, x.KIND });
             modelBuilder.Entity<DevDtrFgtStats>().HasKey(x => new { x.ARTICLE, x.STAGE, x.KIND });
             modelBuilder.Entity<DevDtrVsFile>().HasKey(x => new { x.FACTORYID,x.ARTICLE, x.SEASON, x.ID });
             
