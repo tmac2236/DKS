@@ -126,11 +126,17 @@ export class F205TransComponent implements OnInit {
   } 
   //Transit article
   transit() {
+
     this.cleanTransit();
     let usedfacArray = this.result.map(x => x.factoryId);
     this.facList = this.oFacList.filter( (x)=> !usedfacArray.includes(x.name) );
     let usedStage = this.oStageList.find((x) => x.name == this.oriArticle.stage);
-    this.stageList = this.oStageList.filter( (x)=> x.id >= usedStage.id );
+    if(this.utility.checkIsNullorEmpty(usedStage)){
+      this.stageList = this.oStageList;
+    }else{
+      this.stageList = this.oStageList.filter( (x)=> x.id >= usedStage.id );
+    }
+    
     this.openModal("transit");
   }
   async getNewModelNo(){

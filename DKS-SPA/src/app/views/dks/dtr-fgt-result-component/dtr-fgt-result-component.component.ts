@@ -227,6 +227,7 @@ export class DtrFgtResultComponentComponent implements OnInit {
     formData.append("modelName", model.modelName);
     formData.append("labNo", model.labNo);
     formData.append("stage", model.stage);
+    formData.append("kind", model.kind);
     formData.append("loginUser", this.sDevDtrFgtResult.loginUser);
     this.utility.spinner.show();
     this.dtrService.editPdfDevDtrFgtResult(formData).subscribe(

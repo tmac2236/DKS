@@ -81,13 +81,15 @@ namespace DKS_API.Controllers
             var modelName = HttpContext.Request.Form["modelName"].ToString().Trim();
             var labNo = HttpContext.Request.Form["labNo"].ToString().Trim();
             var stage = HttpContext.Request.Form["stage"].ToString().Trim();
+            var kind = HttpContext.Request.Form["kind"].ToString().Trim();
             var loginUser = HttpContext.Request.Form["loginUser"].ToString().Trim();
             DevDtrFgtResult model = _devDtrFgtResultDAO.FindSingle(
                                  x => x.ARTICLE.Trim() == article &&
                                  x.MODELNO.Trim() == modelNo &&
                                  x.MODELNAME.Trim() == modelName &&
                                  x.LABNO.Trim() == labNo &&
-                                 x.STAGE.Trim() == stage);
+                                 x.STAGE.Trim() == stage &&
+                                 x.KIND.Trim() == kind);
 
             if (model == null) return NoContent();
             if (HttpContext.Request.Form.Files.Count == 0) return NoContent();
