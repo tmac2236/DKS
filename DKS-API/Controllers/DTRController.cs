@@ -437,7 +437,8 @@ namespace DKS_API.Controllers
             fromArt.STATUS = status;
             fromArt.MDUSERID =  transitArticleDto.UpdateUser.ToDecimal();
             fromArt.CHANGDATE = DateTime.Now;
-
+            fromArt.INSERDATE = DateTime.Now;
+            
                 //fromArt.REMARK = string.Format("Transit From Factory: {0} ,Update User: {1}", transitArticleDto.FactoryIdFrom,transitArticleDto.UpdateUser);       
                 //get new PKARTICLE
             var newPkArticle = _commonService.GetPKARTBID();
