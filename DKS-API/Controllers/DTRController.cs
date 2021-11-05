@@ -497,7 +497,7 @@ namespace DKS_API.Controllers
         {
             _logger.LogInformation(String.Format(@"****** DTRController GetDtrLoginHistory fired!! ******"));
 
-
+            /*
             var data =  _dtrLoginHistoryDAO.FindAll(x => x.SystemName.Contains(sDtrLoginHistory.systemName));
             if (!(String.IsNullOrEmpty(sDtrLoginHistory.account))){
                 data = data.Where( x=>x.Account == sDtrLoginHistory.account);
@@ -507,9 +507,11 @@ namespace DKS_API.Controllers
             }
             if (!(String.IsNullOrEmpty(sDtrLoginHistory.loginTimeE))){
                 data = data.Where( x=>x.LoginTime <= sDtrLoginHistory.loginTimeE.ToDateTime());
-            }     
+            } 
+            */
+            var data = _dtrLoginHistoryDAO.GetDtrLoginUserHistoryDto(sDtrLoginHistory);
 
-            PagedList<DtrLoginHistory> result = PagedList<DtrLoginHistory>.Create(data, sDtrLoginHistory.PageNumber, sDtrLoginHistory.PageSize, sDtrLoginHistory.IsPaging);
+            PagedList<DtrLoginUserHistoryDto> result = PagedList<DtrLoginUserHistoryDto>.Create(data, sDtrLoginHistory.PageNumber, sDtrLoginHistory.PageSize, sDtrLoginHistory.IsPaging);
             Response.AddPagination(result.CurrentPage, result.PageSize,
             result.TotalCount, result.TotalPages);
             return Ok(result);
@@ -521,7 +523,8 @@ namespace DKS_API.Controllers
         {
             _logger.LogInformation(String.Format(@"****** DKSController ExportDtrLoginHistory fired!! ******"));
 
-            // query data from database  
+            // query data from database
+            /*  
             var data =  _dtrLoginHistoryDAO.FindAll(x => x.SystemName.Contains(sDtrLoginHistory.systemName));
             if (!(String.IsNullOrEmpty(sDtrLoginHistory.account))){
                 data = data.Where( x=>x.Account == sDtrLoginHistory.account);
@@ -531,7 +534,9 @@ namespace DKS_API.Controllers
             }
             if (!(String.IsNullOrEmpty(sDtrLoginHistory.loginTimeE))){
                 data = data.Where( x=>x.LoginTime <= sDtrLoginHistory.loginTimeE.ToDateTime());
-            }  
+            }
+            */
+            var data = _dtrLoginHistoryDAO.GetDtrLoginUserHistoryDto(sDtrLoginHistory);  
 
             byte[] result = _excelService.CommonExportReport(data.ToList(), "TempDtrLoginHistory.xlsx");
 

@@ -17,6 +17,7 @@ export class DtrLoginHistoryComponent implements OnInit {
 
   title = "Dtr Login History";
   systemNameList: { id: number, name: string, code: string }[] = [
+    { "id": 0, "name": "","code":"All" },
     { "id": 1, "name": "CWA_LIST","code":"CWA List" },
     { "id": 2, "name": "DTR_LIST","code":"DTR List" },
     { "id": 3, "name": "LAB Test Report Maintain","code":"LAB Test Report Maintain" }

@@ -355,10 +355,21 @@ export class DtrFgtResultComponentComponent implements OnInit {
           return;
         }
       }  
-      //Step 3: check is labNo valid
+      //step 3.1: check same article can not have same(stage + test)
+      let aaa = this.result.find(
+        (x) => x["stage"] == this.addAModel.stage.trim() &&
+               x["type"] == this.addAModel.type.trim()
+      ); 
+      if (aaa) {
+        this.utility.alertify.error("The Article have same Stage and Test, you can not add it !! ");
+        return;
+      }
+
+      //Step 3.2: check is labNo valid
       let model = this.result.find(
         (x) => x["labNo"] == this.addAModel.labNo.trim()
       );
+     
       if (model) {
         this.utility.alertify.confirm(
           "Sweet Alert",

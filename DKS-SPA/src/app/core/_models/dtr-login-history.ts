@@ -1,10 +1,11 @@
 import { ModelInterface } from "./interface/model-interface";
 
 export class DtrLoginHistory implements ModelInterface {
-  iD:number;
   systemName:string;
+  factoryId:string;
   account: string;
-  pcName : string;
+  workNo: string;
+  Name : string;
   iP : string;
   loginTime: Date;
 }

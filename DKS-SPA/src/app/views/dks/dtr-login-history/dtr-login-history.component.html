@@ -27,7 +27,6 @@
                   <select
                   class="col-form-label mr-1"
                   name="dataType"
-                  required
                   [(ngModel)]="sCondition.systemName">
                     <option
                       *ngFor="let sys of systemNameList"
@@ -85,18 +84,24 @@
                     <thead>
                       <tr class="table-info">
                         <th>System Name</th>
+                        <th>Factory Id</th>
                         <th>Account</th>
-                        <th>LoginTime</th>
+                        <th>Work No</th>
+                        <th>Name</th>
                         <th>IP</th>
+                        <th>LoginTime</th>
                       </tr>
                     </thead>
                     <tbody>
                       <ng-container *ngFor="let item of result; let i = index">
                         <tr>
                           <td>{{ item.systemName }}</td>
+                          <td>{{ item.factoryId }}</td>
                           <td>{{ item.account }}</td>
-                          <td>{{ item.loginTime | date: "yyyy/MM/dd HH:mm:ss" }}</td>
+                          <td>{{ item.workNo }}</td>
+                          <td>{{ item.name }}</td>                          
                           <td>{{ item.ip }}</td>
+                          <td>{{ item.loginTime | date: "yyyy/MM/dd HH:mm:ss" }}</td>
                         </tr>
                       </ng-container>
                     </tbody>
