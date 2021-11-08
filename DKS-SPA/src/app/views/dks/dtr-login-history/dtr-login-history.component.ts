@@ -22,6 +22,13 @@ export class DtrLoginHistoryComponent implements OnInit {
     { "id": 2, "name": "DTR_LIST","code":"DTR List" },
     { "id": 3, "name": "LAB Test Report Maintain","code":"LAB Test Report Maintain" }
   ]; 
+  factoryList: { id: number, name: string, code: string }[] = [
+    { "id": 0, "name": "","code":"All" },
+    { "id": 1, "name": "C","code":"SHC" },
+    { "id": 2, "name": "U","code":"TSH" },
+    { "id": 3, "name": "E","code":"CB" },
+    { "id": 3, "name": "D","code":"SPC" }
+  ];   
   sCondition: SDtrLoginHistory = new SDtrLoginHistory();
   result: DtrLoginHistory[] = [];
   constructor(public utility: Utility,

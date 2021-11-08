@@ -39,9 +39,9 @@ namespace DFPS.API.Data.Repository
             {
                 data = data.Where(x => x.SystemName == sDtrLoginHistory.systemName);
             }
-            if (!(String.IsNullOrEmpty(sDtrLoginHistory.account)))
+            if (!(String.IsNullOrEmpty(sDtrLoginHistory.factoryId)))
             {
-                data = data.Where(x => x.Account == sDtrLoginHistory.account);
+                data = data.Where(x => x.FactoryId == sDtrLoginHistory.factoryId);
             }
             if (!(String.IsNullOrEmpty(sDtrLoginHistory.loginTimeS)))
             {

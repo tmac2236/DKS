@@ -265,7 +265,7 @@ export class DtrService {
       params = params.append("pageSize", sCondition.itemsPerPage.toString());
     }
     params = params.append("systemName", sCondition.systemName.toString());
-    params = params.append("account", sCondition.account.toString());
+    params = params.append("factoryId", sCondition.factoryId.toString());
 
     params = params.append("loginTimeS", sCondition.loginTimeS.toString());
     params = params.append("loginTimeE", sCondition.loginTimeE.toString());

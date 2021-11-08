@@ -3,7 +3,7 @@ import { utilityConfig } from "../utility/utility-config";
 
 export class SDtrLoginHistory extends Pagination {
   systemName:string;
-  account: string;
+  factoryId: string;
   loginTimeS : string;
   loginTimeE : string;
   /**
@@ -12,7 +12,7 @@ export class SDtrLoginHistory extends Pagination {
   constructor() {
     super();
     this.systemName = ""; 
-    this.account = "";
+    this.factoryId = "";
     this.loginTimeS ="";
     this.loginTimeE ="";
     this.isPaging = true; //開分頁

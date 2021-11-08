@@ -24,7 +24,7 @@ export class DtrFgtResultComponentComponent implements OnInit {
     uploadPdf: "Please upload pdf or excel file and size cannot over 2 Mb.",
   };
   uiControls: any = {
-    editModel: utilityConfig.RoleSysAdm,
+    editPassData: utilityConfig.DtrQcSup,
   };
   title = "LAB Test Report Maintain";
   sDevDtrFgtResult: SDevDtrFgtResult = new SDevDtrFgtResult();
@@ -33,11 +33,11 @@ export class DtrFgtResultComponentComponent implements OnInit {
   partNameList: object[]; //F340PartNoTreatmemtDto
   stageList: { id: number, name: string }[] =[];
   oStageList: { id: number, name: string }[] = [
-    { "id": 1, "name": "CR2" },
-    { "id": 2, "name": "SMS" },
-    { "id": 3, "name": "CS1" },
-    { "id": 4, "name": "CS2" },
-    { "id": 5, "name": "CS3" }
+    { "id": 1, "name": "CR2" },   //開發
+    { "id": 2, "name": "SMS" },   //開發
+    { "id": 3, "name": "CS1" },   //開發
+    { "id": 4, "name": "CS2" },   //量化
+    { "id": 5, "name": "CS3" }    //量化
 ];
 
   addAModel: DevDtrFgtResult = new DevDtrFgtResult(); //use in addFgtResultModal、editFgtResultModal
@@ -258,6 +258,20 @@ export class DtrFgtResultComponentComponent implements OnInit {
       this.addAModel.type = "Article"; // default is Article
       this.openModal("addFgtResult");
     } else if (type == "editFgtResult") {
+      /*
+      //check Pass Edit by Qc Supervisor
+      let aStage = this.oStageList.find( (x)=> x.name == editModel.stage );
+      if(editModel.stage == "CS2" || editModel.stage == "CS3"){//量化
+
+      }else{  //開發
+
+      }
+      let ss = this.result.filter( (x)=>{
+        let b = this.oStageList.find( (x)=> x.name == editModel.stage );
+
+      } );
+      */
+
       this.addAModel.article = editModel.article; //PK
       this.addAModel.modelNo = editModel.modelNo; //PK
       this.addAModel.modelName = editModel.modelName; //PK

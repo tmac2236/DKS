@@ -34,15 +34,26 @@
                       {{ sys.code }}
                     </option>
                   </select>
-                  <label class="col-form-label mr-1">Account</label>
+                  <label class="col-form-label mr-1">Factory Id</label>
+                  <select
+                  class="col-form-label mr-1"
+                  name="factoryId"
+                  [(ngModel)]="sCondition.factoryId">
+                    <option
+                      *ngFor="let fac of factoryList"
+                      value="{{ fac.name }}">
+                      {{ fac.code }}
+                    </option>
+                  </select>                  
+                  <!--
                   <input
                     class="col-form-label mr-1"
                     type="text"
-                    name="season"
+                    name="factoryId"
                     size="4"
-                    [(ngModel)]="sCondition.account"
+                    [(ngModel)]="sCondition.factoryId"
                     />
-                  
+                  -->  
                 <label class="col-form-label mr-1">Login Time Start</label>
                 <input
                   class="col-form-label mr-1"

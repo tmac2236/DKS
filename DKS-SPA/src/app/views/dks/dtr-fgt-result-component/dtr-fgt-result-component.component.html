@@ -127,7 +127,7 @@
                           </td>
                           <td>
                             <img
-                            [style.visibility]="item?.result == 'PASS' ? 'hidden' : 'visible'" 
+                            [style.visibility]="(item?.result == 'FAIL' || this.sDevDtrFgtResult.role.includes(uiControls.editPassData)) ? 'visible' : 'hidden'" 
                               src="../assets/systemImg/edit.png"
                               width="35"
                               height="35"
@@ -135,7 +135,7 @@
                           </td>
                           <td>
                             <img
-                              [style.visibility]="item?.result == 'PASS' ? 'hidden' : 'visible'" 
+                            [style.visibility]="(item?.result == 'FAIL' || this.sDevDtrFgtResult.role.includes(uiControls.editPassData)) ? 'visible' : 'hidden'"
                               src="../assets/systemImg/delete.png"
                               width="35"
                               height="35"
