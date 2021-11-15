@@ -27,7 +27,7 @@ export class F340PpdComponent implements OnInit {
   //for hint
   hintMsg:any = {
     uploadPic: "Please upload pdf file and size cannot over 2 Mb.",
-    uploadPdf: "Please upload jpg file and size cannot over 2 Mb."
+    uploadPdf: "Please upload jpg file and size cannot over 10 Mb."
   };
   //for sorting ; ASC DESC
   cwaDeadlineS = true;
@@ -180,7 +180,7 @@ export class F340PpdComponent implements OnInit {
   uploadPdfF340Ppd(files: FileList, model: F340SchedulePpd) {
     console.log(model);
     //"application/pdf" "image/jpeg"
-    if (!this.utility.checkFileMaxFormat(files.item(0), (1128659 * 2 ),"application/pdf")) {
+    if (!this.utility.checkFileMaxFormat(files.item(0), (1128659 * 10 ),"application/pdf")) {
       this.utility.alertify.confirm(
         "Sweet Alert",
         this.hintMsg.uploadPdf,

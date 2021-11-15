@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import { map, timeout } from "rxjs/operators";
 import { Utility } from "../utility/utility";
 import { utilityConfig } from "../utility/utility-config";
+import { AddDevDtrFgtResultDto } from "../_models/add-dev-dtr-fgt-result-dto";
 import { DevDtrFgtResult } from "../_models/dev-dtr-fgt-result";
 import { DevDtrFgtResultDto } from "../_models/dev-dtr-fgt-result-dto";
 import { DevDtrVisStandard } from "../_models/dev-dtr-vis-standard";
@@ -140,10 +141,10 @@ export class DtrService {
       devDtrFgtResult
     );
   }
-  updateDevDtrFgtResult(devDtrFgtResult: DevDtrFgtResult) {
+  updateDevDtrFgtResult(addDevDtrFgtResultDto: AddDevDtrFgtResultDto) {
     return this.utility.http.post<boolean>(
       this.utility.baseUrl + 'dtr/updateDevDtrFgtResult',
-      devDtrFgtResult
+      addDevDtrFgtResultDto
     );
   }  
   deleteDevDtrFgtResult(devDtrFgtResult: DevDtrFgtResult) {
@@ -317,5 +318,11 @@ export class DtrService {
   dtrLoginHistory(model: DtrLoginHistoryDto) {
     console.log("dtr.service dtrLoginHistory:", model);
     return this.utility.http.post(this.utility.baseUrl + "auth/loginRecord", model);
-  }  
+  }
+  //get F104 Basic code detail by typeNo
+  checkEditFgtIsValid( factoryId:string, article:string , stage:string, kind:string ) {
+    return this.utility.http.get<boolean>(
+      this.utility.baseUrl + "dtr/checkEditFgtIsValid?factoryId="+ factoryId +"&article=" + article + "&stage=" + stage +"&kind=" + kind
+    ).toPromise();
+  }    
 }

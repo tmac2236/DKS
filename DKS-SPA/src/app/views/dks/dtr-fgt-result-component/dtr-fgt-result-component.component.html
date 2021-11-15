@@ -139,7 +139,7 @@
                               src="../assets/systemImg/delete.png"
                               width="35"
                               height="35"
-                              (click)="deleteDevDtrFgtResult(item)"/>  
+                              (click)="deleteDevDtrFgtResult(item)"/>                             
                           </td>
                           <!--Maintain-->
                           <td [hidden]="false">
@@ -590,6 +590,66 @@
   </div>
 </div>
 <!--upgradeModal-->
+
+<!--changeReasonModal-->
+<div
+  bsModal
+  #changeReasonModal="bs-modal"
+  class="modal hide fade in"
+  [config]="{backdrop: 'static'}"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-info modal-lg " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Send Mail to PIC <br> CR2、SMS、CS1 (DEV) ; CS2、CS3 (COMM)</h4>
+        <button
+          type="button"
+          class="close"
+          (click)="closeModal('changeReason')"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">           
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group">
+              <label class="col-form-label mr-1">Reason type : </label>
+              <select
+              class="col-form-label mr-1"
+              name="factoryId"
+              [(ngModel)]="changeReason">
+                <option
+                  *ngFor="let r of reasonList"
+                  value="{{ r.name }}">
+                  {{ r.code }}
+                </option>
+              </select> 
+            </div>
+          </div>
+       </div>                
+      </div>
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col-6">
+            <button
+            type="button"
+            class="btn btn-success btn-lm"
+            style="margin-top: 35px;"
+            (click)="reasonSendMail()">Send Mail
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--changeReasonModal-->
 <ngx-spinner
   bdColor="rgba(0, 0, 0, 0.8)"
   size="large"

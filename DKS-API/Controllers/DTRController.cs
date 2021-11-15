@@ -521,7 +521,7 @@ namespace DKS_API.Controllers
         [HttpPost("exportDtrLoginHistory")]
         public IActionResult ExportDtrLoginHistory(SDtrLoginHistory sDtrLoginHistory)
         {
-            _logger.LogInformation(String.Format(@"****** DKSController ExportDtrLoginHistory fired!! ******"));
+            _logger.LogInformation(String.Format(@"****** DTRController ExportDtrLoginHistory fired!! ******"));
 
             // query data from database
             /*  
@@ -541,6 +541,58 @@ namespace DKS_API.Controllers
             byte[] result = _excelService.CommonExportReport(data.ToList(), "TempDtrLoginHistory.xlsx");
 
             return File(result, "application/xlsx");
-        }               
+        } 
+        //檢查是否為最後一個階段:  開發: CR2->SMS->CS1   量化: CS2->CS3
+        [HttpGet("checkEditFgtIsValid")]
+        public async Task<IActionResult> CheckEditFgtIsValid(string factoryId, string article,string stage, string kind)
+        {
+            _logger.LogInformation(String.Format(@"******DTRController CheckEditFgtIsValid fired!! ******"));
+            var isValid = true;
+            var result = await _devDtrFgtResultDAO.FindAll(x => x.ARTICLE == article
+                                                    && x.KIND == kind
+                                                    && x.LABNO.Substring(0,1) == factoryId)
+                                    .ToListAsync();
+            if(stage == "CR2" ){            //開發
+                var a = result.FirstOrDefault( x=> x.STAGE == "SMS" || x .STAGE =="CS1");
+                if(a == null) isValid = false;
+            }else if (stage == "SMS"){      //開發
+                var a = result.FirstOrDefault( x=> x .STAGE =="CS1");
+                if(a == null) isValid = false;
+            }else if (stage == "CS2"){      //量化
+                var a = result.FirstOrDefault( x=> x .STAGE =="CS3");
+                if(a == null) isValid = false;
+            }
+            return Ok(isValid);
+
+        }
+        [HttpGet("qcSentMailDtrFgtResult")]
+        public async Task<IActionResult> QcSentMailDtrFgtResult(string stage, string modelNo, string article, string labNo, string type, string reason)
+        {
+
+            _logger.LogInformation(String.Format(@"******DTRController SentMailF340PpdByArticle fired!! ******"));
+            ModelDah modelDah = _modelDahDAO.FindSingle(
+                    x => x.MODELNO.Trim() == modelNo.Trim() && x.FACTORYID.Trim() == labNo.Substring(0,1));
+            var season = modelDah.SEASON;
+
+            var toMails = new List<string>();
+            List<BasicCodeDto> list017 = await _dKSDAO.GetBasicCodeDto("017");    //017 = 開發小組
+            BasicCodeDto teamId = list017.FirstOrDefault( x=> x.Key == modelDah.DEVTEAMID.Trim() );
+            if(stage == "CR2" || stage =="SMS" || stage =="CS1"){   //mail to DEV
+                toMails = teamId.MemoZh3.Split(";").Where( x => x.Length > 5 ).ToList();
+            }else if (stage == "CS2" || stage == "CS3"){    //mail to COMM
+                toMails = teamId.MemoZh4.Split(";").Where( x => x.Length > 5 ).ToList();
+            }
+
+            var dksSignature = _config.GetSection("DksSignatureLine").Value;
+            var content = string.Format(@"Hi Team: 
+{0} Test report has been evaluated from pass to fail or deleted, please check with QC team.
+(Model name: {1}, Season: {2}, Model No: {3}, Article: {4})
+Type: {5}。  Reason: {6}。
+", stage, modelDah.MODELNAME, season, modelNo, article, type, reason);
+
+            await _sendMailService.SendListMailAsync(toMails, null, string.Format(@"Test report change result (Season: {0}, Stage: {1}, Model Name: {2}, Model No:{3}, Art:{4})", season, stage, modelDah.MODELNAME, modelNo, article), content, null);
+            return Ok();
+
+        }                              
     }
 }

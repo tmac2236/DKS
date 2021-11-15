@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { ModalDirective } from "ngx-bootstrap/modal";
 import { Utility } from "../../../core/utility/utility";
 import { utilityConfig } from "../../../core/utility/utility-config";
+import { AddDevDtrFgtResultDto } from "../../../core/_models/add-dev-dtr-fgt-result-dto";
 import { DevDtrFgtResult } from "../../../core/_models/dev-dtr-fgt-result";
 import { DevDtrFgtResultDto } from "../../../core/_models/dev-dtr-fgt-result-dto";
 import { DtrLoginHistoryDto } from "../../../core/_models/dtr-login-history-dto";
@@ -19,6 +20,7 @@ export class DtrFgtResultComponentComponent implements OnInit {
   @ViewChild("addFgtResultModal") public addFgtResultModal: ModalDirective;
   @ViewChild("editFgtResultModal") public editFgtResultModal: ModalDirective;
   @ViewChild("upgradeModal") public upgradeModal: ModalDirective;
+  @ViewChild("changeReasonModal") public changeReasonModal: ModalDirective;
   //for hint
   hintMsg: any = {
     uploadPdf: "Please upload pdf or excel file and size cannot over 2 Mb.",
@@ -39,12 +41,19 @@ export class DtrFgtResultComponentComponent implements OnInit {
     { "id": 4, "name": "CS2" },   //量化
     { "id": 5, "name": "CS3" }    //量化
 ];
+reasonList: { id: number, name: string, code: string }[] = [
+    { "id": 1, "name": "1.QC上傳錯誤","code":"1.QC上傳錯誤" },
+    { "id": 2, "name": "2.客人改變","code":"2.客人改變" },
+    { "id": 3, "name": "3.開發改變","code":"3.開發改變" }
+]; 
 
-  addAModel: DevDtrFgtResult = new DevDtrFgtResult(); //use in addFgtResultModal、editFgtResultModal
+  addAModel: AddDevDtrFgtResultDto = new AddDevDtrFgtResultDto(); //use in addFgtResultModal、editFgtResultModal
+  editReasonModel: AddDevDtrFgtResultDto = new AddDevDtrFgtResultDto(); // use in QC edit or delete status PASS->FAIL
   addAModelTreatment: string = ""; //only let user see not save to db
   isValidUpload: boolean = false; //卡控新增畫面的上傳按鈕(Add和Upgrade都會用到)
   upgradeModel: DevDtrFgtResult = new DevDtrFgtResult(); //use in upgradeModelModal
   isUploadable: boolean = false;  //只用於外層的上傳按鈕，為了卡控用而已
+  changeReason:string = "1.QC上傳錯誤"; //QC superviosr edit or delete status = pass 
 
   constructor(
     public utility: Utility,
@@ -251,26 +260,22 @@ export class DtrFgtResultComponentComponent implements OnInit {
     window.open(dataUrl);
   }
   //Add or update a result of fgt
- openAddFgtResultModal(type: string, editModel?: DevDtrFgtResultDto) {
+  async openAddFgtResultModal(type: string, editModel?: DevDtrFgtResultDto) {
     this.cleanModel();
 
     if (type == "addFgtResult") {
       this.addAModel.type = "Article"; // default is Article
       this.openModal("addFgtResult");
     } else if (type == "editFgtResult") {
-      /*
-      //check Pass Edit by Qc Supervisor
-      let aStage = this.oStageList.find( (x)=> x.name == editModel.stage );
-      if(editModel.stage == "CS2" || editModel.stage == "CS3"){//量化
-
-      }else{  //開發
-
+      let alertStr = "The stage of this Article is not final stage. You can't edit !! ";
+      //check Pass Edit by Qc Supervisor 只能改最後一版
+      if(editModel.result == "PASS"){ 
+        let isValid = await this.dtrService.checkEditFgtIsValid( this.sDevDtrFgtResult.factoryId, editModel.article, editModel.stage, editModel.kind )
+        if (!isValid) {
+          this.utility.alertify.error(alertStr);
+          return;
+        }
       }
-      let ss = this.result.filter( (x)=>{
-        let b = this.oStageList.find( (x)=> x.name == editModel.stage );
-
-      } );
-      */
 
       this.addAModel.article = editModel.article; //PK
       this.addAModel.modelNo = editModel.modelNo; //PK
@@ -285,11 +290,13 @@ export class DtrFgtResultComponentComponent implements OnInit {
     if (type == "addFgtResult") this.addFgtResultModal.show();
     if (type == "editFgtResult") this.editFgtResultModal.show();
     if (type == "upgrade") this.upgradeModal.show();
+    if (type == "changeReason") this.changeReasonModal.show();
   }
   closeModal(type: string) {
     if (type == "addFgtResult") this.addFgtResultModal.hide();
     if (type == "editFgtResult") this.editFgtResultModal.hide();
     if (type == "upgrade") this.upgradeModal.hide();
+    if (type == "changeReason") this.changeReasonModal.hide();
   }
 
   saveAFgtResult() {
@@ -440,6 +447,7 @@ export class DtrFgtResultComponentComponent implements OnInit {
           // refresh the page
           this.search();
           this.closeModal("editFgtResult"); //關閉modal
+          this.openChangeReasonModal('Edit',this.addAModel);
         }
       },
       (error) => {
@@ -462,7 +470,7 @@ export class DtrFgtResultComponentComponent implements OnInit {
   }
 
   cleanModel() {
-    this.addAModel = new DevDtrFgtResult();
+    this.addAModel = new AddDevDtrFgtResultDto();
     this.addAModel.upusr = this.sDevDtrFgtResult.loginUser;
     this.addAModelTreatment = "";
     this.isValidUpload = false;
@@ -471,7 +479,17 @@ export class DtrFgtResultComponentComponent implements OnInit {
     this.upgradeModel = new DevDtrFgtResult();
     this.upgradeModel.upusr = this.sDevDtrFgtResult.loginUser;
   }
-  deleteDevDtrFgtResult(model: DevDtrFgtResult) {
+  async deleteDevDtrFgtResult(model: DevDtrFgtResult) {
+    let alertStr = "The stage of this Article is not final stage. You can't delete !! ";
+    //check Pass Edit by Qc Supervisor 只能改(刪)最後一版
+    if(model.result == "PASS"){ 
+      let isValid = await this.dtrService.checkEditFgtIsValid( this.sDevDtrFgtResult.factoryId, model.article, model.stage, model.kind )
+      if (isValid) {
+        this.utility.alertify.error(alertStr);
+        return;
+      }
+    }
+
     this.utility.alertify.confirm(
       "Sweet Alert",
       "Are you sure to Delete this file of article:" + model.article + ", stage:" + model.stage + ".",
@@ -620,6 +638,20 @@ export class DtrFgtResultComponentComponent implements OnInit {
         this.utility.alertify.error(error);
       }
     );
+  }
+  openChangeReasonModal(type: string,editModel?: AddDevDtrFgtResultDto){
+    
+    this.editReasonModel.stage = editModel.stage;
+    this.editReasonModel.modelName = editModel.modelName;
+    this.editReasonModel.modelNo = editModel.modelNo;
+    this.editReasonModel.article = editModel.article;
+    this.editReasonModel.labNo = editModel.labNo; // 第一碼是廠別代號
+    this.editReasonModel.remark = type; // remark借放type 用
+    this.openModal('changeReason');
+
+  }
+  reasonSendMail(){
+    alert("editReasonSendMail");
   }
   
 }
