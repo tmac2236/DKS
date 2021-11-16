@@ -141,10 +141,10 @@ export class DtrService {
       devDtrFgtResult
     );
   }
-  updateDevDtrFgtResult(addDevDtrFgtResultDto: AddDevDtrFgtResultDto) {
+  updateDevDtrFgtResult(devDtrFgtResult: DevDtrFgtResult) {
     return this.utility.http.post<boolean>(
       this.utility.baseUrl + 'dtr/updateDevDtrFgtResult',
-      addDevDtrFgtResultDto
+      devDtrFgtResult
     );
   }  
   deleteDevDtrFgtResult(devDtrFgtResult: DevDtrFgtResult) {
@@ -324,5 +324,12 @@ export class DtrService {
     return this.utility.http.get<boolean>(
       this.utility.baseUrl + "dtr/checkEditFgtIsValid?factoryId="+ factoryId +"&article=" + article + "&stage=" + stage +"&kind=" + kind
     ).toPromise();
-  }    
+  }  
+
+  qcSentMailDtrFgtResult( stage:string, modelNo:string , article:string, labNo:string, type:string, reason:string ) {
+    console.log("dtr.service qcSentMailDtrFgtResult:");
+    return this.utility.http.get<boolean>(
+      this.utility.baseUrl + "dtr/qcSentMailDtrFgtResult?stage="+ stage +"&modelNo=" + modelNo + "&article=" + article + "&labNo=" + labNo
+      + "&type=" + type + "&reason=" + reason);
+  }  
 }

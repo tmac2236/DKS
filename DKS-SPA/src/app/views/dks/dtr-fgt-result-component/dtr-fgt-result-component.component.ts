@@ -47,7 +47,7 @@ reasonList: { id: number, name: string, code: string }[] = [
     { "id": 3, "name": "3.開發改變","code":"3.開發改變" }
 ]; 
 
-  addAModel: AddDevDtrFgtResultDto = new AddDevDtrFgtResultDto(); //use in addFgtResultModal、editFgtResultModal
+  addAModel: DevDtrFgtResult = new DevDtrFgtResult(); //use in addFgtResultModal、editFgtResultModal
   editReasonModel: AddDevDtrFgtResultDto = new AddDevDtrFgtResultDto(); // use in QC edit or delete status PASS->FAIL
   addAModelTreatment: string = ""; //only let user see not save to db
   isValidUpload: boolean = false; //卡控新增畫面的上傳按鈕(Add和Upgrade都會用到)
@@ -349,7 +349,7 @@ reasonList: { id: number, name: string, code: string }[] = [
         return;
       });
     } else {
-      debugger;
+
       //Step 2: check is labNo length is 6 and the value is number
       let isGoodLength = this.addAModel.labNo.length == 6;
 
@@ -376,10 +376,10 @@ reasonList: { id: number, name: string, code: string }[] = [
           return;
         }
       }  
-      //step 3.1: check same article can not have same(stage + test)
+      //step 3.1: check same article can not have same(stage + kind(test))
       let aaa = this.result.find(
         (x) => x["stage"] == this.addAModel.stage.trim() &&
-               x["type"] == this.addAModel.type.trim()
+               x["kind"] == this.addAModel.kind.trim()
       ); 
       if (aaa) {
         this.utility.alertify.error("The Article have same Stage and Test, you can not add it !! ");
@@ -470,7 +470,7 @@ reasonList: { id: number, name: string, code: string }[] = [
   }
 
   cleanModel() {
-    this.addAModel = new AddDevDtrFgtResultDto();
+    this.addAModel = new DevDtrFgtResult();
     this.addAModel.upusr = this.sDevDtrFgtResult.loginUser;
     this.addAModelTreatment = "";
     this.isValidUpload = false;
@@ -640,7 +640,7 @@ reasonList: { id: number, name: string, code: string }[] = [
     );
   }
   openChangeReasonModal(type: string,editModel?: AddDevDtrFgtResultDto){
-    
+
     this.editReasonModel.stage = editModel.stage;
     this.editReasonModel.modelName = editModel.modelName;
     this.editReasonModel.modelNo = editModel.modelNo;
@@ -651,7 +651,31 @@ reasonList: { id: number, name: string, code: string }[] = [
 
   }
   reasonSendMail(){
-    alert("editReasonSendMail");
+    
+    this.utility.spinner.show();
+    this.dtrService.qcSentMailDtrFgtResult( this.editReasonModel.stage,this.editReasonModel.modelNo,this.editReasonModel.article,
+      this.editReasonModel.labNo,this.editReasonModel.remark,this.changeReason ).subscribe(
+      (res: boolean) => {
+        this.utility.spinner.hide();
+        if (!res) {
+          this.utility.alertify.confirm(
+            "Sweet Alert",
+            "Save fault please refresh browser and try again!",
+            () => {}
+          );
+        } else {
+          this.utility.alertify.success("Sent Mail Success !!");
+        }
+      },
+      (error) => {
+        this.utility.spinner.hide();
+        this.utility.alertify.confirm(
+          "System Notice",
+          "Syetem is busy, please try later.",
+          () => {}
+        );
+      }
+    );
   }
   
 }

@@ -554,13 +554,13 @@ namespace DKS_API.Controllers
                                     .ToListAsync();
             if(stage == "CR2" ){            //開發
                 var a = result.FirstOrDefault( x=> x.STAGE == "SMS" || x .STAGE =="CS1");
-                if(a == null) isValid = false;
+                if(a != null) isValid = false;
             }else if (stage == "SMS"){      //開發
                 var a = result.FirstOrDefault( x=> x .STAGE =="CS1");
-                if(a == null) isValid = false;
+                if(a != null) isValid = false;
             }else if (stage == "CS2"){      //量化
                 var a = result.FirstOrDefault( x=> x .STAGE =="CS3");
-                if(a == null) isValid = false;
+                if(a != null) isValid = false;
             }
             return Ok(isValid);
 
