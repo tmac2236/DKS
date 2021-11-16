@@ -587,8 +587,8 @@ namespace DKS_API.Controllers
             var content = string.Format(@"Hi Team: 
 {0} Test report has been evaluated from pass to fail or deleted, please check with QC team.
 (Model name: {1}, Season: {2}, Model No: {3}, Article: {4})
-Type: {5}。  Reason: {6}。
-", stage, modelDah.MODELNAME, season, modelNo, article, type, reason);
+Type: {5}。  Reason: {6}。{7}
+", stage, modelDah.MODELNAME, season, modelNo, article, type, reason, dksSignature);
 
             await _sendMailService.SendListMailAsync(toMails, null, string.Format(@"Test report change result (Season: {0}, Stage: {1}, Model Name: {2}, Model No:{3}, Art:{4})", season, stage, modelDah.MODELNAME, modelNo, article), content, null);
             return Ok();

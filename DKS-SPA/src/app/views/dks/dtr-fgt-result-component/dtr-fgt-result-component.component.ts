@@ -270,8 +270,8 @@ reasonList: { id: number, name: string, code: string }[] = [
       let alertStr = "The stage of this Article is not final stage. You can't edit !! ";
       //check Pass Edit by Qc Supervisor 只能改最後一版
       if(editModel.result == "PASS"){ 
-        let isValid = await this.dtrService.checkEditFgtIsValid( this.sDevDtrFgtResult.factoryId, editModel.article, editModel.stage, editModel.kind )
-        if (!isValid) {
+        let isFinal = await this.dtrService.checkEditFgtIsValid( this.sDevDtrFgtResult.factoryId, editModel.article, editModel.stage, editModel.kind )
+        if (!isFinal) {
           this.utility.alertify.error(alertStr);
           return;
         }
@@ -283,6 +283,7 @@ reasonList: { id: number, name: string, code: string }[] = [
       this.addAModel.labNo = editModel.labNo; //PK
       this.addAModel.result = editModel.result;   //Can edit 1
       this.addAModel.remark = editModel.remark;   //Can edit 2
+      this.addAModel.stage = editModel.stage;   //Can edit 2
       this.openModal("editFgtResult");
     }
   }
@@ -445,9 +446,18 @@ reasonList: { id: number, name: string, code: string }[] = [
           );
         } else {
           // refresh the page
+          //原本是PASS改成FAIL才要跳出視窗(1.)
+          let model = this.result.find(
+            (x) => x["labNo"] == this.addAModel.labNo.trim()
+          ); 
+
           this.search();
           this.closeModal("editFgtResult"); //關閉modal
-          this.openChangeReasonModal('Edit',this.addAModel);
+          //原本是PASS改成FAIL才要跳出視窗(2.)
+          if(model.result =="PASS" && this.addAModel.result == "FAIL" ){
+            this.openChangeReasonModal('Edit',this.addAModel);
+          }     
+
         }
       },
       (error) => {
@@ -483,8 +493,8 @@ reasonList: { id: number, name: string, code: string }[] = [
     let alertStr = "The stage of this Article is not final stage. You can't delete !! ";
     //check Pass Edit by Qc Supervisor 只能改(刪)最後一版
     if(model.result == "PASS"){ 
-      let isValid = await this.dtrService.checkEditFgtIsValid( this.sDevDtrFgtResult.factoryId, model.article, model.stage, model.kind )
-      if (isValid) {
+      let isFinal = await this.dtrService.checkEditFgtIsValid( this.sDevDtrFgtResult.factoryId, model.article, model.stage, model.kind )
+      if (!isFinal) {
         this.utility.alertify.error(alertStr);
         return;
       }
@@ -505,6 +515,10 @@ reasonList: { id: number, name: string, code: string }[] = [
                 () => {}
               );
             } else {
+              //Qc Supervisor 如果成功刪PASS的情況，要出現發信modal
+              if(model.result == "PASS"){ 
+                this.openChangeReasonModal('Delete',model);
+              }
               //Step 2: refresh the page
               this.search();
             }
@@ -657,18 +671,12 @@ reasonList: { id: number, name: string, code: string }[] = [
       this.editReasonModel.labNo,this.editReasonModel.remark,this.changeReason ).subscribe(
       (res: boolean) => {
         this.utility.spinner.hide();
-        if (!res) {
-          this.utility.alertify.confirm(
-            "Sweet Alert",
-            "Save fault please refresh browser and try again!",
-            () => {}
-          );
-        } else {
-          this.utility.alertify.success("Sent Mail Success !!");
-        }
+        this.closeModal("changeReason"); //關閉modal
+        this.utility.alertify.success("Sent Mail Success !!");
       },
       (error) => {
         this.utility.spinner.hide();
+        this.closeModal("changeReason"); //關閉modal
         this.utility.alertify.confirm(
           "System Notice",
           "Syetem is busy, please try later.",
