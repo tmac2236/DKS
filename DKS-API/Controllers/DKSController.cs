@@ -15,7 +15,8 @@ using DKS_API.Helpers;
 using Microsoft.AspNetCore.Hosting;
 using DKS_API.Services.Interface;
 using Microsoft.Extensions.Logging;
-
+using System.Drawing;
+using Microsoft.AspNetCore.Http;
 
 namespace DKS_API.Controllers
 {
@@ -180,7 +181,7 @@ namespace DKS_API.Controllers
                     }
                     var param = dksSignature + x.DevSeason + "$" + x.Article + "$" + x.Photo + "$" + sF340PPDSchedule.factory + "$" + sF340PPDSchedule.loginUser;
                     var encodeStr = CSharpLab.Btoa(param);
-                    var dataUrl = string.Format(@"{0}{1}",factoryApi, encodeStr);
+                    var dataUrl = string.Format(@"{0}{1}", factoryApi, encodeStr);
                     //let dataUrl = environment.apiUrl + "dks/getF340PpdPdf?isStanHandsome=" + window.btoa(param);
                     //x.Photo = "=HYPERLINK(\"" + dataUrl + "\",\"jpg\")";
                     x.Photo = dataUrl;
@@ -210,10 +211,10 @@ namespace DKS_API.Controllers
                                 factoryApi = apiUrl + "dks/getF340PpdPdf?isStanHandsome=";
                                 break;
                             }
-                    }                
+                    }
                     var param = dksSignature + x.DevSeason + "$" + x.Article + "$" + x.Pdf + "$" + sF340PPDSchedule.factory + "$" + sF340PPDSchedule.loginUser;
                     var encodeStr = CSharpLab.Btoa(param);
-                    var dataUrl = string.Format(@"{0}{1}",factoryApi, encodeStr);
+                    var dataUrl = string.Format(@"{0}{1}", factoryApi, encodeStr);
 
                     // no encoding version
                     //var dataUrl = string.Format(@"{0}:{1}{2}{3}/{4}/{5}",ip,spaPort,"/assets/F340PpdPic/",x.DevSeason,x.Article,x.Pdf);
@@ -243,7 +244,7 @@ namespace DKS_API.Controllers
                             break;
                     }
 
-                    var dataUrl = string.Format(@"{0}{1}/{2}",factoryApi, x.Article,x.FgtFileName);
+                    var dataUrl = string.Format(@"{0}{1}/{2}", factoryApi, x.Article, x.FgtFileName);
                     x.FgtFileName = dataUrl;
                 }
             });
@@ -299,7 +300,18 @@ namespace DKS_API.Controllers
             if (HttpContext.Request.Form.Files.Count > 0)
             {
                 var file = HttpContext.Request.Form.Files[0];
-                if (await _fileService.SaveFiletoServer(file, "F340PpdPic", nastFileName))
+                //IformFile  ==> img ==>byte array ==> IformFile
+                Image image = Image.FromStream(file.OpenReadStream(), true, true);
+                var newImage = new Bitmap(1024, 768);
+                using (var g = Graphics.FromImage(newImage))
+                {
+                    g.DrawImage(image, 0, 0, 1024, 768);
+                }
+                ImageConverter converter = new ImageConverter();
+                byte[]bt = (byte[])converter.ConvertTo(newImage, typeof(byte[]));
+                var stream = new MemoryStream(bt);
+                IFormFile resizeFile = new FormFile(stream, 0, bt.Length, file.Name, file.FileName);
+                if (await _fileService.SaveFiletoServer(resizeFile, "F340PpdPic", nastFileName))
                 {
                     model.PHOTO = fileName;
                     _devTreatmentDAO.Update(model);
