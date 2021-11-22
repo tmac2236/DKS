@@ -53,7 +53,7 @@ reasonList: { id: number, name: string, code: string }[] = [
   isValidUpload: boolean = false; //卡控新增畫面的上傳按鈕(Add和Upgrade都會用到)
   upgradeModel: DevDtrFgtResult = new DevDtrFgtResult(); //use in upgradeModelModal
   isUploadable: boolean = false;  //只用於外層的上傳按鈕，為了卡控用而已
-  changeReason:string = "1.QC上傳錯誤"; //QC superviosr edit or delete status = pass 
+  changeReason:string = "D001: Dev. Change"; //QC superviosr edit or delete status = pass 
 
   constructor(
     public utility: Utility,
