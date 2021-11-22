@@ -324,6 +324,12 @@ export class DtrService {
     return this.utility.http.get<boolean>(
       this.utility.baseUrl + "dtr/checkEditFgtIsValid?factoryId="+ factoryId +"&article=" + article + "&stage=" + stage +"&kind=" + kind
     ).toPromise();
+  }
+  //檢查是否Dtr是否有重複:check article+ stage + kind + factoryId can not be duplicated
+  checkFgtIsValid(article:string, stage:string, kind:string, factoryId:string){
+    return this.utility.http.get<boolean>(
+    this.utility.baseUrl + "dtr/checkFgtIsValid?article="+ article +"&stage=" + stage + "&kind=" + kind +"&factoryId=" + factoryId
+    ).toPromise();
   }  
 
   qcSentMailDtrFgtResult( stage:string, modelNo:string , article:string, labNo:string, type:string, reason:string ) {

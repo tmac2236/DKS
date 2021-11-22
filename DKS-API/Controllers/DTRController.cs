@@ -565,6 +565,21 @@ namespace DKS_API.Controllers
             return Ok(isValid);
 
         }
+         //檢查是否Dtr是否有重複:check article+ stage + kind + factoryId can not be duplicated
+        [HttpGet("checkFgtIsValid")]
+        public async Task<IActionResult> CheckFgtIsValid(string article, string stage,string kind, string factoryId)
+        {
+            _logger.LogInformation(String.Format(@"******DTRController CheckFgtIsValid fired!! ******"));
+            var isValid = false;
+            DevDtrFgtResult  model =  await _devDtrFgtResultDAO.FindAll(x => x.ARTICLE == article
+                                                    && x.STAGE == stage
+                                                    && x.KIND == kind
+                                                    && x.LABNO.Substring(0,1) == factoryId)
+                                    .FirstOrDefaultAsync();
+            if(model == null ) isValid = true;
+            return Ok(isValid);
+        }    
+
         [HttpGet("qcSentMailDtrFgtResult")]
         public async Task<IActionResult> QcSentMailDtrFgtResult(string stage, string modelNo, string article, string labNo, string type, string reason)
         {

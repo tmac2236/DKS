@@ -42,9 +42,9 @@ export class DtrFgtResultComponentComponent implements OnInit {
     { "id": 5, "name": "CS3" }    //量化
 ];
 reasonList: { id: number, name: string, code: string }[] = [
-    { "id": 1, "name": "1.QC上傳錯誤","code":"1.QC上傳錯誤" },
-    { "id": 2, "name": "2.客人改變","code":"2.客人改變" },
-    { "id": 3, "name": "3.開發改變","code":"3.開發改變" }
+    { "id": 1, "name": "Q001: QC upload revise","code":"Q001: QC upload revise" },
+    { "id": 2, "name": "D000: Customer Change","code":"D000: Customer Change" },
+    { "id": 3, "name": "D001: Dev. Change","code":"D001: Dev. Change" }
 ]; 
 
   addAModel: DevDtrFgtResult = new DevDtrFgtResult(); //use in addFgtResultModal、editFgtResultModal
@@ -582,8 +582,13 @@ reasonList: { id: number, name: string, code: string }[] = [
 
     this.openModal("upgrade");
   }
-  saveAFgtResultByUpgrade(){
-
+  async saveAFgtResultByUpgrade(){
+    //check article+ stage + kind + factoryId can not be duplicated
+    let isValid = await this.dtrService.checkFgtIsValid( this.upgradeModel.article, this.upgradeModel.stage, this.upgradeModel.kind, this.sDevDtrFgtResult.factoryId );
+    if (!isValid) {
+      this.utility.alertify.error("Article、Stage、Test 、FactoryId can not be duplicated.");
+      return;
+    }
     this.utility.spinner.show();
     this.dtrService.addDevDtrFgtResult(this.upgradeModel).subscribe(
       (res: boolean) => {
