@@ -195,7 +195,9 @@ namespace DKS_API.Controllers
                                  x => x.ARTICLE.Trim() == updateDevDtrFgtResultDto.Article &&
                                  x.MODELNO.Trim() == updateDevDtrFgtResultDto.ModelNo &&
                                  x.MODELNAME.Trim() == updateDevDtrFgtResultDto.ModelName &&
-                                 x.LABNO.Trim() == updateDevDtrFgtResultDto.LabNo);
+                                 x.LABNO.Trim() == updateDevDtrFgtResultDto.LabNo &&
+                                 x.STAGE.Trim() == updateDevDtrFgtResultDto.Stage &&
+                                 x.KIND.Trim() == updateDevDtrFgtResultDto.Kind);
             if (model != null)
             {
                 model.RESULT = updateDevDtrFgtResultDto.Result;
@@ -479,7 +481,8 @@ namespace DKS_API.Controllers
             }
             //step4: stend email
             /*
-            var dksSignature = _config.GetSection("DksSignatureLine").Value;
+            //var dksSignature = _config.GetSection("DksSignatureLine").Value;
+            var dksSignature = "";
             var content = string.Format(@"The Article : {0} was Transit from factory: {1}, please check it in F205 Article of the below website.{2}", transitArticleDto.Article, transitArticleDto.FactoryIdFrom , dksSignature);
 
             var toMails = new List<string>();
@@ -598,7 +601,8 @@ namespace DKS_API.Controllers
                 toMails = teamId.MemoZh4.Split(";").Where( x => x.Length > 5 ).ToList();
             }
 
-            var dksSignature = _config.GetSection("DksSignatureLine").Value;
+            //var dksSignature = _config.GetSection("DksSignatureLine").Value;
+            var dksSignature = "";
             var content = string.Format(@"Hi Team: 
 {0} Test report has been evaluated from pass to fail or deleted, please check with QC team.
 (Model name: {1}, Season: {2}, Model No: {3}, Article: {4})

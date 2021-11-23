@@ -281,6 +281,7 @@ reasonList: { id: number, name: string, code: string }[] = [
       this.addAModel.modelNo = editModel.modelNo; //PK
       this.addAModel.modelName = editModel.modelName; //PK
       this.addAModel.labNo = editModel.labNo; //PK
+      this.addAModel.kind = editModel.kind; //PK
       this.addAModel.result = editModel.result;   //Can edit 1
       this.addAModel.remark = editModel.remark;   //Can edit 2
       this.addAModel.stage = editModel.stage;   //Can edit 2
@@ -664,6 +665,7 @@ reasonList: { id: number, name: string, code: string }[] = [
     this.editReasonModel.modelName = editModel.modelName;
     this.editReasonModel.modelNo = editModel.modelNo;
     this.editReasonModel.article = editModel.article;
+    this.editReasonModel.kind = editModel.kind;
     this.editReasonModel.labNo = editModel.labNo; // 第一碼是廠別代號
     this.editReasonModel.remark = type; // remark借放type 用
     this.openModal('changeReason');

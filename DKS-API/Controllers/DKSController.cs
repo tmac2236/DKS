@@ -515,7 +515,8 @@ namespace DKS_API.Controllers
 
             _logger.LogInformation(String.Format(@"******DKSController SentMailF340PpdByArticle fired!! ******"));
 
-            var dksSignature = _config.GetSection("DksSignatureLine").Value;
+            //var dksSignature = _config.GetSection("DksSignatureLine").Value;
+            var dksSignature = "";
             var content = string.Format(@"The Article : {0} Added Memo please check it in F340-PPD of the below website.{1}", sF340PPDSchedule.article, dksSignature);
 
             var toMails = new List<string>();
