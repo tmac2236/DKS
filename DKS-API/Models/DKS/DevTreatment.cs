@@ -158,5 +158,8 @@ namespace DKS.API.Models.DKS
         public string PHOTO_COMMENT { get; set; }
         [StringLength(40)]
         public string PDF { get; set; }
+        [Required]
+        [StringLength(1)]
+        public string FACTORYID { get; set; }       
     }
 }

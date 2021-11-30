@@ -21,9 +21,11 @@ defineLocale("en", enGbLocale);//定義local英文
   templateUrl: "./F340-ppd.component.html",
   styleUrls: ["./F340-ppd.component.scss"],
 })
+
 export class F340PpdComponent implements OnInit {
   @ViewChild('photoCommentModal') public photoCommentModal: ModalDirective;
   @ViewChild('ppdRemarkModal') public ppdRemarkModal: ModalDirective;
+  @ViewChild('uBDateModal') public uBDateModal: ModalDirective;
   //for hint
   hintMsg:any = {
     uploadPic: "Please upload jpg file and size cannot over 10 Mb.",
@@ -41,8 +43,10 @@ export class F340PpdComponent implements OnInit {
     uploadPdfF340Ppd: utilityConfig.RolePpdPic,
     editMemo: utilityConfig.RoleSysAdm,
     sendMemoMail: utilityConfig.RoleSysAdm,
+    upBottomMaintain: utilityConfig.DevPreAssist,
   };
   editModel: F340SchedulePpd = new F340SchedulePpd(); //onlt use in photoCommentModal
+  uBDateModel: F340SchedulePpd = new F340SchedulePpd(); // only use in uBDateModal
 
   constructor(public utility: Utility, private dksService: DksService, private commonService: CommonService) {}
 
@@ -162,7 +166,8 @@ export class F340PpdComponent implements OnInit {
     formData.append("article",model.article);
     formData.append("devSeason",model.devSeason);
     formData.append("loginUser", this.sF340PpdSchedule.loginUser);
-    
+    formData.append("factoryId", this.sF340PpdSchedule.factoryId);
+
     this.utility.spinner.show();
     this.dksService.editPicF340Ppd(formData).subscribe(
       (res) => {
@@ -196,6 +201,8 @@ export class F340PpdComponent implements OnInit {
     formData.append("article",model.article);
     formData.append("devSeason",model.devSeason);
     formData.append("loginUser", this.sF340PpdSchedule.loginUser);
+    formData.append("factoryId", this.sF340PpdSchedule.factoryId);
+
     this.utility.spinner.show();
     this.dksService.editPdfF340Ppd(formData).subscribe(
       (res) => {
@@ -222,6 +229,8 @@ export class F340PpdComponent implements OnInit {
     formData.append("devSeason",model.devSeason);
     formData.append("photo",model.photo); 
     formData.append("loginUser", this.sF340PpdSchedule.loginUser);
+    formData.append("factoryId", this.sF340PpdSchedule.factoryId);
+
     this.utility.alertify.confirm(
       "Sweet Alert",
       "Are you sure to Delete this picture of article:" + model.article + ", treatment:" + model.treatMent + ", partName:" + model.partName + ".",
@@ -252,6 +261,8 @@ export class F340PpdComponent implements OnInit {
     formData.append("devSeason",model.devSeason);
     formData.append("pdf",model.pdf); 
     formData.append("loginUser", this.sF340PpdSchedule.loginUser);
+    formData.append("factoryId", this.sF340PpdSchedule.factoryId);
+
     this.utility.alertify.confirm(
       "Sweet Alert",
       "Are you sure to Delete this pdf of article:" + model.article + ", treatment:" + model.treatMent + ", partName:" + model.partName + ".",
@@ -348,11 +359,13 @@ export class F340PpdComponent implements OnInit {
   openModal(type:string){
     if(type == "PhotoComment") this.photoCommentModal.show();
     if(type == "PpdRemark") this.ppdRemarkModal.show();
+    if(type == "UBDate") this.uBDateModal.show();
 
   }
   closeModal(type:string){
     if(type == "PhotoComment") this.photoCommentModal.hide();
     if(type == "PpdRemark")this.ppdRemarkModal.hide();
+    if(type == "UBDate") this.uBDateModal.hide();
   }
   //viewPic 共用
   editPhotoComment(model: F340SchedulePpd){
@@ -378,6 +391,11 @@ export class F340PpdComponent implements OnInit {
   editPpdRemark(model: F340SchedulePpd){
     this.openModal("PpdRemark");
     this.editModel = model;
+  }
+  editUBDate(model: F340SchedulePpd){
+    this.uBDateModel = model;
+    this.uBDateModel.factory = this.sF340PpdSchedule.factory; //等Aven改Procedure暫時先用登入者的廠別給值
+    this.openModal("UBDate");
   }
   sendMail(){
     if(this.sF340PpdSchedule.article.length < 1) {
@@ -424,5 +442,19 @@ export class F340PpdComponent implements OnInit {
     }
    let dataUrl = factoryApi + model.article + '/' + model.fgtFileName;
    window.open(dataUrl);
+  }
+  saveUBDate(){
+    this.utility.spinner.show();
+    this.dksService.saveUBDate(this.uBDateModel).subscribe(
+      (res) => {
+        this.utility.spinner.hide();
+        this.closeModal("UBDate");
+        this.utility.alertify.success("Save Success !!");
+      },
+      (error) => {
+        this.utility.spinner.hide();
+        this.utility.alertify.error(error);
+      }
+    );
   }
 }

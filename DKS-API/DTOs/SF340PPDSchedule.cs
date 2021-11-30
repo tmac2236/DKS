@@ -13,7 +13,7 @@ namespace DKS_API.DTOs
         public string article { get; set; }
         public string modelNo { get; set; }
         public string modelName { get; set; }
-
+        public string ubType { get; set; }
 
     }
 }

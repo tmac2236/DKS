@@ -134,6 +134,8 @@ namespace DKS_API.Controllers
             sF340PPDSchedule.cwaDateS = sF340PPDSchedule.cwaDateS.Replace("-", "/");
             sF340PPDSchedule.cwaDateE = sF340PPDSchedule.cwaDateE.Replace("-", "/");
             var data = await _dksDao.GetF340PPDView(sF340PPDSchedule);
+            if(sF340PPDSchedule.ubType == "U") data = data.Where(x => x.HpPartNo != "2016").ToList();
+            if(sF340PPDSchedule.ubType == "B") data = data.Where(x => x.HpPartNo == "2016").ToList();
             PagedList<F340_PpdDto> result = PagedList<F340_PpdDto>.Create(data, sF340PPDSchedule.PageNumber, sF340PPDSchedule.PageSize, sF340PPDSchedule.IsPaging);
             Response.AddPagination(result.CurrentPage, result.PageSize,
             result.TotalCount, result.TotalPages);
@@ -272,6 +274,7 @@ namespace DKS_API.Controllers
             var devSeason = HttpContext.Request.Form["devSeason"].ToString().Trim();
             var fileName = HttpContext.Request.Form["photo"].ToString().Trim();
             var loginUser = HttpContext.Request.Form["loginUser"].ToString().Trim();
+            var factoryId = HttpContext.Request.Form["factoryId"].ToString().Trim();
             var partNo = partName.Split(" ")[0];
             var treatMentNo = treatMent.Split(" ")[0];
 
@@ -295,7 +298,8 @@ namespace DKS_API.Controllers
             DevTreatment model = _devTreatmentDAO.FindSingle(
                              x => x.SAMPLENO.Trim() == sampleNo.Trim() &&
                              x.PARTNO.Trim() == partNo &&
-                             x.TREATMENTCODE.Trim() == treatMentNo);
+                             x.TREATMENTCODE.Trim() == treatMentNo &&
+                             x.FACTORYID == factoryId);
 
             if (HttpContext.Request.Form.Files.Count > 0)
             {
@@ -308,7 +312,7 @@ namespace DKS_API.Controllers
                     g.DrawImage(image, 0, 0, 1024, 768);
                 }
                 ImageConverter converter = new ImageConverter();
-                byte[]bt = (byte[])converter.ConvertTo(newImage, typeof(byte[]));
+                byte[] bt = (byte[])converter.ConvertTo(newImage, typeof(byte[]));
                 var stream = new MemoryStream(bt);
                 IFormFile resizeFile = new FormFile(stream, 0, bt.Length, file.Name, file.FileName);
                 if (await _fileService.SaveFiletoServer(resizeFile, "F340PpdPic", nastFileName))
@@ -361,6 +365,7 @@ namespace DKS_API.Controllers
             var devSeason = HttpContext.Request.Form["devSeason"].ToString().Trim();
             var fileName = HttpContext.Request.Form["pdf"].ToString().Trim();
             var loginUser = HttpContext.Request.Form["loginUser"].ToString().Trim();
+            var factoryId = HttpContext.Request.Form["factoryId"].ToString().Trim();
             var partNo = partName.Split(" ")[0];
             var treatMentNo = treatMent.Split(" ")[0];
 
@@ -383,7 +388,8 @@ namespace DKS_API.Controllers
             DevTreatment model = _devTreatmentDAO.FindSingle(
                              x => x.SAMPLENO.Trim() == sampleNo.Trim() &&
                              x.PARTNO.Trim() == partNo &&
-                             x.TREATMENTCODE.Trim() == treatMentNo);
+                             x.TREATMENTCODE.Trim() == treatMentNo &&
+                             x.FACTORYID == factoryId);
 
             if (HttpContext.Request.Form.Files.Count > 0)
             {
@@ -426,7 +432,7 @@ namespace DKS_API.Controllers
 
             return Ok(model);
         }
-
+        /* Pending
         [HttpPost("editF340Ppds")]
         public async Task<IActionResult> EditF340Ppds(List<F340_PpdDto> dtos)
         {
@@ -443,7 +449,8 @@ namespace DKS_API.Controllers
                 DevTreatment model = _devTreatmentDAO.FindSingle(
                                                  x => x.SAMPLENO.Trim() == dto.SampleNo.Trim() &&
                                                  x.PARTNO.Trim() == partNo &&
-                                                 x.TREATMENTCODE.Trim() == treatMentNo);
+                                                 x.TREATMENTCODE.Trim() == treatMentNo &&
+                                                 x.FACTORYID == factoryId);
 
                 if (model != null)
                 {
@@ -472,6 +479,7 @@ namespace DKS_API.Controllers
             return Ok(editCount);
 
         }
+        */
         [HttpPost("editF340Ppd/{type}")]
         public async Task<IActionResult> EditF340Ppd(F340_PpdDto dto, string type)
         {
@@ -486,7 +494,8 @@ namespace DKS_API.Controllers
             DevTreatment model = _devTreatmentDAO.FindSingle(
                                              x => x.SAMPLENO.Trim() == dto.SampleNo.Trim() &&
                                              x.PARTNO.Trim() == partNo &&
-                                             x.TREATMENTCODE.Trim() == treatMentNo);
+                                             x.TREATMENTCODE.Trim() == treatMentNo &&
+                                             x.FACTORYID == dto.Factory);
 
             if (model != null)
             {
@@ -660,5 +669,29 @@ namespace DKS_API.Controllers
 
             return File(result, "application/pdf");
         }
+        [HttpPost("saveUBDate")]
+        public async Task<IActionResult> SaveUBDate(F340_PpdDto dto)
+        {
+
+            _logger.LogInformation(String.Format(@"******DKSController SaveUBDate fired!! ******"));
+            var partNo = dto.PartName.Split(" ")[0];
+            var treatMentNo = dto.TreatMent.Split(" ")[0];
+            DevTreatment model = _devTreatmentDAO.FindSingle(
+                                                 x => x.SAMPLENO.Trim() == dto.SampleNo.Trim() &&
+                                                 x.PARTNO.Trim() == partNo &&
+                                                 x.TREATMENTCODE.Trim() == treatMentNo &&
+                                                 x.FACTORYID == dto.Factory);
+            if (model != null){
+
+                model.U_REALCARD = dto.CardDate.ToDateTime();       //面部實務卡
+                model.B_COLORCARD = dto.ConfirmDate.ToDateTime();   //底部色卡
+                model.WORKFLOW = dto.ProcessDate.ToDateTime();      //跨單位作業流程
+                _devTreatmentDAO.Update(model);
+                await _devTreatmentDAO.SaveAll();
+            }
+            return Ok();
+
+        }
+
     }
 }

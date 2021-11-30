@@ -436,6 +436,7 @@ reasonList: { id: number, name: string, code: string }[] = [
     }
   }
   updateTheFgtResult(){
+    this.addAModel.upusr = this.sDevDtrFgtResult.loginUser;
     this.dtrService.updateDevDtrFgtResult(this.addAModel).subscribe(
       (res: boolean) => {
         this.utility.spinner.hide();
@@ -591,6 +592,7 @@ reasonList: { id: number, name: string, code: string }[] = [
       return;
     }
     this.utility.spinner.show();
+    this.upgradeModel.upusr = this.sDevDtrFgtResult.loginUser;
     this.dtrService.addDevDtrFgtResult(this.upgradeModel).subscribe(
       (res: boolean) => {
         this.utility.spinner.hide();

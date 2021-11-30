@@ -10,6 +10,7 @@ export class SF340PpdSchedule extends Pagination {
   article: string;
   modelNo: string;
   modelName: string;
+  ubType:string;
   /**
    *default set of searching parameters
    */
@@ -24,6 +25,7 @@ export class SF340PpdSchedule extends Pagination {
     this.article = "";
     this.modelNo = "";
     this.modelName = "";
+    this.ubType ="";
   }
 
   public setPagination(pagination: Pagination) {

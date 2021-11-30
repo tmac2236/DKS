@@ -202,6 +202,8 @@ namespace DKS_API.Controllers
             {
                 model.RESULT = updateDevDtrFgtResultDto.Result;
                 model.REMARK = updateDevDtrFgtResultDto.Remark;
+                model.UPUSR = updateDevDtrFgtResultDto.Upusr;
+                model.UPDAY = DateTime.Now;
                 _devDtrFgtResultDAO.Update(model);
                 await _devDtrFgtResultDAO.SaveAll();
 

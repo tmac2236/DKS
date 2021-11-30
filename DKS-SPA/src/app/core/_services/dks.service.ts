@@ -122,6 +122,7 @@ export class DksService {
     params = params.append("article", sF340PpdSchedule.article.toString());
     params = params.append("modelNo", sF340PpdSchedule.modelNo.toString());
     params = params.append("modelName", sF340PpdSchedule.modelName.toString());
+    params = params.append("ubType", sF340PpdSchedule.ubType.toString());
 
     return this.utility.http
       .get<F340SchedulePpd[]>(this.utility.baseUrl + "dks/getF340_ProcessPpd", {
@@ -155,16 +156,18 @@ export class DksService {
       f340PpdPic
     );
   }
+  /* Pending
   editF340Ppds(f340Ppds: F340SchedulePpd[]) {
-    console.log("dks.service editPicF340Ppds:", f340Ppds);
+    console.log("dks.service editF340Ppds:", f340Ppds);
     return this.utility.http.post(
       this.utility.baseUrl + "dks/editF340Ppds",
       f340Ppds
     );
   }
+  */
   //post two parameter to http post
   editF340Ppd(f340Ppd: F340SchedulePpd,type: string) {
-    console.log("dks.service editPicF340Ppd:", f340Ppd);
+    console.log("dks.service editF340Ppd:", f340Ppd);
     return this.utility.http.post(
       this.utility.baseUrl + "dks/editF340Ppd/"+type,
       f340Ppd
@@ -177,5 +180,12 @@ export class DksService {
       sF340PpdSchedule
     );
   }
-
+  
+  saveUBDate(f340Ppd: F340SchedulePpd) {
+    console.log("dks.service saveUBDate:", f340Ppd);
+    return this.utility.http.post(
+      this.utility.baseUrl + "dks/saveUBDate",
+      f340Ppd
+    );
+  }
 }

@@ -58,7 +58,7 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<Articled>().HasKey(x => new { x.PKARTBID });
             modelBuilder.Entity<DevBuyPlan>().HasKey(x => new { x.MANUF, x.SEASON, x.MODELNO, x.SCOLOR, x.ARTICLE, x.VERN });
             modelBuilder.Entity<SamPartB>().HasKey(x => new { x.PARTNO, x.SAMPLENO });
-            modelBuilder.Entity<DevTreatment>().HasKey(x => new { x.PARTNO, x.SAMPLENO, x.TREATMENTCODE, x.VERNO });
+            modelBuilder.Entity<DevTreatment>().HasKey(x => new { x.PARTNO, x.SAMPLENO, x.TREATMENTCODE, x.VERNO, x.FACTORYID });
             modelBuilder.Entity<DevTreatmentFile>().HasKey(x => new { x.ARTICLE, x.PARTNO, x.TREATMENTCODE, x.UPTIME });
             modelBuilder.Entity<DevSysSet>().HasKey(x => new { x.SYSKEY });
             modelBuilder.Entity<ArticledLdtm>().HasKey(x => new { x.PKARTBID });

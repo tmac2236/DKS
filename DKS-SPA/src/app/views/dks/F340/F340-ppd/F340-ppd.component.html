@@ -53,25 +53,28 @@
             <div class="row">
               <div class="form-group col-xs-2 mr-1">
                 <label>Factory</label>
-                    <!--事業部帳號的選項-->
-                <select *ngIf="sF340PpdSchedule.factoryId ==='2'; else elseFactory"
+                <!--事業部帳號的選項-->
+                <select
+                  *ngIf="sF340PpdSchedule.factoryId === '2'; else elseFactory"
                   class="col-form-label"
                   name="factory"
                   [(ngModel)]="sF340PpdSchedule.factory"
-                  (change)="cleanBP()">
+                  (change)="cleanBP()"
+                >
                   <option value="C" selected>SHC</option>
                   <option value="U" selected>TSH</option>
                   <option value="E" selected>CB</option>
                   <option value="D" selected>SPC</option>
                 </select>
-                    <!--各廠區帳號的選項-->
+                <!--各廠區帳號的選項-->
                 <ng-template #elseFactory>
                   <select
                     class="col-form-label"
                     name="factory"
                     [(ngModel)]="sF340PpdSchedule.factory"
                     (change)="cleanBP()"
-                    disabled="disabled">
+                    disabled="disabled"
+                  >
                     <option value="C" selected>SHC</option>
                     <option value="U" selected>TSH</option>
                     <option value="E" selected>CB</option>
@@ -148,6 +151,18 @@
                   name="modelName"
                   [(ngModel)]="sF340PpdSchedule.modelName"
                 />
+                <!-- 區分面部底部功能
+                <label>Type</label>
+                <select
+                  class="col-form-label"
+                  name="UbType"
+                  [(ngModel)]="sF340PpdSchedule.ubType"
+                >
+                  <option value="" selected>All</option>
+                  <option value="U" selected>Upper</option>
+                  <option value="B" selected>Bottom</option>
+                </select>
+                -->                
                 <button
                   class="btn btn-primary mr-1"
                   type="button"
@@ -166,7 +181,9 @@
                 </button>
                 <button
                   [hidden]="
-                    !this.sF340PpdSchedule.role.includes(uiControls.sendMemoMail)
+                    !this.sF340PpdSchedule.role.includes(
+                      uiControls.sendMemoMail
+                    )
                   "
                   class="btn btn-primary mr-1"
                   type="button"
@@ -300,27 +317,6 @@
                           {{ "F340-PPD.titleList.dropDate" | translate }}
                         </th>
                         <th
-                          style="background-color: #76daff"
-                          tooltip="開發Team"
-                          placement="bottom"
-                        >
-                          {{ "F340-PPD.titleList.confirmDate" | translate }}
-                        </th>
-                        <th
-                          style="background-color: #76daff"
-                          tooltip="開發Team"
-                          placement="bottom"
-                        >
-                          {{ "F340-PPD.titleList.cardDate" | translate }}
-                        </th>
-                        <th
-                          style="background-color: #76daff"
-                          tooltip="開發Team"
-                          placement="bottom"
-                        >
-                          {{ "F340-PPD.titleList.processDate" | translate }}
-                        </th>
-                        <th
                           style="background-color: #23d954"
                           tooltip="開發技術F340"
                           placement="bottom"
@@ -394,6 +390,39 @@
                         >
                           PPD Remark
                         </th>
+                        <th
+                          [hidden]="
+                            !this.sF340PpdSchedule.role.includes(
+                              uiControls.upBottomMaintain
+                            )
+                          "
+                          style="background-color: #23d954"
+                          tooltip="開發Team"
+                          placement="right"
+                        >
+                          開發{{ "F340-PPD.mantainPic" | translate }}
+                        </th>
+                        <th
+                          style="background-color: #23d954"
+                          tooltip="開發Team"
+                          placement="bottom"
+                        >
+                          {{ "F340-PPD.titleList.confirmDate" | translate }}
+                        </th>
+                        <th
+                          style="background-color: #23d954"
+                          tooltip="開發Team"
+                          placement="bottom"
+                        >
+                          {{ "F340-PPD.titleList.cardDate" | translate }}
+                        </th>
+                        <th
+                          style="background-color: #23d954"
+                          tooltip="開發Team"
+                          placement="bottom"
+                        >
+                          {{ "F340-PPD.titleList.processDate" | translate }}
+                        </th>
                         <!---->
                         <th
                           style="background-color: #23d954"
@@ -442,26 +471,26 @@
                           {{ "F340-PPD.titleList.photoComment" | translate }}
                         </th>
                         <th
-                          style="background-color: #FFD966"
+                          style="background-color: #ffd966"
                           tooltip="QC Team"
                           placement="bottom"
                         >
                           {{ "F340-PPD.titleList.fgtHyperLink" | translate }}
                         </th>
                         <th
-                          style="background-color: #FFD966"
+                          style="background-color: #ffd966"
                           tooltip="QC Team"
                           placement="bottom"
                         >
                           {{ "F340-PPD.titleList.fgtFileName" | translate }}
                         </th>
                         <th
-                          style="background-color: #FFD966"
+                          style="background-color: #ffd966"
                           tooltip="QC Team"
                           placement="bottom"
                         >
                           {{ "F340-PPD.titleList.fgtReMark" | translate }}
-                        </th>                                                
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
@@ -496,11 +525,7 @@
                           <td>{{ item.devStatus }}</td>
 
                           <td>{{ item.dropDate }}</td>
-                          <td>{{ item.confirmDate }}</td>
-                          <td>{{ item.cardDate }}</td>
-                          <td>{{ item.processDate }}</td>
                           <td>{{ item.releaseType }}</td>
-
                           <td>{{ item.sampleNo }}</td>
                           <td>{{ item.proStatusId }}</td>
                           <td>{{ item.hpPartNo }}</td>
@@ -514,6 +539,8 @@
                                 uiControls.editMemo
                               )
                             "
+                            tooltip="生管維護"
+                            placement="right"
                           >
                             <img
                               class="mt-2"
@@ -524,11 +551,31 @@
                             />
                           </td>
                           <td
-                          [hidden]="
-                          !this.sF340PpdSchedule.role.includes(
-                            uiControls.editMemo
-                          )
-                        ">{{ item.ppdRemark }}</td>
+                            [hidden]="
+                              !this.sF340PpdSchedule.role.includes(
+                                uiControls.editMemo
+                              )
+                            "
+                          >
+                            {{ item.ppdRemark }}
+                          </td>
+                          <td>
+                            <img
+                            [hidden]="
+                              (!(this.sF340PpdSchedule.role.includes(
+                                uiControls.upBottomMaintain)&&item.sampleNo.length > 0 )
+                              )
+                            "                            
+                              class="mt-2"
+                              src="../assets/systemImg/edit.png"
+                              width="35"
+                              height="35"
+                              (click)="editUBDate(item)"
+                            />
+                          </td>
+                          <td>{{ item.confirmDate }}</td>
+                          <td>{{ item.cardDate }}</td>
+                          <td>{{ item.processDate }}</td>
                           <!-- -->
                           <td>
                             <img
@@ -642,12 +689,17 @@
                           <td>{{ item.fgtHyperLink }}</td>
                           <td>
                             <img
-                            src="../assets/systemImg/download-pdf.png"
-                            class="mt-2"
-                            width="35"
-                            height="35"
-                            [style.visibility]="item.fgtFileName ?.length < 1 ? 'hidden' : 'visible'"
-                            (click)="viewFGT(item)"/>
+                              src="../assets/systemImg/download-pdf.png"
+                              class="mt-2"
+                              width="35"
+                              height="35"
+                              [style.visibility]="
+                                item.fgtFileName?.length < 1
+                                  ? 'hidden'
+                                  : 'visible'
+                              "
+                              (click)="viewFGT(item)"
+                            />
                           </td>
                           <td>{{ item.fgtReMark }}</td>
                         </tr>
@@ -827,6 +879,103 @@
   </div>
 </div>
 <!--ppdRemarkCommentModal-->
+<!--uBDateModal-->
+<div
+  bsModal
+  #uBDateModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-info" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">請輸入日期</h4>
+        <button
+          type="button"
+          class="close"
+          (click)="closeModal('UBDate')"
+          aria-label="Close"
+        >
+          <!--右上角的 X 符號-->
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- First column-->
+        <div class="row" *ngIf="this.uBDateModel.hpPartNo === '2016'">     
+          <div class="col-8">
+            <div class="form-group">
+              <label class="col-form-label">{{ "F340-PPD.titleList.confirmDate" | translate }}: </label><!--底部色卡-->
+              <input
+              class="col-form-label"
+              type="date"
+              name="uBDateModelConfirmDate"
+              [(ngModel)]="uBDateModel.confirmDate"
+              />
+            </div>
+          </div>
+          <div class="col-4">
+
+          </div>
+        </div>
+        <!-- 2 column-->
+        <div class="row" *ngIf="this.uBDateModel.hpPartNo !== '2016'">     
+          <div class="col-8">
+            <div class="form-group">
+              <label class="col-form-label">{{ "F340-PPD.titleList.cardDate" | translate }}: </label><!--面部實物卡-->
+              <input
+              class="col-form-label"
+              type="date"
+              name="uBDateModelCardDate"
+              [(ngModel)]="uBDateModel.cardDate"
+              />
+            </div>
+          </div>
+          <div class="col-4">
+
+          </div>
+        </div> 
+        <!-- 3 column-->
+        <div class="row">     
+          <div class="col-8">
+            <div class="form-group">
+              <label class="col-form-label">{{ "F340-PPD.titleList.processDate" | translate }}: </label><!--跨單位作業流程-->
+              <input
+              class="col-form-label"
+              type="date"
+              name="uBDateModelProcessDate"
+              [(ngModel)]="uBDateModel.processDate"
+              />
+            </div>
+          </div>
+          <div class="col-4">
+
+          </div>
+        </div>                          
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-primary btn-lg"
+          (click)="saveUBDate()"
+        >
+          {{ "Common.btnList.save" | translate }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary btn-lg"
+          (click)="closeModal('UBDate')"
+        >
+          {{ "Common.btnList.close" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--uBDateModal-->
 <ngx-spinner
   bdColor="rgba(0, 0, 0, 0.8)"
   size="large"
