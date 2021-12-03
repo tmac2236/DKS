@@ -365,7 +365,10 @@ export class F340PpdComponent implements OnInit {
   closeModal(type:string){
     if(type == "PhotoComment") this.photoCommentModal.hide();
     if(type == "PpdRemark")this.ppdRemarkModal.hide();
-    if(type == "UBDate") this.uBDateModal.hide();
+    if(type == "UBDate") {
+      this.search();
+      this.uBDateModal.hide();
+    }
   }
   //viewPic 共用
   editPhotoComment(model: F340SchedulePpd){

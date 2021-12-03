@@ -134,8 +134,8 @@ namespace DKS_API.Controllers
             sF340PPDSchedule.cwaDateS = sF340PPDSchedule.cwaDateS.Replace("-", "/");
             sF340PPDSchedule.cwaDateE = sF340PPDSchedule.cwaDateE.Replace("-", "/");
             var data = await _dksDao.GetF340PPDView(sF340PPDSchedule);
-            if(sF340PPDSchedule.ubType == "U") data = data.Where(x => x.HpPartNo != "2016").ToList();
-            if(sF340PPDSchedule.ubType == "B") data = data.Where(x => x.HpPartNo == "2016").ToList();
+            if (sF340PPDSchedule.ubType == "U") data = data.Where(x => x.HpPartNo != "2016").ToList();
+            if (sF340PPDSchedule.ubType == "B") data = data.Where(x => x.HpPartNo == "2016").ToList();
             PagedList<F340_PpdDto> result = PagedList<F340_PpdDto>.Create(data, sF340PPDSchedule.PageNumber, sF340PPDSchedule.PageSize, sF340PPDSchedule.IsPaging);
             Response.AddPagination(result.CurrentPage, result.PageSize,
             result.TotalCount, result.TotalPages);
@@ -681,11 +681,12 @@ namespace DKS_API.Controllers
                                                  x.PARTNO.Trim() == partNo &&
                                                  x.TREATMENTCODE.Trim() == treatMentNo &&
                                                  x.FACTORYID == dto.Factory);
-            if (model != null){
+            if (model != null)
+            {
 
-                model.U_REALCARD = dto.CardDate.ToDateTime();       //面部實務卡
-                model.B_COLORCARD = dto.ConfirmDate.ToDateTime();   //底部色卡
-                model.WORKFLOW = dto.ProcessDate.ToDateTime();      //跨單位作業流程
+                if (!String.IsNullOrEmpty(dto.CardDate)) model.U_REALCARD = dto.CardDate.ToDateTime();       //面部實務卡
+                if (!String.IsNullOrEmpty(dto.ConfirmDate)) model.B_COLORCARD = dto.ConfirmDate.ToDateTime();   //底部色卡
+                if (!String.IsNullOrEmpty(dto.ProcessDate)) model.WORKFLOW = dto.ProcessDate.ToDateTime();      //跨單位作業流程
                 _devTreatmentDAO.Update(model);
                 await _devTreatmentDAO.SaveAll();
             }

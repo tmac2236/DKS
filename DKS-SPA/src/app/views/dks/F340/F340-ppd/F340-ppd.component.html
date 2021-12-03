@@ -557,17 +557,18 @@
                                 uiControls.editMemo
                               )
                             "
-                            tooltip="面部/底部維護"
-                            placement="right"
                           >
                             {{ item.ppdRemark }}
                           </td>
                           <td                             
                           [hidden]="
                             !(this.sF340PpdSchedule.role.includes(
-                              uiControls.upBottomMaintain) )">
+                              uiControls.upBottomMaintain) )"
+                            >
                             <img
-                              [hidden]="item.sampleNo.length > 0"
+                              tooltip="面部/底部維護"
+                              placement="right" 
+                              [hidden]="item.sampleNo.length < 1"
                               class="mt-2"
                               src="../assets/systemImg/edit.png"
                               width="35"
@@ -575,8 +576,8 @@
                               (click)="editUBDate(item)"
                             />
                           </td>
-                          <td>{{ item.confirmDate }}</td>
                           <td>{{ item.cardDate }}</td>
+                          <td>{{ item.confirmDate }}</td>
                           <td>{{ item.processDate }}</td>
                           <!-- -->
                           <td>
