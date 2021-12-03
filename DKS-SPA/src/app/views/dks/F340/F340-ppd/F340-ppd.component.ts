@@ -43,7 +43,7 @@ export class F340PpdComponent implements OnInit {
     uploadPdfF340Ppd: utilityConfig.RolePpdPic,
     editMemo: utilityConfig.RoleSysAdm,
     sendMemoMail: utilityConfig.RoleSysAdm,
-    upBottomMaintain: utilityConfig.DevPreAssist,
+    upBottomMaintain: utilityConfig.RoleSysAdm,
   };
   editModel: F340SchedulePpd = new F340SchedulePpd(); //onlt use in photoCommentModal
   uBDateModel: F340SchedulePpd = new F340SchedulePpd(); // only use in uBDateModal
