@@ -86,6 +86,7 @@ namespace DKS_API.Controllers
         {
             var result = _commonService.GetPKARTBID();
             return Ok(result);
+            
         }
 
     }
