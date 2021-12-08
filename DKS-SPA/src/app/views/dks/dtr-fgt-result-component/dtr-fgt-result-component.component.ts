@@ -21,6 +21,8 @@ export class DtrFgtResultComponentComponent implements OnInit {
   @ViewChild("editFgtResultModal") public editFgtResultModal: ModalDirective;
   @ViewChild("upgradeModal") public upgradeModal: ModalDirective;
   @ViewChild("changeReasonModal") public changeReasonModal: ModalDirective;
+  @ViewChild("qcSuperChangeReasonModal") public qcSuperChangeReasonModal: ModalDirective;
+  
   //for hint
   hintMsg: any = {
     uploadPdf: "Please upload pdf or excel file and size cannot over 2 Mb.",
@@ -54,7 +56,7 @@ reasonList: { id: number, name: string, code: string }[] = [
   upgradeModel: DevDtrFgtResult = new DevDtrFgtResult(); //use in upgradeModelModal
   isUploadable: boolean = false;  //只用於外層的上傳按鈕，為了卡控用而已
   changeReason:string = "D001: Dev. Change"; //QC superviosr edit or delete status = pass 
-
+  changeReasonType:string = "";
   constructor(
     public utility: Utility,
     private dtrService: DtrService,
@@ -447,19 +449,13 @@ reasonList: { id: number, name: string, code: string }[] = [
             () => {}
           );
         } else {
-          // refresh the page
-          //原本是PASS改成FAIL才要跳出視窗(1.)
-          let model = this.result.find(
-            (x) => x["labNo"] == this.addAModel.labNo.trim()
-          ); 
-
-          this.search();
           this.closeModal("editFgtResult"); //關閉modal
-          //原本是PASS改成FAIL才要跳出視窗(2.)
-          if(model.result =="PASS" && this.addAModel.result == "FAIL" ){
+          if(this.isFromPass()){
             this.openChangeReasonModal('Edit',this.addAModel);
+            this.reasonSendMail();
           }     
-
+          // refresh the page
+          this.search();
         }
       },
       (error) => {
@@ -501,7 +497,7 @@ reasonList: { id: number, name: string, code: string }[] = [
         return;
       }
     }
-
+    
     this.utility.alertify.confirm(
       "Sweet Alert",
       "Are you sure to Delete this file of article:" + model.article + ", stage:" + model.stage + ".",
@@ -669,15 +665,17 @@ reasonList: { id: number, name: string, code: string }[] = [
     this.editReasonModel.article = editModel.article;
     this.editReasonModel.kind = editModel.kind;
     this.editReasonModel.labNo = editModel.labNo; // 第一碼是廠別代號
-    this.editReasonModel.remark = type; // remark借放type 用
-    this.openModal('changeReason');
+    this.editReasonModel.remark = editModel.remark;
+    this.changeReasonType = type; // Edit or Delete
+    if(type == "Delete")this.openModal('changeReason');
 
   }
+
   reasonSendMail(){
     
     this.utility.spinner.show();
     this.dtrService.qcSentMailDtrFgtResult( this.editReasonModel.stage,this.editReasonModel.modelNo,this.editReasonModel.article,
-      this.editReasonModel.labNo,this.editReasonModel.remark,this.changeReason ).subscribe(
+      this.editReasonModel.labNo,this.editReasonModel.remark,this.changeReasonType,this.changeReason ).subscribe(
       (res: boolean) => {
         this.utility.spinner.hide();
         this.closeModal("changeReason"); //關閉modal
@@ -693,6 +691,17 @@ reasonList: { id: number, name: string, code: string }[] = [
         );
       }
     );
+  }
+  isFromPass(){
+    //原本資料庫是PASS改成FAIL才要跳出視窗(1.)
+    let model = this.result.find(
+      (x) => x["labNo"] == this.addAModel.labNo.trim()
+    );
+    //原本是PASS改成FAIL(QC主管 Only:已在畫面卡掉了)
+    if(model?.result =="PASS" && this.addAModel?.result == "FAIL" ){;
+      return true;
+    }             
+    return false;
   }
   
 }

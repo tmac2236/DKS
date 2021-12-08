@@ -463,11 +463,10 @@
         <div class="row">     
           <div class="col-2">
             <div class="form-group">
-              <label for="modalTestResult" class="col-form-label"
+              <label class="col-form-label"
                 >Test Result</label>
               <div class="w-100"></div>
               <select
-              id="modalTestResult"
               class="form-control"
               [(ngModel)]="addAModel.result"
               >
@@ -475,6 +474,24 @@
                 <option value = "FAIL" selected>FAIL</option>
               </select>
             </div>
+          </div>
+          <div class ="col-3">
+            <div class="form-group" *ngIf="isFromPass()">
+              <label class="col-form-label mr-1">Reason type : </label>
+              <div class="w-100"></div>
+              <select
+              class="form-control mr-1"
+              name="factoryId"
+              [(ngModel)]="changeReason">
+                <option
+                  *ngFor="let r of reasonList"
+                  value="{{ r.name }}">
+                  {{ r.code }}
+                </option>
+              </select> 
+            </div>            
+          </div>
+          <div class ="col-7">
           </div>
         </div>
         <!-- Second column-->
@@ -529,7 +546,7 @@
         </button>
       </div>
       <div class="modal-body"> 
-        <!-- First column-->
+        <!-- 1 column-->
         <div class="row">
           <div class="col-8">
             <div class="form-inline">
@@ -541,7 +558,7 @@
   
           </div>
         </div>          
-        <!-- Second column-->
+        <!-- 2 column-->
         <div class="row">     
           <div class="col-8">
             <div class="form-group">
@@ -564,7 +581,7 @@
 
           </div>
         </div>
-        <!-- Third column-->
+        <!-- 3 column-->
         <div class="row">
           <div class="col-12">
             <div class="form-group">

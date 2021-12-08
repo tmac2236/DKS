@@ -78,7 +78,7 @@
             "5":"Bad Material"
         }        
     },"F340-PPD":{
-        "title":"F340-PPD",
+        "title":"F340-PPD(Treatment Detail)",
         "mantainPic":"Mantain",
         "picture":"Picture",
         "titleList": {
@@ -92,7 +92,7 @@
             "cwaDeadline": "CwaDeadline",
             "modelNo": "ModelNo",
             "modelName": "ModelName",
-            "confirmDate": "ConfirmDate",
+            "confirmDate": "Plan date (Bottom Swatch)",
 
             "devStatus": "DevStatus",
             "dropDate": "DropDate",
@@ -103,14 +103,19 @@
             "supsName": "SupsName",
             "treatMent": "TreatMent",
             "partName": "PartName",
-            "processDate": "ProcessDate",
-            "cardDate": "CardDate",
+            "processDate": "Plan date (Operation Flow)",
+            "cardDate": "Plan date (UC Swatch)",
             
             "proStatusId": "ProStatusId",
             "photoComment":"PhotoComment",
             "fgtHyperLink":"Fgt Result",
             "fgtFileName":"Fgt FileName",
-            "fgtReMark":"Fgt Remark"
+            "fgtReMark":"Fgt Remark",
+
+            "pdf":"Operation Flow (PDF)",
+            "pdfUpdate":"PDF Update",
+            "shoePhoto":"Shoe Photo",
+            "photoUpdate":"Photo Update"
 
         }
     }

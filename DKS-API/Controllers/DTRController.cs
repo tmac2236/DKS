@@ -586,7 +586,7 @@ namespace DKS_API.Controllers
         }    
 
         [HttpGet("qcSentMailDtrFgtResult")]
-        public async Task<IActionResult> QcSentMailDtrFgtResult(string stage, string modelNo, string article, string labNo, string type, string reason)
+        public async Task<IActionResult> QcSentMailDtrFgtResult(string stage, string modelNo, string article, string labNo, string remark, string type, string reason)
         {
 
             _logger.LogInformation(String.Format(@"******DTRController SentMailF340PpdByArticle fired!! ******"));
@@ -603,13 +603,11 @@ namespace DKS_API.Controllers
                 toMails = teamId.MemoZh4.Split(";").Where( x => x.Length > 5 ).ToList();
             }
 
-            //var dksSignature = _config.GetSection("DksSignatureLine").Value;
-            var dksSignature = "";
             var content = string.Format(@"Hi Team: 
 {0} Test report has been evaluated from pass to fail or deleted, please check with QC team.
 (Model name: {1}, Season: {2}, Model No: {3}, Article: {4})
-Type: {5}。  Reason: {6}。{7}
-", stage, modelDah.MODELNAME, season, modelNo, article, type, reason, dksSignature);
+Type: {5}。  Reason: {6}。 Remark: {7}
+", stage, modelDah.MODELNAME, season, modelNo, article, type, reason, remark);
 
             await _sendMailService.SendListMailAsync(toMails, null, string.Format(@"Test report change result (Season: {0}, Stage: {1}, Model Name: {2}, Model No:{3}, Art:{4})", season, stage, modelDah.MODELNAME, modelNo, article), content, null);
             return Ok();

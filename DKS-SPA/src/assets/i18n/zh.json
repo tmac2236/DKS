@@ -78,7 +78,7 @@
             "5":"材料不良"
         }
     },"F340-PPD":{
-        "title":"F340-PPD",
+        "title":"F340-PPD(量產加工準備明細)",
         "mantainPic":"維護",
         "picture":"圖片",
         "titleList": {
@@ -92,7 +92,7 @@
             "cwaDeadline": "CWA DATE",
             "modelNo": "Model No",
             "modelName": "Model Name",
-            "confirmDate": "底部色卡",
+            "confirmDate": "底部色卡日期",
 
             "devStatus": "DevStatus",
             "dropDate": "DropDate",
@@ -103,14 +103,19 @@
             "supsName": "Sup Name",
             "treatMent": "TreatMent",
             "partName": "Part Name",
-            "processDate": "跨單位作業流程",
-            "cardDate": "面部實物卡",
+            "processDate": "跨單位作業流程日期",
+            "cardDate": "面部實物卡日期",
 
             "proStatusId":"ProStatusId",
             "photoComment":"PhotoComment",
             "fgtHyperLink":"Fgt Result",
             "fgtFileName":"Fgt FileName",
-            "fgtReMark":"Fgt Remark"
+            "fgtReMark":"Fgt Remark",
+
+            "pdf":"PDF",
+            "pdfUpdate":"PDF更新",
+            "shoePhoto":"部品圖片",
+            "photoUpdate":"圖片更新"
         }
     }
 }

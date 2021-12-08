@@ -332,10 +332,10 @@ export class DtrService {
     ).toPromise();
   }  
 
-  qcSentMailDtrFgtResult( stage:string, modelNo:string , article:string, labNo:string, type:string, reason:string ) {
+  qcSentMailDtrFgtResult( stage:string, modelNo:string , article:string, labNo:string, remark:string, type:string, reason:string ) {
     console.log("dtr.service qcSentMailDtrFgtResult:");
     return this.utility.http.get<boolean>(
       this.utility.baseUrl + "dtr/qcSentMailDtrFgtResult?stage="+ stage +"&modelNo=" + modelNo + "&article=" + article + "&labNo=" + labNo
-      + "&type=" + type + "&reason=" + reason);
+      + "&remark="+ remark + "&type=" + type + "&reason=" + reason);
   }  
 }
