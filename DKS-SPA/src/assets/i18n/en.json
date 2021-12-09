@@ -92,7 +92,7 @@
             "cwaDeadline": "CwaDeadline",
             "modelNo": "ModelNo",
             "modelName": "ModelName",
-            "confirmDate": "Plan date (Bottom Swatch)",
+            "confirmDate": "Plan date (UC Swatch)",
 
             "devStatus": "DevStatus",
             "dropDate": "DropDate",
@@ -104,7 +104,7 @@
             "treatMent": "TreatMent",
             "partName": "PartName",
             "processDate": "Plan date (Operation Flow)",
-            "cardDate": "Plan date (UC Swatch)",
+            "cardDate": "Plan date (Bottom Swatch)",
             
             "proStatusId": "ProStatusId",
             "photoComment":"PhotoComment",

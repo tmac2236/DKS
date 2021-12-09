@@ -92,7 +92,7 @@
             "cwaDeadline": "CWA DATE",
             "modelNo": "Model No",
             "modelName": "Model Name",
-            "confirmDate": "底部色卡日期",
+            "confirmDate": "面部實物卡日期",
 
             "devStatus": "DevStatus",
             "dropDate": "DropDate",
@@ -104,7 +104,7 @@
             "treatMent": "TreatMent",
             "partName": "Part Name",
             "processDate": "跨單位作業流程日期",
-            "cardDate": "面部實物卡日期",
+            "cardDate": "底部色卡日期",
 
             "proStatusId":"ProStatusId",
             "photoComment":"PhotoComment",

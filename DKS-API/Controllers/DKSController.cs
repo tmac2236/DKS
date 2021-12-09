@@ -684,8 +684,8 @@ namespace DKS_API.Controllers
             if (model != null)
             {
 
-                if (!String.IsNullOrEmpty(dto.CardDate)) model.U_REALCARD = dto.CardDate.ToDateTime();       //面部實務卡
-                if (!String.IsNullOrEmpty(dto.ConfirmDate)) model.B_COLORCARD = dto.ConfirmDate.ToDateTime();   //底部色卡
+                if (!String.IsNullOrEmpty(dto.CardDate)) model.B_COLORCARD = dto.CardDate.ToDateTime();         //底部色卡
+                if (!String.IsNullOrEmpty(dto.ConfirmDate)) model.U_REALCARD = dto.ConfirmDate.ToDateTime();    //面部實務卡
                 if (!String.IsNullOrEmpty(dto.ProcessDate)) model.WORKFLOW = dto.ProcessDate.ToDateTime();      //跨單位作業流程
                 _devTreatmentDAO.Update(model);
                 await _devTreatmentDAO.SaveAll();

@@ -408,14 +408,14 @@
                           tooltip="開發Team"
                           placement="bottom"
                         >
-                          {{ "F340-PPD.titleList.confirmDate" | translate }}
+                          {{ "F340-PPD.titleList.confirmDate" | translate }}  <!--面部實物卡-->
                         </th>
                         <th
                           style="background-color: #23d954"
                           tooltip="開發Team"
                           placement="bottom"
                         >
-                          {{ "F340-PPD.titleList.cardDate" | translate }}
+                          {{ "F340-PPD.titleList.cardDate" | translate }}   <!--底部色卡-->
                         </th>
                         <th
                           style="background-color: #23d954"
@@ -576,8 +576,8 @@
                               (click)="editUBDate(item)"
                             />
                           </td>
-                          <td>{{ item.cardDate }}</td>
                           <td>{{ item.confirmDate }}</td>
+                          <td>{{ item.cardDate }}</td>
                           <td>{{ item.processDate }}</td>
                           <!-- -->
                           <td>
@@ -908,10 +908,10 @@
       </div>
       <div class="modal-body">
         <!-- First column-->
-        <div class="row" *ngIf="this.uBDateModel.hpPartNo === '2016'">     
+        <div class="row" *ngIf="this.uBDateModel.hpPartNo !== '2016'">     
           <div class="col-8">
             <div class="form-group">
-              <label class="col-form-label">{{ "F340-PPD.titleList.confirmDate" | translate }}: </label><!--底部色卡-->
+              <label class="col-form-label">{{ "F340-PPD.titleList.confirmDate" | translate }}: </label><!--面部實物卡-->
               <input
               class="col-form-label"
               type="date"
@@ -925,10 +925,10 @@
           </div>
         </div>
         <!-- 2 column-->
-        <div class="row" *ngIf="this.uBDateModel.hpPartNo !== '2016'">     
+        <div class="row" *ngIf="this.uBDateModel.hpPartNo === '2016'">     
           <div class="col-8">
             <div class="form-group">
-              <label class="col-form-label">{{ "F340-PPD.titleList.cardDate" | translate }}: </label><!--面部實物卡-->
+              <label class="col-form-label">{{ "F340-PPD.titleList.cardDate" | translate }}: </label><!--底部色卡-->
               <input
               class="col-form-label"
               type="date"
