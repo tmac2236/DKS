@@ -1,0 +1,415 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <strong class ="col-11" style="font-size: 20px;color:#000000;">{{title}}</strong>
+              <div class="col-1 btn-group" dropdown>
+                <button id="button-basic" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
+                        aria-controls="dropdown-basic">
+                        <strong *ngIf="this.searchCondition.loginUser">{{ this.searchCondition.loginUser }}</strong> <span class="caret"></span>
+                </button>
+                <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
+                    role="menu" aria-labelledby="button-basic">
+                  <li role="menuitem"><a class="dropdown-item" href="../assets/manual/實驗室測試告報操作手冊V1.0.pdf" target="_blank"><img src="../assets/systemImg/question.png" class="topImg" width="25" height="25"/>  Help </a></li>  
+                  <li role="menuitem"><a class="dropdown-item" href="javascript:;" (click)="this.utility.logout()"><img src="../assets/systemImg/exit.png" class="topImg" width="25" height="25"/>  Log Out</a></li>
+                </ul>                
+            </div>
+          </div>          
+        </div>
+        <div class="card-body">
+          <form class="form" #addQueryReportDataForm="ngForm">
+            <!-- first column-->
+            <div class="row">
+              <div class="form-group col-12">
+                <label>Part No</label>
+                <input
+                  class="col-form-label"
+                  type="text"
+                  name="sPartno"
+                  maxlength ="4"
+                  placeholder="4 digits"
+                  [(ngModel)]="searchCondition.partno"
+                />
+                <label>Location</label>
+                <input
+                  class="col-form-label"
+                  type="text"
+                  name="sLocation"
+                  placeholder=""
+                  [(ngModel)]="searchCondition.location"
+                />
+                <label>Part Name EN</label>
+                <input
+                  class="col-form-label"
+                  type="text"
+                  name="sPartnameen"
+                  placeholder=""
+                  [(ngModel)]="searchCondition.partnameen"
+                />
+                <label>Part Name CN</label>
+                <input
+                  class="col-form-label"
+                  type="text"
+                  name="sPartnamecn"
+                  placeholder=""
+                  [(ngModel)]="searchCondition.partnamecn"
+                />
+              </div>                                         
+            </div>
+            <!-- Second column-->
+            <div class="row">
+              <div class="form-group col-6 mr-1">
+                <button
+                  class="btn btn-primary mr-1"
+                  type="button"
+                  (click)="search()"
+                >
+                  Search
+                </button>
+                <button
+                  class="btn btn-primary mr-1"
+                  type="button"
+                  (click)="openAddModal()"
+                >
+                Add
+                </button>
+                <button
+                  class="btn btn-primary mr-1"
+                  type="button"
+                  (click)="export()"
+                  [disabled]="!addQueryReportDataForm.valid"
+                >
+                Export
+                </button>                
+              </div>
+              <div class="form-group col-6"></div>
+            </div>
+          </form>
+        </div>
+        <div class="row" *ngIf="result.length > 0">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table text-center text-nowrap table-striped">
+                    <!--text-nowrap不換行-->
+                    <!--套版分頁<table datatable id="f340Sche" class="table text-center table-striped">-->
+                    <thead>
+                      <tr class="table-info">
+                        <th>Edit</th><!--Edit-->
+                        <th>Delete</th><!--Delete-->
+                        <th>Part No</th>
+                        <th>Part Name EN</th>
+                        <th>Part Name CN</th>
+
+                        <th>Part Name VN</th>
+                        <th>Location</th>
+                        <th>Rename</th>
+                        <th>Part Group</th>
+                        <th>Insert User</th>
+
+                        <th>Insert Date</th>
+                        <th>Change User</th>
+                        <th>Change Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container *ngFor="let item of result; let i = index">
+                        <tr>
+                          <td>
+                            <img
+                            [style.visibility]="(item?.result == 'FAIL' || this.searchCondition.role.includes(uiControls.editPassData)) ? 'visible' : 'hidden'" 
+                              src="../assets/systemImg/edit.png"
+                              width="35"
+                              height="35"
+                              (click)="openEditModal(item)"/>
+                          </td>
+                          <td>
+                            <img
+                            [style.visibility]="(item?.result == 'FAIL' || this.searchCondition.role.includes(uiControls.editPassData)) ? 'visible' : 'hidden'"
+                              src="../assets/systemImg/delete.png"
+                              width="35"
+                              height="35"
+                              (click)="delete(item)"/>                             
+                          </td>                         
+                          <td>{{ item.partno }}</td>
+                          <td>{{ item.partnameen }}</td>
+                          <td>{{ item.partnamecn }}</td>
+
+                          <td>{{ item.partnamevn }}</td>
+                          <td>{{ item.location }}</td>
+                          <td>{{ item.rename }}</td>
+                          <td>{{ item.partgroup }}</td>
+                          <td>{{ item.insertuser }}</td>
+                          
+                          <td>{{ item.insertdate | date: "yyyy/MM/dd HH:mm:ss" }}</td>
+                          <td>{{ item.changeuser }}</td>
+                          <td>{{ item.changedate  | date: "yyyy/MM/dd HH:mm:ss" }}</td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                  <div class ="d-flex justify-content-start">
+                    <select
+                    style="height:35px;width:45px;"
+                    name="itemsPerPage"
+                    (change)="this.search()"
+                    [(ngModel)]="searchCondition.itemsPerPage">
+                    <option value = 10 selected>10</option>
+                    <option value = 25 selected>25</option>
+                    <option value = 50 selected>50</option>
+                    <option value = 100 selected>100</option>
+                    </select> 
+                    <pagination *ngIf="this.searchCondition.isPaging" 
+                      [boundaryLinks]="true" 
+                      [totalItems]="searchCondition.totalItems"
+                      [maxSize]="30"
+                      [itemsPerPage]="searchCondition.itemsPerPage"
+                      [(ngModel)]="searchCondition.currentPage"
+                      (pageChanged) = "pageChangeds($event)"
+                      previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+                    </pagination>
+                  </div>                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--addModal-->
+<div
+  bsModal
+  #addModal="bs-modal"
+  class="modal hide fade in"
+  [config]="{backdrop: 'static'}"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-info modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Add A Record</h4>
+        <button
+          type="button"
+          class="close"
+          (click)="closeModal('addModal')"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- 1 column-->
+        <!-- Second column-->
+        <div class="row">
+          <div class="col-2">
+            <div class="form-group">
+              <label for="modalFactory" class="col-form-label">Part No</label>
+              <label style="color:red;">*</label>
+              <input type="text" class="form-control" id="modalPartno" maxlength ="4" [(ngModel)]="addAModel.partno"/>
+            </div>
+          </div>          
+          <div class="col-1">
+            <div class="form-group">
+              <label for="modalFactory" class="col-form-label">Rename</label>
+              <label style="color:red;">*</label>
+              <div class="w-100"></div>
+              <select
+              class="form-control"
+              [(ngModel)]="addAModel.rename"
+              >
+              <option
+                *ngFor="let r of reNameList"
+                value="{{ r.name }}" >
+                {{ r.code }}
+              </option>
+              </select>
+            </div>
+          </div>           
+          <div class="col-3">
+            <div class="form-group">
+              <label for="modalFactory" class="col-form-label">Location</label>
+              <label style="color:red;">*</label>
+              <input type="text" class="form-control" id="modalLocation" [(ngModel)]="addAModel.location" />
+            </div>
+          </div>          
+          <div class="col-3">
+            <div class="form-group">
+              <label for="modalFactory" class="col-form-label">Part Group</label>
+              <input type="text" class="form-control" id="modalPartgroup" [(ngModel)]="addAModel.partgroup" />
+            </div>
+          </div>
+          <div class="col-3">
+
+          </div>                     
+        </div>
+        <div class="row">
+          <div class="col-4">
+            <div class="form-group">
+              <label for="modalFactory" class="col-form-label">Part Name(EN)</label>
+              <label style="color:red;">*</label>
+              <input type="text" class="form-control" id="modalPartNameEn" [(ngModel)]="addAModel.partnameen" />
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="form-group">
+              <label for="modalFactory" class="col-form-label">Part Name(CN)</label>
+              <label style="color:red;">*</label>
+              <input type="text" class="form-control" id="modalPartnameCn" [(ngModel)]="addAModel.partnamecn" />
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="form-group">
+              <label for="modalFactory" class="col-form-label">Part Name(VN)</label>
+              <input type="text" class="form-control" id="modalPartnameVn" [(ngModel)]="addAModel.partnamevn" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col-10">
+          </div>
+          <div class="col-2">
+            <button
+              type="button"
+              [hidden]="false"
+              class="btn btn-primary btn-lg"
+              (click)="save()">
+              Save
+            </button>
+          </div>
+        </div>          
+      </div>
+    </div>
+  </div>
+</div>
+<!--addModal-->
+
+<!--editModal-->
+<div
+  bsModal
+  #editModal="bs-modal"
+  class="modal hide fade in"
+  [config]="{backdrop: 'static'}"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-info modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Edit the Record</h4>
+        <button
+          type="button"
+          class="close"
+          (click)="closeModal('editModal')"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- 1 column-->
+        <!-- Second column-->
+        <div class="row">
+          <div class="col-2">
+            <div class="form-group">
+              <label for="modalFactory" class="col-form-label">Part No</label>
+              <label style="color:red;">*</label>
+              <input type="text" class="form-control" id="modalPartno" maxlength ="4" [(ngModel)]="addAModel.partno" [readonly]="true"/>
+            </div>
+          </div>          
+          <div class="col-1">
+            <div class="form-group">
+              <label for="modalFactory" class="col-form-label">Rename</label>
+              <label style="color:red;">*</label>
+              <div class="w-100"></div>
+              <select
+              class="form-control"
+              [(ngModel)]="addAModel.rename"
+              >
+              <option
+                *ngFor="let r of reNameList"
+                value="{{ r.name }}" >
+                {{ r.code }}
+              </option>
+              </select>
+            </div>
+          </div>           
+          <div class="col-3">
+            <div class="form-group">
+              <label for="modalFactory" class="col-form-label">Location</label>
+              <label style="color:red;">*</label>
+              <input type="text" class="form-control" id="modalLocation" [(ngModel)]="addAModel.location" />
+            </div>
+          </div>          
+          <div class="col-3">
+            <div class="form-group">
+              <label for="modalFactory" class="col-form-label">Part Group</label>
+              <input type="text" class="form-control" id="modalPartgroup" [(ngModel)]="addAModel.partgroup" />
+            </div>
+          </div>
+          <div class="col-3">
+
+          </div>                     
+        </div>
+        <div class="row">
+          <div class="col-4">
+            <div class="form-group">
+              <label for="modalFactory" class="col-form-label">Part Name(EN)</label>
+              <label style="color:red;">*</label>
+              <input type="text" class="form-control" id="modalPartNameEn" [(ngModel)]="addAModel.partnameen" />
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="form-group">
+              <label for="modalFactory" class="col-form-label">Part Name(CN)</label>
+              <label style="color:red;">*</label>
+              <input type="text" class="form-control" id="modalPartnameCn" [(ngModel)]="addAModel.partnamecn" />
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="form-group">
+              <label for="modalFactory" class="col-form-label">Part Name(VN)</label>
+              <input type="text" class="form-control" id="modalPartnameVn" [(ngModel)]="addAModel.partnamevn" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col-10">
+          </div>
+          <div class="col-2">
+            <button
+              type="button"
+              [hidden]="false"
+              class="btn btn-primary btn-lg"
+              (click)="edit()">
+              Edit
+            </button>
+          </div>
+        </div>          
+      </div>
+    </div>
+  </div>
+</div>
+<!--editModal-->
+
+<ngx-spinner
+  bdColor="rgba(0, 0, 0, 0.8)"
+  size="large"
+  color="#fff"
+  type="square-jelly-box"
+  [fullScreen]="true"  
+  ><p style="color: white">Loading {{title}}...</p></ngx-spinner
+>

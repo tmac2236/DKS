@@ -29,6 +29,8 @@ namespace DKS_API.Data.Repository
         public DbSet<DevDtrVsFile> DTR_VS_FILE { get; set; }
         public DbSet<DtrLoginHistory> DTR_LOGIN_HISTORY { get; set; }
         public DbSet<EmpDataH> EMPDATAH { get; set; }
+        public DbSet<DevPlmPart> DEV_PLM_PART { get; set; }
+        
 
         //DTO(Stored Procedure)
         public DbSet<F418_F420Dto> GetF420F418View { get; set; }
@@ -68,7 +70,8 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<DevDtrFgt>().HasKey(x => new { x.ARTICLE, x.STAGE, x.KIND, x.VERN });
             modelBuilder.Entity<DevDtrFgtResult>().HasKey(x => new { x.ARTICLE, x.MODELNO, x.MODELNAME, x.LABNO, x.STAGE, x.KIND });
             modelBuilder.Entity<DevDtrVsFile>().HasKey(x => new { x.FACTORYID,x.ARTICLE, x.SEASON, x.ID });
-            
+            modelBuilder.Entity<DevPlmPart>().HasKey(x => new { x.PARTNO });
+
             //DTO(Stored Procedure)
             modelBuilder.Entity<F418_F420Dto>()
             .HasNoKey();

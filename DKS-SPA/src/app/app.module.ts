@@ -73,6 +73,7 @@ import { DtrVStandardListComponent } from "./views/dks/dtr-v-standard-list/dtr-v
 import { CovidComponent } from "./views/covid/covid.component";
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { DtrLoginHistoryComponent } from "./views/dks/dtr-login-history/dtr-login-history.component";
+import { PlmPartComponent } from "./views/dks/plm/plm-part/plm-part.component";
 
 //載入 "/assets/i18n/[lang].json" 語系檔
 export function createTranslateLoader(http: HttpClient) {
@@ -128,6 +129,7 @@ export function createTranslateLoader(http: HttpClient) {
     DtrFgtResultReportComponent,
     DtrVStandardComponent,
     DtrVStandardListComponent,
+    PlmPartComponent,
     DtrLoginHistoryComponent,
     DictionaryComponent,
     HomePageComponent,
