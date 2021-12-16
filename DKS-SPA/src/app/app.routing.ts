@@ -118,7 +118,11 @@ export const routes: Routes = [
   },
   {
     path: "PLM-Part",
+    canActivate: [AuthGuardRole],
     component: PlmPartComponent, 
+    data: {
+      roles: [utilityConfig.DevPreAssist],
+    },
   }, 
   {
     path: "",
