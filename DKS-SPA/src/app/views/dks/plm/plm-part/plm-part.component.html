@@ -120,7 +120,7 @@
                         <tr>
                           <td>
                             <img
-                            [style.visibility]="(item?.result == 'FAIL' || this.searchCondition.role.includes(uiControls.editPassData)) ? 'visible' : 'hidden'" 
+                            [style.visibility]="(this.searchCondition.role.includes(uiControls.editPassData)) ? 'visible' : 'hidden'" 
                               src="../assets/systemImg/edit.png"
                               width="35"
                               height="35"
@@ -128,7 +128,7 @@
                           </td>
                           <td>
                             <img
-                            [style.visibility]="(item?.result == 'FAIL' || this.searchCondition.role.includes(uiControls.editPassData)) ? 'visible' : 'hidden'"
+                            [style.visibility]="(this.searchCondition.role.includes(uiControls.editPassData)) ? 'visible' : 'hidden'"
                               src="../assets/systemImg/delete.png"
                               width="35"
                               height="35"

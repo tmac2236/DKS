@@ -19,12 +19,15 @@ namespace DKS_API.Controllers
     {
         private readonly IExcelService _excelService;
         private readonly IDevPlmPartDAO _devPlmPartDAO;
-        public PlmController(IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<WareHouseController> logger, IDevPlmPartDAO devPlmPartDAO,
+        private readonly IDKSDAO _dksDao;
+        public PlmController(IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<WareHouseController> logger,
+             IDevPlmPartDAO devPlmPartDAO, IDKSDAO dksDao,
              IExcelService excelService)
         : base(config, webHostEnvironment, logger)
         {
             _excelService = excelService;
             _devPlmPartDAO = devPlmPartDAO;
+            _dksDao = dksDao;
         }
         [HttpGet("getPlmPart")]
         public  IActionResult GetPlmPart([FromQuery] SDevPlmPart sDevPlmPart)
@@ -71,10 +74,21 @@ namespace DKS_API.Controllers
         public async Task<IActionResult> UpdatePlmPart(DevPlmPart devPlmPart)
         {
             _logger.LogInformation(String.Format(@"****** PlmController UpdatePlmPart fired!! ******"));
+            
+            DevPlmPart old = _devPlmPartDAO.FindAll(x =>x.PARTNO == devPlmPart.PARTNO).AsNoTracking().First();
 
             devPlmPart.CHANGEDATE = DateTime.Now;
             _devPlmPartDAO.Update(devPlmPart);
             await _devPlmPartDAO.SaveAll();
+            if(old != null){
+                UserLog userlog = new UserLog();
+                userlog.PROGNAME = "PLM Part";
+                userlog.LOGINNAME = devPlmPart.CHANGEUSER;
+                userlog.HISTORY = string.Format("U, PartNo: {0}, PartName(En): {1}, PartName(Cn): {2}, PartName(Vn):{3}, Location: {4}, Rename:{5}, PartGroup: {6}",
+                                            old.PARTNO, old.PARTNAMEEN, old.PARTNAMECN, old.PARTNAMEVN, old.LOCATION, old.RENAME, old.PARTGROUP );
+                userlog.UPDATETIME = devPlmPart.CHANGEDATE.ToDateTime();
+                await _dksDao.AddUserLogAsync(userlog);
+            }
 
             return Ok(true);
 
@@ -83,9 +97,16 @@ namespace DKS_API.Controllers
         public async Task<IActionResult> DeletePlmPart(DevPlmPart devPlmPart)
         {
             _logger.LogInformation(String.Format(@"****** PlmController DeletePlmPart fired!! ******"));
-
+                        UserLog userlog = new UserLog();
+                        userlog.PROGNAME = "PLM Part";
+                        userlog.LOGINNAME = devPlmPart.CHANGEUSER;
+                        userlog.HISTORY = string.Format("D,PartNo: {0}", devPlmPart.PARTNO);
+                        userlog.UPDATETIME = devPlmPart.CHANGEDATE.ToDateTime();
+                        await _dksDao.AddUserLogAsync(userlog);
             _devPlmPartDAO.Remove(devPlmPart);
             await _devPlmPartDAO.SaveAll();
+
+
 
             return Ok(true);
         }

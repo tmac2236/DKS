@@ -22,7 +22,7 @@ export class PlmPartComponent implements OnInit {
     uploadPdf: "Please upload pdf or excel file and size cannot over 2 Mb.",
   };
   uiControls: any = {
-    editPassData: utilityConfig.DtrQcSup,
+    editPassData: utilityConfig.RoleSysAdm,
   };
   title = "PLM Part Maintain";
   searchCondition: SPlmPart = new SPlmPart();
