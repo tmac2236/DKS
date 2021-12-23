@@ -86,7 +86,7 @@ namespace DKS_API.Controllers
                 userlog.LOGINNAME = devPlmPart.CHANGEUSER;
                 userlog.HISTORY = string.Format("U, PartNo: {0}, PartName(En): {1}, PartName(Cn): {2}, PartName(Vn):{3}, Location: {4}, Rename:{5}, PartGroup: {6}",
                                             old.PARTNO, old.PARTNAMEEN, old.PARTNAMECN, old.PARTNAMEVN, old.LOCATION, old.RENAME, old.PARTGROUP );
-                userlog.UPDATETIME = devPlmPart.CHANGEDATE.ToDateTime();
+                userlog.UPDATETIME = DateTime.Now;
                 await _dksDao.AddUserLogAsync(userlog);
             }
 
@@ -101,7 +101,7 @@ namespace DKS_API.Controllers
                         userlog.PROGNAME = "PLM Part";
                         userlog.LOGINNAME = devPlmPart.CHANGEUSER;
                         userlog.HISTORY = string.Format("D,PartNo: {0}", devPlmPart.PARTNO);
-                        userlog.UPDATETIME = devPlmPart.CHANGEDATE.ToDateTime();
+                        userlog.UPDATETIME = DateTime.Now;
                         await _dksDao.AddUserLogAsync(userlog);
             _devPlmPartDAO.Remove(devPlmPart);
             await _devPlmPartDAO.SaveAll();

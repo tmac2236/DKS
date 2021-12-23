@@ -146,6 +146,7 @@ export class PlmPartComponent implements OnInit {
 
   }
  delete(model: PlmPart) {
+    model.changeuser = this.searchCondition.loginUser;
     this.utility.alertify.confirm(
       "Sweet Alert",
       "Are you sure to Delete this Part No :" + model?.partno +  ".",
