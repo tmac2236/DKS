@@ -16,6 +16,8 @@ import { utilityConfig } from "../../../core/utility/utility-config";
 })
 export class DtrVStandardComponent implements OnInit {
   @ViewChild("addDtrVSModal") public addDtrVSModal: ModalDirective;
+  @ViewChild("copyModal") public copyModal: ModalDirective;
+  
   //for hint
   hintMsg: any = {
     uploadPdf: "Please upload pdf file and size cannot over 2 Mb.",
@@ -24,10 +26,12 @@ export class DtrVStandardComponent implements OnInit {
   validArticle: boolean = false;
   result: DevDtrVisStandard[] = [];
   addAModel: DevDtrVisStandard = new DevDtrVisStandard();
+  copyArrayModal:string ="";
   bufferFile: File | null = null; // upload
   uiControls:any = {
     addAReport: utilityConfig.DevAssist,
     deleteAReport: utilityConfig.DevAssist,
+    copyVsFile: utilityConfig.RoleSysAdm
   };
   factoryIdUrl: string; 
 
@@ -133,9 +137,12 @@ export class DtrVStandardComponent implements OnInit {
   }
   openModal(type: string) {
     if (type == "addDtrVSModal") this.addDtrVSModal.show();
+    if (type == "copyModal") this.copyModal.show();
+    
   }
   closeModal(type: string) {
     if (type == "addDtrVSModal") this.addDtrVSModal.hide();
+    if (type == "copyModal") this.copyModal.hide();
   }
 
   initAddBtn() {
@@ -265,5 +272,47 @@ export class DtrVStandardComponent implements OnInit {
           );
         }
       );
+  }
+  openCopyModal(model: DevDtrVisStandard){
+    this.cleanModel();
+    this.copyArrayModal ="";
+    this.openModal('copyModal');
+    this.addAModel = model;
+
+  }
+  copyArraySave(){
+    let tt = false;
+    let aa = this.copyArrayModal.trim().split("/");
+    let bb = new Set(aa);
+    let cc = Array.from( bb );
+    const index = cc.indexOf(this.addAModel.article, 0);
+    if (index > -1) {
+      cc.splice(index, 1);
+    }
+    cc.forEach(function(v){
+      if(v.trim().length != 6){
+        tt = true;
+      }
+    });
+
+    if(tt){
+      this.utility.alertify.error("Each Article have to be 6 characters !!!!");
+    }else{
+      this.dtrService.copyArraySave(this.addAModel,cc.toString()).subscribe(
+        (res) => {
+          this.utility.spinner.hide();
+          this.utility.alertify.confirm(
+            "Sweet Alert",
+            "Your Copy is success!",
+            () => { this.closeModal('copyModal') });  
+        },
+        (error) => {
+          this.utility.spinner.hide();
+          this.utility.alertify.error(error);
+        }
+      );
+      
+    }
+
   }
 }

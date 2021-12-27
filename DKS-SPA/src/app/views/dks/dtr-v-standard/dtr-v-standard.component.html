@@ -121,6 +121,17 @@
                             "
                             (click)="viewPdf(item)"
                             />
+                            <img
+                            *ngIf="this.sDevDtrVisStandard.role?.includes(uiControls.copyVsFile)"
+                            src="../assets/systemImg/up-arrow.png"
+                            class="mr-1"
+                            width="40"
+                            height="40"
+                            [style.visibility]="
+                              item.filename?.length < 1 ? 'hidden' : 'visible'
+                            "
+                            (click)="this.openCopyModal(item)"
+                            />                            
                           </td>
                           <td>{{ item.upday | date: "yyyy/MM/dd HH:mm:ss" }}</td>
                           <td>{{ item.upusr }}</td>
@@ -228,6 +239,77 @@
 </div>
 </div>
 <!--addDtrVSModal-->
+<!--copyModal-->
+<div
+  bsModal
+  #copyModal="bs-modal"
+  class="modal hide fade in"
+  [config]="{backdrop: 'static'}"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+<div class="modal-dialog modal-info modal-xl" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Please paste array of article.</h4>
+      <button
+        type="button"
+        class="close"
+        (click)="closeModal('copyModal')"
+        aria-label="Close"
+      >
+        <!--右上角的 X 符號-->
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body"> 
+      <div class="row">
+        <div class="col-8">
+          <div class="form-inline">
+            <label class="col-form-label ">Copy PDF from : {{addAModel.article}}    Id : {{addAModel.id}}</label>          
+          </div>
+        </div>
+        <div class="col-4">
+
+        </div>
+      </div>           
+      <div class="row">
+        <div class="col-12">
+          <div class="form-group">
+            <textarea
+              class="form-control"
+              name="photoComment"
+              rows="2"
+              maxlength="200"
+              placeholder="e.g. GY0793/GY0792/GX5808/GX8667/GW3039/GX8663/GW0627/GY9484"
+              [hidden]="false"
+              [(ngModel)]="copyArrayModal"
+            ></textarea>
+
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-10">
+        </div>
+        <div class="col-2">           
+          <button
+            type="button"
+            [hidden]="false"
+            class="btn btn-primary btn-lg mt-2"
+            (click)="copyArraySave()"
+          >
+            Save
+          </button>
+        </div>
+      </div>  
+    </div>
+  </div>
+</div>
+</div>
+<!--copyModal-->
 <ngx-spinner
   bdColor="rgba(0, 0, 0, 0.8)"
   size="large"

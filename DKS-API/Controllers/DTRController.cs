@@ -389,6 +389,63 @@ namespace DKS_API.Controllers
 
             return Ok(model);
         }
+        [HttpPost("copyeVSfile/{fileName}")]
+        public async Task<IActionResult> CopyeVSfile(DevDtrVsFile dto, string fileName)
+        {
+
+            _logger.LogInformation(String.Format(@"******DKSController CopyeVSfile fired!! ******"));
+            // generate local path
+            List<string> nastFileName = new List<string>();
+            nastFileName.Add("DTRVS");
+            nastFileName.Add(dto.SEASON);
+            nastFileName.Add(dto.ARTICLE);
+            nastFileName.Add(dto.FILENAME);
+            var pathList = _fileService.GetLocalPath("F340PpdPic", nastFileName);
+            if (!Directory.Exists(pathList[0])) return Ok("The file is empty");
+
+            List<string> l = fileName.Split(',').ToList();
+            foreach(string i in l){
+            //check the article last id
+                int last =  _devDtrVsFileDAO.FindAll(x=>x.ARTICLE == i)
+                            .OrderByDescending(x => x.ID).Select(x => x.ID).ToList().FirstOrDefault().ToInt();
+                last += 1; 
+            // ###### copy file start ###### 
+            // generate local path
+            List<string> newNastFileName = new List<string>();
+            newNastFileName.Add("DTRVS");
+            newNastFileName.Add(dto.SEASON);
+            newNastFileName.Add(i);
+            //C_SS22_GY0793_1.pdf
+            var newFileName = String.Format("{0}_{1}_{2}_{3}.pdf",dto.FACTORYID,dto.SEASON,i,last.ToString() );
+            newNastFileName.Add(newFileName);
+            var newPathList = _fileService.GetLocalPath("F340PpdPic", newNastFileName);
+            if (!Directory.Exists(newPathList[0]))
+            {
+                DirectoryInfo di = Directory.CreateDirectory(newPathList[0]);
+            }
+            System.IO.File.Copy(pathList[1], newPathList[1]); 
+            // ###### copy file end ######
+            _logger.LogInformation(String.Format(@"******DTRController AddVSfile Add a PDF: {0}!! ******", fileName));
+            //save to DAO
+            DevDtrVsFile model = new DevDtrVsFile();
+            model.FACTORYID = dto.FACTORYID;
+            model.SEASON = dto.SEASON;
+            model.ARTICLE = i;
+            model.ID = last.ToString();
+            model.FILENAME = newFileName;
+            model.REMARK = String.Format("{0}_copy form:{1}",dto.REMARK, dto.ARTICLE);
+
+            model.UPUSR = dto.UPUSR;
+            model.UPDAY = DateTime.Now;
+
+            _devDtrVsFileDAO.Add(model);
+            await _devDtrVsFileDAO.SaveAll();            
+
+            }
+
+            return Ok();
+
+        }        
 
         [HttpPost("deleteVSResult")]
         public async Task<IActionResult> DeleteVSResult(DevDtrVsFile devDtrVsFile)

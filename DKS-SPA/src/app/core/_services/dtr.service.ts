@@ -297,6 +297,14 @@ export class DtrService {
       dtrVS
     );
   }
+  copyArraySave(vs: DevDtrVisStandard,fileName: string) {
+    console.log("dks.service copyArraySave:", vs);
+    return this.utility.http.post(
+      this.utility.baseUrl + "dtr/copyeVSfile/"+fileName,
+      vs
+    );
+  }
+
   deleteVSResult(devDtrVisStandard: DevDtrVisStandard) {
     return this.utility.http.post<boolean>(
       this.utility.baseUrl + 'dtr/deleteVSResult',
