@@ -24,5 +24,7 @@
     <PackageReference Include="Serilog.Enrichers.Thread" Version="3.1.0"/>
     <PackageReference Include="Quartz" Version="3.0.7"/>
     <PackageReference Include="Quartz.Serialization.Json" Version="3.0.7"/>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.1"/>
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.1.1"/>
   </ItemGroup>
 </Project>

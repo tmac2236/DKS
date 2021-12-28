@@ -27,6 +27,7 @@ using Quartz.Impl;
 using DFPS_API.Quartz;
 using DFPS_API.Quartz.Jobs;
 using DKS_API.Helpers.AutoMapper;
+using Microsoft.OpenApi.Models;
 
 namespace DKS_API
 {
@@ -128,6 +129,12 @@ namespace DKS_API
             //AOP
             services.AddScoped<ApiExceptionFilter>();
             services.AddScoped<ApiActionFilter>();
+            //swagger Generator
+            services.AddSwaggerGen(c =>
+            {
+                c.EnableAnnotations();
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "DKS API", Version = "v 2" });
+            });
 
         }
 
@@ -160,6 +167,12 @@ namespace DKS_API
                 );
             }
 
+            //swagger
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "DKS V1");
+            });                    
             //security
             app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
             app.UseHttpsRedirection();

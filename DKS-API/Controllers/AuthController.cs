@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using DKS.API.Models.DKS;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace DKS_API.Controllers
 {
@@ -32,6 +33,10 @@ namespace DKS_API.Controllers
         }
 
         [HttpPost("login")]
+        [SwaggerOperation(
+            Summary = "DKS外掛Web用的API",
+            Description = "用UserId登入"
+        )]        
         public async Task<IActionResult> Login(UserDto userForLoginDto)
         {
             _logger.LogInformation(String.Format(@"******  AuthController Login fired!! ******"));

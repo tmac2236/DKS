@@ -204,7 +204,7 @@ namespace DKS_API.Controllers
             return MergedImage;
         }
 
-        public byte[] ImageToByteArray(Image img)
+        private byte[] ImageToByteArray(Image img)
         {
             _logger.LogInformation(String.Format(@"****** PictureController ImageToByteArray fired!! ******"));
 
