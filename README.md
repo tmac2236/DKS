@@ -18,6 +18,8 @@ C# Web  3 Layered Architecture（Controller+Service+Dao）
 
 * Quartz: 3.0.7
 
+* Swashbuckle(Swagger): 6.1.1
+
 ### SPA ###
 * Angular :9.1.12
 
