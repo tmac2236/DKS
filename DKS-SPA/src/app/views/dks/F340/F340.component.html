@@ -118,6 +118,7 @@
                         <!--<th [ngClass]="this.cwaDeadlineS ? 'zoom-in' : 'zoom-out'"
                         (click)="this.sort($event)">cwaDeadline</th>-->
                         <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.activationDate' | translate }}</th>
+                        <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.cwaDeadline' | translate }}</th>
                         <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.modelNo' | translate }}</th>
                         <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.modelName' | translate }}</th>
                         <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.orderStag' | translate }}</th>
@@ -158,6 +159,7 @@
                           <td>{{ item.article }}</td>
 
                           <td>{{ item.activationDate }}</td>
+                          <td>{{ item.cwaDeadline }}</td>
                           <td>{{ item.modelNo }}</td>
                           <td>{{ item.modelName }}</td>
                           <td>{{ item.orderStag }}</td>

@@ -433,7 +433,7 @@ namespace DKS_API.Controllers
             model.ARTICLE = i;
             model.ID = last.ToString();
             model.FILENAME = newFileName;
-            model.REMARK = String.Format("{0}_copy form:{1}",dto.REMARK, dto.ARTICLE);
+            model.REMARK = String.Format("{0}",dto.REMARK);
 
             model.UPUSR = dto.UPUSR;
             model.UPDAY = DateTime.Now;

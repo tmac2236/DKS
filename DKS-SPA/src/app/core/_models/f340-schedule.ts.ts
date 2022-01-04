@@ -36,5 +36,6 @@ export class F340Schedule implements ModelInterface {
   ttRejectReason: string;
   ttRejectDate: string;
   ttRejectCount: string;
+  cwaDeadline: string;
 
 }
