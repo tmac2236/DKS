@@ -61,5 +61,7 @@ namespace DKS.API.Models.DKS
         [Required]
         [StringLength(50)]
         public string UPUSR { get; set; }
+
+        public string FACTORYID { get; set; }
     }
 }

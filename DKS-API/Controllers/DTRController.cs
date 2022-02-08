@@ -180,6 +180,7 @@ namespace DKS_API.Controllers
                 if (String.IsNullOrEmpty(devDtrFgtResult.PARTNAME)) devDtrFgtResult.PARTNAME = "";
                 devDtrFgtResult.UPUSR = devDtrFgtResult.UPUSR;
                 devDtrFgtResult.UPDAY = DateTime.Now;
+                devDtrFgtResult.FACTORYID = devDtrFgtResult.LABNO.Substring(0, 1);
                 _devDtrFgtResultDAO.Add(devDtrFgtResult);
                 await _devDtrFgtResultDAO.SaveAll();
 
