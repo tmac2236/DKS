@@ -396,7 +396,7 @@ export class DtrService {
       );
   }
   sentMailSampleTrack(){
-    return this.utility.http.get<boolean>(
+    return this.utility.http.get<string[]>(
       this.utility.baseUrl + 'dtr/sentMailSampleTrack'
     );
   }  

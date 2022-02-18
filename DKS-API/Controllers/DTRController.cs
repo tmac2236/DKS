@@ -720,8 +720,9 @@ Type: {5}。  Reason: {6}。 Remark: {7}
             var data = await _dKSDAO.GetSampleTrackDto();
             byte[] result = _excelService.CommonExportReport(data.ToList(), "TempSampleTrack.xlsx");
             toMails.Add("stan.chen@ssbshoes.com");
+            toMails.Add("aven.yu@ssbshoes.com");
             await _sendMailService.SendListMailAsyncbyByte(toMails, null, "Sample Shoes Alert please see the attachment !", content, result);
-            return Ok();
+            return Ok(toMails);
 
         }            
 

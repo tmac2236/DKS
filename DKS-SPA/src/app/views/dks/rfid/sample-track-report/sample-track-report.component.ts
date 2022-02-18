@@ -76,23 +76,31 @@ export class SampleTrackReportComponent implements OnInit {
     this.utility.exportFactory(url, "SampleTrackReport", this.sSampleTrackReport);
   }
 
-  sendMail(){
-
-    this.utility.spinner.show();
-    
-    this.dtrService.sentMailSampleTrack().subscribe(
-      (res) => {
-        this.utility.spinner.hide();
-        this.utility.alertify.confirm(
-          "Sweet Alert",
-          "sent Mail success.",
-          () => { });  
-      },
-      (error) => {
-        this.utility.spinner.hide();
-        this.utility.alertify.error(error);
+  sendMail(event: any){
+    this.utility.alertify.confirm(
+      "System Alert",
+      "Are you sure to Send Email to PIC.    It may take 10 minutes to precess.     Please DO NOT send Mail frequently.",
+      () => {
+        //this.utility.spinner.show();
+        event.target.disabled = true;
+        this.dtrService.sentMailSampleTrack().subscribe(
+          (res) => {
+            //this.utility.spinner.hide();
+            var str = res.join(", "); 
+            event.target.disabled = false;
+            this.utility.alertify.confirm(
+              "Sweet Alert",
+              "You'd sent mail to: " + str,
+              () => { });  
+          },
+          (error) => {
+            //this.utility.spinner.hide();
+            event.target.disabled = false;
+            this.utility.alertify.error(error);
+          }
+        );        
       }
     );
-    
+
   }
 }

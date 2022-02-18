@@ -83,7 +83,6 @@
                   {{ "Common.btnList.search" | translate }}
                 </button>
                 -->
-                <!--
                 <button
                   class="btn btn-primary mr-1 ml-4"
                   type="button"
@@ -100,12 +99,12 @@
                   "
                   class="btn btn-primary mr-1"
                   type="button"
-                  (click)="sendMail()"
+                  (click)="sendMail($event)"
                   [disabled]="!addQueryReportDataForm.valid"
                 >
                   {{ "Common.btnList.sendMail" | translate }}
                 </button>
-                -->
+                
               </div>
             </div>
           </form>
@@ -121,91 +120,92 @@
                     <thead>
                       <tr class="table-info">
                         <th
-                          style="background-color: #23d954"
+                          style="background-color: #23d954;width:15%;"
+
                         >
-                        SAMPLENO
+                        Sampel No
                         </th>
 
                         <th
-                          style="background-color: #23d954"
+                          style="background-color: #23d954;width:5%;"
                         >
-                        ARTICLE
+                        Article
                         </th>
                         <th
-                          style="background-color: #23d954"
+                          style="background-color: #23d954;width:5%;"
                         >
-                        MODEL NO
+                        Model No
                         </th>
                         <th
-                          style="background-color: #23d954"
+                          style="background-color: #23d954;width:10%;"
                         >
-                        MODEL NAME
+                        Model Name
                         </th>
                         <th
-                          style="background-color: #23d954" 
+                          style="background-color: #23d954;width:5%;" 
                         >
-                        TEAM
+                        Team
                         </th>
                         <th
-                          style="background-color: #23d954"
+                          style="background-color: #23d954;width:5%;"
                         >
-                        STAGE
+                        Stage
                         </th>
                         <th
-                          style="background-color: #23d954"
+                          style="background-color: #23d954;width:5%;"
                         >
-                        TEST
+                        Test
                         </th>
                         <th
-                          style="background-color: #23d954"
+                          style="background-color: #23d954;width:10%;"
                         >
-                        BARCODE NO
+                        Barcode No
                         </th>
                         <th
-                          style="background-color: #23d954"
+                          style="background-color: #23d954;width:10%;"
                         >
-                        DEV TRANS DATE
+                        DEV Trans Date
                         </th>
                         <th
-                          style="background-color: #23d954"
+                          style="background-color: #23d954;width:5%;"
                         >
-                        DEV TRANSR SN
+                        DEV Trans Sn
                         </th>
                         <th
-                          style="background-color: #23d954"
+                          style="background-color: #23d954;width:5%;"
                         >
-                        DEV KEEPER
+                        DEV Keeper
                         </th>
                         <th
-                          style="background-color: #23d954"
+                          style="background-color: #23d954;width:5%;"
                         >
-                        DEV TRANSFERER
+                        DEV Transfer
                         </th>
                         <th
-                          style="background-color: #23d954"
+                          style="background-color: #23d954;width:5%;"
                         >
-                        OVER DAYs
+                        Over Days
                         </th>                        
                       </tr>
                     </thead>
                     <tbody>
                       <ng-container *ngFor="let item of result; let i = index">
                         <tr>
-                          <td>{{ item.sampleNo  }}</td>
-                          <td>{{ item.article  }}</td>
-                          <td>{{ item.modelNo  }}</td>
-                          <td>{{ item.modelName  }}</td>
-                          <td>{{ item.team  }}</td>
+                          <td style="width:15%;">{{ item.sampleNo  }}</td>
+                          <td style="width:5%;">{{ item.article  }}</td>
+                          <td style="width:5%;">{{ item.modelNo  }}</td>
+                          <td style="width:10%;">{{ item.modelName  }}</td>
+                          <td style="width:5%;">{{ item.team  }}</td>
 
-                          <td>{{ item.stage  }}</td>
-                          <td>{{ item.test  }}</td>
-                          <td>{{ item.barCodeNo  }}</td>
-                          <td>{{ item.devTransDate | date: "yyyy/MM/dd"  }}</td>
-                          <td>{{ item.devTransSn  }}</td>
+                          <td style="width:5%;">{{ item.stage  }}</td>
+                          <td style="width:5%;">{{ item.test  }}</td>
+                          <td style="width:10%;">{{ item.barCodeNo  }}</td>
+                          <td style="width:10%;">{{ item.devTransDate | date: "yyyy/MM/dd"  }}</td>
+                          <td style="width:5%;">{{ item.devTransSn  }}</td>
 
-                          <td>{{ item.devKeeper  }}</td>
-                          <td>{{ item.devTransferer  }}</td>
-                          <td>{{ item.overDays }}</td>
+                          <td style="width:5%;">{{ item.devKeeper  }}</td>
+                          <td style="width:5%;">{{ item.devTransferer  }}</td>
+                          <td style="width:5%;">{{ item.overDays }}</td>
                         </tr>
                       </ng-container>
                     </tbody>
