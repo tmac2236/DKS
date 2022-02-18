@@ -1,0 +1,259 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-3">
+              <strong>{{title}}</strong>
+            </div>
+            <div class="col-9">
+              <div class="float-right">
+                <strong *ngIf="this.sSampleTrackReport.loginUser"
+                  >{{ "Common.hello" | translate }}
+                  {{ this.sSampleTrackReport.loginUser }}</strong
+                >
+                <!--
+                <img
+                  src="../assets/systemImg/taiwan.png"
+                  tooltip="{{
+                    this.sSampleTrackReport.loginUser
+                  }} Prefers Mandarin"
+                  placement="bottom"
+                  width="25"
+                  height="25"
+                  (click)="this.utility.useLanguage('zh')"
+                />
+                <img
+                  src="../assets/systemImg/united-states.png"
+                  tooltip="{{
+                    this.sSampleTrackReport.loginUser
+                  }} Prefers English"
+                  placement="bottom"
+                  width="25"
+                  height="25"
+                  (click)="this.utility.useLanguage('en')"
+                />
+                -->
+                <!--<img src="../assets/systemImg/vietnam.png" width="25" height="25" />-->
+                <img
+                  src="../assets/systemImg/exit.png"
+                  tooltip="Logout"
+                  width="25"
+                  height="25"
+                  (click)="this.utility.logout()"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <form class="form" #addQueryReportDataForm="ngForm">
+            <!-- Second column-->
+            <div class="row">
+              <div class="form-group col-xs-2 mr-1">
+                <!--
+                <label class="col-form-label mr-1 mt-2">Article</label>
+                <input
+                  class="col-form-label mr-1"
+                  type="text"
+                  name="article"
+                  [(ngModel)]="sSampleTrackReport.article"
+                />
+                <label class="col-form-label mr-1 mt-2">Model No</label>
+                <input
+                  class="col-form-label mr-1"
+                  type="text"
+                  name="modelNo"
+                  [(ngModel)]="sSampleTrackReport.modelNo"
+                />
+                <label class="col-form-label mr-1 mt-2">Model Name</label>
+                <input
+                  class="col-form-label mr-1"
+                  type="text"
+                  name="modelName"
+                  [(ngModel)]="sSampleTrackReport.modelName"
+                />                           
+                <button
+                  class="btn btn-primary mr-1"
+                  type="button"
+                  (click)="search()"
+                  [disabled]="!addQueryReportDataForm.valid"
+                >
+                  {{ "Common.btnList.search" | translate }}
+                </button>
+                -->
+                <!--
+                <button
+                  class="btn btn-primary mr-1 ml-4"
+                  type="button"
+                  (click)="export()"
+                  [disabled]="!addQueryReportDataForm.valid"
+                >
+                  {{ "Common.btnList.export" | translate }}
+                </button>
+                <button
+                  [hidden]="
+                    !this.sSampleTrackReport.role.includes(
+                      uiControls.sendMemoMail
+                    )
+                  "
+                  class="btn btn-primary mr-1"
+                  type="button"
+                  (click)="sendMail()"
+                  [disabled]="!addQueryReportDataForm.valid"
+                >
+                  {{ "Common.btnList.sendMail" | translate }}
+                </button>
+                -->
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table text-center table-striped">
+                    <!--text-nowrap不換行-->
+                    <!--套版分頁<table datatable id="f340Sche" class="table text-center table-striped">-->
+                    <thead>
+                      <tr class="table-info">
+                        <th
+                          style="background-color: #23d954"
+                        >
+                        SAMPLENO
+                        </th>
+
+                        <th
+                          style="background-color: #23d954"
+                        >
+                        ARTICLE
+                        </th>
+                        <th
+                          style="background-color: #23d954"
+                        >
+                        MODEL NO
+                        </th>
+                        <th
+                          style="background-color: #23d954"
+                        >
+                        MODEL NAME
+                        </th>
+                        <th
+                          style="background-color: #23d954" 
+                        >
+                        TEAM
+                        </th>
+                        <th
+                          style="background-color: #23d954"
+                        >
+                        STAGE
+                        </th>
+                        <th
+                          style="background-color: #23d954"
+                        >
+                        TEST
+                        </th>
+                        <th
+                          style="background-color: #23d954"
+                        >
+                        BARCODE NO
+                        </th>
+                        <th
+                          style="background-color: #23d954"
+                        >
+                        DEV TRANS DATE
+                        </th>
+                        <th
+                          style="background-color: #23d954"
+                        >
+                        DEV TRANSR SN
+                        </th>
+                        <th
+                          style="background-color: #23d954"
+                        >
+                        DEV KEEPER
+                        </th>
+                        <th
+                          style="background-color: #23d954"
+                        >
+                        DEV TRANSFERER
+                        </th>
+                        <th
+                          style="background-color: #23d954"
+                        >
+                        OVER DAYs
+                        </th>                        
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container *ngFor="let item of result; let i = index">
+                        <tr>
+                          <td>{{ item.sampleNo  }}</td>
+                          <td>{{ item.article  }}</td>
+                          <td>{{ item.modelNo  }}</td>
+                          <td>{{ item.modelName  }}</td>
+                          <td>{{ item.team  }}</td>
+
+                          <td>{{ item.stage  }}</td>
+                          <td>{{ item.test  }}</td>
+                          <td>{{ item.barCodeNo  }}</td>
+                          <td>{{ item.devTransDate | date: "yyyy/MM/dd"  }}</td>
+                          <td>{{ item.devTransSn  }}</td>
+
+                          <td>{{ item.devKeeper  }}</td>
+                          <td>{{ item.devTransferer  }}</td>
+                          <td>{{ item.overDays }}</td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                  <!--
+                  <div class="d-flex justify-content-start">
+                    <select
+                      style="height: 35px; width: 45px"
+                      name="itemsPerPage"
+                      [(ngModel)]="sSampleTrackReport.itemsPerPage"
+                      (change)="changePageSize($event)"
+                    >
+                      <option value="10" selected>10</option>
+                      <option value="25" selected>25</option>
+                      <option value="50" selected>50</option>
+                      <option value="100" selected>100</option>
+                    </select>
+                    <pagination
+                      *ngIf="this.sSampleTrackReport.isPaging"
+                      [boundaryLinks]="true"
+                      [totalItems]="sSampleTrackReport.totalItems"
+                      [maxSize]="60"
+                      [itemsPerPage]="sSampleTrackReport.itemsPerPage"
+                      [(ngModel)]="sSampleTrackReport.currentPage"
+                      (pageChanged)="pageChangeds($event)"
+                      previousText="&lsaquo;"
+                      nextText="&rsaquo;"
+                      firstText="&laquo;"
+                      lastText="&raquo;"
+                    >
+                    </pagination>
+                  </div>
+                  -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ngx-spinner
+  bdColor="rgba(0, 0, 0, 0.8)"
+  size="large"
+  color="#fff"
+  type="square-jelly-box"
+  [fullScreen]="true"
+  ><p style="color: white">Loading {{title}}...</p></ngx-spinner
+>

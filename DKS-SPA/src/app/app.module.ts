@@ -74,6 +74,7 @@ import { CovidComponent } from "./views/covid/covid.component";
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { DtrLoginHistoryComponent } from "./views/dks/dtr-login-history/dtr-login-history.component";
 import { PlmPartComponent } from "./views/dks/plm/plm-part/plm-part.component";
+import { SampleTrackReportComponent } from "./views/dks/rfid/sample-track-report/sample-track-report.component";
 
 //載入 "/assets/i18n/[lang].json" 語系檔
 export function createTranslateLoader(http: HttpClient) {
@@ -134,6 +135,7 @@ export function createTranslateLoader(http: HttpClient) {
     DictionaryComponent,
     HomePageComponent,
     CovidComponent,
+    SampleTrackReportComponent,
   ],
   providers: [
     AuthService,

@@ -19,6 +19,7 @@ import { F340Component } from "./views/dks/F340/F340.component";
 import { F428EditComponent } from "./views/dks/F428/F428-edit/F428-edit.component";
 import { F428Component } from "./views/dks/F428/F428.component";
 import { PlmPartComponent } from "./views/dks/plm/plm-part/plm-part.component";
+import { SampleTrackReportComponent } from "./views/dks/rfid/sample-track-report/sample-track-report.component";
 
 import { P404Component } from "./views/error/404.component";
 import { P500Component } from "./views/error/500.component";
@@ -123,7 +124,11 @@ export const routes: Routes = [
     data: {
       roles: [utilityConfig.RoleSysAdm],
     },
-  }, 
+  },
+  {
+    path: "Sample-Track-Report",
+    component: SampleTrackReportComponent,
+  },   
   {
     path: "",
     component: DefaultLayoutComponent,

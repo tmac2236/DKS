@@ -242,5 +242,14 @@ ON t1.PKBASEHID=t3.FKBASEHID and t3.LANGID='437' ");
             var data =  _context.Database.ExecuteSqlRaw("EXEC GetTransferToDTR @FactoryIdFrom,@FactoryIdTo,@Article", pc.ToArray());
 
         }
+        public async Task<List<SampleTrackReportDto>> GetSampleTrackDto()
+        {
+            var data = await _context.GetSampleTrackReportDto
+                   .FromSqlRaw("EXECUTE dbo.GetSampleTrackReport")
+                   .ToListAsync();
+            return data;
+
+        }         
     }
+   
 }

@@ -16,7 +16,9 @@ import { SDevDtrFgtResult } from "../_models/s-dev-dtr-fgt-result";
 import { SDevDtrFgtResultReport } from "../_models/s-dev-dtr-fgt-result-report";
 import { SDevDtrVisStandard } from "../_models/s-dev-dtr-vis-standard";
 import { SDevDtrVsList } from "../_models/s-dev-dtr-vs-list";
+import { SampleTrackReportDto } from "../_models/sample-track-report-dto";
 import { SDtrLoginHistory } from "../_models/s_dtr-login-history";
+import { SSampleTrackReport } from "../_models/s_sample-track-report";
 import { TransitArticle } from "../_models/transit-article";
 
 @Injectable({
@@ -345,5 +347,57 @@ export class DtrService {
     return this.utility.http.get<boolean>(
       this.utility.baseUrl + "dtr/qcSentMailDtrFgtResult?stage="+ stage +"&modelNo=" + modelNo + "&article=" + article + "&labNo=" + labNo
       + "&remark="+ remark + "&type=" + type + "&reason=" + reason);
+  }
+  getSampleTrackDto(
+    sSampleTrackReport: SSampleTrackReport
+  ): Observable<PaginatedResult<SampleTrackReportDto[]>> {
+    const paginatedResult: PaginatedResult<SampleTrackReportDto[]> =
+      new PaginatedResult<SampleTrackReportDto[]>();
+
+    let params = new HttpParams();
+    params = params.append("IsPaging", sSampleTrackReport.isPaging.toString());
+    if (
+      sSampleTrackReport.currentPage != null &&
+      sSampleTrackReport.itemsPerPage != null
+    ) {
+      params = params.append(
+        "pageNumber",
+        sSampleTrackReport.currentPage.toString()
+      );
+      params = params.append(
+        "pageSize",
+        sSampleTrackReport.itemsPerPage.toString()
+      );
+
+    }
+
+    //params = params.append("article", sSampleTrackReport.article.toString());
+    //params = params.append("modelNo", sSampleTrackReport.modelNo.toString());
+    //params = params.append("modelName", sSampleTrackReport.modelName.toString());
+
+    return this.utility.http
+      .get<SampleTrackReportDto[]>(
+        this.utility.baseUrl + "dtr/getSampleTrackDto",
+        {
+          observe: "response",
+          params,
+        }
+      )
+      .pipe(
+        map((response) => {
+          paginatedResult.result = response.body;
+          if (response.headers.get("Pagination") != null) {
+            paginatedResult.pagination = JSON.parse(
+              response.headers.get("Pagination")
+            );
+          }
+          return paginatedResult;
+        })
+      );
+  }
+  sentMailSampleTrack(){
+    return this.utility.http.get<boolean>(
+      this.utility.baseUrl + 'dtr/sentMailSampleTrack'
+    );
   }  
 }

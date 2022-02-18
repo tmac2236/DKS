@@ -29,6 +29,8 @@ namespace DKS_API.Controllers
         private readonly IDevDtrVsFileDAO _devDtrVsFileDAO;
         private readonly IDtrLoginHistoryDAO _dtrLoginHistoryDAO;
 
+        private readonly IDevSendMailDAO _devSendMailDAO;
+
         private readonly IFileService _fileService;
         private readonly IExcelService _excelService;
         private readonly ICommonService _commonService;
@@ -36,7 +38,7 @@ namespace DKS_API.Controllers
 
         public DTRController(IMapper mapper, IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<PictureController> logger,
          IDKSDAO dKSDAO, IDevDtrFgtResultDAO devDtrFgtResultDAO, IArticledDAO articledDAO, IDevDtrFgtStatsDAO devDtrFgtStatsDAO, IDevDtrVsFileDAO devDtrVsFileDAO,
-         IArticlePictureDAO articlePictureDAO,IModelDahDAO modelDahDAO,IDtrLoginHistoryDAO dtrLoginHistoryDAO,
+         IArticlePictureDAO articlePictureDAO,IModelDahDAO modelDahDAO,IDtrLoginHistoryDAO dtrLoginHistoryDAO,IDevSendMailDAO devSendMailDAO,
          IFileService fileService, IExcelService excelService,ICommonService commonService, ISendMailService sendMailService)
                 : base(config, webHostEnvironment, logger)
         {
@@ -53,6 +55,7 @@ namespace DKS_API.Controllers
             _devDtrVsFileDAO = devDtrVsFileDAO;
             _articlePictureDAO = articlePictureDAO;
             _dtrLoginHistoryDAO = dtrLoginHistoryDAO;
+            _devSendMailDAO = devSendMailDAO;
         }
 
            
@@ -670,6 +673,57 @@ Type: {5}。  Reason: {6}。 Remark: {7}
             await _sendMailService.SendListMailAsync(toMails, null, string.Format(@"Test report change result (Season: {0}, Stage: {1}, Model Name: {2}, Model No:{3}, Art:{4})", season, stage, modelDah.MODELNAME, modelNo, article), content, null);
             return Ok();
 
-        }                              
+        }
+
+        [HttpGet("getSampleTrackDto")]
+        public async Task<IActionResult> GetSampleTrackDto([FromQuery] SSampleTrackReportDto sSampleTrackReportDto)
+        {
+            _logger.LogInformation(String.Format(@"****** DKSController GetSampleTrackDto fired!! ******"));
+
+            var data = await _dKSDAO.GetSampleTrackDto();
+            PagedList<SampleTrackReportDto> result = PagedList<SampleTrackReportDto>.Create(data, sSampleTrackReportDto.PageNumber, sSampleTrackReportDto.PageSize, sSampleTrackReportDto.IsPaging);
+            Response.AddPagination(result.CurrentPage, result.PageSize,
+            result.TotalCount, result.TotalPages);
+            return Ok(result);
+        }
+        
+        [HttpPost("exportSampleTrackDto")]
+        public async Task<IActionResult> ExportSampleTrackDto(SSampleTrackReportDto sSampleTrackReportDto)
+        {
+            _logger.LogInformation(String.Format(@"****** DTRController ExportSampleTrackDto fired!! ******"));
+
+            var data = await _dKSDAO.GetSampleTrackDto();
+
+
+            byte[] result = _excelService.CommonExportReport(data.ToList(), "TempSampleTrack.xlsx");
+
+            return File(result, "application/xlsx");
+
+        }
+        [HttpGet("sentMailSampleTrack")]
+        public async Task<IActionResult> SentMailSampleTrack()
+        {
+
+            _logger.LogInformation(String.Format(@"******DTRController SentMailSampleTrack fired!! ******"));
+
+            var content = string.Format(@"SSB Dev. Sysyem (開發系統) Website: http://10.4.0.39:8080/ArcareEng/login.jsp");
+
+            var toMails = new List<string>();
+            /*
+            var users = await _devSendMailDAO.FindAll(x => x.EMAIL_TYPE == "02" &&
+                                                           x.STATUS == 1).ToListAsync();  
+            users.ForEach(x =>
+            {
+                toMails.Add(x.EMAIL);
+            });
+            */
+            var data = await _dKSDAO.GetSampleTrackDto();
+            byte[] result = _excelService.CommonExportReport(data.ToList(), "TempSampleTrack.xlsx");
+            toMails.Add("stan.chen@ssbshoes.com");
+            await _sendMailService.SendListMailAsyncbyByte(toMails, null, "Sample Shoes Alert please see the attachment !", content, result);
+            return Ok();
+
+        }            
+
     }
 }

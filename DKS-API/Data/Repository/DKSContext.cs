@@ -30,6 +30,7 @@ namespace DKS_API.Data.Repository
         public DbSet<DtrLoginHistory> DTR_LOGIN_HISTORY { get; set; }
         public DbSet<EmpDataH> EMPDATAH { get; set; }
         public DbSet<DevPlmPart> DEV_PLM_PART { get; set; }
+        public DbSet<DevSendMail> DEV_SENDMAIL { get; set; }
         
 
         //DTO(Stored Procedure)
@@ -47,6 +48,7 @@ namespace DKS_API.Data.Repository
         public DbSet<DevDtrVsListDto> GetDevDtrVsListDto { get; set; }
         public DbSet<BasicCodeDto> GetBasicCodeDto { get; set; }
         public DbSet<TupleDto> GetTupleDto { get; set; }
+        public DbSet<SampleTrackReportDto> GetSampleTrackReportDto { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -71,6 +73,7 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<DevDtrFgtResult>().HasKey(x => new { x.ARTICLE, x.MODELNO, x.MODELNAME, x.LABNO, x.STAGE, x.KIND });
             modelBuilder.Entity<DevDtrVsFile>().HasKey(x => new { x.FACTORYID,x.ARTICLE, x.SEASON, x.ID });
             modelBuilder.Entity<DevPlmPart>().HasKey(x => new { x.PARTNO });
+            modelBuilder.Entity<DevSendMail>().HasKey(x => new { x.WORKPNO,x.DEPTID,x.EMAIL_TYPE,x.DEVTEAM });
 
             //DTO(Stored Procedure)
             modelBuilder.Entity<F418_F420Dto>()
@@ -100,7 +103,9 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<BasicCodeDto>()
             .HasNoKey();
             modelBuilder.Entity<TupleDto>()
-            .HasNoKey();            
+            .HasNoKey();
+            modelBuilder.Entity<SampleTrackReportDto>()
+            .HasNoKey();               
         }
     }
 }
