@@ -31,6 +31,9 @@ namespace DKS_API.Controllers
 
         private readonly IDevSendMailDAO _devSendMailDAO;
 
+        private readonly IDtrFgtShoesDAO _dtrFgtShoesDAO;
+        private readonly IDtrFgtEtdDAO _dtrFgtEtdDAO;
+
         private readonly IFileService _fileService;
         private readonly IExcelService _excelService;
         private readonly ICommonService _commonService;
@@ -38,7 +41,8 @@ namespace DKS_API.Controllers
 
         public DTRController(IMapper mapper, IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<PictureController> logger,
          IDKSDAO dKSDAO, IDevDtrFgtResultDAO devDtrFgtResultDAO, IArticledDAO articledDAO, IDevDtrFgtStatsDAO devDtrFgtStatsDAO, IDevDtrVsFileDAO devDtrVsFileDAO,
-         IArticlePictureDAO articlePictureDAO,IModelDahDAO modelDahDAO,IDtrLoginHistoryDAO dtrLoginHistoryDAO,IDevSendMailDAO devSendMailDAO,
+         IArticlePictureDAO articlePictureDAO,IModelDahDAO modelDahDAO,IDtrLoginHistoryDAO dtrLoginHistoryDAO,IDevSendMailDAO devSendMailDAO,IDtrFgtShoesDAO dtrFgtShoesDAO,
+         IDtrFgtEtdDAO dtrFgtEtdDAO,
          IFileService fileService, IExcelService excelService,ICommonService commonService, ISendMailService sendMailService)
                 : base(config, webHostEnvironment, logger)
         {
@@ -56,6 +60,8 @@ namespace DKS_API.Controllers
             _articlePictureDAO = articlePictureDAO;
             _dtrLoginHistoryDAO = dtrLoginHistoryDAO;
             _devSendMailDAO = devSendMailDAO;
+            _dtrFgtShoesDAO = dtrFgtShoesDAO;
+            _dtrFgtEtdDAO = dtrFgtEtdDAO;
         }
 
            
@@ -725,6 +731,30 @@ Type: {5}。  Reason: {6}。 Remark: {7}
             return Ok(toMails);
 
         }            
+        [HttpGet("getDtrFgtEtdDto")]
+        public async Task<IActionResult> GetDtrFgtEtdDto([FromQuery] SDtrFgtShoes sDtrFgtShoes)
+        {
+            _logger.LogInformation(String.Format(@"****** DKSController GetDtrFgtEtdDto fired!! ******"));
+
+            var data = await _dtrFgtEtdDAO.GetDtrFgtEtdDto();
+            PagedList<DtrFgtEtdDto> result = PagedList<DtrFgtEtdDto>.Create(data, sDtrFgtShoes.PageNumber, sDtrFgtShoes.PageSize, sDtrFgtShoes.IsPaging);
+            Response.AddPagination(result.CurrentPage, result.PageSize,
+            result.TotalCount, result.TotalPages);
+            return Ok(result);
+        }
+        [HttpPost("exportDtrFgtEtdDto")]
+        public async Task<IActionResult> ExportDtrFgtEtdDto(SDtrFgtShoes sDtrFgtShoes)
+        {
+            _logger.LogInformation(String.Format(@"****** DTRController ExportDtrFgtEtdDto fired!! ******"));
+
+            var data = await _dtrFgtEtdDAO.GetDtrFgtEtdDto();
+
+
+            byte[] result = _excelService.CommonExportReport(data.ToList(), "TempDtrFgtEtd.xlsx");
+
+            return File(result, "application/xlsx");
+
+        }
 
     }
 }

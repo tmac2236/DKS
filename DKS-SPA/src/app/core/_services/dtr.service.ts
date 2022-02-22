@@ -9,6 +9,8 @@ import { DevDtrFgtResult } from "../_models/dev-dtr-fgt-result";
 import { DevDtrFgtResultDto } from "../_models/dev-dtr-fgt-result-dto";
 import { DevDtrVisStandard } from "../_models/dev-dtr-vis-standard";
 import { DevDtrVsList } from "../_models/dev-dtr-vs-list";
+import { DtrFgtEtdDto } from "../_models/dtr-fgt-etd-dto";
+import { DtrFgtShoes } from "../_models/dtr-fgt-shoes";
 import { DtrLoginHistory } from "../_models/dtr-login-history";
 import { DtrLoginHistoryDto } from "../_models/dtr-login-history-dto";
 import { PaginatedResult } from "../_models/pagination";
@@ -18,6 +20,7 @@ import { SDevDtrVisStandard } from "../_models/s-dev-dtr-vis-standard";
 import { SDevDtrVsList } from "../_models/s-dev-dtr-vs-list";
 import { SampleTrackReportDto } from "../_models/sample-track-report-dto";
 import { SDtrLoginHistory } from "../_models/s_dtr-login-history";
+import { SDtrFgtShoes } from "../_models/s_dtr_fgt_shoes";
 import { SSampleTrackReport } from "../_models/s_sample-track-report";
 import { TransitArticle } from "../_models/transit-article";
 
@@ -399,5 +402,48 @@ export class DtrService {
     return this.utility.http.get<string[]>(
       this.utility.baseUrl + 'dtr/sentMailSampleTrack'
     );
-  }  
+  }
+  getDtrFgtEtdDto(
+    sDtrFgtShoes: SDtrFgtShoes
+  ): Observable<PaginatedResult<DtrFgtEtdDto[]>> {
+    const paginatedResult: PaginatedResult<DtrFgtEtdDto[]> =
+      new PaginatedResult<DtrFgtEtdDto[]>();
+
+    let params = new HttpParams();
+    params = params.append("IsPaging", sDtrFgtShoes.isPaging.toString());
+    if (
+      sDtrFgtShoes.currentPage != null &&
+      sDtrFgtShoes.itemsPerPage != null
+    ) {
+      params = params.append(
+        "pageNumber",
+        sDtrFgtShoes.currentPage.toString()
+      );
+      params = params.append(
+        "pageSize",
+        sDtrFgtShoes.itemsPerPage.toString()
+      );
+
+    }
+
+    return this.utility.http
+      .get<DtrFgtEtdDto[]>(
+        this.utility.baseUrl + "dtr/getDtrFgtEtdDto",
+        {
+          observe: "response",
+          params,
+        }
+      )
+      .pipe(
+        map((response) => {
+          paginatedResult.result = response.body;
+          if (response.headers.get("Pagination") != null) {
+            paginatedResult.pagination = JSON.parse(
+              response.headers.get("Pagination")
+            );
+          }
+          return paginatedResult;
+        })
+      );
+  }    
 }
