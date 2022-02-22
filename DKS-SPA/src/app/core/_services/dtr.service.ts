@@ -445,5 +445,12 @@ export class DtrService {
           return paginatedResult;
         })
       );
+  }
+  editDtrFgtEtds(dtrFgtEtdDtos: DtrFgtEtdDto[]) {
+    console.log("dtr.service editDtrFgtEtds:", dtrFgtEtdDtos);
+    return this.utility.http.post(
+      this.utility.baseUrl + "dtr/editDtrFgtEtds",
+      dtrFgtEtdDtos
+    );
   }    
 }

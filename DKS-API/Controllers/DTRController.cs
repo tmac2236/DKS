@@ -755,6 +755,40 @@ Type: {5}。  Reason: {6}。 Remark: {7}
             return File(result, "application/xlsx");
 
         }
+        [HttpPost("editDtrFgtEtds")]
+        public async Task<IActionResult> EditDtrFgtEtds(List<DtrFgtEtdDto> dtos)
+        {
+
+            _logger.LogInformation(String.Format(@"******DTRController EditDtrFgtEtds fired!! ******"));
+
+            var editCount = 0;
+            foreach (DtrFgtEtdDto dto in dtos)
+            {
+
+                DtrFgtEtd model = _dtrFgtEtdDAO.FindSingle(
+                                                 x => x.FACTORYID == dto.FactoryId &&
+                                                 x.ARTICLE == dto.Article  &&
+                                                 x.STAGE  == dto.Stage &&
+                                                 x.TEST  == dto.Test &&
+                                                 x.QC_RECEIVE  == dto.QcReceive );
+
+                if (model != null)
+                {
+                    //假如 QC ETD 和 Remark和DB裡的一樣就不用修改
+                    if(model.QC_ETD == dto.QcEtd && model.REMARK.Trim() == dto.Remark) continue;
+                    _logger.LogInformation(String.Format(@"******DTRController EditDtrFgtEtds Update QC_ETD: {0}, REMARK: {1}  !! ******", dto.QcEtd, dto.Remark ) );
+                    model.QC_ETD = dto.QcEtd;
+                    model.REMARK = dto.Remark;
+
+                    _dtrFgtEtdDAO.Update(model);
+                }
+            }
+
+            await _dtrFgtEtdDAO.SaveAll();
+
+            return Ok(editCount);
+
+        }        
 
     }
 }

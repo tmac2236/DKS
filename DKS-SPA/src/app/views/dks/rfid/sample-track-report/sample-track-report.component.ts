@@ -21,11 +21,7 @@ export class SampleTrackReportComponent implements OnInit {
   result: SampleTrackReportDto[] = [];
 
   uiControls:any = {
-    uploadPicF340Ppd: utilityConfig.RolePpdPic,
-    uploadPdfF340Ppd: utilityConfig.RolePpdPic,
-    editMemo: utilityConfig.RoleSysAdm,
     sendMemoMail: utilityConfig.RoleSysAdm,
-    upBottomMaintain: utilityConfig.RolePpdPic,
   };
 
   constructor(public utility: Utility, private dtrService: DtrService, private commonService: CommonService) {}

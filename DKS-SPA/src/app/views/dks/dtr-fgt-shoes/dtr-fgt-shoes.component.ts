@@ -16,17 +16,13 @@ import { DtrService } from '../../../core/_services/dtr.service';
 })
 export class DtrFgtShoesComponent implements OnInit {
 
-
+  memoBtn = true;
   title = "DTR-FGT-Shoes";
   sDtrFgtShoes: SDtrFgtShoes = new SDtrFgtShoes();
   result: DtrFgtEtdDto[] = [];
 
   uiControls:any = {
-    uploadPicF340Ppd: utilityConfig.RolePpdPic,
-    uploadPdfF340Ppd: utilityConfig.RolePpdPic,
     editMemo: utilityConfig.RoleSysAdm,
-    sendMemoMail: utilityConfig.RoleSysAdm,
-    upBottomMaintain: utilityConfig.RolePpdPic,
   };
 
   constructor(public utility: Utility, private dtrService: DtrService, private commonService: CommonService) {}
@@ -70,6 +66,31 @@ export class DtrFgtShoesComponent implements OnInit {
   export() {
     const url = this.utility.baseUrl + "dtr/exportDtrFgtEtdDto";
     this.utility.exportFactory(url, "DtrFgtEtdReport", this.sDtrFgtShoes);
+  }
+  editMemo(){
+    this.memoBtn = !this.memoBtn;
+  }
+  saveMemo(){
+    this.utility.spinner.show();
+    this.memoBtn = !this.memoBtn;
+    
+    this.dtrService.editDtrFgtEtds(this.result).subscribe(
+      (res) => {
+        this.utility.spinner.hide();
+        this.utility.alertify.confirm(
+          "System Alert",
+          "Updated Successed.",
+          () => { });  
+      },
+      (error) => {
+        this.utility.spinner.hide();
+        this.utility.alertify.error(error);
+      }
+    );
+     
+  }
+  test(event: any){
+    alert(event);
   }
 
 }
