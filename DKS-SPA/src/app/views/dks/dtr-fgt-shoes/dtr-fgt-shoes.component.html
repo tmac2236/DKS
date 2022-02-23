@@ -102,7 +102,7 @@
                   type="button"
                   (click)="editMemo()"
                 >
-                  修改Memo
+                  修改ETD
                 </button>
                 <ng-template #elseMemoBtn>
                   <button
@@ -110,7 +110,7 @@
                     type="button"
                     (click)="saveMemo()"
                   >
-                    儲存Memo
+                    儲存ETD
                   </button>
                 </ng-template>                
 
@@ -216,14 +216,16 @@
                               type="date"
                               [ngModel] ="item.qcEtd | date:'yyyy-MM-dd'"
                               (ngModelChange)="item.qcEtd = $event"
+                              (change)="$event.target.classList.add('bg-danger')"
                             />
                             </td>
                             <td style="width:5%;">
                             <textarea
-                              class="form-control"
+                              class="form-control ml-2"
                               name="remark"
                               rows="2"
                               [(ngModel)]="item.remark"
+                              (change)="$event.target.classList.add('bg-danger')"
                               #message="ngModel"
                             ></textarea>
                             </td>                            

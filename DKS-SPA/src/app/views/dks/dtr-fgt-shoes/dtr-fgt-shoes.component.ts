@@ -89,8 +89,5 @@ export class DtrFgtShoesComponent implements OnInit {
     );
      
   }
-  test(event: any){
-    alert(event);
-  }
 
 }

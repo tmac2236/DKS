@@ -24,5 +24,6 @@ namespace DKS_API.Data.Interface
         Task<List<BasicCodeDto>> GetBasicCodeDto(string typeNo);
         void GetTransferToDTR(string factoryIdFrom,string factoryIdTo,string article);
         Task<List<SampleTrackReportDto>> GetSampleTrackDto();
+        Task<List<NoneDto>> DoSsbDtrVsFileUpdate(string factoryId, string season, string article );
     }
 }

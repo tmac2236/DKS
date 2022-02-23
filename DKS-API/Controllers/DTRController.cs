@@ -394,6 +394,7 @@ namespace DKS_API.Controllers
                     model.UPDAY = DateTime.Now;
                     _devDtrVsFileDAO.Add(model);
                     await _devDtrVsFileDAO.SaveAll();
+                    await _dKSDAO.DoSsbDtrVsFileUpdate(devDtrVisStandardDto.FactoryId,devDtrVisStandardDto.Season.Trim(),devDtrVisStandardDto.Article.Trim());
                 }
             }
 
@@ -449,7 +450,8 @@ namespace DKS_API.Controllers
             model.UPDAY = DateTime.Now;
 
             _devDtrVsFileDAO.Add(model);
-            await _devDtrVsFileDAO.SaveAll();            
+            await _devDtrVsFileDAO.SaveAll();
+            await _dKSDAO.DoSsbDtrVsFileUpdate(model.FACTORYID,model.SEASON,model.ARTICLE);            
 
             }
 
@@ -476,7 +478,7 @@ namespace DKS_API.Controllers
                     //Step2: kill fgt result
                     _devDtrVsFileDAO.Remove(devDtrVsFile);
                     await _devDtrVsFileDAO.SaveAll();
-
+                    await _dKSDAO.DoSsbDtrVsFileUpdate(devDtrVsFile.FACTORYID,devDtrVsFile.SEASON,devDtrVsFile.ARTICLE);
                     return Ok(true);
                 }
             }

@@ -52,6 +52,8 @@ namespace DKS_API.Data.Repository
         public DbSet<SampleTrackReportDto> GetSampleTrackReportDto { get; set; }
 
         public DbSet<DtrFgtEtdDto> GetDtrFgtEtdDto { get; set; }
+        public DbSet<NoneDto> GetNoneDto { get; set; }
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -114,7 +116,9 @@ namespace DKS_API.Data.Repository
             .HasNoKey();
             modelBuilder.Entity<DtrFgtEtdDto>()
             .HasNoKey();            
-                           
+            modelBuilder.Entity<NoneDto>()
+            .HasNoKey();    
+
         }
     }
 }

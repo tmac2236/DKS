@@ -249,7 +249,21 @@ ON t1.PKBASEHID=t3.FKBASEHID and t3.LANGID='437' ");
                    .ToListAsync();
             return data;
 
-        }         
+        }
+        public async Task<List<NoneDto>> DoSsbDtrVsFileUpdate(string factoryId, string season, string article )
+        {
+
+            List<SqlParameter> pc = new List<SqlParameter>{
+                new SqlParameter("@FACTORYID",factoryId ),
+                new SqlParameter("@SEASON",season ),
+                new SqlParameter("@ARTICLE",article )
+            };
+            var data = await _context.GetNoneDto
+                   .FromSqlRaw(string.Format("EXECUTE dbo.SSB_DTR_VSFILE_UPDATE @FACTORYID,@SEASON,@ARTICLE"), pc.ToArray())
+                   .ToListAsync();
+            return data;
+        }        
+                 
     }
    
 }
