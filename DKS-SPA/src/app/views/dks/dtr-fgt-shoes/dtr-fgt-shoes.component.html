@@ -108,10 +108,17 @@
                   <button
                     class="btn btn-danger mr-1"
                     type="button"
-                    (click)="saveMemo()"
+                    (click)="saveMemo('save')"
                   >
                     儲存ETD
                   </button>
+                  <button
+                    class="btn btn-success mr-1"
+                    type="button"
+                    (click)="saveMemo('cancel')"
+                  >
+                    取消修改
+                  </button>                  
                 </ng-template>                
 
               </div>
@@ -129,86 +136,71 @@
                     <thead>
                       <tr class="table-info">
                         <th
-                          style="background-color: #23d954;width:2%"
+                          style="background-color: #23d954;width:10%"
 
                         >
                         Factory
                         </th>
 
                         <th
-                          style="background-color: #23d954;width:5%"
+                          style="background-color: #23d954;width:20%"
                         >
                         Article
                         </th>
                         <th
-                          style="background-color: #23d954;width:2%"
+                          style="background-color: #23d954;width:10%"
                         >
                         Stage
                         </th>
                         <th
-                          style="background-color: #23d954;width:2%"
+                          style="background-color: #23d954;width:10%"
                         >
                         Test
                         </th>
                         <th
-                          style="background-color: #23d954;width:5%" 
+                          style="background-color: #23d954;width:10%" 
                         >
                         QC Receive Date
                         </th>
                         <th
-                          style="background-color: #23d954;width:5%"
+                          style="background-color: #23d954;width:10%"
                         >
                         QC ETD
                         </th>
                         <th
-                          style="background-color: #23d954;width:5%"
+                          style="background-color: #23d954;width:10%"
                         >
                         Remark
                         </th>
                         <th
-                          style="background-color: #23d954;width:5%"
+                          style="background-color: #23d954;width:10%"
                         >
-                        ETD User 
+                        Update User 
                         </th>
                         <th
-                          style="background-color: #23d954;width:2%"
+                          style="background-color: #23d954;width:10%"
                         >
-                        ETD Date 
-                        </th>
-                        <th
-                          style="background-color: #23d954;width:5%"
-                        >
-                        Lab No
-                        </th>
-                        <th
-                          style="background-color: #23d954;width:5%"
-                        >
-                        FGT User 
-                        </th>
-                        <th
-                          style="background-color: #23d954;width:2%"
-                        >
-                        FGT Date
-                        </th>                     
+                        Update Time 
+                        </th>                    
                       </tr>
                     </thead>
                     <tbody>
                       <ng-container *ngFor="let item of result; let i = index">
                         <tr>
-                          <td style="width:2%;">{{ item.factoryId  }}</td>
-                          <td style="width:5%;">{{ item.article  }}</td>
-                          <td style="width:2%;">{{ item.stage  }}</td>
-                          <td style="width:2%;">{{ item.test  }}</td>
-                          <td style="width:5%;">{{ item.qcReceive | date: "yyyy/MM/dd" }}</td>
+                          <td style="width:10%;">{{ item.factoryId  }}</td>
+                          <td style="width:20%;">{{ item.article  }}</td>
+                          <td style="width:10%;">{{ item.stage  }}</td>
+                          <td style="width:10%;">{{ item.test  }}</td>
+                          <td style="width:10%;">{{ item.qcReceive | date: "yyyy/MM/dd" }}</td>
 
                           <!--批次修改Memo -->  
-                          <td style="width:5%;" *ngIf="this.memoBtn; else elseMemoTd">
+                          <td style="width:10%;" *ngIf="this.memoBtn; else elseMemoTd">
                             {{ item.qcEtd | date: "yyyy/MM/dd" }}
                           </td>
-                          <td style="width:5%;" *ngIf="this.memoBtn; ">
+                          <td style="width:10%;" *ngIf="this.memoBtn; ">
                             {{ item.remark   }}</td>
                           <ng-template #elseMemoTd>
-                            <td style="width:5%;">
+                            <td style="width:10%;">
                             <!--Angular修改日期處理方式-->
                             <input
                               class="col-form-label mr-2"
@@ -219,7 +211,7 @@
                               (change)="$event.target.classList.add('bg-danger')"
                             />
                             </td>
-                            <td style="width:5%;">
+                            <td style="width:10%;">
                             <textarea
                               class="form-control ml-2"
                               name="remark"
@@ -230,12 +222,8 @@
                             ></textarea>
                             </td>                            
                           </ng-template>
-                          <td style="width:5%;">{{ item.etdUser   }}</td>
-                          <td style="width:2%;">{{ item.etdDate  | date: "yyyy/MM/dd HH:mm:ss"   }}</td>
-                          <td style="width:5%;">{{ item.labNo   }}</td>
-
-                          <td style="width:5%;">{{ item.fgtUser  }}</td>
-                          <td style="width:2%;">{{ item.fgtDate | date: "yyyy/MM/dd HH:mm:ss"  }}</td>
+                          <td style="width:10%;">{{ item.etdUser   }}</td>
+                          <td style="width:10%;">{{ item.etdDate  | date: "yyyy/MM/dd HH:mm:ss"   }}</td>
 
                         </tr>
                       </ng-container>

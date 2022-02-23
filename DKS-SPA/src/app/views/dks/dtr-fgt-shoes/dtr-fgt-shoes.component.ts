@@ -70,9 +70,16 @@ export class DtrFgtShoesComponent implements OnInit {
   editMemo(){
     this.memoBtn = !this.memoBtn;
   }
-  saveMemo(){
-    this.utility.spinner.show();
+  saveMemo(type:string){
+    
     this.memoBtn = !this.memoBtn;
+    if(type == "cancel"){
+      this.search();
+      return;
+    }
+
+    this.utility.spinner.show();
+
     
     this.dtrService.editDtrFgtEtds(this.result).subscribe(
       (res) => {

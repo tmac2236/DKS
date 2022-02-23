@@ -35,6 +35,7 @@ SELECT t1.FACTORYID AS Factoryid
 FROM DTR_FGT_ETD t1
 left join DTR_FGT_RESULT t2
 on t1.FACTORYID=t2.FACTORYID and t1.ARTICLE=t2.ARTICLE and t1.STAGE=t2.STAGE and t1.TEST=t2.KIND
+where LabNo is null
 order by QC_ETD ");
 
             var data = await _context.GetDtrFgtEtdDto.FromSqlRaw(strSQL).ToListAsync();
