@@ -757,8 +757,8 @@ Type: {5}。  Reason: {6}。 Remark: {7}
             return File(result, "application/xlsx");
 
         }
-        [HttpPost("editDtrFgtEtds")]
-        public async Task<IActionResult> EditDtrFgtEtds(List<DtrFgtEtdDto> dtos)
+        [HttpPost("editDtrFgtEtds/{userId}")]
+        public async Task<IActionResult> EditDtrFgtEtds(List<DtrFgtEtdDto> dtos, string userId)
         {
 
             _logger.LogInformation(String.Format(@"******DTRController EditDtrFgtEtds fired!! ******"));
@@ -781,6 +781,8 @@ Type: {5}。  Reason: {6}。 Remark: {7}
                     _logger.LogInformation(String.Format(@"******DTRController EditDtrFgtEtds Update QC_ETD: {0}, REMARK: {1}  !! ******", dto.QcEtd, dto.Remark ) );
                     model.QC_ETD = dto.QcEtd;
                     model.REMARK = dto.Remark;
+                    model.UPUSR = userId;
+                    model.UPDAY = DateTime.Now;
 
                     _dtrFgtEtdDAO.Update(model);
                 }

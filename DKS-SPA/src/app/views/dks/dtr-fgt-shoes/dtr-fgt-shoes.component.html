@@ -143,7 +143,7 @@
                         </th>
 
                         <th
-                          style="background-color: #23d954;width:20%"
+                          style="background-color: #23d954;width:10%"
                         >
                         Article
                         </th>
@@ -162,13 +162,14 @@
                         >
                         QC Receive Date
                         </th>
+                        
                         <th
                           style="background-color: #23d954;width:10%"
                         >
-                        QC ETD
+                        QC Result__ Date  <!--QcEtd-->
                         </th>
                         <th
-                          style="background-color: #23d954;width:10%"
+                          style="background-color: #23d954;width:20%"
                         >
                         Remark
                         </th>
@@ -188,7 +189,7 @@
                       <ng-container *ngFor="let item of result; let i = index">
                         <tr>
                           <td style="width:10%;">{{ item.factoryId  }}</td>
-                          <td style="width:20%;">{{ item.article  }}</td>
+                          <td style="width:10%;">{{ item.article  }}</td>
                           <td style="width:10%;">{{ item.stage  }}</td>
                           <td style="width:10%;">{{ item.test  }}</td>
                           <td style="width:10%;">{{ item.qcReceive | date: "yyyy/MM/dd" }}</td>
@@ -197,23 +198,27 @@
                           <td style="width:10%;" *ngIf="this.memoBtn; else elseMemoTd">
                             {{ item.qcEtd | date: "yyyy/MM/dd" }}
                           </td>
-                          <td style="width:10%;" *ngIf="this.memoBtn; ">
+                          <td style="width:20%;" *ngIf="this.memoBtn; ">
                             {{ item.remark   }}</td>
                           <ng-template #elseMemoTd>
                             <td style="width:10%;">
-                            <!--Angular修改日期處理方式-->
+                            <!--Angular修改日期處理方式，只能選擇原本日期之後-->
+                            <!-- min = "{{item.qcEtd|date:'yyyy-MM-dd'}}"
+                                 max = "2099-12-31"
+                            -->
                             <input
-                              class="col-form-label mr-2"
+                              class="col-form-label"
                               name="qcEtd"
                               type="date"
-                              [ngModel] ="item.qcEtd | date:'yyyy-MM-dd'"
+
+                              [ngModel] ="item.qcEtd | date:'yyyy-MM-dd'" 
                               (ngModelChange)="item.qcEtd = $event"
                               (change)="$event.target.classList.add('bg-danger')"
                             />
                             </td>
-                            <td style="width:10%;">
+                            <td style="width:20%;">
                             <textarea
-                              class="form-control ml-2"
+                              class="form-control ml-4"
                               name="remark"
                               rows="2"
                               [(ngModel)]="item.remark"

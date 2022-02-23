@@ -446,10 +446,10 @@ export class DtrService {
         })
       );
   }
-  editDtrFgtEtds(dtrFgtEtdDtos: DtrFgtEtdDto[]) {
+  editDtrFgtEtds(dtrFgtEtdDtos: DtrFgtEtdDto[], userId:string) {
     console.log("dtr.service editDtrFgtEtds:", dtrFgtEtdDtos);
     return this.utility.http.post(
-      this.utility.baseUrl + "dtr/editDtrFgtEtds",
+      this.utility.baseUrl + "dtr/editDtrFgtEtds/"+ userId,
       dtrFgtEtdDtos
     );
   }    

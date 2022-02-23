@@ -81,13 +81,11 @@ export class DtrFgtShoesComponent implements OnInit {
     this.utility.spinner.show();
 
     
-    this.dtrService.editDtrFgtEtds(this.result).subscribe(
+    this.dtrService.editDtrFgtEtds(this.result,this.sDtrFgtShoes.loginUser).subscribe(
       (res) => {
         this.utility.spinner.hide();
-        this.utility.alertify.confirm(
-          "System Alert",
-          "Updated Successed.",
-          () => { });  
+        this.utility.alertify.success("Save success !");
+        this.search(); 
       },
       (error) => {
         this.utility.spinner.hide();
