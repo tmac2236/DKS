@@ -785,10 +785,12 @@ Type: {5}。  Reason: {6}。 Remark: {7}
                     model.UPDAY = DateTime.Now;
 
                     _dtrFgtEtdDAO.Update(model);
+                    await _dtrFgtEtdDAO.SaveAll();
+                    //sync Dtr_Excel的欄位
+                    await _dtrFgtEtdDAO.DoSsbDtrQcEtdUpdate(dto);
                 }
             }
 
-            await _dtrFgtEtdDAO.SaveAll();
 
             return Ok(editCount);
 

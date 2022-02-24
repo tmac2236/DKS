@@ -41,5 +41,21 @@ order by QC_ETD ");
             var data = await _context.GetDtrFgtEtdDto.FromSqlRaw(strSQL).ToListAsync();
             return data;
         }
+        public async Task<List<NoneDto>> DoSsbDtrQcEtdUpdate(DtrFgtEtdDto dto )
+        {
+
+            List<SqlParameter> pc = new List<SqlParameter>{
+                new SqlParameter("@FACTORYID",dto.FactoryId ),
+                new SqlParameter("@ARTICLE",dto.Article ),
+                new SqlParameter("@TEST",dto.Test ),
+                new SqlParameter("@STAGE",dto.Stage ),
+                new SqlParameter("@QC_RECEIVE",dto.QcReceive ),
+                new SqlParameter("@QC_ETD",dto.QcEtd )
+            };
+            var data = await _context.GetNoneDto
+                   .FromSqlRaw(string.Format("EXECUTE dbo.SSB_DTR_QCETD_UPDATE @FACTORYID,@ARTICLE,@TEST,@STAGE,@QC_RECEIVE,@QC_ETD"), pc.ToArray())
+                   .ToListAsync();
+            return data;
+        }        
     }
 }

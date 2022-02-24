@@ -8,5 +8,6 @@ namespace DKS_API.Data.Interface
     public interface IDtrFgtEtdDAO : ICommonDAO<DtrFgtEtd>
     {
      Task<List< DtrFgtEtdDto>> GetDtrFgtEtdDto();
+     Task<List<NoneDto>> DoSsbDtrQcEtdUpdate(DtrFgtEtdDto dto );
     }
 }
