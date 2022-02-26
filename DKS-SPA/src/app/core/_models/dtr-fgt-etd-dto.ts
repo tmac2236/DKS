@@ -15,4 +15,6 @@ export class DtrFgtEtdDto implements ModelInterface{
 
      fgtUser:string;
      fgtDate :Date;
+
+     isWarn: boolean; //only use in front end
 }
