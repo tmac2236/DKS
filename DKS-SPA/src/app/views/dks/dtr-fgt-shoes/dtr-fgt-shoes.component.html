@@ -139,50 +139,50 @@
                     <thead>
                       <tr class="table-info">
                         <th
-                          style="background-color: #23d954;width:5%"
+                          style="width:5%"
 
                         >
                         Factory
                         </th>
 
                         <th
-                          style="background-color: #23d954;width:10%"
+                          style="width:10%"
                         >
                         Article
                         </th>
                         <th
-                          style="background-color: #23d954;width:10%"
+                          style="width:10%"
                         >
                         Stage
                         </th>
                         <th
-                          style="background-color: #23d954;width:10%"
+                          style="width:10%"
                         >
                         Test
                         </th>
                         <th
-                          style="background-color: #23d954;width:10%" 
+                          style="width:10%" 
                         >
                         QC Receive Date
                         </th>
                         
                         <th
-                          style="background-color: #23d954;width:15%"
+                          style="width:15%"
                         >
                         QC Result__ Date  <!--QcEtd-->
                         </th>
                         <th
-                          style="background-color: #23d954;width:20%"
+                          style="width:20%"
                         >
                         Remark
                         </th>
                         <th
-                          style="background-color: #23d954;width:10%"
+                          style="width:10%"
                         >
                         Update User 
                         </th>
                         <th
-                          style="background-color: #23d954;width:10%"
+                          style="width:10%"
                         >
                         Update Time 
                         </th>                    
@@ -208,6 +208,7 @@
                             <!--Angular修改日期處理方式，只能選擇原本日期之後-->
                             <!-- min = "{{item.qcEtd|date:'yyyy-MM-dd'}}"
                                  max = "2099-12-31"
+                                 (change)="$event.target.classList.add('bg-danger')"
                             -->
                             <input
                               class="col-form-label"
@@ -216,7 +217,6 @@
 
                               [ngModel] ="item.qcEtd | date:'yyyy-MM-dd'" 
                               (ngModelChange)="item.qcEtd = $event"
-                              (change)="$event.target.classList.add('bg-danger')"
                             />
                             </td>
                             <td style="width:20%;">
@@ -224,7 +224,6 @@
                               class="col-form-label"
                               name="valueZh"
                               [(ngModel)]="item.remark" 
-                              (change)="$event.target.classList.add('bg-danger')"
                             >
                               <option value=""></option>
                               <option *ngFor="let a of code066" value="{{ a.valueEn }}">
