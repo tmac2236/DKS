@@ -58,7 +58,7 @@
                   class="col-form-label mr-1"
                   type="text"
                   name="article"
-                  placeholder="Please type the Artilce"
+                  placeholder="Please type the Article"
                   [(ngModel)]="sDtrFgtShoes.article"
                   (blur)="filterResult()"
                 />
@@ -92,35 +92,46 @@
                   (click)="export()"
                   [disabled]="!addQueryReportDataForm.valid"
                 >
-                  {{ "Common.btnList.export" | translate }}
+                Export
                 </button>
                 <!--批次修改Memo -->
                 <button
-                    [hidden]="
-                    !this.sDtrFgtShoes.role.includes(
-                      uiControls.editMemo
-                    )"
+                [hidden]="
+                !(this.sDtrFgtShoes.role.includes(
+                  uiControls.editMemo)||
+                  this.sDtrFgtShoes.role.includes(
+                  uiControls.editMemo1) )"
                   *ngIf="this.memoBtn; else elseMemoBtn"
                   class="btn btn-success mr-1"
                   type="button"
                   (click)="editMemo()"
                 >
-                  修改ETD
+                  Edit ETD
                 </button>
                 <ng-template #elseMemoBtn>
                   <button
+                  [hidden]="
+                  !(this.sDtrFgtShoes.role.includes(
+                    uiControls.editMemo)||
+                    this.sDtrFgtShoes.role.includes(
+                    uiControls.editMemo1) )"                 
                     class="btn btn-danger mr-1"
                     type="button"
                     (click)="saveMemo('save')"
                   >
-                    儲存ETD
+                    Save ETD
                   </button>
                   <button
+                  [hidden]="
+                  !(this.sDtrFgtShoes.role.includes(
+                    uiControls.editMemo)||
+                    this.sDtrFgtShoes.role.includes(
+                    uiControls.editMemo1) )"                  
                     class="btn btn-success mr-1"
                     type="button"
                     (click)="saveMemo('cancel')"
                   >
-                    取消修改
+                    Cancel Edit
                   </button>                  
                 </ng-template>                
 

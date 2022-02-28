@@ -23,7 +23,8 @@ export class DtrFgtShoesComponent implements OnInit {
   result: DtrFgtEtdDto[] = [];
   oriResult: DtrFgtEtdDto[] = [];
   uiControls:any = {
-    editMemo: utilityConfig.RoleSysAdm,
+    editMemo: utilityConfig.RoleFgtLabReport,
+    editMemo1: utilityConfig.DtrQcSup
   };
   code066: BasicCodeDto[] = []; //066 QC測試報告ETD的REMARK
 

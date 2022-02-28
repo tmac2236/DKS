@@ -50,10 +50,11 @@ order by QC_ETD ");
                 new SqlParameter("@TEST",dto.Test ),
                 new SqlParameter("@STAGE",dto.Stage ),
                 new SqlParameter("@QC_RECEIVE",dto.QcReceive ),
-                new SqlParameter("@QC_ETD",dto.QcEtd )
+                new SqlParameter("@QC_ETD",dto.QcEtd ),
+                new SqlParameter("@QC_REMARK",dto.Remark )
             };
             var data = await _context.GetNoneDto
-                   .FromSqlRaw(string.Format("EXECUTE dbo.SSB_DTR_QCETD_UPDATE @FACTORYID,@ARTICLE,@TEST,@STAGE,@QC_RECEIVE,@QC_ETD"), pc.ToArray())
+                   .FromSqlRaw(string.Format("EXECUTE dbo.SSB_DTR_QCETD_UPDATE @FACTORYID,@ARTICLE,@TEST,@STAGE,@QC_RECEIVE,@QC_ETD,@QC_REMARK"), pc.ToArray())
                    .ToListAsync();
             return data;
         }        
