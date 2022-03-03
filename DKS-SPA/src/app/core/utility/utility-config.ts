@@ -11,5 +11,6 @@ export var utilityConfig = {
   RolePpdPic: "GM0000000038",     //加工圖片維護                                                                                                                                                                                                                                          
   RolePpdLook: "GM0000000039",    //加工準備查詢 
   RoleFgtLabReport: "GM0000000041",  //實驗室測試報告 
-  DtrQcSup: "GM0000000047",          //實驗室測試報告(主管)                                                                                                                                                                                                                                             
+  DtrQcSup: "GM0000000047",          //實驗室測試報告(主管)      
+  DtrUnfozen: "GM0000000051",      //DTR_UNFROZEN                                                                                                                                                                                                                               
 };

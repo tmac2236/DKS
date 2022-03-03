@@ -21,7 +21,7 @@ export class SampleTrackReportComponent implements OnInit {
   result: SampleTrackReportDto[] = [];
 
   uiControls:any = {
-    sendMemoMail: utilityConfig.RoleSysAdm,
+    sendMemoMail: utilityConfig.DtrUnfozen,
   };
 
   constructor(public utility: Utility, private dtrService: DtrService, private commonService: CommonService) {}

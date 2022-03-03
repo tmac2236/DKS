@@ -34,8 +34,10 @@ SELECT t1.FACTORYID AS Factoryid
 	  ,t2.UPDAY as FgtDate
 FROM DTR_FGT_ETD t1
 left join DTR_FGT_RESULT t2
-on t1.FACTORYID=t2.FACTORYID and t1.ARTICLE=t2.ARTICLE and t1.STAGE=t2.STAGE and t1.TEST=t2.KIND
-where LabNo is null
+on  t1.FACTORYID=t2.FACTORYID and t1.ARTICLE=t2.ARTICLE and t1.TEST=t2.KIND
+where (t1.STAGE in ('CR2','SMS','CS1') and t2.STAGE is null ) or
+      (t1.STAGE='SMS' and t2.STAGE not in ('SMS','CS1')) or
+      (t1.STAGE='CS1' and t2.STAGE not in ('CS1'))
 order by QC_ETD ");
 
             var data = await _context.GetDtrFgtEtdDto.FromSqlRaw(strSQL).ToListAsync();

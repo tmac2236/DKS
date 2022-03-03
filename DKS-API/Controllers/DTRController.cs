@@ -714,22 +714,29 @@ Type: {5}。  Reason: {6}。 Remark: {7}
 
             _logger.LogInformation(String.Format(@"******DTRController SentMailSampleTrack fired!! ******"));
 
-            var content = string.Format(@"SSB Dev. Sysyem (開發系統) Website: http://10.4.0.39:8080/ArcareEng/login.jsp");
+            var content = string.Format(@"Hi Dev, 
+
+Please urgently check if the test shoes in attached list are transferred to QC team or not, 
+If no, please bring it to QC asap.
+If yes, please check with QC.  
+
+Thank you
+");
 
             var toMails = new List<string>();
-            /*
+            
             var users = await _devSendMailDAO.FindAll(x => x.EMAIL_TYPE == "02" &&
                                                            x.STATUS == 1).ToListAsync();  
             users.ForEach(x =>
             {
                 toMails.Add(x.EMAIL);
             });
-            */
+            
             var data = await _dKSDAO.GetSampleTrackDto();
             byte[] result = _excelService.CommonExportReport(data.ToList(), "TempSampleTrack.xlsx");
-            toMails.Add("stan.chen@ssbshoes.com");
-            toMails.Add("aven.yu@ssbshoes.com");
-            await _sendMailService.SendListMailAsyncbyByte(toMails, null, "Sample Shoes Alert please see the attachment !", content, result);
+            //toMails.Add("stan.chen@ssbshoes.com");
+            //toMails.Add("aven.yu@ssbshoes.com");
+            await _sendMailService.SendListMailAsyncbyByte(toMails, null, "Test Shoe Has Not Completely Transferred Yet – from DEV to QC", content, result);
             return Ok(toMails);
 
         }            
