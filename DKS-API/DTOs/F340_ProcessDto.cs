@@ -20,24 +20,27 @@ namespace DKS_API.DTOs
         public string DropDate { get; set; }
         public string Memo { get; set; }
 
+        public string PdmStatus { get; set; } //2022 02 02 add
+        public string PdmStatusDate { get; set; }   //2022 02 02 add
         public string HpFlag { get; set; }
         public string HpSampleNo { get; set; }
         public string F340SampleNo { get; set; }
+
         public string ReleaseType { get; set; }
         public string CreateDate { get; set; }
-
         public string PdmDate { get; set; }
         public string DevUpDate { get; set; }
         public string DevBtmDate { get; set; }
+
         public string TTUpDate { get; set; }
         public string TTBtmDate { get; set; }
-
         public string ReleaseDate { get; set; }
         public string TTRejectReason { get; set; }
         public string TTRejectDate { get; set; }
+
         public string TTRejectCount { get; set; }
         public string CwaDeadline { get; set; }
-        
+
 
     }
 }

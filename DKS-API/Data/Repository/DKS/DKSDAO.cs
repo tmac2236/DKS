@@ -22,7 +22,7 @@ namespace DFPS.API.Data.Repository
         {
             _context = context;
             _config = config;
-            spCode = _config.GetSection("AppSettings:SpCode").Value;
+            spCode = _config.GetSection("AppSettings:SpCode").Value; //目前用在F340進度表而已
         }
 
         //依LOGIN查帳號

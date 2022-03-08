@@ -20,21 +20,24 @@ export class F340Schedule implements ModelInterface {
   dropDate: string;
   memo: string;
 
+  pdmStatus: string;  //2022 02 02 add
+  pdmStatusDate: string;  //2022 02 02 add
   hpFlag: string;
   hpSampleNo: string;
   f340SampleNo: string;
+
   releaseType: string;
   createDate: string;
-
   pdmDate: string;
   devUpDate: string;
   devBtmDate: string;
+
   ttUpDate: string;
   ttBtmDate: string;
-  
   releaseDate: string;
   ttRejectReason: string;
   ttRejectDate: string;
+
   ttRejectCount: string;
   cwaDeadline: string;
 

@@ -125,7 +125,9 @@
                         <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.sampleNo' | translate }}</th>
 
                         <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.smsSampleNo' | translate }}</th>                        
-                        <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.memo' | translate }}</th> 
+                        <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.memo' | translate }}</th>
+                        <th style="background-color:#D0D0D0;" tooltip="From PDM" placement="bottom">{{ 'F340.titleList.pdmStatus' | translate }}</th> <!--2022 02-02 add-->
+                        <th style="background-color:#D0D0D0;" tooltip="From PDM" placement="bottom">{{ 'F340.titleList.pdmStatusDate' | translate }}</th>  <!--2022 02-02 add-->
                         <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.devStatus' | translate }}</th>
                         <th style="background-color:#76DAFF;" tooltip="FromF204/F205" placement="bottom">{{ 'F340.titleList.dropDate' | translate }}</th>
                         <th style="background-color:#FF7F50;" tooltip="From HP" placement="bottom">{{ 'F340.titleList.hpFlag' | translate }}</th>
@@ -167,6 +169,8 @@
 
                           <td>{{ item.smsSampleNo }}</td>
                           <td>{{ item.memo }}</td>
+                          <td>{{ item.pdmStatus }}</td>      <!-- 2022-02-02 add-->
+                          <td>{{ item.pdmStatusDate }}</td>  <!-- 2022-02-02 add-->                         
                           <td>{{ item.devStatus }}</td>
                           <td>{{ item.dropDate }}</td>
                           <td>{{ item.hpFlag }}</td>

@@ -46,7 +46,9 @@
                 "releaseDate":"Release Date",
                 "ttRejectCount":"技轉退回次數",
                 "smsSampleNo":"SMS SampleNo",
-                "memo":"Memo"
+                "memo":"Memo",
+                "pdmStatus":"Pdm Status",
+                "pdmStatusDate":"Pdm Status Date"
         }
     },"F428": {
         "title": "F428 ",
