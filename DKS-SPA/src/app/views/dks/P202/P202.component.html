@@ -1,0 +1,124 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-3">
+              <strong>{{title}}</strong>
+            </div>
+            <div class="col-9">
+              <div class="float-right">
+                <strong *ngIf="this.sCondtion?.loginUser"
+                  >{{ "Common.hello" | translate }}
+                  {{ this.sDtrFgtShoes?.loginUser }}</strong
+                >
+                <!--
+                <img
+                  src="../assets/systemImg/taiwan.png"
+                  tooltip="{{
+                    this.sSampleTrackReport.loginUser
+                  }} Prefers Mandarin"
+                  placement="bottom"
+                  width="25"
+                  height="25"
+                  (click)="this.utility.useLanguage('zh')"
+                />
+                <img
+                  src="../assets/systemImg/united-states.png"
+                  tooltip="{{
+                    this.sSampleTrackReport.loginUser
+                  }} Prefers English"
+                  placement="bottom"
+                  width="25"
+                  height="25"
+                  (click)="this.utility.useLanguage('en')"
+                />
+                -->
+                <!--<img src="../assets/systemImg/vietnam.png" width="25" height="25" />-->
+                <img
+                  *ngIf="this.sCondtion?.loginUser"
+                  src="../assets/systemImg/exit.png"
+                  tooltip="Logout"
+                  width="25"
+                  height="25"
+                  (click)="this.utility.logout()"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <form class="form">
+            <!-- Second column-->
+            <div class="row">
+              <div class="form-group col-xs-2 mr-1">
+                <label class="col-form-label mr-1 mt-2">Brand</label>
+                <select
+                class="col-form-label"
+                name="brand"
+                [(ngModel)]="sCondtion.brand" 
+                >
+                  <option value=""></option>
+                  <option *ngFor="let a of code034" value="{{ a.key }}">
+                    {{ a.key }}: {{ a.valueEn }}
+                  </option>
+                </select> 
+                <label class="col-form-label mr-1 mt-2">Season</label>
+                <input
+                  class="col-form-label mr-1"
+                  type="text"
+                  name="season"
+                  size ="4"
+                  maxlength="4"
+                  [(ngModel)]="sCondtion.season"
+                />
+                <label class="col-form-label mr-1 mt-2">Model Name</label>
+                <input
+                  class="col-form-label mr-1"
+                  type="text"
+                  name="modelName"
+                  [(ngModel)]="sCondtion.modelName"
+                />                
+                <label class="col-form-label mr-1 mt-2">Model No</label>
+                <input
+                  class="col-form-label mr-1"
+                  type="text"
+                  name="modelNo"
+                  [(ngModel)]="sCondtion.modelNo"
+                />
+                <label class="col-form-label mr-1 mt-2">Article</label>
+                <input
+                  class="col-form-label mr-1"
+                  type="text"
+                  name="article"
+                  size ="6"
+                  maxlength="6"
+                  [(ngModel)]="sCondtion.article"
+                />                   
+                <button
+                  class="btn btn-primary mr-1"
+                  type="button"
+                  (click)="export()"
+                  [disabled]="isCannotExportable()"
+                >
+                Export
+                </button>             
+
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ngx-spinner
+  bdColor="rgba(0, 0, 0, 0.8)"
+  size="large"
+  color="#fff"
+  type="square-jelly-box"
+  [fullScreen]="true"
+  ><p style="color: white">Loading {{title}}...</p></ngx-spinner
+>

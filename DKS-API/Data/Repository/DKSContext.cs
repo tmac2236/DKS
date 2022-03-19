@@ -53,8 +53,8 @@ namespace DKS_API.Data.Repository
 
         public DbSet<DtrFgtEtdDto> GetDtrFgtEtdDto { get; set; }
         public DbSet<NoneDto> GetNoneDto { get; set; }
-        
-
+        public DbSet<P202Dto> GetP202Dto { get; set; }
+    
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Ordsumoh>().HasKey(x => new { x.PRSUMNO });
@@ -117,7 +117,9 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<DtrFgtEtdDto>()
             .HasNoKey();            
             modelBuilder.Entity<NoneDto>()
-            .HasNoKey();    
+            .HasNoKey();
+            modelBuilder.Entity<P202Dto>()
+            .HasNoKey();                
 
         }
     }

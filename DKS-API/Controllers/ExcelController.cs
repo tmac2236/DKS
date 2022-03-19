@@ -49,6 +49,22 @@ namespace DFPS.API.Controllers
             return File(result, "application/xlsx", "P206DataByArticle.xlsx");
         }
 
+        [HttpPost("getP202BySeason")]
+        public async Task<IActionResult> GetP202BySeason(SP202 sP202)
+        {
+            _logger.LogInformation(String.Format(@"****** ExcelController GetP202BySeason fired!! ******"));
+
+            List<SqlParameter> pc = new List<SqlParameter>{
+                new SqlParameter("@Season",sP202.season)
+            };
+            var data = await _context.GetP202Dto
+                   .FromSqlRaw(" EXECUTE dbo.GetP202BySeason @Season ", pc.ToArray())
+                   .ToListAsync();
+
+            byte[] result = _excelService.CommonExportReport(data, "TempP202BySeason.xlsx");
+            return File(result, "application/xlsx", "P202BySeason.xlsx");
+        }
+
 
     }
 }
