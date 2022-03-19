@@ -55,10 +55,14 @@ namespace DFPS.API.Controllers
             _logger.LogInformation(String.Format(@"****** ExcelController GetP202BySeason fired!! ******"));
 
             List<SqlParameter> pc = new List<SqlParameter>{
-                new SqlParameter("@Season",sP202.season)
+                new SqlParameter("@Season",sP202.season.Trim()),
+                new SqlParameter("@Brandcate",sP202.brand.Trim()),
+                new SqlParameter("@ModelName",sP202.modelName.Trim()),
+                new SqlParameter("@ModelNo",sP202.modelNo.Trim()),
+                new SqlParameter("@Article",sP202.article.Trim())
             };
             var data = await _context.GetP202Dto
-                   .FromSqlRaw(" EXECUTE dbo.GetP202BySeason @Season ", pc.ToArray())
+                   .FromSqlRaw(" EXECUTE dbo.GetP202BySeason @Season,@Brandcate,@ModelName,@ModelNo,@Article ", pc.ToArray())
                    .ToListAsync();
 
             byte[] result = _excelService.CommonExportReport(data, "TempP202BySeason.xlsx");
