@@ -15,5 +15,7 @@ export class SampleTrackReportDto implements ModelInterface{
 
      devKeeper :string;
      devTransferer :string;
-     overDays: number;
+     deptName :string;
+     transferName :string;
+     overDays : number;
 }

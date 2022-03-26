@@ -22,6 +22,10 @@ namespace DKS.API.Models.DKS
         public string DevKeeper { get; set; }
         public string DevTransferer { get; set; }
         public int OverDays { get; set; }
+        public string DeptName { get; set; }
+        public string TransferName { get; set; }
+
+        
 
     }
 }

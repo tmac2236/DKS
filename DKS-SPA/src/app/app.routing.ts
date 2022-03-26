@@ -124,7 +124,7 @@ export const routes: Routes = [
     canActivate: [AuthGuardRole],
     component: PlmPartComponent, 
     data: {
-      roles: [utilityConfig.RoleSysAdm],
+      roles: [utilityConfig.PlmUpload],
     },
   },
   {

@@ -46,7 +46,8 @@ namespace DKS_API
             //security
             services.AddCors();
             services.AddDbContext<DKSSysDataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DKSSysConnection")));
-            services.AddDbContext<DKSContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DKSConnection")));
+            services.AddDbContext<DKSContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DKSConnection"),
+            sqlServerOptions => sqlServerOptions.CommandTimeout(1800)));
 
             services.AddControllers();
             /*

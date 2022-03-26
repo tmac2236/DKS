@@ -120,7 +120,7 @@
                     <thead>
                       <tr class="table-info">
                         <th
-                          style="background-color: #23d954;width:15%;"
+                          style="background-color: #23d954;width:10%;"
 
                         >
                         Sampel No
@@ -137,7 +137,7 @@
                         Model No
                         </th>
                         <th
-                          style="background-color: #23d954;width:10%;"
+                          style="background-color: #23d954;width:5%;"
                         >
                         Model Name
                         </th>
@@ -184,6 +184,16 @@
                         <th
                           style="background-color: #23d954;width:5%;"
                         >
+                        DeptName
+                        </th> 
+                        <th
+                          style="background-color: #23d954;width:5%;"
+                        >
+                        TransferName
+                        </th>                                                 
+                        <th
+                          style="background-color: #23d954;width:5%;"
+                        >
                         Over Days
                         </th>                        
                       </tr>
@@ -191,10 +201,10 @@
                     <tbody>
                       <ng-container *ngFor="let item of result; let i = index">
                         <tr>
-                          <td style="width:15%;">{{ item.sampleNo  }}</td>
+                          <td style="width:10%;">{{ item.sampleNo  }}</td>
                           <td style="width:5%;">{{ item.article  }}</td>
                           <td style="width:5%;">{{ item.modelNo  }}</td>
-                          <td style="width:10%;">{{ item.modelName  }}</td>
+                          <td style="width:5%;">{{ item.modelName  }}</td>
                           <td style="width:5%;">{{ item.team  }}</td>
 
                           <td style="width:5%;">{{ item.stage  }}</td>
@@ -205,6 +215,8 @@
 
                           <td style="width:5%;">{{ item.devKeeper  }}</td>
                           <td style="width:5%;">{{ item.devTransferer  }}</td>
+                          <td style="width:5%;">{{ item.deptName  }}</td>
+                          <td style="width:5%;">{{ item.transferName  }}</td>                          
                           <td style="width:5%;">{{ item.overDays }}</td>
                         </tr>
                       </ng-container>
