@@ -160,6 +160,9 @@ namespace DKS.API.Models.DKS
         public string PDF { get; set; }
         [Required]
         [StringLength(1)]
-        public string FACTORYID { get; set; }       
+        public string FACTORYID { get; set; }
+        [StringLength(10)]  //2022 04 10 Add
+        public string STYLE { get; set; } 
+
     }
 }

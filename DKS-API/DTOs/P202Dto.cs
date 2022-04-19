@@ -41,5 +41,9 @@ namespace DKS_API.DTOs
         public string TEST_RESULT { get; set; }
         public string EXPIRE_DATE { get; set; }
 
+        public string DEADLINE { get; set; }
+        public string ACTIVATED_CWA { get; set; }
+        public string PROJECT_STATUS { get; set; }
+
     }
 }
