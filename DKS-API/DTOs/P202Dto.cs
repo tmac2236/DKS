@@ -44,6 +44,8 @@ namespace DKS_API.DTOs
         public string DEADLINE { get; set; }
         public string ACTIVATED_CWA { get; set; }
         public string PROJECT_STATUS { get; set; }
+        public decimal MARKET_FORECAST { get; set; }
+
 
     }
 }
