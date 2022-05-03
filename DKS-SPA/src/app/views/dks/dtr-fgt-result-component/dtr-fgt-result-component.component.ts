@@ -568,7 +568,26 @@ reasonList: { id: number, name: string, code: string }[] = [
     }
 
     this.cleanUpgrade();
-    this.upgradeModel = model;
+    //convert
+    //this.upgradeModel = model;
+    this.upgradeModel.article = model.article;
+    this.upgradeModel.stage = model.stage;
+    this.upgradeModel.kind = model.kind;
+    this.upgradeModel.type = model.type;
+    this.upgradeModel.modelNo = model.modelNo;
+
+    this.upgradeModel.modelName = model.modelName;
+    this.upgradeModel.labNo = model.labNo;
+    this.upgradeModel.result = model.result;
+    this.upgradeModel.partNo = model.partNo;
+    this.upgradeModel.partName = model.partName;
+
+    this.upgradeModel.fileName = model.fileName;
+    this.upgradeModel.remark = model.remark;
+    this.upgradeModel.upday = null; //api will get datetime now
+    this.upgradeModel.upusr = model.upusr;
+
+
     this.upgradeModel.upusr = this.sDevDtrFgtResult.loginUser;
 
     if(model.stage =="MCS"){  //因為舊資料還有MCS

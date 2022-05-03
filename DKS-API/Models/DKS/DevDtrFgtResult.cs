@@ -63,5 +63,6 @@ namespace DKS.API.Models.DKS
         public string UPUSR { get; set; }
 
         public string FACTORYID { get; set; }
+        public DateTime? FIRSTUPDAY { get; set; }
     }
 }

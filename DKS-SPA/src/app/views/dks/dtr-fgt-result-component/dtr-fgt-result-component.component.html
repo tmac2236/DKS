@@ -109,8 +109,9 @@
 
                         <th>TreatMent(zh-TW)</th>
                         <th>TreatMent(En)</th>
-                        <th>Upload Time</th>
-                        <th>Upload User</th>
+                        <th>First Upload Time</th>
+                        <th>Update Time</th>
+                        <th>Update User</th>
                         <th>Remark</th>
                       </tr>
                     </thead>
@@ -186,8 +187,9 @@
 
                           <td>{{ item.treatmentZh }}</td>
                           <td>{{ item.treatmentEn }}</td>
-
-                          <td>{{ item.upday  | date: "yyyy/MM/dd HH:mm:ss"  }}</td>
+                          
+                          <td>{{ item.firstUpday }}</td>
+                          <td>{{ item.upday}}</td>
                           <td>{{ item.upusr }}</td>
 
                           <td>{{ item.remark }}</td>

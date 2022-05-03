@@ -15,12 +15,13 @@ export class DevDtrFgtResultDto implements ModelInterface {
 
   fileName: string;
   remark: string;
-  upday: Date;
+  upday: string;
   upusr: string;
   treatmentCode: string;
 
   treatmentZh: string;
   treatmentEn: string;
+  firstUpday: string;       //2022 04 29 add
 
   vern: string;             //配合和新增畫面一樣物件
   devSeason: string;        //配合和新增畫面一樣物件

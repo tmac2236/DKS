@@ -21,12 +21,13 @@ namespace DKS.API.Models.DKS
 
         public string FileName { get; set; }
         public string Remark { get; set; }
-        public DateTime Upday { get; set; }
+        public string Upday { get; set; }
         public string Upusr { get; set; }
         public string TreatmentCode { get; set; }
         
         public string TreatmentZh { get; set; }
         public string TreatmentEn { get; set; }
+        public string FirstUpday { get; set; }     //2022 04 29 add
         
         public string Vern { get; set; }  //配合和新增畫面一樣物件(Buy Plan)
         public string DevSeason { get; set; }  //配合和新增畫面一樣物件(Buy Plan、Dev)
