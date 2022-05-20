@@ -100,7 +100,7 @@ export const routes: Routes = [
     canActivate: [AuthGuardRole],
     component: DtrFgtResultReportComponent,
     data: {
-      roles: [utilityConfig.RoleFgtLabReport],
+      roles: [utilityConfig.RoleFgtLabReport,utilityConfig.DtrQcSup],
     },
   },
   {

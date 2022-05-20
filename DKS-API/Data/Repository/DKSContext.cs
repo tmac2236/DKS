@@ -54,7 +54,8 @@ namespace DKS_API.Data.Repository
         public DbSet<DtrFgtEtdDto> GetDtrFgtEtdDto { get; set; }
         public DbSet<NoneDto> GetNoneDto { get; set; }
         public DbSet<P202Dto> GetP202Dto { get; set; }
-    
+        public DbSet<KanbanTQCDto> GetKanbanTQCDto { get; set; }
+        public DbSet<KanbanDataByLineDto> GetKanbanDataByLineDto { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Ordsumoh>().HasKey(x => new { x.PRSUMNO });
@@ -119,7 +120,11 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<NoneDto>()
             .HasNoKey();
             modelBuilder.Entity<P202Dto>()
-            .HasNoKey();                
+            .HasNoKey(); 
+            modelBuilder.Entity<KanbanTQCDto>()
+            .HasNoKey();
+            modelBuilder.Entity<KanbanDataByLineDto>()
+            .HasNoKey();               
 
         }
     }

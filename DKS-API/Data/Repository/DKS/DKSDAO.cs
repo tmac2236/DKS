@@ -262,8 +262,29 @@ ON t1.PKBASEHID=t3.FKBASEHID and t3.LANGID='437' ");
                    .FromSqlRaw(string.Format("EXECUTE dbo.SSB_DTR_VSFILE_UPDATE @FACTORYID,@SEASON,@ARTICLE"), pc.ToArray())
                    .ToListAsync();
             return data;
-        }        
-                 
+        }
+        public async Task<List<KanbanDataByLineDto>> GetKanbanDataByLineDto(string lineId )
+        {
+
+            List<SqlParameter> pc = new List<SqlParameter>{
+                new SqlParameter("@LINEID",lineId )
+            };
+            var data = await _context.GetKanbanDataByLineDto
+                   .FromSqlRaw(string.Format("EXECUTE dbo.PROD_GET_KANBAN_PRODUCT_LINE @LINEID"), pc.ToArray())
+                   .ToListAsync();
+            return data;
+        } 
+        public async Task<List<KanbanTQCDto>> GetKanbanTQCDto(string lineId)
+        {
+
+            List<SqlParameter> pc = new List<SqlParameter>{
+                new SqlParameter("@LINEID",lineId )
+            };
+            var data = await _context.GetKanbanTQCDto
+                   .FromSqlRaw(string.Format("EXECUTE dbo.PROD_GET_KANBAN_TQC @LINEID"), pc.ToArray())
+                   .ToListAsync();
+            return data;
+        }    
     }
    
 }

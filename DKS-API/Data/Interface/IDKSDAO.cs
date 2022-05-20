@@ -25,5 +25,9 @@ namespace DKS_API.Data.Interface
         void GetTransferToDTR(string factoryIdFrom,string factoryIdTo,string article);
         Task<List<SampleTrackReportDto>> GetSampleTrackDto();
         Task<List<NoneDto>> DoSsbDtrVsFileUpdate(string factoryId, string season, string article );
+
+        Task<List<KanbanDataByLineDto>> GetKanbanDataByLineDto(string lineId );
+        Task<List<KanbanTQCDto>> GetKanbanTQCDto(string lineId);
+        
     }
 }

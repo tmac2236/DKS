@@ -16,11 +16,14 @@ namespace DKS_API.Controllers
     public class SystemController : ApiController
     {
         private readonly IDevSysSetDAO _devSysSetDAO;
+        private readonly IDKSDAO _dksDAO;
 
-        public SystemController(IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<SystemController> logger, IDevSysSetDAO devSysSetDAO)
+        public SystemController(IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<SystemController> logger,
+                 IDevSysSetDAO devSysSetDAO,IDKSDAO dksDAO)
                 : base(config, webHostEnvironment, logger)
         {
             _devSysSetDAO = devSysSetDAO;
+            _dksDAO = dksDAO;
         }
 
         [HttpGet("findAll")]
@@ -51,6 +54,20 @@ namespace DKS_API.Controllers
             return Ok(errorStr);
 
         }
+        [HttpGet("getKanbanDataByLineDto")]
+        public async Task<IActionResult> GetKanbanDataByLineDto(string lineId)
+        {
+            _logger.LogInformation(String.Format(@"****** SystemController GetKanbanDataByLineDto fired!! ******"));
+            var data = await _dksDAO.GetKanbanDataByLineDto(lineId);
+            return Ok(data);
+        }           
+        [HttpGet("getKanbanTQCDto")]
+        public async Task<IActionResult> GetKanbanTQCDto(string lineId)
+        {
+            _logger.LogInformation(String.Format(@"****** SystemController GetKanbanTQCDto fired!! ******"));
+            var data = await _dksDAO.GetKanbanTQCDto(lineId);
+            return Ok(data);
+        }        
 
     }
 }
