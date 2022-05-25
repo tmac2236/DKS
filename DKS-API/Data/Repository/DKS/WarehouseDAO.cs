@@ -8,6 +8,7 @@ using DKS_API.DTOs;
 using Microsoft.Data.SqlClient;
 using System;
 using DKS_API.Helpers;
+using DKS.API.Models.DKS;
 
 namespace DFPS.API.Data.Repository
 {
@@ -33,11 +34,6 @@ namespace DFPS.API.Data.Repository
                 .Create(data, sF428SampleNoDetail.PageNumber, sF428SampleNoDetail.PageSize, sF428SampleNoDetail.IsPaging);
         }
 
-        public Task<List<F428SampleNoDetail>> GetMaterialNoBySampleNoForWarehouse4Excel(SF428SampleNoDetail sMaterialDetailBySampleNo)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<List<StockDetailByMaterialNo>> GetStockDetailByMaterialNo(SF428SampleNoDetail sF428SampleNoDetail)
         {
             List<SqlParameter> pc = new List<SqlParameter>{
@@ -50,10 +46,21 @@ namespace DFPS.API.Data.Repository
                    .ToListAsync();
             return data;
         }
-
-        public Task<bool> SaveAll()
+        public Task<List<F428SampleNoDetail>> GetMaterialNoBySampleNoForWarehouse4Excel(SF428SampleNoDetail sF428SampleNoDetail)
         {
             throw new NotImplementedException();
         }
+        public async Task<List<F406iDto>> GetF406iDto(SF406i sF406iDto)
+        {
+            List<SqlParameter> pc = new List<SqlParameter>{
+                new SqlParameter("@StockNo",sF406iDto.StockNo)
+            };
+
+            var data = await  _context.GetF406iDto
+                   .FromSqlRaw("EXECUTE dbo.GetF406I @StockNo", pc.ToArray())
+                   .ToListAsync();
+            return data;
+        }
+
     }
 }

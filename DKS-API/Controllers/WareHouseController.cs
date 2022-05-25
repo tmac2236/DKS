@@ -82,5 +82,18 @@ namespace DKS_API.Controllers
             return Ok();
 
         }
+        [HttpGet("getF406iDto")]
+        public async Task<IActionResult> GetF406iDto([FromQuery] SF406i sF406i)
+        {
+            _logger.LogInformation(String.Format(@"****** WareHouseController GetF406iDto fired!! ******"));
+
+            var data = await _warehouseDao.GetF406iDto(sF406i);
+
+            PagedList<F406iDto> result = PagedList<F406iDto>.Create(data, sF406i.PageNumber, sF406i.PageSize, sF406i.IsPaging);
+            Response.AddPagination(result.CurrentPage, result.PageSize,
+            result.TotalCount, result.TotalPages);
+            return Ok(result);
+
+        }
     }
 }

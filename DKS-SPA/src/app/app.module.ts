@@ -77,6 +77,7 @@ import { PlmPartComponent } from "./views/dks/plm/plm-part/plm-part.component";
 import { SampleTrackReportComponent } from "./views/dks/rfid/sample-track-report/sample-track-report.component";
 import { DtrFgtShoesComponent } from "./views/dks/dtr-fgt-shoes/dtr-fgt-shoes.component";
 import { P202Component } from "./views/dks/P202/P202.component";
+import { F406IComponent } from "./views/dks/F406I/F406I.component";
 
 //載入 "/assets/i18n/[lang].json" 語系檔
 export function createTranslateLoader(http: HttpClient) {
@@ -140,6 +141,7 @@ export function createTranslateLoader(http: HttpClient) {
     SampleTrackReportComponent,
     DtrFgtShoesComponent,
     P202Component,
+    F406IComponent,
   ],
   providers: [
     AuthService,

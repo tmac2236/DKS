@@ -1,0 +1,162 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-3">
+              <strong>{{title}}</strong>
+            </div>
+            <div class="col-9">
+              <div class="float-right">
+                <strong *ngIf="this.sF406i?.loginUser"
+                  >{{ "Common.hello" | translate }}
+                  {{ this.sF406i?.loginUser }}</strong
+                >
+                <img
+                  src="../assets/systemImg/exit.png"
+                  tooltip="Logout"
+                  width="25"
+                  height="25"
+                  (click)="this.utility.logout()"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <form class="form" #addQueryReportDataForm="ngForm">
+            <!-- Second column-->
+            <div class="row">
+              <div class="form-group col-xs-2 mr-1">
+
+                <label class="col-form-label ml-4 mr-1 mt-2">Scan</label>
+                <input
+                  class="col-form-label mr-1"
+                  type="text"
+                  name="stockNo"
+                  placeholder="Please sacn the Stock#"
+                  [(ngModel)]="sF406i.stockNo"
+                  (change)="scanStockNo()"
+                />
+                <!--                           
+                <button
+                  class="btn btn-primary mr-1"
+                  type="button"
+                  (click)="search()"
+                  [disabled]="!addQueryReportDataForm.valid"
+                >
+                  {{ "Common.btnList.search" | translate }}
+                </button>
+
+                <button
+                  class="btn btn-primary mr-1 ml-4"
+                  type="button"
+                  (click)="export()"
+                  [disabled]="!addQueryReportDataForm.valid"
+                >
+                Export
+                </button>
+                -->
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table text-center table-striped">
+                    <!--text-nowrap不換行-->
+                    <!--套版分頁<table datatable id="f340Sche" class="table text-center table-striped">-->
+                    <thead>
+                      <tr class="table-info">
+                        <th style="width:5%" >Stock#</th>
+                        <th style="width:5%" >Order#</th>
+                        <th style="width:5%" >Material#</th>
+                        <th style="width:15%" >Material</th>
+                        <th style="width:5%" >Color</th>
+
+                        <th style="width:5%" >Supplier</th>
+                        <th style="width:15%" >Model</th>
+                        <th style="width:5%" >Article</th>
+                        <th style="width:10%" >Season</th>
+                        <th style="width:5%" >Stage</th>
+
+                        <th style="width:5%" >Date</th>
+                        <th style="width:5%" >Qty</th>
+                        <th style="width:5%" >TST</th>
+                        <th style="width:10%" >SFMCA</th>                   
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container *ngFor="let item of result; let i = index">
+                        <tr>
+                          <td style="width:5%;">{{ item.stockNo }}</td>
+                          <td style="width:5%;">{{ item.orderNo }}</td>
+                          <td style="width:5%;">{{ item.materialNo  }}</td>
+                          <td style="width:15%;">{{ item.materialName }}/{{ item.sheSize }}</td>
+                          <td style="width:5%;">{{ item.colorCode  }}({{ item.ssbMatPid }})</td>
+
+                          <td style="width:5%;">{{ item.supName }}</td>
+                          <td style="width:15%;">{{ item.modelMemo }}/{{ item.devTeamName }}</td>
+                          <td style="width:5%;">{{ item.articleMemo }}</td>
+                          <td style="width:10%;">{{ item.season }}({{ item.location }})</td>
+                          <td style="width:5%;">{{ item.oDSTAGE20 }}</td>
+
+                          <td style="width:5%;">{{ item.acptDate | date: "yyyy/MM/dd"  }}</td>
+                          <td style="width:5%;">{{ item.accQty  }} {{ item.unit  }}</td>
+                          <td style="width:5%;">Yes/{{ item.testYn }}</td>
+                          <td style="width:10%;">{{ item.fmca1 }}</td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                  <!--
+                  <div class="d-flex justify-content-start">
+                    <select
+                      style="height: 35px; width: 45px"
+                      name="itemsPerPage"
+                      [(ngModel)]="sSampleTrackReport.itemsPerPage"
+                      (change)="changePageSize($event)"
+                    >
+                      <option value="10" selected>10</option>
+                      <option value="25" selected>25</option>
+                      <option value="50" selected>50</option>
+                      <option value="100" selected>100</option>
+                    </select>
+                    <pagination
+                      *ngIf="this.sSampleTrackReport.isPaging"
+                      [boundaryLinks]="true"
+                      [totalItems]="sSampleTrackReport.totalItems"
+                      [maxSize]="60"
+                      [itemsPerPage]="sSampleTrackReport.itemsPerPage"
+                      [(ngModel)]="sSampleTrackReport.currentPage"
+                      (pageChanged)="pageChangeds($event)"
+                      previousText="&lsaquo;"
+                      nextText="&rsaquo;"
+                      firstText="&laquo;"
+                      lastText="&raquo;"
+                    >
+                    </pagination>
+                  </div>
+                  -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ngx-spinner
+  bdColor="rgba(0, 0, 0, 0.8)"
+  size="large"
+  color="#fff"
+  type="square-jelly-box"
+  [fullScreen]="true"
+  ><p style="color: white">Loading {{title}}...</p></ngx-spinner
+>

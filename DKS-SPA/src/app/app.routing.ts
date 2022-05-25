@@ -17,6 +17,7 @@ import { DtrVStandardComponent } from "./views/dks/dtr-v-standard/dtr-v-standard
 import { F205TransComponent } from "./views/dks/F205/F205-trans/F205-trans.component";
 import { F340PpdComponent } from "./views/dks/F340/F340-ppd/F340-ppd.component";
 import { F340Component } from "./views/dks/F340/F340.component";
+import { F406IComponent } from "./views/dks/F406I/F406I.component";
 import { F428EditComponent } from "./views/dks/F428/F428-edit/F428-edit.component";
 import { F428Component } from "./views/dks/F428/F428.component";
 import { P202Component } from "./views/dks/P202/P202.component";
@@ -138,6 +139,10 @@ export const routes: Routes = [
   {
     path: "P202",
     component: P202Component,     
+  },
+  {
+    path: "F406I",
+    component: F406IComponent, 
   },   
   {
     path: "",
