@@ -62,56 +62,59 @@
             </div>
           </form>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="result.length > 0">
           <div class="col-lg-12">
             <div class="card">
               <div class="card-body">
                 <div class="table-responsive">
-                  <table class="table text-center table-striped">
-                    <!--text-nowrap不換行-->
-                    <!--套版分頁<table datatable id="f340Sche" class="table text-center table-striped">-->
-                    <thead>
-                      <tr class="table-info">
-                        <th style="width:5%" >Stock#</th>
-                        <th style="width:5%" >Order#</th>
-                        <th style="width:5%" >Material#</th>
-                        <th style="width:15%" >Material</th>
-                        <th style="width:5%" >Color</th>
-
-                        <th style="width:5%" >Supplier</th>
-                        <th style="width:15%" >Model</th>
-                        <th style="width:5%" >Article</th>
-                        <th style="width:10%" >Season</th>
-                        <th style="width:5%" >Stage</th>
-
-                        <th style="width:5%" >Date</th>
-                        <th style="width:5%" >Qty</th>
-                        <th style="width:5%" >TST</th>
-                        <th style="width:10%" >SFMCA</th>                   
+                  <table class="table text-center">
+                      <tr>
+                        <th >Stock#</th>
+                        <td colspan="3">{{ result[0].stockNo }}</td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      <ng-container *ngFor="let item of result; let i = index">
-                        <tr>
-                          <td style="width:5%;">{{ item.stockNo }}</td>
-                          <td style="width:5%;">{{ item.orderNo }}</td>
-                          <td style="width:5%;">{{ item.materialNo  }}</td>
-                          <td style="width:15%;">{{ item.materialName }}/{{ item.sheSize }}</td>
-                          <td style="width:5%;">{{ item.colorCode  }}({{ item.ssbMatPid }})</td>
+                      <tr>
+                        <th >Order#</th>
+                        <td >{{ result[0].orderNo }}</td>
+                        <th >Material#</th>
+                        <td >{{ result[0].materialNo  }}</td>
+                      </tr>
+                      <tr>  
+                        <th >Material</th>
+                        <td colspan="3">{{ result[0].materialName }}/{{ result[0].sheSize }}</td>
+                      </tr>
+                      <tr>  
+                        <th >Color</th>
+                        <td >{{ result[0].colorCode  }}({{ result[0].ssbMatPid }})</td>
+                        <th >Supplier</th>
+                        <td >{{ result[0].supName }}</td>
+                      </tr>
+                      <tr> 
+                        <th >Model</th>
+                        <td colspan="3">{{ result[0].modelMemo }}/{{ result[0].devTeamName }}</td>
+                      </tr>
+                      <tr>  
+                        <th >Article</th>
+                        <td colspan="3">{{ result[0].articleMemo }}</td>
+                      </tr>
+                      <tr>  
+                        <th >Season</th>
+                        <td >{{ result[0].season }}({{ result[0].location }})</td>
+                        <th >Stage</th>
+                        <td >{{ result[0].oDSTAGE20 }}</td>
+                      </tr>
+                      <tr>
+                        <th >Date</th>
+                        <td >{{ result[0].acptDate | date: "yyyy/MM/dd"  }}</td>
+                        <th >Qty</th>
+                        <td >{{ result[0].accQty  }} {{ result[0].unit  }}</td>
+                      </tr>
+                      <tr>  
+                        <th >TST</th>
+                        <td >Yes/{{ result[0].testYn }}</td>
+                        <th >SFMCA</th>
+                        <td >{{ result[0].fmca1 }}</td>                   
+                      </tr>
 
-                          <td style="width:5%;">{{ item.supName }}</td>
-                          <td style="width:15%;">{{ item.modelMemo }}/{{ item.devTeamName }}</td>
-                          <td style="width:5%;">{{ item.articleMemo }}</td>
-                          <td style="width:10%;">{{ item.season }}({{ item.location }})</td>
-                          <td style="width:5%;">{{ item.oDSTAGE20 }}</td>
-
-                          <td style="width:5%;">{{ item.acptDate | date: "yyyy/MM/dd"  }}</td>
-                          <td style="width:5%;">{{ item.accQty  }} {{ item.unit  }}</td>
-                          <td style="width:5%;">Yes/{{ item.testYn }}</td>
-                          <td style="width:10%;">{{ item.fmca1 }}</td>
-                        </tr>
-                      </ng-container>
-                    </tbody>
                   </table>
                   <!--
                   <div class="d-flex justify-content-start">
