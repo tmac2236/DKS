@@ -47,6 +47,7 @@ export class F406IComponent implements OnInit {
       (res: PaginatedResult<F406iDto[]>) => {
         this.result = res.result;        
         this.sF406i.setPagination(res.pagination);
+        this.sF406i.stockNo =""; //clear
         this.utility.spinner.hide();
       },
       (error) => {
@@ -64,7 +65,7 @@ export class F406IComponent implements OnInit {
     if(this.sF406i.stockNo.length == 8){
       this.search() ;
     }else{
-      this.utility.alertify.error("The length of Stock# have to be 6 !");
+      this.utility.alertify.error("The length of Stock# have to be 8 !");
     }
 
   }
