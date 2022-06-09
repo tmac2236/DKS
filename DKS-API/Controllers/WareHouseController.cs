@@ -95,5 +95,15 @@ namespace DKS_API.Controllers
             return Ok(result);
 
         }
+        [HttpGet("getP406Dto")]
+        public async Task<IActionResult> GetP406Dto([FromQuery] string acpDateS, string acpDateE)
+        {
+            _logger.LogInformation(String.Format(@"****** WareHouseController GetF406iDto fired!! ******"));
+
+            var data = await _warehouseDao.GetP406Dto(acpDateS, acpDateE);
+
+            byte[] result = _excelService.CommonExportReport(data, "TempP406.xlsx");
+            return File(result, "application/xlsx");
+        }
     }
 }

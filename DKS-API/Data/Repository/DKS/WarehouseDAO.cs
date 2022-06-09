@@ -62,5 +62,17 @@ namespace DFPS.API.Data.Repository
             return data;
         }
 
+        public async Task<List<P406Dto>> GetP406Dto(string acpDateS, string acpDateE)
+        {
+            List<SqlParameter> pc = new List<SqlParameter>{
+                new SqlParameter("@AcpDateS",acpDateS.Trim()),
+                new SqlParameter("@AcpDateE",acpDateE.Trim())
+            };
+
+            var data = await  _context.GetP406Dto
+                   .FromSqlRaw("EXECUTE dbo.GetP406 @AcpDateS,@AcpDateE", pc.ToArray())
+                   .ToListAsync();
+            return data;
+        }
     }
 }

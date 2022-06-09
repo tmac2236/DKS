@@ -57,6 +57,7 @@ namespace DKS_API.Data.Repository
         public DbSet<KanbanTQCDto> GetKanbanTQCDto { get; set; }
         public DbSet<KanbanDataByLineDto> GetKanbanDataByLineDto { get; set; }
         public DbSet<F406iDto> GetF406iDto{ get; set; }
+        public DbSet<P406Dto> GetP406Dto{ get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -129,7 +130,8 @@ namespace DKS_API.Data.Repository
             .HasNoKey(); 
             modelBuilder.Entity<F406iDto>()
             .HasNoKey();                           
-            
+            modelBuilder.Entity<P406Dto>()
+            .HasNoKey(); 
         }
     }
 }
