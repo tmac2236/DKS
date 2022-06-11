@@ -13,5 +13,6 @@ namespace DKS_API.Data.Interface
         Task<List<StockDetailByMaterialNo>> GetStockDetailByMaterialNo(SF428SampleNoDetail sF428SampleNoDetail);
         Task<List<F406iDto>> GetF406iDto(SF406i sF406iDto);
         Task<List<P406Dto>> GetP406Dto(string acpDateS,string acpDateE);
+        Task<List<F434Dto>> GetF434Dto(SF406i sF406iDto);
     }
 }

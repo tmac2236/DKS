@@ -4,6 +4,8 @@ import { utilityConfig } from "../utility/utility-config";
 export class SF406i extends Pagination {
 
   stockNo: string;
+  materialNo: string;
+  type: number;
   /**
    *default set of searching parameters
    */
@@ -11,6 +13,8 @@ export class SF406i extends Pagination {
     super();
     this.isPaging = false; //開分頁
     this.stockNo = "";
+    this.materialNo = "";
+    this.type = 0;
   }
 
   public setPagination(pagination: Pagination) {

@@ -28,46 +28,49 @@
           <form class="form" #addQueryReportDataForm="ngForm">
             <!-- Second column-->
             <div class="row">
-              <div class="form-group col-xs-2 mr-1">
-
-                <label class="col-form-label ml-4 mr-1 mt-2">Scan</label>
-                <input
-                  class="col-form-label mr-1"
+              <div class="form-group ml-4 mr-1">
+                <select
+                style="height: 40px; width: 100px"
+                name="itemsPerPage"
+                [(ngModel)]="sF406i.type"
+              >
+                <option value=0 >Stock#</option>
+                <option value=1 >Materail#</option>
+              </select>
+              <label *ngIf="(sF406i.type == 0 )" class="col-form-label ml-2 mr-1 mt-2">Scan</label>
+                <input *ngIf="(sF406i.type == 0 )"
+                  class="col-form-label ml-2 mr-1"
                   type="text"
                   name="stockNo"
                   placeholder="Please sacn the Stock#"
                   [(ngModel)]="sF406i.stockNo"
                   (keyup)="scanStockNo()"
                 />
-                <!--                           
-                <button
-                  class="btn btn-primary mr-1"
+                <input *ngIf="(sF406i.type == 1 )"
+                class="col-form-label ml-2 mr-1"
+                type="text"
+                name="materialNo"
+                placeholder="Please key the Material#"
+                [(ngModel)]="sF406i.materialNo"
+              />   
+              <button *ngIf="(sF406i.type == 1 )"
+                  class="btn-lg btn-primary ml-2 mr-1"
                   type="button"
-                  (click)="search()"
+                  (click)="scanMaterialNo()"
                   [disabled]="!addQueryReportDataForm.valid"
                 >
                   {{ "Common.btnList.search" | translate }}
-                </button>
-
-                <button
-                  class="btn btn-primary mr-1 ml-4"
-                  type="button"
-                  (click)="export()"
-                  [disabled]="!addQueryReportDataForm.valid"
-                >
-                Export
-                </button>
-                -->
+              </button>
               </div>
             </div>
           </form>
         </div>
-        <div class="row" *ngIf="result.length > 0">
+        <div class="row" >
           <div class="col-lg-12">
             <div class="card">
               <div class="card-body">
-                <div class="table-responsive">
-                  <table class="table text-center">
+                <div class="table-responsive" >
+                  <table class="table text-center" *ngIf="(result.length > 0) && (sF406i.type == 0 )">
                       <tr>
                         <th >Stock#</th>
                         <td colspan="3">{{ result[0].stockNo }}</td>
@@ -114,37 +117,69 @@
                         <th >SFMCA</th>
                         <td >{{ result[0].fmca1 }}</td>                   
                       </tr>
-
                   </table>
-                  <!--
-                  <div class="d-flex justify-content-start">
-                    <select
-                      style="height: 35px; width: 45px"
-                      name="itemsPerPage"
-                      [(ngModel)]="sSampleTrackReport.itemsPerPage"
-                      (change)="changePageSize($event)"
-                    >
-                      <option value="10" selected>10</option>
-                      <option value="25" selected>25</option>
-                      <option value="50" selected>50</option>
-                      <option value="100" selected>100</option>
-                    </select>
-                    <pagination
-                      *ngIf="this.sSampleTrackReport.isPaging"
-                      [boundaryLinks]="true"
-                      [totalItems]="sSampleTrackReport.totalItems"
-                      [maxSize]="60"
-                      [itemsPerPage]="sSampleTrackReport.itemsPerPage"
-                      [(ngModel)]="sSampleTrackReport.currentPage"
-                      (pageChanged)="pageChangeds($event)"
-                      previousText="&lsaquo;"
-                      nextText="&rsaquo;"
-                      firstText="&laquo;"
-                      lastText="&raquo;"
-                    >
-                    </pagination>
-                  </div>
-                  -->
+                  <table class="table text-center text-nowrap table-striped"  *ngIf="(resultM.length > 0) && (sF406i.type == 1 )"><!--text-nowrap不換行-->
+                      <thead>
+                        <tr class="table-info">
+                          <th>Type</th>
+                          <th>Stock #</th>
+                          <th>WH</th>
+                          <th>Location</th>
+                          <th>Mat. #</th>
+
+                          <th>Mat. Name</th>
+                          <th>Color</th>
+                          <th>Size</th>
+                          <th>UOM</th>
+                          <th>Stock Qty</th>
+
+                          <th>Season</th>
+                          <th>BOM Stage</th>
+                          <th>Order Stage</th>
+                          <th>Dev. Team</th>
+                          <th>Model Name</th>
+
+                          <th>Article</th>
+                          <th>FMCA</th>
+                          <th>Single Test Result</th>
+                          <th>Incoming Date</th>
+                          <th>Remark</th>
+
+                          <th>PO#</th>
+                        </tr>
+                      </thead>
+                    <tbody>
+                      <ng-container *ngFor="let item of resultM; let i = index">
+                        <tr>
+                          <td>{{ item.ssbMatPid }}</td>
+                          <td>{{ item.stockNo }}</td>
+                          <td>{{ item.wareCode }}</td>                          
+                          <td>{{ item.location }}</td>
+                          <td>{{ item.materialNo }}</td>
+
+                          <td>{{ item.materialName }}</td>
+                          <td>{{ item.color }}</td>
+                          <td>{{ item.shoeSize }}</td>                          
+                          <td>{{ item.unit }}</td>
+                          <td>{{ item.materialQty }}</td>
+                          
+                          <td>{{ item.season }}</td>
+                          <td>{{ item.stage }}</td>
+                          <td>{{ item.orderStage }}</td>                          
+                          <td>{{ item.devTeam }}</td>
+                          <td>{{ item.modelNameMemo }}</td>
+
+                          <td>{{ item.article }}</td>
+                          <td>{{ item.fmcaTestResult }}</td>
+                          <td>{{ item.singleTestResult }}</td>                          
+                          <td>{{ item.insertDate| date: "yyyy/MM/dd" }}</td>
+                          <td>{{ item.memo }}</td>
+
+                          <td>{{ item.orderNumber }}</td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>                  
                 </div>
               </div>
             </div>

@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { Utility } from "../utility/utility";
 import { F406iDto } from "../_models/f406i-dto";
 import { F428SampleNoDetail } from "../_models/f428-sample-no-detail";
+import { F434Dto } from "../_models/f434-dto";
 import { PaginatedResult } from "../_models/pagination";
 import { SF428SampleNoDetail } from "../_models/s-f428-sample-no-detail";
 import { StockDetailByMaterialNo } from "../_models/stock-detail-by-material-no";
@@ -105,6 +106,51 @@ export class WarehouseService {
           return paginatedResult;
         })
       );
-  }  
+  }
+  
+  searchF434(
+    sF406i: SF406i
+  ): Observable<PaginatedResult<F434Dto[]>> {
+    const paginatedResult: PaginatedResult<F434Dto[]> =
+      new PaginatedResult<F434Dto[]>();
+
+    let params = new HttpParams();
+    params = params.append("IsPaging", sF406i.isPaging.toString());
+    if (
+      sF406i.currentPage != null &&
+      sF406i.itemsPerPage != null
+    ) {
+      params = params.append(
+        "pageNumber",
+        sF406i.currentPage.toString()
+      );
+      params = params.append(
+        "pageSize",
+        sF406i.itemsPerPage.toString()
+      );
+      //params = params.append('orderBy', sAttendance.orderBy);
+    }
+    params = params.append("MaterialNo", sF406i.materialNo.toString());
+
+    return this.utility.http
+      .get<F434Dto[]>(
+        this.utility.baseUrl + "wareHouse/getF434Dto",
+        {
+          observe: "response",
+          params,
+        }
+      )
+      .pipe(
+        map((response) => {
+          paginatedResult.result = response.body;
+          if (response.headers.get("Pagination") != null) {
+            paginatedResult.pagination = JSON.parse(
+              response.headers.get("Pagination")
+            );
+          }
+          return paginatedResult;
+        })
+      );
+  }
 
 }

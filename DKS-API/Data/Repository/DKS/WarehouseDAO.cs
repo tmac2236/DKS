@@ -74,5 +74,17 @@ namespace DFPS.API.Data.Repository
                    .ToListAsync();
             return data;
         }
+
+        public async Task<List<F434Dto>> GetF434Dto(SF406i sF406iDto)
+        {
+            List<SqlParameter> pc = new List<SqlParameter>{
+                new SqlParameter("@MaterialNo",sF406iDto.MaterialNo)
+            };
+
+            var data = await  _context.GetF434Dto
+                   .FromSqlRaw("EXECUTE dbo.GetF434Dto @MaterialNo", pc.ToArray())
+                   .ToListAsync();
+            return data;
+        }
     }
 }

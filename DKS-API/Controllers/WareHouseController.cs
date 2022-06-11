@@ -105,5 +105,18 @@ namespace DKS_API.Controllers
             byte[] result = _excelService.CommonExportReport(data, "TempP406.xlsx");
             return File(result, "application/xlsx");
         }
+        [HttpGet("getF434Dto")]
+        public async Task<IActionResult> GetF434Dto([FromQuery] SF406i sF406i)
+        {
+            _logger.LogInformation(String.Format(@"****** WareHouseController GetF434Dto fired!! ******"));
+
+            var data = await _warehouseDao.GetF434Dto(sF406i);
+
+            PagedList<F434Dto> result = PagedList<F434Dto>.Create(data, sF406i.PageNumber, sF406i.PageSize, sF406i.IsPaging);
+            Response.AddPagination(result.CurrentPage, result.PageSize,
+            result.TotalCount, result.TotalPages);
+            return Ok(result);
+
+        }        
     }
 }

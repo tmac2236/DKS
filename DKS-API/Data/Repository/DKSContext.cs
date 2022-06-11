@@ -58,7 +58,8 @@ namespace DKS_API.Data.Repository
         public DbSet<KanbanDataByLineDto> GetKanbanDataByLineDto { get; set; }
         public DbSet<F406iDto> GetF406iDto{ get; set; }
         public DbSet<P406Dto> GetP406Dto{ get; set; }
-        
+        public DbSet<F434Dto> GetF434Dto{ get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Ordsumoh>().HasKey(x => new { x.PRSUMNO });
@@ -132,6 +133,9 @@ namespace DKS_API.Data.Repository
             .HasNoKey();                           
             modelBuilder.Entity<P406Dto>()
             .HasNoKey(); 
+            modelBuilder.Entity<F434Dto>()
+            .HasNoKey(); 
+            
         }
     }
 }
