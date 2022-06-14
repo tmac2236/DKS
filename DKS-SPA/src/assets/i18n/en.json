@@ -120,5 +120,31 @@
             "photoUpdate":"Photo Update"
 
         }
+    },"F434":{
+        "ssbMatPid": "Type",
+        "stockNo": "Stock",
+        "wareCode": "WH",
+        "location": "Location",
+        "materialNo": "Mat. #",
+
+        "materialName": "Mat. Name",
+        "color": "Color",
+        "shoeSize": "Size",
+        "unit": "UOM",
+        "materialQty": "Stock Qty",
+
+        "season": "Season",
+        "stage": "BOM Stage",
+        "orderStage": "Order Stage",
+        "devTeam": "Dev. Team",
+        "modelNameMemo": "Model Name",
+        
+        "article": "Article",
+        "fmcaTestResult": "FMCA",
+        "singleTestResult": "Single Test Result",
+        "insertDate": "Incoming Date",
+        "memo": "Remark",
+      
+        "orderNumber": "PO#"
     }
 }

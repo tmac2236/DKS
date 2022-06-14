@@ -119,6 +119,32 @@
             "shoePhoto":"部品圖片",
             "photoUpdate":"圖片更新"
         }
+    },"F434":{
+        "ssbMatPid": "類別",
+        "stockNo": "庫存批號",
+        "wareCode": "庫別",
+        "location": "儲位",
+        "materialNo": "料號",
+
+        "materialName": "品名",
+        "color": "顏色",
+        "shoeSize": "尺寸",
+        "unit": "單位",
+        "materialQty": "庫存數量",
+
+        "season": "Season",
+        "stage": "BOM Stage",
+        "orderStage": "Order Stage",
+        "devTeam": "Dev. Team",
+        "modelNameMemo": "Model Name",
+        
+        "article": "Article",
+        "fmcaTestResult": "檢驗結果",
+        "singleTestResult": "Single Test Result",
+        "insertDate": "入庫日期",
+        "memo": "備註",
+      
+        "orderNumber": "訂購單號"
     }
 }
  

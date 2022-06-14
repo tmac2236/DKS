@@ -4,25 +4,20 @@
       <div class="card">
         <div class="card-header">
           <div class="row">
-            <div class="col-3">
-              <strong>{{title}}</strong>
+            <strong class ="col-11" style="font-size: 20px;color:#000000;">{{title}}</strong>
+              <div class="col-1 btn-group" dropdown>
+                <button id="button-basic" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
+                        aria-controls="dropdown-basic">
+                        <strong *ngIf="this.sF406i.loginUser">{{ this.sF406i.loginUser }}</strong> <span class="caret"></span>
+                </button>
+                <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
+                    role="menu" aria-labelledby="button-basic">
+                    <li role="menuitem"><a class="dropdown-item" href="javascript:;" (click)="this.utility.useLanguage('zh')" ><img src="../assets/systemImg/taiwan.png" class="topImg" width="25" height="25"/> ZH </a></li>
+                    <li role="menuitem"><a class="dropdown-item" href="javascript:;" (click)="this.utility.useLanguage('en')" ><img src="../assets/systemImg/united-states.png" class="topImg" width="25" height="25"/>  EN </a></li>
+                    <li role="menuitem"><a class="dropdown-item" href="javascript:;" (click)="this.utility.logout()"><img src="../assets/systemImg/exit.png" class="topImg" width="25" height="25"/>  Log Out</a></li>
+                </ul>                
             </div>
-            <div class="col-9">
-              <div class="float-right">
-                <strong *ngIf="this.sF406i?.loginUser"
-                  >{{ "Common.hello" | translate }}
-                  {{ this.sF406i?.loginUser }}</strong
-                >
-                <img
-                  src="../assets/systemImg/exit.png"
-                  tooltip="Logout"
-                  width="25"
-                  height="25"
-                  (click)="this.utility.logout()"
-                />
-              </div>
-            </div>
-          </div>
+          </div> 
         </div>
         <div class="card-body">
           <form class="form" #addQueryReportDataForm="ngForm">
@@ -113,7 +108,10 @@
                       </tr>
                       <tr>  
                         <th >TST</th>
-                        <td >Yes/{{ result[0].testYn }}</td>
+                          <td  *ngIf=" result[0].testYn != '' ;else elseTST">Yes/{{ result[0].testYn }}</td>
+                          <ng-template #elseTST>
+                            <td></td>
+                          </ng-template>
                         <th >SFMCA</th>
                         <td >{{ result[0].fmca1 }}</td>                   
                       </tr>
@@ -121,31 +119,31 @@
                   <table class="table text-center text-nowrap table-striped"  *ngIf="(resultM.length > 0) && (sF406i.type == 1 )"><!--text-nowrap不換行-->
                       <thead>
                         <tr class="table-info">
-                          <th>Type</th>
-                          <th>Stock #</th>
-                          <th>WH</th>
-                          <th>Location</th>
-                          <th>Mat. #</th>
+                          <th>{{ "F434.ssbMatPid" | translate }}</th>
+                          <th>{{ "F434.stockNo" | translate }}</th>
+                          <th>{{ "F434.wareCode" | translate }}</th>
+                          <th>{{ "F434.location" | translate }}</th>
+                          <th>{{ "F434.materialNo" | translate }}</th>
 
-                          <th>Mat. Name</th>
-                          <th>Color</th>
-                          <th>Size</th>
-                          <th>UOM</th>
-                          <th>Stock Qty</th>
+                          <th>{{ "F434.materialName" | translate }}</th>
+                          <th>{{ "F434.color" | translate }}</th>
+                          <th>{{ "F434.shoeSize" | translate }}</th>
+                          <th>{{ "F434.unit" | translate }}</th>
+                          <th>{{ "F434.materialQty" | translate }}</th>
 
-                          <th>Season</th>
-                          <th>BOM Stage</th>
-                          <th>Order Stage</th>
-                          <th>Dev. Team</th>
-                          <th>Model Name</th>
+                          <th>{{ "F434.season" | translate }}</th>
+                          <th>{{ "F434.stage" | translate }}</th>
+                          <th>{{ "F434.orderStage" | translate }}</th>
+                          <th>{{ "F434.devTeam" | translate }}</th>
+                          <th>{{ "F434.modelNameMemo" | translate }}</th>
 
-                          <th>Article</th>
-                          <th>FMCA</th>
-                          <th>Single Test Result</th>
-                          <th>Incoming Date</th>
-                          <th>Remark</th>
+                          <th>{{ "F434.article" | translate }}</th>
+                          <th>{{ "F434.fmcaTestResult" | translate }}</th>
+                          <th>{{ "F434.singleTestResult" | translate }}</th>
+                          <th>{{ "F434.insertDate" | translate }}</th>
+                          <th>{{ "F434.memo" | translate }}</th>
 
-                          <th>PO#</th>
+                          <th>{{ "F434.orderNumber" | translate }}</th>
                         </tr>
                       </thead>
                     <tbody>
