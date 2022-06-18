@@ -338,10 +338,10 @@ export class DtrService {
       this.utility.baseUrl + "dtr/checkEditFgtIsValid?factoryId="+ factoryId +"&article=" + article + "&stage=" + stage +"&kind=" + kind
     ).toPromise();
   }
-  //檢查是否Dtr是否有重複:check article+ stage + kind + factoryId can not be duplicated
-  checkFgtIsValid(article:string, stage:string, kind:string, factoryId:string){
+  //檢查是否Dtr是否有重複:check (type:article、modelNo、modelName)+ stage + kind + factoryId can not be duplicated
+  checkFgtIsValid(type:string, typeVal:string, stage:string, kind:string, factoryId:string){
     return this.utility.http.get<boolean>(
-    this.utility.baseUrl + "dtr/checkFgtIsValid?article="+ article +"&stage=" + stage + "&kind=" + kind +"&factoryId=" + factoryId
+    this.utility.baseUrl + "dtr/checkFgtIsValid?type="+ type +"&typeVal=" + typeVal +"&stage=" + stage + "&kind=" + kind +"&factoryId=" + factoryId
     ).toPromise();
   }  
 

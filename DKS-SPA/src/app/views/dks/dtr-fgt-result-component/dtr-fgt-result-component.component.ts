@@ -37,6 +37,7 @@ export class DtrFgtResultComponentComponent implements OnInit {
   partNameList: object[]; //F340PartNoTreatmemtDto
   stageList: { id: number, name: string }[] =[];
   oStageList: { id: number, name: string }[] = [
+    { "id": 0, "name": "CR1" },   //開發
     { "id": 1, "name": "CR2" },   //開發
     { "id": 2, "name": "SMS" },   //開發
     { "id": 3, "name": "CS1" },   //開發
@@ -303,7 +304,7 @@ reasonList: { id: number, name: string, code: string }[] = [
     if (type == "changeReason") this.changeReasonModal.hide();
   }
 
-  saveAFgtResult() {
+  async saveAFgtResult() {
     let isAlert = false;
     let alertStr = "Please select these (";
     if (this.utility.checkIsNullorEmpty(this.addAModel.modelName)) {
@@ -380,7 +381,7 @@ reasonList: { id: number, name: string, code: string }[] = [
           return;
         }
       }  
-      //step 3.1: check same article can not have same(stage + kind(test))
+    //step 3.1: check same article can not have same(stage + kind(test))
       let aaa = this.result.find(
         (x) => x["stage"] == this.addAModel.stage.trim() &&
                x["kind"] == this.addAModel.kind.trim()
@@ -389,8 +390,26 @@ reasonList: { id: number, name: string, code: string }[] = [
         this.utility.alertify.error("The Article have same Stage and Test, you can not add it !! ");
         return;
       }
-
-      //Step 3.2: check is labNo valid
+    //step 3.2:check  (type:article、modelNo、modelName)+ stage + kind + factoryId can not be duplicated
+    let typeVal ="";
+    switch (this.addAModel.type)
+    {
+        case "Article": 
+        typeVal = this.addAModel.article;
+            break;
+        case "Model No": 
+        typeVal = this.addAModel.modelNo;
+            break;
+        case "Model Name":
+        typeVal = this.addAModel.modelName;
+            break;
+    }
+    let isValid = await this.dtrService.checkFgtIsValid( this.addAModel.type,typeVal, this.addAModel.stage, this.addAModel.kind, this.sDevDtrFgtResult.factoryId );
+    if (!isValid) {
+      this.utility.alertify.error("The" + this.addAModel.type + "、Stage、Test 、FactoryId can not be duplicated.");
+      return;
+    }      
+      //Step 3.3: check is labNo valid
       let model = this.result.find(
         (x) => x["labNo"] == this.addAModel.labNo.trim()
       );
@@ -600,10 +619,23 @@ reasonList: { id: number, name: string, code: string }[] = [
     this.openModal("upgrade");
   }
   async saveAFgtResultByUpgrade(){
-    //check article+ stage + kind + factoryId can not be duplicated
-    let isValid = await this.dtrService.checkFgtIsValid( this.upgradeModel.article, this.upgradeModel.stage, this.upgradeModel.kind, this.sDevDtrFgtResult.factoryId );
+    //check  (type:article、modelNo、modelName)+ stage + kind + factoryId can not be duplicated
+    let typeVal ="";
+    switch (this.upgradeModel.type)
+    {
+        case "Article": 
+        typeVal = this.upgradeModel.article;
+            break;
+        case "Model No": 
+        typeVal = this.upgradeModel.modelNo;
+            break;
+        case "Model Name":
+        typeVal = this.upgradeModel.modelName;
+            break;
+    }
+    let isValid = await this.dtrService.checkFgtIsValid( this.upgradeModel.type,typeVal, this.upgradeModel.stage, this.upgradeModel.kind, this.sDevDtrFgtResult.factoryId );
     if (!isValid) {
-      this.utility.alertify.error("Article、Stage、Test 、FactoryId can not be duplicated.");
+      this.utility.alertify.error("The" + this.upgradeModel.type + "、Stage、Test 、FactoryId can not be duplicated.");
       return;
     }
     this.utility.spinner.show();

@@ -641,17 +641,35 @@ namespace DKS_API.Controllers
             return Ok(isValid);
 
         }
-         //檢查是否Dtr是否有重複:check article+ stage + kind + factoryId can not be duplicated
+         //檢查是否Dtr是否有重複:check (type:article、modelNo、modelName)+ stage + kind + factoryId can not be duplicated
         [HttpGet("checkFgtIsValid")]
-        public async Task<IActionResult> CheckFgtIsValid(string article, string stage,string kind, string factoryId)
+        public async Task<IActionResult> CheckFgtIsValid(string type, string typeVal, string stage,string kind, string factoryId)
         {
             _logger.LogInformation(String.Format(@"******DTRController CheckFgtIsValid fired!! ******"));
             var isValid = false;
-            DevDtrFgtResult  model =  await _devDtrFgtResultDAO.FindAll(x => x.ARTICLE == article
+            DevDtrFgtResult model = new DevDtrFgtResult();
+
+            if(type == "Article" ){            
+                model =  await _devDtrFgtResultDAO.FindAll(x => x.ARTICLE == typeVal
                                                     && x.STAGE == stage
                                                     && x.KIND == kind
                                                     && x.LABNO.Substring(0,1) == factoryId)
                                     .FirstOrDefaultAsync();
+            }else if (type == "Model No"){      
+                model =  await _devDtrFgtResultDAO.FindAll(x => x.MODELNO == typeVal
+                                                    && x.STAGE == stage
+                                                    && x.KIND == kind
+                                                    && x.LABNO.Substring(0,1) == factoryId)
+                                    .FirstOrDefaultAsync();
+            }else if (type == "Model Name"){     
+                model =  await _devDtrFgtResultDAO.FindAll(x => x.MODELNAME == typeVal
+                                                    && x.STAGE == stage
+                                                    && x.KIND == kind
+                                                    && x.LABNO.Substring(0,1) == factoryId)
+                                    .FirstOrDefaultAsync();
+            }
+     
+
             if(model == null ) isValid = true;
             return Ok(isValid);
         }    
@@ -668,7 +686,7 @@ namespace DKS_API.Controllers
             var toMails = new List<string>();
             List<BasicCodeDto> list017 = await _dKSDAO.GetBasicCodeDto("017");    //017 = 開發小組
             BasicCodeDto teamId = list017.FirstOrDefault( x=> x.Key == modelDah.DEVTEAMID.Trim() );
-            if(stage == "CR2" || stage =="SMS" || stage =="CS1"){   //mail to DEV
+            if(stage == "CR1" ||stage == "CR2" || stage =="SMS" || stage =="CS1"){   //mail to DEV
                 toMails = teamId.MemoZh3.Split(";").Where( x => x.Length > 5 ).ToList();
             }else if (stage == "CS2" || stage == "CS3"){    //mail to COMM
                 toMails = teamId.MemoZh4.Split(";").Where( x => x.Length > 5 ).ToList();
