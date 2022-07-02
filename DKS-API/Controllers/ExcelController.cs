@@ -39,9 +39,12 @@ namespace DFPS.API.Controllers
                    .FromSqlRaw(" EXECUTE dbo.GetP206DataByArticle @Article ", pc.ToArray())
                    .ToListAsync();
             string title = "";
-            if (data.Count > 0){
-                 title = data[0].Title;
-            }else{
+            if (data.Count > 0)
+            {
+                title = data[0].Title;
+            }
+            else
+            {
                 return Ok("0");
             }
 
@@ -67,6 +70,20 @@ namespace DFPS.API.Controllers
 
             byte[] result = _excelService.CommonExportReport(data, "TempP202BySeason.xlsx");
             return File(result, "application/xlsx", "P202BySeason.xlsx");
+        }
+        [HttpGet("getGetF505Dto")]
+        public async Task<IActionResult> GetGetF505Dto([FromQuery] string mtDocNo)
+        {
+            _logger.LogInformation(String.Format(@"****** ExcelController GetGetF505Dto fired!! ******"));
+            List<SqlParameter> pc = new List<SqlParameter>{
+                new SqlParameter("@MtDocNo",mtDocNo.Trim())
+            };
+            var data = await _context.GetF505Dto
+                   .FromSqlRaw(" EXECUTE dbo.GetF505 @MtDocNo ", pc.ToArray())
+                   .ToListAsync();
+
+            byte[] result = _excelService.CommonExportReport(data, "TempF505.xlsx");
+            return File(result, "application/xlsx", "F505.xlsx");
         }
 
 

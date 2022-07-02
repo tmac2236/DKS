@@ -59,6 +59,7 @@ namespace DKS_API.Data.Repository
         public DbSet<F406iDto> GetF406iDto{ get; set; }
         public DbSet<P406Dto> GetP406Dto{ get; set; }
         public DbSet<F434Dto> GetF434Dto{ get; set; }
+        public DbSet<F505Dto> GetF505Dto{ get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -134,6 +135,8 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<P406Dto>()
             .HasNoKey(); 
             modelBuilder.Entity<F434Dto>()
+            .HasNoKey(); 
+            modelBuilder.Entity<F505Dto>()
             .HasNoKey(); 
             
         }

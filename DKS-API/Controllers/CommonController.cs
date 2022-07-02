@@ -73,6 +73,7 @@ namespace DKS_API.Controllers
                                     {
                                         VERN = x.VERN
                                     }).Distinct()
+                                    .OrderBy(x =>x.VERN)
                                     .ToListAsync();
 
             List<string> bpVern = result.Select(x => x.VERN.ToString()).ToList();
