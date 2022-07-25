@@ -74,6 +74,7 @@ namespace DKS_API
             services.AddScoped<IDKSSysUserDAO, DKSSysUserDAO>();
             services.AddScoped<IDKSDAO, DKSDAO>();
             services.AddScoped<IModelDahDAO, ModelDahDAO>();
+            services.AddScoped<IModelDabDAO, ModelDabDAO>();
             services.AddScoped<IArticledDAO, ArticledDAO>();
             services.AddScoped<IDevBuyPlanDAO, DevBuyPlanDAO>();
             services.AddScoped<IWarehouseDAO, WarehouseDAO>();

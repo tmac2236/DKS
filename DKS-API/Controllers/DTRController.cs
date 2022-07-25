@@ -14,6 +14,9 @@ using DKS_API.DTOs;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using Newtonsoft.Json;
+using System.Net.Http;
+using System.Text;
 
 namespace DKS_API.Controllers
 {
@@ -23,6 +26,7 @@ namespace DKS_API.Controllers
         private readonly IDKSDAO _dKSDAO;
         private readonly IDevDtrFgtResultDAO _devDtrFgtResultDAO;
         private readonly IModelDahDAO _modelDahDAO;
+        private readonly IModelDabDAO _modelDabDAO;
         private readonly IArticledDAO _articledDAO;
         private readonly IArticlePictureDAO _articlePictureDAO;
         private readonly IDevDtrFgtStatsDAO _devDtrFgtStatsDAO;
@@ -42,7 +46,7 @@ namespace DKS_API.Controllers
         public DTRController(IMapper mapper, IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<PictureController> logger,
          IDKSDAO dKSDAO, IDevDtrFgtResultDAO devDtrFgtResultDAO, IArticledDAO articledDAO, IDevDtrFgtStatsDAO devDtrFgtStatsDAO, IDevDtrVsFileDAO devDtrVsFileDAO,
          IArticlePictureDAO articlePictureDAO,IModelDahDAO modelDahDAO,IDtrLoginHistoryDAO dtrLoginHistoryDAO,IDevSendMailDAO devSendMailDAO,IDtrFgtShoesDAO dtrFgtShoesDAO,
-         IDtrFgtEtdDAO dtrFgtEtdDAO,
+         IDtrFgtEtdDAO dtrFgtEtdDAO,IModelDabDAO modelDabDAO,
          IFileService fileService, IExcelService excelService,ICommonService commonService, ISendMailService sendMailService)
                 : base(config, webHostEnvironment, logger)
         {
@@ -51,6 +55,7 @@ namespace DKS_API.Controllers
             _devDtrFgtResultDAO = devDtrFgtResultDAO;
             _articledDAO = articledDAO;
             _modelDahDAO = modelDahDAO;
+            _modelDabDAO = modelDabDAO;
             _devDtrFgtStatsDAO = devDtrFgtStatsDAO;
             _fileService = fileService;
             _excelService = excelService;
@@ -538,9 +543,11 @@ namespace DKS_API.Controllers
                              x => x.MODELNO.Trim() == transitArticleDto.ModelNo.Trim() &&
                                   x.FACTORYID.Trim() == transitArticleDto.FactoryId.Trim() );            
             if(toModel == null){
+                //取得複製來源的Model
                 ModelDah fromModel = _modelDahDAO.FindSingle(
                              x => x.MODELNO.Trim() == transitArticleDto.ModelNoFrom.Trim() &&
                                   x.FACTORYID.Trim() == transitArticleDto.FactoryIdFrom.Trim() );
+
                 fromModel.MODELNO = transitArticleDto.ModelNo.Trim();
                 fromModel.DEVTEAMID = transitArticleDto.DevTeamId;
                 fromModel.DEVELOPERID = "";
@@ -550,7 +557,27 @@ namespace DKS_API.Controllers
                 fromModel.CHANGDATE = DateTime.Now;                 
                 _modelDahDAO.Add(fromModel);                           
                 await _modelDahDAO.SaveAll(); 
-                _logger.LogInformation(String.Format(@"****** Save ModelDah Success!! ModelNo: {0}, FactoryId: {1} ******", fromModel.MODELNO, fromModel.FACTORYID) );  
+                _logger.LogInformation(String.Format(@"****** Save ModelDah Success!! ModelNo: {0}, FactoryId: {1} ******", fromModel.MODELNO, fromModel.FACTORYID) ); 
+                //  Step3-1: if save modelDah sucess then save modelDab.
+                //取得複製來源的Model表身
+                List<ModelDab> fromModelbList = _modelDabDAO.FindAll(
+                             x => x.MODELNO.Trim() == transitArticleDto.ModelNoFrom.Trim()).ToList();
+                //被複製者的Model表身                  
+                List<ModelDab> toModelbList = _modelDabDAO.FindAll(
+                             x => x.MODELNO.Trim() == transitArticleDto.ModelNo.Trim()).ToList();                 
+                if(toModelbList.Count == 0 && fromModelbList.Count > 0 ){  //被複製者本身沒有 + 複製來源>0 才可以複製 
+
+                    fromModelbList.ForEach(x =>{
+                        ModelDab modelDab = new ModelDab();
+                        modelDab.MODELNO = transitArticleDto.ModelNo.Trim();
+                        modelDab.SHOESIZE = x.SHOESIZE;
+                        _modelDabDAO.Add(modelDab);
+                        _logger.LogInformation(String.Format(@"******Ready to Save ModelDab, ModelNo: {0}******", modelDab.MODELNO) ); 
+                    });
+
+                await _modelDabDAO.SaveAll(); 
+                _logger.LogInformation(String.Format(@"****** Save ModelDab Success!! ModelNo: {0}, FactoryId: {1} ******", fromModel.MODELNO, fromModel.FACTORYID) ); 
+                }
             }
             //step4: stend email
             /*
@@ -821,7 +848,42 @@ Thank you
 
             return Ok(editCount);
 
-        }        
+        }
+        /*
+        [HttpGet("syncPlmArticleModel")]
+        public async Task<IActionResult> SyncPlmArticleModel()
+        {
+
+            _logger.LogInformation(String.Format(@"******DTRController SyncPlmArticleModel fired!! ******"));
+            DateTime dt =  DateTime.Now.AddMinutes(-300);
+            var modelList = await _modelDahDAO.FindAll(x =>x.CHANGDATE >= dt)
+                                        .Select(x => new {x.MODELNO,x.FACTORYID}).ToListAsync();
+            var articleList = await _articledDAO.FindAll(x =>x.CHANGDATE >= dt)
+                                        .Select(x => new {x.ARTICLE,x.FACTORYID,x.STAGE}).ToListAsync();
+            List<dynamic> list = new List<dynamic>(); 
+                list.Add(modelList);
+                list.Add(articleList);
+            var result = JsonConvert.SerializeObject(list);
+            HttpClient client = new HttpClient();
+            // Wrap our JSON inside a StringContent which then can be used by the HttpClient class
+            var httpContent = new StringContent(result, Encoding.UTF8, "application/json");
+            // Do the actual request and await the response
+            var httpResponse = await client.PostAsync("http://localhost:5000/api/dtr/testt", httpContent);
+
+        
+            return Ok(result);
+
+        }
+        [HttpPost("testt")]
+        public IActionResult Testt(object obj)
+        {
+
+            _logger.LogInformation(String.Format(@"******DTRController Testt fired!! ******"));
+
+            return Ok(obj);
+
+        }
+        */                           
 
     }
 }

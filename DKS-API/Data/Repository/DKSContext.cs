@@ -16,6 +16,7 @@ namespace DKS_API.Data.Repository
         public DbSet<Pracdatb> PRACDATB { get; set; }
         public DbSet<Proporh> PROPORH { get; set; }
         public DbSet<ModelDah> MODELDAH { get; set; }
+        public DbSet<ModelDab> MODELDAB { get; set; }
         public DbSet<Articled> ARTICLED { get; set; }
         public DbSet<DevBuyPlan> DEV_BUYPLAN { get; set; }
         public DbSet<SamPartB> SAMPARTB { get; set; }
@@ -70,6 +71,7 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<Pracdatb>().HasKey(x => new { x.PKPRACBID, x.PROACCNO });
             modelBuilder.Entity<Proporh>().HasKey(x => new { x.PROORDNO });
             modelBuilder.Entity<ModelDah>().HasKey(x => new { x.MODELNO,x.FACTORYID });
+            modelBuilder.Entity<ModelDab>().HasKey(x => new { x.MODELNO,x.SHOESIZE });
             modelBuilder.Entity<Articled>().HasKey(x => new { x.PKARTBID });
             modelBuilder.Entity<DevBuyPlan>().HasKey(x => new { x.MANUF, x.SEASON, x.MODELNO, x.SCOLOR, x.ARTICLE, x.VERN });
             modelBuilder.Entity<SamPartB>().HasKey(x => new { x.PARTNO, x.SAMPLENO });

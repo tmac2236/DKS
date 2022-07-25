@@ -640,6 +640,7 @@ reasonList: { id: number, name: string, code: string }[] = [
     }
     this.utility.spinner.show();
     this.upgradeModel.upusr = this.sDevDtrFgtResult.loginUser;
+    this.upgradeModel.upday = new Date();  //避免http 400 先給一個值，真正給值在後端
     this.dtrService.addDevDtrFgtResult(this.upgradeModel).subscribe(
       (res: boolean) => {
         this.utility.spinner.hide();
