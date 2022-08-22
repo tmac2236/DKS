@@ -86,5 +86,40 @@ namespace DFPS.API.Data.Repository
                    .ToListAsync();
             return data;
         }
+        public async Task<List<CheckF303Dto>> GetCheckF303Dto(string sampleNo)
+        {
+            List<SqlParameter> pc = new List<SqlParameter>{
+                new SqlParameter("@SampleNo",sampleNo)
+            };
+
+            var data = await _context.GetCheckF303Dto
+                   .FromSqlRaw(" EXECUTE dbo.CheckF303 @SampleNo ", pc.ToArray())
+                   .ToListAsync();
+            return data;
+        }
+
+        public async Task<List<GetF303MatQtyDto>> GetF303MatQtyDto(string sampleNo)
+        {
+            List<SqlParameter> pc = new List<SqlParameter>{
+                new SqlParameter("@SampleNo",sampleNo)
+            };
+
+            var data = await _context.GetF303MatQtyDto
+                   .FromSqlRaw(" EXECUTE dbo.GetF303_MATQTY @SampleNo ", pc.ToArray())
+                   .ToListAsync();
+            return data;
+        }
+
+        public async Task<List<GetF303PartQtyDto>> GetF303PartQtyDto(string sampleNo)
+        {
+            List<SqlParameter> pc = new List<SqlParameter>{
+                new SqlParameter("@SampleNo",sampleNo)
+            };
+
+            var data = await _context.GetF303PartQtyDto
+                   .FromSqlRaw(" EXECUTE dbo.GetF303_PARTQTY @SampleNo ", pc.ToArray())
+                   .ToListAsync();
+            return data;
+        }
     }
 }

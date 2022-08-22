@@ -35,6 +35,11 @@ namespace DKS_API.Data.Repository
         public DbSet<DtrFgtShoes> DTR_FGT_SHOES { get; set; }
         public DbSet<DtrFgtEtd> DTR_FGT_ETD { get; set; }
 
+        public DbSet<SamDetlB> SAMDETLB { get; set; }
+        public DbSet<TempSamplQtb> TEMPSAMPLQTB { get; set; }
+        
+
+
         //DTO(Stored Procedure)
         public DbSet<F418_F420Dto> GetF420F418View { get; set; }
         public DbSet<F340_ProcessDto> GetF340ProcessView { get; set; }
@@ -61,7 +66,9 @@ namespace DKS_API.Data.Repository
         public DbSet<P406Dto> GetP406Dto{ get; set; }
         public DbSet<F434Dto> GetF434Dto{ get; set; }
         public DbSet<F505Dto> GetF505Dto{ get; set; }
-
+        public DbSet<CheckF303Dto> GetCheckF303Dto{ get; set; }
+        public DbSet<GetF303MatQtyDto> GetF303MatQtyDto{ get; set; }    
+        public DbSet<GetF303PartQtyDto> GetF303PartQtyDto{ get; set; }   
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Ordsumoh>().HasKey(x => new { x.PRSUMNO });
@@ -89,6 +96,8 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<DevSendMail>().HasKey(x => new { x.WORKPNO,x.DEPTID,x.EMAIL_TYPE,x.DEVTEAM });
             modelBuilder.Entity<DtrFgtShoes>().HasKey(x => new { x.SAMPLENO });
             modelBuilder.Entity<DtrFgtEtd>().HasKey(x => new { x.FACTORYID,x.ARTICLE,x.STAGE,x.TEST,x.QC_RECEIVE });
+            modelBuilder.Entity<SamDetlB>().HasKey(x => new { x.PKSAMDLID,x.SAMPLENO });
+            modelBuilder.Entity<TempSamplQtb>().HasKey(x => new { x.SAMPLENO,x.PASSIDNAME });
             
 
             //DTO(Stored Procedure)
@@ -139,7 +148,13 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<F434Dto>()
             .HasNoKey(); 
             modelBuilder.Entity<F505Dto>()
-            .HasNoKey(); 
+            .HasNoKey();
+            modelBuilder.Entity<CheckF303Dto>()
+            .HasNoKey();
+            modelBuilder.Entity<GetF303MatQtyDto>()
+            .HasNoKey();
+            modelBuilder.Entity<GetF303PartQtyDto>()
+            .HasNoKey();                  
             
         }
     }

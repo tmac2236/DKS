@@ -93,7 +93,8 @@ namespace DKS_API
             services.AddScoped<IDevSendMailDAO,DevSendMailDAO>();
             services.AddScoped<IDtrFgtShoesDAO,DtrFgtShoesDAO>();
             services.AddScoped<IDtrFgtEtdDAO,DtrFgtEtdDAO>();
-
+            services.AddScoped<ISamDetlBDAO,SamDetlBDAO>();
+            services.AddScoped<ITempSamplQtbDAO,TempSamplQtbDAO>();
 
             services.AddScoped<IMailUtility,MailUtility>();
             
