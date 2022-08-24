@@ -12,27 +12,32 @@ using DKS_API.Services.Implement;
 using DKS_API.Services.Interface;
 using Microsoft.Extensions.Logging;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace DKS_API.Controllers
 {
     public class WareHouseController : ApiController
     {
         private readonly IExcelService _excelService;
+        private readonly ISendMailService _sendMailService;
         private readonly IWarehouseDAO _warehouseDao;
         private readonly ISamPartBDAO _samPartBDAO;
         private readonly ISamDetlBDAO _samDetlBDAO;
         private readonly ITempSamplQtbDAO _tempSamplQtbDAO;
+        private readonly IDKSDAO _dksDao;
         
         public WareHouseController(IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<WareHouseController> logger,
-         IWarehouseDAO warehouseDao, ISamPartBDAO samPartBDAO,ISamDetlBDAO samDetlBDAO, ITempSamplQtbDAO tempSamplQtbDAO,
-        IExcelService excelService)
+         IWarehouseDAO warehouseDao, ISamPartBDAO samPartBDAO,ISamDetlBDAO samDetlBDAO, ITempSamplQtbDAO tempSamplQtbDAO, IDKSDAO dksDao,
+        IExcelService excelService, ISendMailService sendMailService)
         : base(config, webHostEnvironment, logger)
         {
             _excelService = excelService;
+            _sendMailService = sendMailService;
             _warehouseDao = warehouseDao;
             _samPartBDAO = samPartBDAO;
             _samDetlBDAO = samDetlBDAO;
             _tempSamplQtbDAO = tempSamplQtbDAO;
+            _dksDao = dksDao;
         }
         [HttpGet("getMaterialNoBySampleNoForWarehouse")]
         public IActionResult GetMaterialNoBySampleNoForWarehouse([FromQuery] SF428SampleNoDetail sF428SampleNoDetail)
@@ -139,7 +144,30 @@ namespace DKS_API.Controllers
                 }
             }
             if(alertStr != ""){
-                alertStr += " Please contact IT to maintain there SampleNo !!! ";
+
+                //sens Mail to aven stan
+                var title = string.Format(@"請協助新增F303_SIZE對照表!");
+                    var userDto = await  _dksDao.GetUsersByName(passName);
+                    var toMails = new List<string>();
+                    toMails.Add("stan.chen@ssbshoes.com");
+                    //toMails.Add("aven.yu@ssbshoes.com");
+
+                    userDto.ForEach(x =>
+                    {
+                        toMails.Add(x.EMAIL);
+                    });  
+                                      
+                    var sign = "\r\n\r\n\r\n陳尚賢Stan Chen\r\n--------------------------------------------------------------------------------------------------------------------\r\nInformation and Technology Center (資訊本部)-系統整合三組\r\nSHYANG SHIN BAO industrial co., LTD (翔鑫堡工業股份有限公司)\r\nSHYANG HUNG CHENG CO.,LTD (翔鴻程責任有限公司)\r\nTel: +84 (0274)3745-001-025 #6696\r\nEmail : Stan.Chen@ssbshoes.com";
+                    var content = string.Format(@"
+                    Dear {0}: 以下樣品單查無尺碼對照表，請等IT維護F303_SIZE對照表後再操作一次，謝謝。
+
+                    Dear Aven: 以下樣品單查無尺碼對照表，請先維護F303_SIZE對照表再操作一次，謝謝。 
+                    SampleNo:{1}
+                    
+                    {2}",passName, alertStr, sign);
+                    await _sendMailService.SendListMailAsync(toMails, null, title, content, null);
+
+                alertStr += " Please contact IT to maintain there SampleNo !!! ";    
                 return Ok(alertStr);
             }
             foreach(string sample in sampleList){

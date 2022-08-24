@@ -602,7 +602,7 @@ namespace DKS_API.Controllers
                     toMails.Add("aven.yu@ssbshoes.com");
                     toMails.Add("hsin.chen@ssbshoes.com");
                     var sqlDetail = string.Format(@"delete infxshcmes@ondbs:dev_f340 where spno in ( '{0}' )", sampleNo);
-                    var sign = "\r\n\r\n\r\n陳尚賢Stan Chen\r\n--------------------------------------------------------------------------------------------------------------------\r\nInformation and Technology Center (資訊中心)-ERP\r\nSHYANG SHIN BAO industrial co., LTD (翔鑫堡工業股份有限公司)\r\nSHYANG HUNG CHENG CO.,LTD (翔鴻程責任有限公司)\r\nTel: +84 (0274)3745-001-025 #6696\r\nEmail : Stan.Chen@ssbshoes.com";
+                    var sign = "\r\n\r\n\r\n陳尚賢Stan Chen\r\n--------------------------------------------------------------------------------------------------------------------\r\nInformation and Technology Center (資訊本部)-系統整合三組\r\nSHYANG SHIN BAO industrial co., LTD (翔鑫堡工業股份有限公司)\r\nSHYANG HUNG CHENG CO.,LTD (翔鴻程責任有限公司)\r\nTel: +84 (0274)3745-001-025 #6696\r\nEmail : Stan.Chen@ssbshoes.com";
                     var content = string.Format(@"Dear Hsin:   請幫忙協助刪除中介檔資料，謝謝。 
                     {0}
                     

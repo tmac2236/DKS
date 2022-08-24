@@ -13,6 +13,7 @@ namespace DKS_API.Data.Interface
         Task<Staccrth> SearchStaffByUserId(string userId);
         Task<List<UserRoleDto>> GetRolesByUserId(string userId);
         Task<List<UserRoleDto>> GetUsersByRole(string groupNo);
+        Task<List<UserRoleDto>> GetUsersByName(string userName);
         Task AddUserLogAsync(UserLog user);
         Task<bool> SaveAll();
         F418_F420Dto GetF420F418View(string f418No);

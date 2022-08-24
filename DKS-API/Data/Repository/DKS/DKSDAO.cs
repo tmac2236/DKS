@@ -284,7 +284,26 @@ ON t1.PKBASEHID=t3.FKBASEHID and t3.LANGID='437' ");
                    .FromSqlRaw(string.Format("EXECUTE dbo.PROD_GET_KANBAN_TQC @LINEID"), pc.ToArray())
                    .ToListAsync();
             return data;
-        }    
+        }
+
+        public async Task<List<UserRoleDto>> GetUsersByName(string userName)
+        {
+            string strWhere =  String.Format(@"WHERE A.LOGIN='{0}'", userName);
+            string strSQL = string.Format(@"
+                                            SELECT  
+                                                   A.WORKPNO
+                                                  ,CONVERT(varchar,A.USERID) AS USERID
+                                                  ,A.LOGIN
+                                                  ,A.FACTORYID
+                                            	  ,B.GROUPNO
+                                                  ,C.EMAIL
+                                              FROM STACCRTH AS A
+                                              LEFT JOIN UTL_PJOBINER AS B ON A.USERID = B.USERID
+                                              INNER JOIN SSBDEV3..UTL_USERINFO AS C ON A.USERID = C.USERID ");
+            strSQL += strWhere;
+            var data = await _context.UserRoleDto.FromSqlRaw(strSQL).ToListAsync();
+            return data;
+        }
     }
    
 }
