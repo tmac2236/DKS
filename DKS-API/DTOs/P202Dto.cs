@@ -47,5 +47,7 @@ namespace DKS_API.DTOs
         public decimal MARKET_FORECAST { get; set; }
         public string MATERSIZE { get; set; }
 
+        public decimal CONS {get;set;}
+
     }
 }

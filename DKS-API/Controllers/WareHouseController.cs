@@ -143,19 +143,18 @@ namespace DKS_API.Controllers
                     alertStr += "  ";
                 }
             }
+            
             if(alertStr != ""){
 
                 //sens Mail to aven stan
                 var title = string.Format(@"請協助新增F303_SIZE對照表!");
                     var userDto = await  _dksDao.GetUsersByName(passName);
                     var toMails = new List<string>();
+                    toMails.Add("aven.yu@ssbshoes.com");
                     toMails.Add("stan.chen@ssbshoes.com");
-                    //toMails.Add("aven.yu@ssbshoes.com");
-
-                    userDto.ForEach(x =>
-                    {
-                        toMails.Add(x.EMAIL);
-                    });  
+                    if(userDto.Count > 0){
+                        toMails.Add(userDto[0].EMAIL);
+                    }
                                       
                     var sign = "\r\n\r\n\r\n陳尚賢Stan Chen\r\n--------------------------------------------------------------------------------------------------------------------\r\nInformation and Technology Center (資訊本部)-系統整合三組\r\nSHYANG SHIN BAO industrial co., LTD (翔鑫堡工業股份有限公司)\r\nSHYANG HUNG CHENG CO.,LTD (翔鴻程責任有限公司)\r\nTel: +84 (0274)3745-001-025 #6696\r\nEmail : Stan.Chen@ssbshoes.com";
                     var content = string.Format(@"
@@ -167,7 +166,11 @@ namespace DKS_API.Controllers
                     {2}",passName, alertStr, sign);
                     await _sendMailService.SendListMailAsync(toMails, null, title, content, null);
 
-                alertStr += " Please contact IT to maintain there SampleNo !!! ";    
+                alertStr += " Please contact IT to maintain there SampleNo !!! "; 
+                //刪除暫存檔
+                _tempSamplQtbDAO.RemoveMultiple(_tempSamplQtbDAO.FindAll(x => x.PASSIDNAME == passName).ToList());
+                await _tempSamplQtbDAO.SaveAll();    
+
                 return Ok(alertStr);
             }
             foreach(string sample in sampleList){
@@ -203,7 +206,7 @@ namespace DKS_API.Controllers
             await _samDetlBDAO.SaveAll();  
             await _samPartBDAO.SaveAll();  
             await _tempSamplQtbDAO.SaveAll();
-            return Ok();
+            return Ok("Count Success! Please close the page!");
 
         }                 
     }

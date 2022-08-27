@@ -72,7 +72,7 @@
                   class="btn btn-primary mr-1"
                   type="button"
                   (click)="openAddFgtResultModal('addFgtResult')"
-                  [disabled]="!(articleList?.length > 0)"
+                  [disabled]="(!(articleList?.length > 0))|| this.sDevDtrFgtResult.factoryId == 'C'"
                 >
                   Add A Report
                 </button>
@@ -120,7 +120,7 @@
                         <tr>
                           <td>
                             <img
-                              [style.visibility]="item?.result == 'PASS' ? 'visible' : 'hidden'"                            
+                              [style.visibility]="(item?.result &&this.sDevDtrFgtResult.factoryId != 'C') == 'PASS' ? 'visible' : 'hidden'"                            
                               src="../assets/systemImg/up-arrow.png"
                               width="35"
                               height="35"
@@ -128,7 +128,7 @@
                           </td>
                           <td>
                             <img
-                            [style.visibility]="(item?.result == 'FAIL' || this.sDevDtrFgtResult.role.includes(uiControls.editPassData)) ? 'visible' : 'hidden'" 
+                            [style.visibility]="((item?.result == 'FAIL' || this.sDevDtrFgtResult.role.includes(uiControls.editPassData))&&this.sDevDtrFgtResult.factoryId != 'C') ? 'visible' : 'hidden'" 
                               src="../assets/systemImg/edit.png"
                               width="35"
                               height="35"
@@ -136,7 +136,7 @@
                           </td>
                           <td>
                             <img
-                            [style.visibility]="(item?.result == 'FAIL' || this.sDevDtrFgtResult.role.includes(uiControls.editPassData)) ? 'visible' : 'hidden'"
+                            [style.visibility]="((item?.result == 'FAIL' || this.sDevDtrFgtResult.role.includes(uiControls.editPassData))&&this.sDevDtrFgtResult.factoryId != 'C') ? 'visible' : 'hidden'"
                               src="../assets/systemImg/delete.png"
                               width="35"
                               height="35"
@@ -153,6 +153,7 @@
                             (click)="viewPdf(item)"
                             />
                             <button class="btn btn-success mb-3" type="button"
+                            [style.visibility]="(this.sDevDtrFgtResult.factoryId != 'C') ? 'visible' : 'hidden'"
                             (click)="isUploadableBtn(item)">+</button>
                             <label
                               [style.visibility]="'hidden'"
