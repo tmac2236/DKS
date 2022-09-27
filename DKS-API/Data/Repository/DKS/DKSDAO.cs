@@ -304,6 +304,22 @@ ON t1.PKBASEHID=t3.FKBASEHID and t3.LANGID='437' ");
             var data = await _context.UserRoleDto.FromSqlRaw(strSQL).ToListAsync();
             return data;
         }
+        public async Task<List<DtrF206BomDto>> GetDtrF206Bom(string article )
+        {
+
+            List<SqlParameter> pc = new List<SqlParameter>{
+                new SqlParameter("@ARTICLE",article ),
+                new SqlParameter("@CR2","" ),
+                new SqlParameter("@SMS","" ),
+                new SqlParameter("@MCS","" ),
+                new SqlParameter("@OTH","" ),
+                new SqlParameter("@STAGE","" )                
+            };
+            var data = await _context.GetDtrF206BomDto
+                   .FromSqlRaw(string.Format("EXECUTE dbo.GetDtrF206Bom @ARTICLE,@CR2,@SMS,@MCS,@OTH,@STAGE"), pc.ToArray())
+                   .ToListAsync();
+            return data;
+        }        
     }
    
 }

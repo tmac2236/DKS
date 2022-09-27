@@ -1,0 +1,152 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <strong class ="col-11" style="font-size: 20px;color:#000000;">{{title}}</strong>
+              <div class="col-1 btn-group" dropdown>
+                <button id="button-basic" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
+                        aria-controls="dropdown-basic">
+                        <strong *ngIf="this.sDtrF206Bom.loginUser">{{ this.sCondition.loginUser }}</strong> <span class="caret"></span>
+                </button>
+                <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
+                    role="menu" aria-labelledby="button-basic">
+                    <li role="menuitem"><a class="dropdown-item" href="" target="_blank"><img src="../assets/systemImg/question.png" class="topImg" width="25" height="25"/>  Help </a></li>  
+                  <li role="menuitem"><a class="dropdown-item" href="javascript:;" (click)="this.utility.logout()"><img src="../assets/systemImg/exit.png" class="topImg" width="25" height="25"/>  Log Out</a></li>
+                </ul>                
+            </div>
+          </div> 
+        </div>
+        <form class="form-horizontal" #addQueryReportDataForm="ngForm">
+          <div class="card-body">
+            <div class="form-group row">
+              <div class="col-md-12">
+                <div class="col">
+                <label class="col-form-label mr-1">Article</label>
+                <input
+                  class="col-form-label mr-1"
+                  type="text"
+                  name="article"
+                  size ="6"
+                  maxlength="6"
+                  [readonly] = "true"
+                  [(ngModel)]="sDtrF206Bom.article"/>
+                  <!--  
+                  <button
+                    class="btn btn-primary mr-1"
+                    type="button"
+                    (click)="search()"
+                    [disabled]="!addQueryReportDataForm.valid">
+                  {{ 'Common.btnList.search' | translate }}
+                  </button>
+                  -->            
+                  <button
+                    class="btn btn-primary mr-1"
+                    type="button"
+                    (click)="export()"
+                  >
+                  {{ 'Common.btnList.export' | translate }}
+                  </button>                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table text-center text-nowrap table-striped">
+                  <!--套版分頁<table datatable id="f340Sche" class="table text-center table-striped">-->
+                    <thead>
+                      <tr class="table-info">
+                        <th >ModelNo</th>
+                        <th >Model Name</th>
+                        <th >Season</th>
+                        <th >Stage</th>
+                        <th >Article</th>
+
+                        <th >Part No</th>
+                        <th >Part Name</th>
+                        <th >Supplier Mat Id</th>
+                        <!--<th>materiaNo</th>-->
+                        <th >Material Name</th>
+
+                        <th >Supplier</th>
+                        <th >ColorCode</th>
+                        <th >ColorName</th>
+                        <th >UOM</th>
+                        <th >Size?</th> 
+                        
+                        <th >Material Size</th>
+                        <th >Consumption</th> 
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container *ngFor="let item of result; let i = index">
+                        <tr>
+                          <td >{{ item.modelNo }}</td>
+                          <td >{{ item.modelName }}</td>
+                          <td >{{ item.season }}</td>
+                          <td >{{ item.stage }}</td>
+                          <td >{{ item.article }}</td> 
+
+                          <td >{{ item.partNo }}</td>
+                          <td >{{ item.partName }}</td>
+                          <td >{{ item.supplierMatId }}</td>
+                          <!--<td>{{ item.materiaNo }}</td>-->
+                          <td >{{ item.materialName }}</td> 
+
+                          <td >{{ item.supplier }}</td>
+                          <td >{{ item.colorCode }}</td>
+                          <td >{{ item.colorName }}</td>
+                          <td >{{ item.uom }}</td>
+                          <td >{{ item.isSize }}</td>                           
+                        
+                          <td >{{ item.materialSize }}</td>
+                          <td >{{ item.consumption }}</td>  
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                  <!--
+                  <div class ="d-flex justify-content-start">
+                    <select
+                    style="height:35px;width:45px;"
+                    name="itemsPerPage"
+                    [(ngModel)]="sDtrF206Bom.itemsPerPage">
+                    <option value = 10 selected>10</option>
+                    <option value = 25 selected>25</option>
+                    <option value = 50 selected>50</option>
+                    <option value = 100 selected>100</option>
+                    </select> 
+                    <pagination *ngIf="this.sDtrF206Bom.isPaging" 
+                      [boundaryLinks]="true" 
+                      [totalItems]="sCondition.totalItems"
+                      [maxSize]="60"
+                      [itemsPerPage]="sCondition.itemsPerPage"
+                      [(ngModel)]="sCondition.currentPage"
+                      (pageChanged) = "pageChangeds($event)"
+                      previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+                    </pagination>
+                  </div>   
+                  -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ngx-spinner
+  bdColor="rgba(0, 0, 0, 0.8)"
+  size="large"
+  color="#fff"
+  type="square-jelly-box"
+  [fullScreen]="true"
+  ><p style="color: white">Loading {{title}}...</p></ngx-spinner
+>

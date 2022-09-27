@@ -849,6 +849,30 @@ Thank you
             return Ok(editCount);
 
         }
+        [HttpGet("getDtrF206Bom")]
+        public async Task<IActionResult> GetDtrF206Bom([FromQuery] SDtrF206Bom sDtrF206Bom)
+        {
+            _logger.LogInformation(String.Format(@"****** DTRController GetDtrF206Bom fired!! ******"));
+
+            var data = await _dKSDAO.GetDtrF206Bom(sDtrF206Bom.article);
+
+            PagedList<DtrF206BomDto> result = PagedList<DtrF206BomDto>.Create(data, sDtrF206Bom.PageNumber, sDtrF206Bom.PageSize, sDtrF206Bom.IsPaging);
+            Response.AddPagination(result.CurrentPage, result.PageSize,
+            result.TotalCount, result.TotalPages);
+            return Ok(result);
+
+        }
+        [HttpPost("exportDtrF206Bom")]
+        public async Task<IActionResult> ExportDtrF206Bom(SDtrF206Bom sDtrF206Bom)
+        {
+            _logger.LogInformation(String.Format(@"****** DTRController ExportDtrF206Bom fired!! ******"));
+            //10/27再改
+            var data = await _dKSDAO.GetDtrF206Bom(sDtrF206Bom.article);
+            byte[] result = _excelService.CommonExportReport(data.ToList(), "TempDtrF206Bom.xlsx");
+
+            return File(result, "application/xlsx");
+
+        }                 
         /*
         [HttpGet("syncPlmArticleModel")]
         public async Task<IActionResult> SyncPlmArticleModel()

@@ -9,6 +9,7 @@ import { DevDtrFgtResult } from "../_models/dev-dtr-fgt-result";
 import { DevDtrFgtResultDto } from "../_models/dev-dtr-fgt-result-dto";
 import { DevDtrVisStandard } from "../_models/dev-dtr-vis-standard";
 import { DevDtrVsList } from "../_models/dev-dtr-vs-list";
+import { DtrF206Bom } from "../_models/dtr-f206-bom";
 import { DtrFgtEtdDto } from "../_models/dtr-fgt-etd-dto";
 import { DtrFgtShoes } from "../_models/dtr-fgt-shoes";
 import { DtrLoginHistory } from "../_models/dtr-login-history";
@@ -18,6 +19,7 @@ import { SDevDtrFgtResult } from "../_models/s-dev-dtr-fgt-result";
 import { SDevDtrFgtResultReport } from "../_models/s-dev-dtr-fgt-result-report";
 import { SDevDtrVisStandard } from "../_models/s-dev-dtr-vis-standard";
 import { SDevDtrVsList } from "../_models/s-dev-dtr-vs-list";
+import { SDtrF206Bom } from "../_models/s-dtr-206-bom";
 import { SampleTrackReportDto } from "../_models/sample-track-report-dto";
 import { SDtrLoginHistory } from "../_models/s_dtr-login-history";
 import { SDtrFgtShoes } from "../_models/s_dtr_fgt_shoes";
@@ -452,5 +454,45 @@ export class DtrService {
       this.utility.baseUrl + "dtr/editDtrFgtEtds/"+ userId,
       dtrFgtEtdDtos
     );
+  }
+  searchDtrF206Bom(
+    sCondition: SDtrF206Bom
+  ): Observable<PaginatedResult<DtrF206Bom[]>> {
+    const paginatedResult: PaginatedResult<DtrF206Bom[]> =
+      new PaginatedResult<DtrF206Bom[]>();
+
+    let params = new HttpParams();
+    params = params.append("IsPaging", sCondition.isPaging.toString());
+    if (
+      sCondition.currentPage != null &&
+      sCondition.itemsPerPage != null
+    ) {
+      params = params.append(
+        "pageNumber",
+        sCondition.currentPage.toString()
+      );
+      params = params.append("pageSize", sCondition.itemsPerPage.toString());
+    }
+    params = params.append("article", sCondition.article.toString());
+
+
+    return this.utility.http
+      .get<DtrF206Bom[]>(this.utility.baseUrl + "dtr/getDtrF206Bom", {
+        observe: "response",
+        params,
+      })
+      .pipe(
+        timeout(utilityConfig.httpTimeOut),
+        map((response) => {
+          paginatedResult.result = response.body;
+          if (response.headers.get("Pagination") != null) {
+            paginatedResult.pagination = JSON.parse(
+              response.headers.get("Pagination")
+            );
+          }
+          return paginatedResult;
+        })
+      );
   }    
+    
 }

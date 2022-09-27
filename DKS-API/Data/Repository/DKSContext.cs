@@ -68,7 +68,8 @@ namespace DKS_API.Data.Repository
         public DbSet<F505Dto> GetF505Dto{ get; set; }
         public DbSet<CheckF303Dto> GetCheckF303Dto{ get; set; }
         public DbSet<GetF303MatQtyDto> GetF303MatQtyDto{ get; set; }    
-        public DbSet<GetF303PartQtyDto> GetF303PartQtyDto{ get; set; }   
+        public DbSet<GetF303PartQtyDto> GetF303PartQtyDto{ get; set; }  
+        public DbSet<DtrF206BomDto> GetDtrF206BomDto{ get; set; }       
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Ordsumoh>().HasKey(x => new { x.PRSUMNO });
@@ -154,7 +155,9 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<GetF303MatQtyDto>()
             .HasNoKey();
             modelBuilder.Entity<GetF303PartQtyDto>()
-            .HasNoKey();                  
+            .HasNoKey();
+            modelBuilder.Entity<DtrF206BomDto>()
+            .HasNoKey();                    
             
         }
     }

@@ -8,6 +8,7 @@ import { AuthGuard } from "./core/_guards/auth.guard";
 import { AuthGuardRole } from "./core/_guards/auth.guard-role";
 import { CovidComponent } from "./views/covid/covid.component";
 import { DictionaryComponent } from "./views/dictionary/dictionary.component";
+import { DtrF206BomComponent } from "./views/dks/dtr-f206-bom/dtr-f206-bom.component";
 import { DtrFgtResultComponentComponent } from "./views/dks/dtr-fgt-result-component/dtr-fgt-result-component.component";
 import { DtrFgtResultReportComponent } from "./views/dks/dtr-fgt-result-report/dtr-fgt-result-report.component";
 import { DtrFgtShoesComponent } from "./views/dks/dtr-fgt-shoes/dtr-fgt-shoes.component";
@@ -93,7 +94,7 @@ export const routes: Routes = [
     canActivate: [AuthGuardRole],
     component: DtrFgtResultComponentComponent,
     data: {
-      roles: [utilityConfig.RoleFgtLabReport],
+      roles: [utilityConfig.RoleFgtLabReport,utilityConfig.RoleSysAdm],
     },
   },
   {
@@ -120,6 +121,10 @@ export const routes: Routes = [
     path: "DTR-Login-History",
     component: DtrLoginHistoryComponent,
   },
+  {
+    path: "DtrF206Bom",
+    component: DtrF206BomComponent,
+  },  
   {
     path: "PLM-Part",
     canActivate: [AuthGuardRole],
