@@ -30,5 +30,7 @@ namespace DKS_API.Data.Interface
         Task<List<KanbanDataByLineDto>> GetKanbanDataByLineDto(string lineId );
         Task<List<KanbanTQCDto>> GetKanbanTQCDto(string lineId);
         Task<List<DtrF206BomDto>> GetDtrF206Bom(string article );
+        Task<List<SrfChangeDto>> GetSrfChange(string article );
+        Task<List<SrfDifferenceDto>> GetSrfDifference(string srfId1,string srfId2);
     }
 }

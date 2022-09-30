@@ -12,6 +12,7 @@ using DKS_API.Services.Implement;
 using DKS_API.Services.Interface;
 using Microsoft.Extensions.Logging;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace DKS_API.Controllers
 {
@@ -20,12 +21,14 @@ namespace DKS_API.Controllers
         private readonly IExcelService _excelService;
         private readonly IDevPlmPartDAO _devPlmPartDAO;
         private readonly IDKSDAO _dksDao;
+        private readonly ISendMailService _sendMailService;
         public PlmController(IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<WareHouseController> logger,
              IDevPlmPartDAO devPlmPartDAO, IDKSDAO dksDao,
-             IExcelService excelService)
+             IExcelService excelService, ISendMailService sendMailService)
         : base(config, webHostEnvironment, logger)
         {
             _excelService = excelService;
+            _sendMailService = sendMailService;
             _devPlmPartDAO = devPlmPartDAO;
             _dksDao = dksDao;
         }
@@ -125,6 +128,43 @@ namespace DKS_API.Controllers
             byte[] result = _excelService.CommonExportReport(data.ToList(), "TempPlmPart.xlsx");
 
             return File(result, "application/xlsx");
-        }                 
+        }
+        [HttpGet("checkSrfChangeAlert")]
+        public async Task<IActionResult> CheckSrfChangeAlert()
+        {
+            _logger.LogInformation(String.Format(@"****** PlmController CheckSrfChangeAlert fired!! ******"));
+            string beforeDate = DateTime.Now.ToString("yyyy-MM-dd");
+            var srfChangeList = await _dksDao.GetSrfChange(beforeDate);
+            if(srfChangeList.Count > 0){
+                
+                var srfdiffernceList = new List<SrfDifferenceDto>();
+
+                foreach(SrfChangeDto srfChange in srfChangeList){
+                    var srfdiffernce = await _dksDao.GetSrfDifference(srfChange.SrfIdN,srfChange.SrfIdO);
+                    if(srfdiffernce.Count > 0 )  srfdiffernceList.AddRange(srfdiffernce);
+
+                }
+                var toMails = new List<string>();
+            
+                toMails.Add("stan.chen@ssbshoes.com");
+                //toMails.Add("aven.yu@ssbshoes.com");
+                //toMails.Add("molly.lin@shc.ssbshoes.com");
+                var xitrumSignature = _config.GetSection("XitrumSignatureLine").Value;                
+                var content = string.Format(@"Dear Molly, 
+
+Please urgently check the attached SRF changed list 
+
+Thank you {0}
+",xitrumSignature);
+
+                byte[] result = _excelService.CommonExportReport(srfdiffernceList, "TempSRFDifference.xlsx");
+                await _sendMailService.SendListMailAsyncbyByte(toMails, null, "Please read the attachement of SRF changed yesterday ", content, result);
+
+                return Ok("sent mail success!");
+            }
+
+
+            return Ok("no need to send mail");
+        }                         
     }
 }

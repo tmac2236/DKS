@@ -319,7 +319,31 @@ ON t1.PKBASEHID=t3.FKBASEHID and t3.LANGID='437' ");
                    .FromSqlRaw(string.Format("EXECUTE dbo.GetDtrF206Bom @ARTICLE,@CR2,@SMS,@MCS,@OTH,@STAGE"), pc.ToArray())
                    .ToListAsync();
             return data;
-        }        
+        } 
+        public async Task<List<SrfChangeDto>> GetSrfChange(string beforeDate )
+        {
+
+            List<SqlParameter> pc = new List<SqlParameter>{
+                new SqlParameter("@BEFOREDATE",beforeDate ),
+                new SqlParameter("@MODELNO","" )              
+            };
+            var data = await _context.GetSrfChangeDto
+                   .FromSqlRaw(string.Format("EXECUTE dbo.SSB_GET_SRF_CHANGE @BEFOREDATE,@MODELNO"), pc.ToArray())
+                   .ToListAsync();
+            return data;
+        } 
+        public async Task<List<SrfDifferenceDto>> GetSrfDifference(string srfId1,string srfId2)
+        {
+
+            List<SqlParameter> pc = new List<SqlParameter>{
+                new SqlParameter("@SRFID1",srfId1 ),
+                new SqlParameter("@SRFID2",srfId2 )              
+            };
+            var data = await _context.GetSrfDifferenceDto
+                   .FromSqlRaw(string.Format("EXECUTE dbo.SSB_GET_SRF_DIFFERENCE @SRFID1,@SRFID2"), pc.ToArray())
+                   .ToListAsync();
+            return data;
+        }                
     }
    
 }

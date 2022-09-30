@@ -25,9 +25,10 @@ export class DtrF206BomComponent implements OnInit {
     this.activeRouter.queryParams.subscribe((params) => {
       if (params.homeParam !== undefined) {
         //from aven excel
-        this.sDtrF206Bom.article = params.homeParam;
+        this.sDtrF206Bom.article = window.atob(params.homeParam);
       }
     });
+    
   }
 
   ngOnInit() {
