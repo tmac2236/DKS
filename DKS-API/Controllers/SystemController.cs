@@ -10,6 +10,7 @@ using DKS_API.Data.Interface;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using DKS_API.DTOs;
 
 namespace DKS_API.Controllers
 {
@@ -68,6 +69,12 @@ namespace DKS_API.Controllers
             var data = await _dksDAO.GetKanbanTQCDto(lineId);
             return Ok(data);
         }        
-
+        [HttpPost("sendSynoBot")]
+        public  IActionResult SendSynoBot(string sysnoDto)
+        {
+            _logger.LogInformation(String.Format(@"****** SystemController SendSynoBot fired!! ******"));
+            //var data = await _dksDAO.GetKanbanTQCDto(lineId);
+            return Ok(sysnoDto);
+        }   
     }
 }
