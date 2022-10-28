@@ -16,6 +16,7 @@ export class DtrF206BomComponent implements OnInit {
   sDtrF206Bom: SDtrF206Bom = new SDtrF206Bom();
   title = "Dtr F206 Bom";
   result: DtrF206Bom[] = [];
+  selectedList:DtrF206Bom[] = []; //checkbox用
 
   constructor(
     public utility: Utility,
@@ -63,5 +64,18 @@ export class DtrF206BomComponent implements OnInit {
   export(){
     const url =this.utility.baseUrl +"dtr/exportDtrF206Bom";
     this.utility.exportFactory(url,"DtrF206Bom",this.sDtrF206Bom);
+  }
+  selectList(e,item:DtrF206Bom){
+
+      if(e.target.checked){
+        this.selectedList.push(item);
+      }else{
+        const index = this.selectedList.indexOf(item);
+        if(index !== -1){
+          this.selectedList.splice(index,1);
+        }
+      }
+      console.log(JSON.stringify(this.selectedList));
+
   }
 }

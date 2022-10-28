@@ -147,7 +147,7 @@ namespace DKS_API.Controllers
                 var toMails = new List<string>();
             
                 toMails.Add("stan.chen@ssbshoes.com");
-                //toMails.Add("aven.yu@ssbshoes.com");
+                toMails.Add("aven.yu@ssbshoes.com");
                 //toMails.Add("molly.lin@shc.ssbshoes.com");
                 var xitrumSignature = _config.GetSection("XitrumSignatureLine").Value;                
                 var content = string.Format(@"Dear Molly, 
