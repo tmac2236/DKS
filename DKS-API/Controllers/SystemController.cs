@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using DKS_API.DTOs;
+using System.Linq;
 
 namespace DKS_API.Controllers
 {
@@ -70,11 +71,28 @@ namespace DKS_API.Controllers
             return Ok(data);
         }        
         [HttpPost("sendSynoBot")]
-        public  IActionResult SendSynoBot(string sysnoDto)
+        public  IActionResult SendSynoBot([FromForm] SynoBotDto sysnoDto)
         {
             _logger.LogInformation(String.Format(@"****** SystemController SendSynoBot fired!! ******"));
-            //var data = await _dksDAO.GetKanbanTQCDto(lineId);
-            return Ok(sysnoDto);
+            SynoBotDto rep = new SynoBotDto();
+            var localStr = _config.GetSection("AppSettings:SopUrl").Value;
+            string[] switchStrings = {"F340","F432"};
+
+                switch (switchStrings.FirstOrDefault<string>(s => sysnoDto.Text.ToUpper().Contains(s)))
+                {
+                    case "F432": 
+                        string fileName = "F432Edit.pdf";
+                        rep.Text = String.Format(@"Please follow the SOP!! <{0}{1}|Click Me!!!>", localStr, fileName );
+                        break;
+
+                    default:
+                        {
+                        rep.Text = "Sorry, Dobby have no idea, Please ask Aven.";
+                            break;
+                        }
+                }
+  
+            return Ok(rep);
         }   
     }
 }

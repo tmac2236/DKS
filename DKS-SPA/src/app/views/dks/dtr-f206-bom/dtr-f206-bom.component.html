@@ -62,7 +62,7 @@
                   <!--套版分頁<table datatable id="f340Sche" class="table text-center table-striped">-->
                     <thead>
                       <tr class="table-info">
-                        <th> Select</th>
+                        <!-- <th> Select</th> -->
                         <th >ModelNo</th>
                         <th >Model Name</th>
                         <th >Season</th>
@@ -88,7 +88,7 @@
                     <tbody>
                       <ng-container *ngFor="let item of result; let i = index">
                         <tr>
-                          <td ><input type="checkbox"(change)="selectList($event,item)"></td>
+                          <!-- <td ><input type="checkbox"(change)="selectList($event,item)"></td> -->
                           <td >{{ item.modelNo }}</td>
                           <td >{{ item.modelName }}</td>
                           <td >{{ item.season }}</td>
