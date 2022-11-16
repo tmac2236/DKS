@@ -9,5 +9,6 @@ namespace DKS_API.Services.Interface
     {
          Task SendListMailAsync(List<string> toMail,List<string>? toCCMail, string subject, string content, string? filePath);
          Task SendListMailAsyncbyByte(List<string> toMail, List<string>? toCCMail, string subject, string content, byte[] file);
+         Task<bool> SendRFIDAlert();
     }
 }

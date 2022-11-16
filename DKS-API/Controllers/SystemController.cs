@@ -12,6 +12,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using DKS_API.DTOs;
 using System.Linq;
+using Newtonsoft.Json;
+using System.Net.Http;
+using System.Text;
 
 namespace DKS_API.Controllers
 {
@@ -93,6 +96,50 @@ namespace DKS_API.Controllers
                 }
   
             return Ok(rep);
-        }   
+        } 
+        [HttpGet("sendRfidAlert")]
+        public IActionResult SendRfidAlert(string message)
+        {
+            _logger.LogInformation(String.Format(@"****** SystemController SendRfidAlert fired!! ******"));
+            var dd = new DateTime();
+            var localStr = _config.GetSection("AppSettings:RFIDApiUrl").Value;
+            var nowTime = DateTime.Now.AddHours(-3);
+            var starTime = new DateTime(1911, 10, 10, 7,30,0).TimeOfDay ;  //07:30 上班
+            var endTime = new DateTime(1911, 10, 10, 16,30,0).TimeOfDay ;  //16:30 上班
+            /*上班測試中
+            if( starTime<nowTime.TimeOfDay&& nowTime.TimeOfDay<endTime ){
+                return Ok("Working Time No need send!");
+            } 
+            */
+            /*
+            string recordTime = nowTime.ToString("yyyy-MM-dd HH:mm:ss");
+            var data = await _dksDAO.GetPrdEntryAccessDto(area,recordTime);
+            if(data.Count <=0 ) return Ok("No Warn Record!");
+
+            foreach(PrdEntryAccessDto i in data){
+                result += "   ";
+                result += String.Format(@"{0}[{1}]", i.Gate.Trim(),i.BarcodeNo.Trim() );
+            }
+            */
+
+            string result = "Please Check below RFID Area !!! ( ex. Gate[Barcode] )";
+            var httpClientHandler = new HttpClientHandler();
+            httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) =>
+            {
+                return true;
+            };
+
+            using (var client = new HttpClient(httpClientHandler))
+            {
+
+                 var str = "payload={\"text\": \"" + result + message + "\"}";
+                 HttpResponseMessage  res = client.PostAsync(localStr, new StringContent(str)).Result;
+                 return Ok(res);
+
+            }
+            
+        } 
+
+
     }
 }

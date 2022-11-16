@@ -71,7 +71,10 @@ namespace DKS_API.Data.Repository
         public DbSet<GetF303PartQtyDto> GetF303PartQtyDto{ get; set; }  
         public DbSet<DtrF206BomDto> GetDtrF206BomDto{ get; set; }
         public DbSet<SrfChangeDto> GetSrfChangeDto { get; set; }      
-        public DbSet<SrfDifferenceDto> GetSrfDifferenceDto { get; set; }            
+        public DbSet<SrfDifferenceDto> GetSrfDifferenceDto { get; set; }      
+        public DbSet<PrdEntryAccessDto> GetPrdEntryAccessDto { get; set; } 
+        public DbSet<PrdRfidAlertDto> GetPrdRfidAlertDto { get; set; } 
+               
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Ordsumoh>().HasKey(x => new { x.PRSUMNO });
@@ -163,8 +166,12 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<SrfChangeDto>()
             .HasNoKey();  
             modelBuilder.Entity<SrfDifferenceDto>()
-            .HasNoKey();                                            
-            
+            .HasNoKey();   
+            modelBuilder.Entity<PrdEntryAccessDto>()
+            .HasNoKey(); 
+            modelBuilder.Entity<PrdRfidAlertDto>()
+            .HasNoKey(); 
+                                                  
         }
     }
 }

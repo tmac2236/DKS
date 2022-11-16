@@ -343,7 +343,32 @@ ON t1.PKBASEHID=t3.FKBASEHID and t3.LANGID='437' ");
                    .FromSqlRaw(string.Format("EXECUTE dbo.SSB_GET_SRF_DIFFERENCE @SRFID1,@SRFID2"), pc.ToArray())
                    .ToListAsync();
             return data;
-        }                
+        } 
+        public async Task<List<PrdEntryAccessDto>> GetPrdEntryAccessDto(string area,string recordTime)
+        {
+
+            List<SqlParameter> pc = new List<SqlParameter>{
+                new SqlParameter("@Area",area ),
+                new SqlParameter("@RecordTime",recordTime )              
+            };
+            var data = await _context.GetPrdEntryAccessDto
+                   .FromSqlRaw(string.Format("EXECUTE dbo.PrdEntryAccessApi @Area,@RecordTime"), pc.ToArray())
+                   .ToListAsync();
+            return data;
+        } 
+        public async Task<List<PrdRfidAlertDto>> GetPrdRfidAlertDto(DateTime recordTime)
+        {
+
+            List<SqlParameter> pc = new List<SqlParameter>{
+                new SqlParameter("@RecordTime",recordTime )              
+            };
+            var data = await _context.GetPrdRfidAlertDto
+                   .FromSqlRaw(string.Format("EXECUTE dbo.PrdRfidAlertApi @RecordTime"), pc.ToArray())
+                   .ToListAsync();
+            return data;
+        } 
+
+                         
     }
    
 }

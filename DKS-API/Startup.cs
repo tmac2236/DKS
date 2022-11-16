@@ -110,13 +110,19 @@ namespace DKS_API
             //Add Jobs
             //services.AddSingleton<F340CheckTimeJob>();
             //services.AddSingleton<SentStanMailTimeJob>();
+            //services.AddSingleton<SentRFIAlertJob>();
+            
             //Add Triggers 
             //services.AddSingleton(
-            //     new JobSchedule(jobType: typeof(F340CheckTimeJob), cronExpression: " * 30 8-15 ? * MON,TUE,WED,THU,FRI,SAT *")//每五秒鐘觸發一次
+            //    new JobSchedule(jobType: typeof(F340CheckTimeJob), cronExpression: " * 30 8-15 ? * MON,TUE,WED,THU,FRI,SAT *")//每五秒鐘觸發一次
             //);
             //services.AddSingleton(
-            //     new JobSchedule(jobType: typeof(SentStanMailTimeJob), cronExpression: "0 30 8,9,10,11,12,13,14,15 ? * MON,TUE,WED,THU,FRI,SAT")
+            //     new JobSchedule(jobType: typeof(SentStanMailTimeJob), cronExpression: "0 00 8,9,10,11,12,13,14,15 ? * MON,TUE,WED,THU,FRI,SAT")
             //);
+            //services.AddSingleton(
+            //    new JobSchedule(jobType: typeof(SentRFIAlertJob), cronExpression: " 0 * * ? * * ")    //每分鐘  " 0 * * ? * * "
+            //);
+
             //Launch QuartzHostedServie
             //services.AddHostedService<QuartzHostedService>();
             
