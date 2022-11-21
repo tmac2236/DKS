@@ -15,6 +15,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
+using DKS_API.Helpers;
 
 namespace DKS_API.Controllers
 {
@@ -22,13 +23,15 @@ namespace DKS_API.Controllers
     {
         private readonly IDevSysSetDAO _devSysSetDAO;
         private readonly IDKSDAO _dksDAO;
+        private readonly IDevGateLogDataLogDAO _devGateLogDataLogDAO;
 
         public SystemController(IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<SystemController> logger,
-                 IDevSysSetDAO devSysSetDAO,IDKSDAO dksDAO)
+                 IDevSysSetDAO devSysSetDAO,IDKSDAO dksDAO, IDevGateLogDataLogDAO devGateLogDataLogDAO)
                 : base(config, webHostEnvironment, logger)
         {
             _devSysSetDAO = devSysSetDAO;
             _dksDAO = dksDAO;
+            _devGateLogDataLogDAO = devGateLogDataLogDAO;
         }
 
         [HttpGet("findAll")]
@@ -139,7 +142,37 @@ namespace DKS_API.Controllers
             }
             
         } 
+        [HttpGet("getRfidAlert")]
+        public async Task<IActionResult> GetRfidAlert([FromQuery]SRfidMaintain sRfidMaintain)
+        {
+            var data = await _dksDAO.GetPrdRfidAlertDto(sRfidMaintain.time); 
 
+            PagedList<PrdRfidAlertDto> result = PagedList<PrdRfidAlertDto>.Create(data, sRfidMaintain.PageNumber, sRfidMaintain.PageSize, sRfidMaintain.IsPaging);
+            Response.AddPagination(result.CurrentPage, result.PageSize,
+            result.TotalCount, result.TotalPages);
+
+            return Ok(result);
+        }
+        [HttpPost("setRfidAlert/{reason}/{updater}")]
+        public async Task<IActionResult> SetRfidAlert(List<PrdRfidAlertDto> prdRfidAlertDtos, string reason,string updater)
+        {
+            foreach(PrdRfidAlertDto item in prdRfidAlertDtos){
+                var model =  _devGateLogDataLogDAO.FindSingle(x=>x.SEQ == Convert.ToInt32(item.Seq));
+                if( model == null){
+                    model = new DevGateLogDataLog();
+                    model.SEQ = Convert.ToInt32(item.Seq);
+                    model.REASON  =  reason;
+                    model.UPDATER =  updater;
+                    _devGateLogDataLogDAO.Add(model);
+                }else{
+                    model.REASON  =  reason;
+                    model.UPDATER =  updater;
+                    _devGateLogDataLogDAO.Update(model);
+                }  
+            }
+            await _devGateLogDataLogDAO.SaveAll();
+            return Ok();
+        }
 
     }
 }

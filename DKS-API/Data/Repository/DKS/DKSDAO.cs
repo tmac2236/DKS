@@ -356,7 +356,7 @@ ON t1.PKBASEHID=t3.FKBASEHID and t3.LANGID='437' ");
                    .ToListAsync();
             return data;
         } 
-        public async Task<List<PrdRfidAlertDto>> GetPrdRfidAlertDto(DateTime recordTime)
+        public async Task<List<PrdRfidAlertDto>> GetPrdRfidAlertDto(string recordTime)
         {
 
             List<SqlParameter> pc = new List<SqlParameter>{

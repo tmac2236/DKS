@@ -23,6 +23,7 @@ import { F428EditComponent } from "./views/dks/F428/F428-edit/F428-edit.componen
 import { F428Component } from "./views/dks/F428/F428.component";
 import { P202Component } from "./views/dks/P202/P202.component";
 import { PlmPartComponent } from "./views/dks/plm/plm-part/plm-part.component";
+import { MaintainRfidComponent } from "./views/dks/rfid/maintain-rfid/maintain-rfid.component";
 import { SampleTrackReportComponent } from "./views/dks/rfid/sample-track-report/sample-track-report.component";
 
 import { P404Component } from "./views/error/404.component";
@@ -148,7 +149,11 @@ export const routes: Routes = [
   {
     path: "F406I",
     component: F406IComponent, 
-  },   
+  }, 
+  {
+    path:"Maintain-RFID",
+    component:MaintainRfidComponent,
+  },  
   {
     path: "",
     component: DefaultLayoutComponent,

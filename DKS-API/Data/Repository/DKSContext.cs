@@ -37,6 +37,8 @@ namespace DKS_API.Data.Repository
 
         public DbSet<SamDetlB> SAMDETLB { get; set; }
         public DbSet<TempSamplQtb> TEMPSAMPLQTB { get; set; }
+
+        public DbSet<DevGateLogDataLog> DEV_GATE_LOGDATA_LOG { get; set; }
         
 
 
@@ -104,6 +106,8 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<DtrFgtEtd>().HasKey(x => new { x.FACTORYID,x.ARTICLE,x.STAGE,x.TEST,x.QC_RECEIVE });
             modelBuilder.Entity<SamDetlB>().HasKey(x => new { x.PKSAMDLID,x.SAMPLENO });
             modelBuilder.Entity<TempSamplQtb>().HasKey(x => new { x.SAMPLENO,x.PASSIDNAME });
+            modelBuilder.Entity<DevGateLogDataLog>().HasKey(x => new { x.SEQ });
+
             
 
             //DTO(Stored Procedure)

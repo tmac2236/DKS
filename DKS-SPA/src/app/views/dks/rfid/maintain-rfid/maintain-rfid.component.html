@@ -1,0 +1,231 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-3">
+              <strong>{{title}}</strong>
+            </div>
+            <div class="col-9">
+              <div class="float-right">
+                <strong *ngIf="this.sReactime?.loginUser"
+                  >{{ "Common.hello" | translate }}
+                  {{ this.sReactime?.loginUser }}</strong
+                >
+                <img
+                  src="../assets/systemImg/exit.png"
+                  tooltip="Logout"
+                  width="25"
+                  height="25"
+                  (click)="this.utility.logout()"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <form class="form" #addQueryReportDataForm="ngForm">
+            <!-- Second column-->
+            <div class="row">
+              <div class="form-group col-xs-2 mr-1">
+                <label class="col-form-label mr-1">Reactime</label>
+                <input
+                  class="col-form-label mr-1"
+                  type="date"
+                  name="reactime"
+                  [(ngModel)]="sReactime.reactime"/>
+                <button
+                  class="btn btn-primary mr-1 ml-4"
+                  type="button"
+                  (click)="search()"
+                >
+                  Search
+                </button>
+                <button
+                class="btn btn-primary mr-1 ml-4"
+                type="button"
+                (click)="openModal('addRfidModal')"
+                [hidden]="this.selectedList.length == 0"
+              >
+                Add RFID Reason
+              </button>  
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table text-center table-striped">
+                    <!--text-nowrap不換行-->
+                    <!--套版分頁<table datatable id="f340Sche" class="table text-center table-striped">-->
+                    <thead>
+                      <tr class="table-info">
+                        <th style="background-color: #23d954;width:10%;"><input type="checkbox"(change)="checkUncheckAll($event)"> Select</th>
+                        <th
+                          style="background-color: #23d954;width:10%;"
+
+                        >
+                        Gate
+                        </th>
+
+                        <th
+                          style="background-color: #23d954;width:10%;"
+                        >
+                        Time
+                        </th>
+                        <th
+                          style="background-color: #23d954;width:10%;"
+
+                        >
+                        EPC
+                        </th>
+
+                        <th
+                          style="background-color: #23d954;width:10%;"
+                        >
+                        SEQ
+                        </th>
+                        <th
+                          style="background-color: #23d954;width:10%;"
+
+                        >
+                        Reason
+                        </th>
+
+                        <th
+                          style="background-color: #23d954;width:10%;"
+                        >
+                        Updater
+                        </th>                                                 
+                               
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container *ngFor="let item of result; let i = index">
+                        <tr>
+                          <td style="width:10%;"><input type="checkbox"(change)="selectList()" [(ngModel)] = "result[i].checked"></td>
+                          <td style="width:10%;">{{ item.gate  }}</td>
+                          <td style="width:10%;">{{ item.time  }}</td>
+                          <td style="width:10%;">{{ item.epc  }}</td>
+                          <td style="width:10%;">{{ item.seq  }}</td>
+                          <td style="width:10%;">{{ item.reason  }}</td>
+                          <td style="width:10%;">{{ item.updater  }}</td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                  <!--
+                  <div class="d-flex justify-content-start">
+                    <select
+                      style="height: 35px; width: 45px"
+                      name="itemsPerPage"
+                      [(ngModel)]="sSampleTrackReport.itemsPerPage"
+                      (change)="changePageSize($event)"
+                    >
+                      <option value="10" selected>10</option>
+                      <option value="25" selected>25</option>
+                      <option value="50" selected>50</option>
+                      <option value="100" selected>100</option>
+                    </select>
+                    <pagination
+                      *ngIf="this.sSampleTrackReport.isPaging"
+                      [boundaryLinks]="true"
+                      [totalItems]="sSampleTrackReport.totalItems"
+                      [maxSize]="60"
+                      [itemsPerPage]="sSampleTrackReport.itemsPerPage"
+                      [(ngModel)]="sSampleTrackReport.currentPage"
+                      (pageChanged)="pageChangeds($event)"
+                      previousText="&lsaquo;"
+                      nextText="&rsaquo;"
+                      firstText="&laquo;"
+                      lastText="&raquo;"
+                    >
+                    </pagination>
+                  </div>
+                  -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--addRfidModal-->
+<div
+  bsModal
+  #addRfidModal="bs-modal"
+  class="modal hide fade in"
+  [config]="{backdrop: 'static'}"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+<div class="modal-dialog modal-info modal-lg" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Please type reason and guard name.</h4>
+      <button
+        type="button"
+        class="close"
+        (click)="closeModal('addRfidModal')"
+        aria-label="Close"
+      >
+        <!--右上角的 X 符號-->
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">   
+      <div class="row">
+        <div class="col-12">
+          <div class="form-group">
+            Reason:
+            <input
+            class="col-form-label mr-2"
+            type="text"
+            size="50"
+            name="modalReason"
+            [(ngModel)]="addModal.reason"/>
+            Guard:
+            <input
+            class="col-form-label mr-2"
+            type="text"
+            size="20"
+            name="modalUdater"
+            [(ngModel)]="addModal.updater"/>
+            <button
+            type="button"
+            [hidden]="false"
+            class="btn btn-primary btn-lg"
+            (click)="saveModal()"
+            >
+            Save
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-10">
+        </div>
+        <div class="col-2">
+        </div>
+      </div>  
+    </div>
+  </div>
+</div>
+</div>
+<!--addRfidModal-->
+<ngx-spinner
+  bdColor="rgba(0, 0, 0, 0.8)"
+  size="large"
+  color="#fff"
+  type="square-jelly-box"
+  [fullScreen]="true"
+  ><p style="color: white">Loading {{title}}...</p></ngx-spinner
+>
