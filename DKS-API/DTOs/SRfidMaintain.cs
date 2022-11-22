@@ -5,9 +5,7 @@ namespace DKS_API.DTOs
 {
     public class SRfidMaintain : PaginationParams
     {
-        public string gate { get; set; }
-        public string time { get; set; }
-        public string epc { get; set; }
-        public string seq { get; set; }
+        public string recordTimeS { get; set; }
+        public string recordTimeE { get; set; }
     }
 }

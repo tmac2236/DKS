@@ -2,7 +2,8 @@ import { Pagination } from "./pagination";
 
 export class SRfidMaintain extends Pagination {
 
-  reactime: string;
+  recordTimeS: string;
+  recordTimeE: string;
 
   constructor() {
 

@@ -5,7 +5,8 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { BsLocaleService } from "ngx-bootstrap/datepicker";
 import { NgxSpinnerService } from "ngx-spinner";
-import { timeout } from "rxjs/operators";
+import { Observable } from "rxjs";
+import { map, timeout } from "rxjs/operators";
 import { environment } from "../../../environments/environment";
 import { ModelInterface } from "../_models/interface/model-interface";
 import { Pagination } from "../_models/pagination";
@@ -29,6 +30,11 @@ export class Utility {
     public languageService: LanguageService,
     private localeService: BsLocaleService
   ) {}
+  //
+  // ruru的API
+  loginRuRu(account: string, password: string): Observable<any> {
+    return this.http.get(this.baseUrl+'system/loginRuRu?account=' + account +'&password=' + password );
+  }
 
   logout() {
     this.alertify.confirm(

@@ -7,5 +7,6 @@ export class PrdRfidAlertDto implements ModelInterface{
      seq  :string;
      reason  :string;
      updater  :string;
+     updateTime  :string;
      checked:boolean;  //only 4 前端
 }

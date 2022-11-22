@@ -137,7 +137,7 @@ namespace DKS_API.Services.Implement
                 return false;
             } 
 
-            var data = await _dksDao.GetPrdRfidAlertDto(""); //撈現在前三分鐘內
+            var data = await _dksDao.GetPrdRfidAlertDto("",""); //撈現在前三分鐘內
 
             _logger.LogInformation(String.Format(@"{0}: Today DTO count: {1}", nowTime.ToString(),data.Count.ToString() ));
             // data = data.FindAll(x=>x.Time >= nowTime.AddMinutes(-3));

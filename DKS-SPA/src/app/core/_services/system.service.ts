@@ -53,8 +53,8 @@ export class SystemService {
         sRfidMaintain.itemsPerPage.toString()
       );
     }
-    params = params.append("time", sRfidMaintain.reactime.toString());
-
+    params = params.append("recordTimeS", sRfidMaintain.recordTimeS.toString());
+    params = params.append("recordTimeE", sRfidMaintain.recordTimeE.toString());
 
     return this.utility.http
       .get<PrdRfidAlertDto[]>(

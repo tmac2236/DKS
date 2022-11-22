@@ -356,14 +356,15 @@ ON t1.PKBASEHID=t3.FKBASEHID and t3.LANGID='437' ");
                    .ToListAsync();
             return data;
         } 
-        public async Task<List<PrdRfidAlertDto>> GetPrdRfidAlertDto(string recordTime)
+        public async Task<List<PrdRfidAlertDto>> GetPrdRfidAlertDto(string recordTimeS,string recordTimeE)
         {
 
             List<SqlParameter> pc = new List<SqlParameter>{
-                new SqlParameter("@RecordTime",recordTime )              
+                new SqlParameter("@RecordTimeS",recordTimeS ),
+                new SqlParameter("@RecordTimeE",recordTimeE )               
             };
             var data = await _context.GetPrdRfidAlertDto
-                   .FromSqlRaw(string.Format("EXECUTE dbo.PrdRfidAlertApi @RecordTime"), pc.ToArray())
+                   .FromSqlRaw(string.Format("EXECUTE dbo.PrdRfidAlertApi @RecordTimeS,@RecordTimeE"), pc.ToArray())
                    .ToListAsync();
             return data;
         } 

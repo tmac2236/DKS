@@ -12,5 +12,7 @@ namespace DKS.API.Models.DKS
         public string Epc { get; set; }
         public string Reason { get; set; }
         public string Updater { get; set; }
+        public string UpdateTime { get; set; }
+        
     }
 }

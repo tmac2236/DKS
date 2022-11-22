@@ -15,5 +15,7 @@ namespace DKS.API.Models.DKS
 
         public string? FLAG { get; set; }
 
+        public string UPDATETIME { get; set; }
+        
     }
 }

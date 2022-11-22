@@ -16,6 +16,8 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
 using DKS_API.Helpers;
+using DKS_API.Services.Interface;
+using Newtonsoft.Json.Linq;
 
 namespace DKS_API.Controllers
 {
@@ -24,14 +26,17 @@ namespace DKS_API.Controllers
         private readonly IDevSysSetDAO _devSysSetDAO;
         private readonly IDKSDAO _dksDAO;
         private readonly IDevGateLogDataLogDAO _devGateLogDataLogDAO;
+        private readonly IExcelService _excelService;
 
         public SystemController(IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<SystemController> logger,
-                 IDevSysSetDAO devSysSetDAO,IDKSDAO dksDAO, IDevGateLogDataLogDAO devGateLogDataLogDAO)
+                 IDevSysSetDAO devSysSetDAO,IDKSDAO dksDAO, IDevGateLogDataLogDAO devGateLogDataLogDAO
+                 , IExcelService excelService)
                 : base(config, webHostEnvironment, logger)
         {
             _devSysSetDAO = devSysSetDAO;
             _dksDAO = dksDAO;
             _devGateLogDataLogDAO = devGateLogDataLogDAO;
+            _excelService = excelService;
         }
 
         [HttpGet("findAll")]
@@ -145,7 +150,10 @@ namespace DKS_API.Controllers
         [HttpGet("getRfidAlert")]
         public async Task<IActionResult> GetRfidAlert([FromQuery]SRfidMaintain sRfidMaintain)
         {
-            var data = await _dksDAO.GetPrdRfidAlertDto(sRfidMaintain.time); 
+            _logger.LogInformation(String.Format(@"****** SystemController GetRfidAlert fired!! ******"));
+            DateTime dtS = DateTime.Parse(sRfidMaintain.recordTimeS);
+            DateTime dtE = DateTime.Parse(sRfidMaintain.recordTimeE);
+            var data = await _dksDAO.GetPrdRfidAlertDto(dtS.ToString("yyyy-MM-dd HH:mm:ss"),dtE.ToString("yyyy-MM-dd HH:mm:ss")); 
 
             PagedList<PrdRfidAlertDto> result = PagedList<PrdRfidAlertDto>.Create(data, sRfidMaintain.PageNumber, sRfidMaintain.PageSize, sRfidMaintain.IsPaging);
             Response.AddPagination(result.CurrentPage, result.PageSize,
@@ -153,9 +161,24 @@ namespace DKS_API.Controllers
 
             return Ok(result);
         }
+        [HttpPost("exportRfidAlert")]
+        public  async Task<IActionResult>  ExportRfidAlert(SRfidMaintain sRfidMaintain)
+        {
+            _logger.LogInformation(String.Format(@"****** SystemController exportRfidAlert fired!! ******"));
+
+            DateTime dtS = DateTime.Parse(sRfidMaintain.recordTimeS);
+            DateTime dtE = DateTime.Parse(sRfidMaintain.recordTimeE);
+            var data = await _dksDAO.GetPrdRfidAlertDto(dtS.ToString("yyyy-MM-dd HH:mm:ss"),dtE.ToString("yyyy-MM-dd HH:mm:ss")); 
+
+            byte[] result = _excelService.CommonExportReport(data.ToList(), "TempRfidMaintain.xlsx");
+
+            return File(result, "application/xlsx");
+        }        
         [HttpPost("setRfidAlert/{reason}/{updater}")]
         public async Task<IActionResult> SetRfidAlert(List<PrdRfidAlertDto> prdRfidAlertDtos, string reason,string updater)
         {
+            _logger.LogInformation(String.Format(@"****** SystemController SetRfidAlert fired!! ******"));
+
             foreach(PrdRfidAlertDto item in prdRfidAlertDtos){
                 var model =  _devGateLogDataLogDAO.FindSingle(x=>x.SEQ == Convert.ToInt32(item.Seq));
                 if( model == null){
@@ -163,16 +186,45 @@ namespace DKS_API.Controllers
                     model.SEQ = Convert.ToInt32(item.Seq);
                     model.REASON  =  reason;
                     model.UPDATER =  updater;
+                    model.UPDATETIME = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                     _devGateLogDataLogDAO.Add(model);
                 }else{
                     model.REASON  =  reason;
                     model.UPDATER =  updater;
+                    model.UPDATETIME = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                     _devGateLogDataLogDAO.Update(model);
                 }  
             }
             await _devGateLogDataLogDAO.SaveAll();
             return Ok();
         }
+        [HttpGet("loginRuRu")]
+        public async Task<IActionResult> LoginRuRu(string account, string password)
+        {
+            _logger.LogInformation(String.Format(@"****** SystemController LoginRuRu fired!! ******"));
+
+            var httpClientHandler = new HttpClientHandler();
+            httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) =>
+            {
+                return true;
+            };
+
+            using (var client = new HttpClient(httpClientHandler))
+            {
+
+                 var str = string.Format(@"http://10.4.0.39:8080/ArcareAccount/Validate?account={0}&password={1}", account, password);
+                 HttpResponseMessage  res = client.GetAsync(str).Result;
+                 string result = JObject.Parse(await res.Content.ReadAsStringAsync())["result"].ToString();
+                 if(result == "True"){
+                    return Ok(true);
+                 }else{
+                    return Ok(false);
+                 }
+
+
+            }
+           
+        }        
 
     }
 }

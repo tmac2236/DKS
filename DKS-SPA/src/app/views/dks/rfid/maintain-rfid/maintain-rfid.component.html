@@ -10,16 +10,20 @@
             <div class="col-9">
               <div class="float-right">
                 <strong *ngIf="this.sReactime?.loginUser"
-                  >{{ "Common.hello" | translate }}
-                  {{ this.sReactime?.loginUser }}</strong
-                >
-                <img
-                  src="../assets/systemImg/exit.png"
-                  tooltip="Logout"
+                  >{{ this.sReactime?.loginUser }}</strong>
+                  <img
+                  *ngIf="!this.sReactime?.loginUser"
+                  src="../assets/systemImg/login.png"
                   width="25"
                   height="25"
-                  (click)="this.utility.logout()"
-                />
+                  (click)="openModal('loginModal')"/>    
+
+                  <img
+                  *ngIf="this.sReactime?.loginUser"
+                  src="../assets/systemImg/exit.png"
+                  width="25"
+                  height="25"
+                  (click)="this.logout()"/>
               </div>
             </div>
           </div>
@@ -29,27 +33,40 @@
             <!-- Second column-->
             <div class="row">
               <div class="form-group col-xs-2 mr-1">
-                <label class="col-form-label mr-1">Reactime</label>
+                <label class="col-form-label mr-1">From:</label>
                 <input
                   class="col-form-label mr-1"
-                  type="date"
-                  name="reactime"
-                  [(ngModel)]="sReactime.reactime"/>
+                  type="datetime-local"
+                  name="recordTimeS"
+                  [(ngModel)]="sReactime.recordTimeS"/>
+                  <label class="col-form-label mr-1">To:</label>
+                  <input
+                    class="col-form-label mr-1"
+                    type="datetime-local"
+                    name="recordTimeE"
+                    [(ngModel)]="sReactime.recordTimeE"/>         
                 <button
-                  class="btn btn-primary mr-1 ml-4"
+                  class="btn btn-primary mr-1 ml-1"
                   type="button"
                   (click)="search()"
                 >
                   Search
                 </button>
                 <button
-                class="btn btn-primary mr-1 ml-4"
+                class="btn btn-primary mr-1 ml-1"
                 type="button"
                 (click)="openModal('addRfidModal')"
                 [hidden]="this.selectedList.length == 0"
               >
-                Add RFID Reason
-              </button>  
+                Maintain
+              </button>
+              <button
+              class="btn btn-primary mr-1"
+              type="button"
+              (click)="export()"
+              >
+              Export
+              </button>                  
               </div>
             </div>
           </form>
@@ -83,12 +100,6 @@
                         >
                         EPC
                         </th>
-
-                        <th
-                          style="background-color: #23d954;width:10%;"
-                        >
-                        SEQ
-                        </th>
                         <th
                           style="background-color: #23d954;width:10%;"
 
@@ -101,7 +112,11 @@
                         >
                         Updater
                         </th>                                                 
-                               
+                        <th
+                        style="background-color: #23d954;width:10%;"
+                      >
+                        Update Time
+                      </th>                         
                       </tr>
                     </thead>
                     <tbody>
@@ -109,11 +124,12 @@
                         <tr>
                           <td style="width:10%;"><input type="checkbox"(change)="selectList()" [(ngModel)] = "result[i].checked"></td>
                           <td style="width:10%;">{{ item.gate  }}</td>
-                          <td style="width:10%;">{{ item.time  }}</td>
+                          <td style="width:10%;">{{ item.time | date: "yyyy/MM/dd HH:mm:ss"  }}</td>
                           <td style="width:10%;">{{ item.epc  }}</td>
-                          <td style="width:10%;">{{ item.seq  }}</td>
                           <td style="width:10%;">{{ item.reason  }}</td>
                           <td style="width:10%;">{{ item.updater  }}</td>
+                          <td style="width:10%;">{{ item.updateTime }}</td>
+                          
                         </tr>
                       </ng-container>
                     </tbody>
@@ -192,13 +208,14 @@
             size="50"
             name="modalReason"
             [(ngModel)]="addModal.reason"/>
-            Guard:
+            Updater:
             <input
             class="col-form-label mr-2"
             type="text"
             size="20"
             name="modalUdater"
-            [(ngModel)]="addModal.updater"/>
+            [(ngModel)]="addModal.updater"
+            readonly/>
             <button
             type="button"
             [hidden]="false"
@@ -221,6 +238,71 @@
 </div>
 </div>
 <!--addRfidModal-->
+<!--loginModal-->
+<div
+  bsModal
+  #loginModal="bs-modal"
+  class="modal hide fade in"
+  [config]="{backdrop: 'static'}"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+<div class="modal-dialog modal-info " role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Please Login first.</h4>
+      <button
+        type="button"
+        class="close"
+        (click)="closeModal('loginModal')"
+        aria-label="Close"
+      >
+        <!--右上角的 X 符號-->
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">   
+      <div class="row">
+        <div class="col-12">
+          <div class="form-group">
+            Account:
+            <input
+            class="col-form-label mr-2"
+            type="text"
+            size="10"
+            name="modalReason"
+            [(ngModel)]="loginModel.account"/>
+            Password:
+            <input
+            class="col-form-label mr-2"
+            type="password"
+            size="10"
+            name="modalUdater"
+            [(ngModel)]="loginModel.password"/>
+            <button
+            type="button"
+            [hidden]="false"
+            class="btn btn-primary btn-lg"
+            (click)="this.login()"
+            >
+            Login in
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-10">
+        </div>
+        <div class="col-2">
+        </div>
+      </div>  
+    </div>
+  </div>
+</div>
+</div>
+<!--loginModal-->
 <ngx-spinner
   bdColor="rgba(0, 0, 0, 0.8)"
   size="large"
