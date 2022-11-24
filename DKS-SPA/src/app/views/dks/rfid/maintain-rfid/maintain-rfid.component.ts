@@ -22,19 +22,32 @@ export class MaintainRfidComponent implements OnInit {
   result: PrdRfidAlertDto[] = [];
   sReactime: SRfidMaintain = new SRfidMaintain();
   uiControls:any = {
-    sendMemoMail: utilityConfig.DtrUnfozen,
+    rfidMaintain: utilityConfig.RfidGaurd,
   };
   selectedList:PrdRfidAlertDto[] = []; //checkbox用
   isAllCheck = false; //全選checkbox用
   addModal:DevGateLogDataLog = new DevGateLogDataLog();
   loginModel: any = {}; //登入用
-
+  sortFlag = true; //for sorting ; ASC DESC
+  
   constructor(public utility: Utility, private systemService: SystemService, private commonService: CommonService) { }
 
   ngOnInit() {
-
-    this.sReactime.loginUser = localStorage.getItem("user");
+    /////////// set default date  ///////////
+    this.utility.initUserRoleRuRu(this.sReactime);
     this.addModal.updater = this.sReactime.loginUser;
+
+    var local = new Date();
+    local.setMinutes(local.getMinutes() - local.getTimezoneOffset()); // UTc + 7
+      this.sReactime.recordTimeE = local.toISOString();
+      this.sReactime.recordTimeE = this.sReactime.recordTimeE.substring(0, this.sReactime.recordTimeE.length - 5);  //取到秒就好
+    
+      var local2 = local;
+    local2.setTime(local.getTime() + (-2 * 60 *60 * 1000)); //minus 2 hours
+    this.sReactime.recordTimeS = local2.toISOString();
+    this.sReactime.recordTimeS = this.sReactime.recordTimeS.substring(0, this.sReactime.recordTimeS.length - 5);  //取到秒就好
+    /////////// set default date  ///////////
+
 
   }
   //搜尋
@@ -108,6 +121,11 @@ openModal(type: string) {
   if (type == "addRfidModal"){
     if(this.utility.checkIsNullorEmpty(this.sReactime.loginUser)){
       this.utility.alertify.error("Please Login in first !!!!");
+      this.openModal('loginModal');
+      return;
+    }
+    if(!this.sReactime.role.includes(this.uiControls.rfidMaintain)){
+      this.utility.alertify.error("Your account don't have permisson !!!!");
       return;
     }
     this.addRfidModal.show();
@@ -143,10 +161,9 @@ login(){
   this.utility.loginRuRu(this.loginModel.account,this.loginModel.password).subscribe(
     (res: any) => {
 
-      console.log(res);
       if(res){
-        localStorage.setItem('user', this.loginModel.account); //非後端給的token，簡易給個名稱
-        this.sReactime.loginUser = localStorage.getItem("user");
+        localStorage.setItem('tokenRuru', JSON.stringify(res));
+        this.utility.initUserRoleRuRu(this.sReactime);
         this.addModal.updater = this.sReactime.loginUser;
 
         this.utility.alertify.success("Login Success !!!!");
@@ -167,11 +184,28 @@ login(){
   )
 }
 logout(){
-  localStorage.removeItem('user');
+  localStorage.removeItem('tokenRuru');
   this.sReactime.loginUser = null;
   this.addModal.updater = "";
   this.utility.alertify.success("Logout Success !!!!");
 }
 
+  //排序按鈕 
+  sort(colName: string) {
+
+    if (this.sortFlag) {
+      //ASC
+      this.result = this.result.sort((a, b) =>
+        a[colName].localeCompare(b[colName])
+      );
+    } else {
+      //DESC
+      this.result = this.result.sort((a, b) =>
+        b[colName].localeCompare(a[colName])
+      );
+    }
+    this.sortFlag = !this.sortFlag;
+
+  }
 
 }

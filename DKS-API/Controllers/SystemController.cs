@@ -189,10 +189,13 @@ namespace DKS_API.Controllers
                     model.UPDATETIME = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                     _devGateLogDataLogDAO.Add(model);
                 }else{
-                    model.REASON  =  reason;
-                    model.UPDATER =  updater;
-                    model.UPDATETIME = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                    _devGateLogDataLogDAO.Update(model);
+                    //只有上一個修改者才能覆蓋自己的那一筆
+                    if(item.Updater == updater){    
+                        model.REASON  =  reason;
+                        model.UPDATER =  updater;
+                        model.UPDATETIME = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                        _devGateLogDataLogDAO.Update(model);
+                    }
                 }  
             }
             await _devGateLogDataLogDAO.SaveAll();
@@ -212,14 +215,27 @@ namespace DKS_API.Controllers
             using (var client = new HttpClient(httpClientHandler))
             {
 
-                 var str = string.Format(@"http://10.4.0.39:8080/ArcareAccount/Validate?account={0}&password={1}", account, password);
-                 HttpResponseMessage  res = client.GetAsync(str).Result;
-                 string result = JObject.Parse(await res.Content.ReadAsStringAsync())["result"].ToString();
-                 if(result == "True"){
-                    return Ok(true);
-                 }else{
+                var str = string.Format(@"http://10.4.0.39:8080/ArcareAccount/Validate?account={0}&password={1}", account, password);
+                HttpResponseMessage  res = client.GetAsync(str).Result;
+                string result = JObject.Parse(await res.Content.ReadAsStringAsync())["result"].ToString();
+                if(result == "True"){
+
+                    var userRoles = await _dksDAO.GetRolesByAccount(account);
+
+                    IEnumerable<string> onlyGroupNos = from u in userRoles 
+                                        select u.GROUPNO ;
+                    string roleArray = string.Join(".",onlyGroupNos);
+                    var dict = new Dictionary<string, string>();
+                    dict.Add("userId", userRoles[0].USERID.ToString());
+                    dict.Add("user", userRoles[0].LOGIN);
+                    dict.Add("role", roleArray);
+                    dict.Add("factoryId", userRoles[0].FACTORYID);
+
+
+                    return Ok(Newtonsoft.Json.JsonConvert.SerializeObject(dict));
+                }else{
                     return Ok(false);
-                 }
+                }
 
 
             }

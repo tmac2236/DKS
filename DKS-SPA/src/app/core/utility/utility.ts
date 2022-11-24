@@ -177,6 +177,18 @@ export class Utility {
     s.factoryId = this.getToken("actort");
     return s;
   }
+  initUserRoleRuRu(s: Pagination) {
+    
+    let token = JSON.parse(localStorage.getItem("tokenRuru"));
+    if(token){
+      s.loginUser = token["user"];
+      s.role = token["role"];
+      s.userId = token["userId"];
+      s.factoryId = token["factoryId"];
+    }
+
+    return s;
+  }
   //Base64 to Blob
   dataURLToBlob(dataURL) {
     // Code taken from https://github.com/ebidel/filer.js

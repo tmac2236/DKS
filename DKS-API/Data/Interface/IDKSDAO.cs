@@ -12,6 +12,7 @@ namespace DKS_API.Data.Interface
         Task<Staccrth> SearchStaffByLOGIN(string login);
         Task<Staccrth> SearchStaffByUserId(string userId);
         Task<List<UserRoleDto>> GetRolesByUserId(string userId);
+        Task<List<UserRoleDto>> GetRolesByAccount(string account);
         Task<List<UserRoleDto>> GetUsersByRole(string groupNo);
         Task<List<UserRoleDto>> GetUsersByName(string userName);
         Task AddUserLogAsync(UserLog user);

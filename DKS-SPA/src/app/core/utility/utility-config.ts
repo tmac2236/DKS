@@ -13,5 +13,6 @@ export var utilityConfig = {
   RoleFgtLabReport: "GM0000000041",  //實驗室測試報告 
   DtrQcSup: "GM0000000047",          //實驗室測試報告(主管)      
   DtrUnfozen: "GM0000000051",      //DTR_UNFROZEN  
-  PlmUpload:"GM0000000049",       //UPLOAD_PLM                                                                                                                                                                                                                           
+  PlmUpload:"GM0000000049",       //UPLOAD_PLM     
+  RfidGaurd:"GM0000000059"        //RFID 守衛                                                                                                                                                                                                                      
 };
