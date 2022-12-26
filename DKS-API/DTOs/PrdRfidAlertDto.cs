@@ -7,6 +7,7 @@ namespace DKS.API.Models.DKS
     public class PrdRfidAlertDto
     {
         public string Gate { get; set; }
+        public string Area { get; set; }
         public DateTime Time { get; set; }
         public string Seq { get; set; }
         public string Epc { get; set; }

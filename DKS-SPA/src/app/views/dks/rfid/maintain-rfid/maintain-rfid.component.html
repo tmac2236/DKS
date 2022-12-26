@@ -44,7 +44,15 @@
                     class="col-form-label mr-1"
                     type="datetime-local"
                     name="recordTimeE"
-                    [(ngModel)]="sReactime.recordTimeE"/>         
+                    [(ngModel)]="sReactime.recordTimeE"/>
+                    <select
+                    style="height:40px;width:65px;"
+                    name="area"
+                    [(ngModel)]="sReactime.area">
+                    <option value = 'Q' selected>QC</option>
+                    <option value = 'D' selected>DC</option>
+                    <option value = '' selected>All</option>
+                    </select>                              
                 <button
                   class="btn btn-primary mr-1 ml-1"
                   type="button"
@@ -91,7 +99,12 @@
                         >
                         Gate
                         </th>
-
+                        <th
+                          style="background-color: #23d954;width:5%;"
+                          (click)="this.sort('area')"
+                        >
+                        Area
+                        </th>
                         <th
                           style="background-color: #23d954;width:10%;"
                           (click)="this.sort('time')"
@@ -105,7 +118,7 @@
                         EPC
                         </th>
                         <th
-                          style="background-color: #23d954;width:20%;"
+                          style="background-color: #23d954;width:15%;"
                           (click)="this.sort('epc')"
                         >
                         Reason
@@ -130,9 +143,10 @@
                         <tr>
                           <td style="width:5%;"><input type="checkbox"(change)="selectList()" [(ngModel)] = "result[i].checked"></td>
                           <td style="width:5%;">{{ item.gate  }}</td>
+                          <td style="width:5%;">{{ item.area  }}</td>
                           <td style="width:10%;">{{ item.time | date: "yyyy/MM/dd HH:mm:ss"  }}</td>
                           <td style="width:10%;">{{ item.epc  }}</td>
-                          <td style="width:20%;">{{ item.reason  }}</td>
+                          <td style="width:15%;">{{ item.reason  }}</td>
                           <td style="width:10%;">{{ item.updater  }}</td>
                           <td style="width:10%;">{{ item.updateTime }}</td>
                           
@@ -204,19 +218,22 @@
       </button>
     </div>
     <div class="modal-body">   
-      <div class="row">
-        <div class="col-12">
-          <div class="form-group">
+      
+          <div class="row">
             Reason:
-            <input
-            class="col-form-label mr-2"
-            type="text"
-            size="50"
+            <select
+            class="form-control mr-2 col-3"
             name="modalReason"
-            [(ngModel)]="addModal.reason"/>
+            [(ngModel)]="addModal.reason">
+              <option
+                *ngFor="let r of reasonList"
+                value="{{ r.name }}">
+                {{ r.code }}
+              </option>
+            </select>
             Updater:
             <input
-            class="col-form-label mr-2"
+            class="form-control mr-2 col-3"
             type="text"
             size="20"
             name="modalUdater"
@@ -231,8 +248,6 @@
             Save
             </button>
           </div>
-        </div>
-      </div>
       <div class="row">
         <div class="col-10">
         </div>

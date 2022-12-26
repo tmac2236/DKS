@@ -7,5 +7,6 @@ namespace DKS_API.DTOs
     {
         public string recordTimeS { get; set; }
         public string recordTimeE { get; set; }
+        public string area { get; set; }
     }
 }

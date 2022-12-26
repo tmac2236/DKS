@@ -55,6 +55,7 @@ export class SystemService {
     }
     params = params.append("recordTimeS", sRfidMaintain.recordTimeS.toString());
     params = params.append("recordTimeE", sRfidMaintain.recordTimeE.toString());
+    params = params.append("area", sRfidMaintain.area.toString());
 
     return this.utility.http
       .get<PrdRfidAlertDto[]>(

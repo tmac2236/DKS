@@ -29,7 +29,13 @@ export class MaintainRfidComponent implements OnInit {
   addModal:DevGateLogDataLog = new DevGateLogDataLog();
   loginModel: any = {}; //登入用
   sortFlag = true; //for sorting ; ASC DESC
-  
+
+  reasonList: { id: number, name: string, code: string }[] = [
+    { "id": 1, "name": "Touch by mistake","code":"Touch by mistake" },
+    { "id": 2, "name": "Binding the wrong RFID","code":"Binding the wrong RFID" },
+    { "id": 3, "name": "Shoes were stolen","code":"Shoes were stolen" },
+    { "id": 4, "name": "Others","code":"Others" }
+]; 
   constructor(public utility: Utility, private systemService: SystemService, private commonService: CommonService) { }
 
   ngOnInit() {
@@ -43,7 +49,8 @@ export class MaintainRfidComponent implements OnInit {
       this.sReactime.recordTimeE = this.sReactime.recordTimeE.substring(0, this.sReactime.recordTimeE.length - 5);  //取到秒就好
     
       var local2 = local;
-    local2.setTime(local.getTime() + (-2 * 60 *60 * 1000)); //minus 2 hours
+    //local2.setTime(local.getTime() + (-2 * 60 *60 * 1000)); //minus 2 hours
+    local2.setUTCHours(-8,30,0,0); // start from today
     this.sReactime.recordTimeS = local2.toISOString();
     this.sReactime.recordTimeS = this.sReactime.recordTimeS.substring(0, this.sReactime.recordTimeS.length - 5);  //取到秒就好
     /////////// set default date  ///////////

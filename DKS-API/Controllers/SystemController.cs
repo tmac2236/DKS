@@ -29,7 +29,7 @@ namespace DKS_API.Controllers
         private readonly IExcelService _excelService;
 
         public SystemController(IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<SystemController> logger,
-                 IDevSysSetDAO devSysSetDAO,IDKSDAO dksDAO, IDevGateLogDataLogDAO devGateLogDataLogDAO
+                 IDevSysSetDAO devSysSetDAO, IDKSDAO dksDAO, IDevGateLogDataLogDAO devGateLogDataLogDAO
                  , IExcelService excelService)
                 : base(config, webHostEnvironment, logger)
         {
@@ -73,38 +73,38 @@ namespace DKS_API.Controllers
             _logger.LogInformation(String.Format(@"****** SystemController GetKanbanDataByLineDto fired!! ******"));
             var data = await _dksDAO.GetKanbanDataByLineDto(lineId);
             return Ok(data);
-        }           
+        }
         [HttpGet("getKanbanTQCDto")]
         public async Task<IActionResult> GetKanbanTQCDto(string lineId)
         {
             _logger.LogInformation(String.Format(@"****** SystemController GetKanbanTQCDto fired!! ******"));
             var data = await _dksDAO.GetKanbanTQCDto(lineId);
             return Ok(data);
-        }        
+        }
         [HttpPost("sendSynoBot")]
-        public  IActionResult SendSynoBot([FromForm] SynoBotDto sysnoDto)
+        public IActionResult SendSynoBot([FromForm] SynoBotDto sysnoDto)
         {
             _logger.LogInformation(String.Format(@"****** SystemController SendSynoBot fired!! ******"));
             SynoBotDto rep = new SynoBotDto();
             var localStr = _config.GetSection("AppSettings:SopUrl").Value;
-            string[] switchStrings = {"F340","F432"};
+            string[] switchStrings = { "F340", "F432" };
 
-                switch (switchStrings.FirstOrDefault<string>(s => sysnoDto.Text.ToUpper().Contains(s)))
-                {
-                    case "F432": 
-                        string fileName = "F432Edit.pdf";
-                        rep.Text = String.Format(@"Please follow the SOP!! <{0}{1}|Click Me!!!>", localStr, fileName );
-                        break;
+            switch (switchStrings.FirstOrDefault<string>(s => sysnoDto.Text.ToUpper().Contains(s)))
+            {
+                case "F432":
+                    string fileName = "F432Edit.pdf";
+                    rep.Text = String.Format(@"Please follow the SOP!! <{0}{1}|Click Me!!!>", localStr, fileName);
+                    break;
 
-                    default:
-                        {
+                default:
+                    {
                         rep.Text = "Sorry, Dobby have no idea, Please ask Aven.";
-                            break;
-                        }
-                }
-  
+                        break;
+                    }
+            }
+
             return Ok(rep);
-        } 
+        }
         [HttpGet("sendRfidAlert")]
         public IActionResult SendRfidAlert(string message)
         {
@@ -112,8 +112,8 @@ namespace DKS_API.Controllers
             var dd = new DateTime();
             var localStr = _config.GetSection("AppSettings:RFIDApiUrl").Value;
             var nowTime = DateTime.Now.AddHours(-3);
-            var starTime = new DateTime(1911, 10, 10, 7,30,0).TimeOfDay ;  //07:30 上班
-            var endTime = new DateTime(1911, 10, 10, 16,30,0).TimeOfDay ;  //16:30 上班
+            var starTime = new DateTime(1911, 10, 10, 7, 30, 0).TimeOfDay;  //07:30 上班
+            var endTime = new DateTime(1911, 10, 10, 16, 30, 0).TimeOfDay;  //16:30 上班
             /*上班測試中
             if( starTime<nowTime.TimeOfDay&& nowTime.TimeOfDay<endTime ){
                 return Ok("Working Time No need send!");
@@ -140,21 +140,22 @@ namespace DKS_API.Controllers
             using (var client = new HttpClient(httpClientHandler))
             {
 
-                 var str = "payload={\"text\": \"" + result + message + "\"}";
-                 HttpResponseMessage  res = client.PostAsync(localStr, new StringContent(str)).Result;
-                 return Ok(res);
+                var str = "payload={\"text\": \"" + result + message + "\"}";
+                HttpResponseMessage res = client.PostAsync(localStr, new StringContent(str)).Result;
+                return Ok(res);
 
             }
-            
-        } 
+
+        }
         [HttpGet("getRfidAlert")]
-        public async Task<IActionResult> GetRfidAlert([FromQuery]SRfidMaintain sRfidMaintain)
+        public async Task<IActionResult> GetRfidAlert([FromQuery] SRfidMaintain sRfidMaintain)
         {
             _logger.LogInformation(String.Format(@"****** SystemController GetRfidAlert fired!! ******"));
             DateTime dtS = DateTime.Parse(sRfidMaintain.recordTimeS);
             DateTime dtE = DateTime.Parse(sRfidMaintain.recordTimeE);
-            var data = await _dksDAO.GetPrdRfidAlertDto(dtS.ToString("yyyy-MM-dd HH:mm:ss"),dtE.ToString("yyyy-MM-dd HH:mm:ss")); 
-
+            var data = await _dksDAO.GetPrdRfidAlertDto(dtS.ToString("yyyy-MM-dd HH:mm:ss"), dtE.ToString("yyyy-MM-dd HH:mm:ss"));
+            if(sRfidMaintain.area == "D") data = data.Where(x=>x.Area == "D").ToList();
+            if(sRfidMaintain.area == "Q") data = data.Where(x=>x.Area == "Q").ToList();
             PagedList<PrdRfidAlertDto> result = PagedList<PrdRfidAlertDto>.Create(data, sRfidMaintain.PageNumber, sRfidMaintain.PageSize, sRfidMaintain.IsPaging);
             Response.AddPagination(result.CurrentPage, result.PageSize,
             result.TotalCount, result.TotalPages);
@@ -162,41 +163,46 @@ namespace DKS_API.Controllers
             return Ok(result);
         }
         [HttpPost("exportRfidAlert")]
-        public  async Task<IActionResult>  ExportRfidAlert(SRfidMaintain sRfidMaintain)
+        public async Task<IActionResult> ExportRfidAlert(SRfidMaintain sRfidMaintain)
         {
             _logger.LogInformation(String.Format(@"****** SystemController exportRfidAlert fired!! ******"));
 
             DateTime dtS = DateTime.Parse(sRfidMaintain.recordTimeS);
             DateTime dtE = DateTime.Parse(sRfidMaintain.recordTimeE);
-            var data = await _dksDAO.GetPrdRfidAlertDto(dtS.ToString("yyyy-MM-dd HH:mm:ss"),dtE.ToString("yyyy-MM-dd HH:mm:ss")); 
+            var data = await _dksDAO.GetPrdRfidAlertDto(dtS.ToString("yyyy-MM-dd HH:mm:ss"), dtE.ToString("yyyy-MM-dd HH:mm:ss"));
 
             byte[] result = _excelService.CommonExportReport(data.ToList(), "TempRfidMaintain.xlsx");
 
             return File(result, "application/xlsx");
-        }        
+        }
         [HttpPost("setRfidAlert/{reason}/{updater}")]
-        public async Task<IActionResult> SetRfidAlert(List<PrdRfidAlertDto> prdRfidAlertDtos, string reason,string updater)
+        public async Task<IActionResult> SetRfidAlert(List<PrdRfidAlertDto> prdRfidAlertDtos, string reason, string updater)
         {
             _logger.LogInformation(String.Format(@"****** SystemController SetRfidAlert fired!! ******"));
 
-            foreach(PrdRfidAlertDto item in prdRfidAlertDtos){
-                var model =  _devGateLogDataLogDAO.FindSingle(x=>x.SEQ == Convert.ToInt32(item.Seq));
-                if( model == null){
+            foreach (PrdRfidAlertDto item in prdRfidAlertDtos)
+            {
+                var model = _devGateLogDataLogDAO.FindSingle(x => x.SEQ == Convert.ToInt32(item.Seq));
+                if (model == null)
+                {
                     model = new DevGateLogDataLog();
                     model.SEQ = Convert.ToInt32(item.Seq);
-                    model.REASON  =  reason;
-                    model.UPDATER =  updater;
+                    model.REASON = reason;
+                    model.UPDATER = updater;
                     model.UPDATETIME = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                     _devGateLogDataLogDAO.Add(model);
-                }else{
+                }
+                else
+                {
                     //只有上一個修改者才能覆蓋自己的那一筆
-                    if(item.Updater == updater){    
-                        model.REASON  =  reason;
-                        model.UPDATER =  updater;
+                    if (item.Updater == updater)
+                    {
+                        model.REASON = reason;
+                        model.UPDATER = updater;
                         model.UPDATETIME = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                         _devGateLogDataLogDAO.Update(model);
                     }
-                }  
+                }
             }
             await _devGateLogDataLogDAO.SaveAll();
             return Ok();
@@ -216,15 +222,16 @@ namespace DKS_API.Controllers
             {
 
                 var str = string.Format(@"http://10.4.0.39:8080/ArcareAccount/Validate?account={0}&password={1}", account, password);
-                HttpResponseMessage  res = client.GetAsync(str).Result;
+                HttpResponseMessage res = client.GetAsync(str).Result;
                 string result = JObject.Parse(await res.Content.ReadAsStringAsync())["result"].ToString();
-                if(result == "True"){
+                if (result == "True")
+                {
 
                     var userRoles = await _dksDAO.GetRolesByAccount(account);
 
-                    IEnumerable<string> onlyGroupNos = from u in userRoles 
-                                        select u.GROUPNO ;
-                    string roleArray = string.Join(".",onlyGroupNos);
+                    IEnumerable<string> onlyGroupNos = from u in userRoles
+                                                       select u.GROUPNO;
+                    string roleArray = string.Join(".", onlyGroupNos);
                     var dict = new Dictionary<string, string>();
                     dict.Add("userId", userRoles[0].USERID.ToString());
                     dict.Add("user", userRoles[0].LOGIN);
@@ -233,14 +240,16 @@ namespace DKS_API.Controllers
 
 
                     return Ok(Newtonsoft.Json.JsonConvert.SerializeObject(dict));
-                }else{
+                }
+                else
+                {
                     return Ok(false);
                 }
 
 
             }
-           
-        }        
+
+        }
 
     }
 }
