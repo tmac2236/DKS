@@ -385,7 +385,19 @@ ON t1.PKBASEHID=t3.FKBASEHID and t3.LANGID='437' ");
                    .ToListAsync();
             return data;
         } 
+        public async Task<List<BarcodeByCodeDto>> GetBarcodeByCodeDto(string code,string SDate,string EDate)
+        {
 
+            List<SqlParameter> pc = new List<SqlParameter>{
+                new SqlParameter("@Code",code ),
+                new SqlParameter("@SDate",SDate ),
+                new SqlParameter("@EDate",EDate )               
+            };
+            var data = await _context.GetBarcodeByCodeDto
+                   .FromSqlRaw(string.Format("EXECUTE dbo.GetBarcodeByCode @Code,@SDate,@EDate "), pc.ToArray())
+                   .ToListAsync();
+            return data;
+        } 
                          
     }
    

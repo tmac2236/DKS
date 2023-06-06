@@ -76,6 +76,7 @@ namespace DKS_API.Data.Repository
         public DbSet<SrfDifferenceDto> GetSrfDifferenceDto { get; set; }      
         public DbSet<PrdEntryAccessDto> GetPrdEntryAccessDto { get; set; } 
         public DbSet<PrdRfidAlertDto> GetPrdRfidAlertDto { get; set; } 
+        public DbSet<BarcodeByCodeDto> GetBarcodeByCodeDto { get; set; } 
                
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -175,7 +176,9 @@ namespace DKS_API.Data.Repository
             .HasNoKey(); 
             modelBuilder.Entity<PrdRfidAlertDto>()
             .HasNoKey(); 
-                                                  
+            modelBuilder.Entity<BarcodeByCodeDto>()
+            .HasNoKey(); 
+                                       
         }
     }
 }

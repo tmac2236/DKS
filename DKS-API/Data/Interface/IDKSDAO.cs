@@ -35,5 +35,6 @@ namespace DKS_API.Data.Interface
         Task<List<SrfDifferenceDto>> GetSrfDifference(string srfId1,string srfId2);
         Task<List<PrdEntryAccessDto>> GetPrdEntryAccessDto(string area,string recordTime);
         Task<List<PrdRfidAlertDto>> GetPrdRfidAlertDto(string recordTimeS,string recordTimeE);
+        Task<List<BarcodeByCodeDto>> GetBarcodeByCodeDto(string code,string SDate,string EDate);
     }
 }

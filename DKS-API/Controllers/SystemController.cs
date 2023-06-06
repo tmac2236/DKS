@@ -250,6 +250,20 @@ namespace DKS_API.Controllers
             }
 
         }
+        [HttpGet("exportBarcodeByCode")]
+        public async Task<IActionResult> ExportBarcodeByCode(string code, string sDate, string eDate)
+        {
+            _logger.LogInformation(String.Format(@"****** SystemController ExportBarcodeByCode fired!! ******"));
+
+            if (String.IsNullOrEmpty(code)) code = "322";
+            if (String.IsNullOrEmpty(sDate)) sDate = _config.GetSection("LogicSettings:MinDate").Value;
+            if (String.IsNullOrEmpty(eDate)) eDate = _config.GetSection("LogicSettings:MaxDate").Value;
+            var data = await _dksDAO.GetBarcodeByCodeDto(code,sDate,eDate);
+
+            byte[] result = _excelService.CommonExportReport(data.ToList(), "TempBarcodeByCode.xlsx");
+
+            return File(result, "application/xlsx",$"BarcodeByCode_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx");
+        }        
 
     }
 }
