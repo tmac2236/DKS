@@ -30,6 +30,7 @@ import { P404Component } from "./views/error/404.component";
 import { P500Component } from "./views/error/500.component";
 import { HomePageComponent } from "./views/home-page/home-page.component";
 import { PictureComponent } from "./views/picture/picture.component";
+import { BomManageComponent } from "./views/dks/bom-manage/bom-manage.component";
 
 export const routes: Routes = [
   {
@@ -118,6 +119,10 @@ export const routes: Routes = [
       roles: [utilityConfig.RoleSysAdm],
     },
   },
+  {
+    path: "BOM-Manage",
+    component: BomManageComponent,
+  },  
   {
     path: "DTR-Login-History",
     component: DtrLoginHistoryComponent,

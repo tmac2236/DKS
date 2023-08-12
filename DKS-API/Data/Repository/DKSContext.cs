@@ -39,7 +39,7 @@ namespace DKS_API.Data.Repository
         public DbSet<TempSamplQtb> TEMPSAMPLQTB { get; set; }
 
         public DbSet<DevGateLogDataLog> DEV_GATE_LOGDATA_LOG { get; set; }
-        
+        public DbSet<DevBomFile> DEV_BOM_FILE { get; set; }
 
 
         //DTO(Stored Procedure)
@@ -77,7 +77,8 @@ namespace DKS_API.Data.Repository
         public DbSet<PrdEntryAccessDto> GetPrdEntryAccessDto { get; set; } 
         public DbSet<PrdRfidAlertDto> GetPrdRfidAlertDto { get; set; } 
         public DbSet<BarcodeByCodeDto> GetBarcodeByCodeDto { get; set; } 
-               
+        public DbSet<DevBomFileDetailDto> GetDevBomFileDetailDto { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Ordsumoh>().HasKey(x => new { x.PRSUMNO });
@@ -108,7 +109,7 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<SamDetlB>().HasKey(x => new { x.PKSAMDLID,x.SAMPLENO });
             modelBuilder.Entity<TempSamplQtb>().HasKey(x => new { x.SAMPLENO,x.PASSIDNAME });
             modelBuilder.Entity<DevGateLogDataLog>().HasKey(x => new { x.SEQ });
-
+            modelBuilder.Entity<DevBomFile>().HasKey(x => new { x.FACTORY,x.ARTICLE, x.VER });
             
 
             //DTO(Stored Procedure)
@@ -178,6 +179,8 @@ namespace DKS_API.Data.Repository
             .HasNoKey(); 
             modelBuilder.Entity<BarcodeByCodeDto>()
             .HasNoKey(); 
+            modelBuilder.Entity<DevBomFileDetailDto>()
+            .HasNoKey();             
                                        
         }
     }

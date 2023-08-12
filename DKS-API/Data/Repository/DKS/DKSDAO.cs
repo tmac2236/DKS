@@ -397,8 +397,23 @@ ON t1.PKBASEHID=t3.FKBASEHID and t3.LANGID='437' ");
                    .FromSqlRaw(string.Format("EXECUTE dbo.GetBarcodeByCode @Code,@SDate,@EDate "), pc.ToArray())
                    .ToListAsync();
             return data;
-        } 
-                         
+        }
+        public async Task<List<DevBomFileDetailDto>> GetDevBomFileDto(SDevBomFile sDevBomFile)
+        {
+            List<SqlParameter> pc = new List<SqlParameter>{
+                new SqlParameter("@FACTORYID",  String.IsNullOrEmpty(sDevBomFile.FactoryId) ? "" : sDevBomFile.FactoryId.Trim()),
+                new SqlParameter("@SEASON",  String.IsNullOrEmpty(sDevBomFile.Season) ? "" : sDevBomFile.Season.Trim()),
+                new SqlParameter("@MODELNO",  String.IsNullOrEmpty(sDevBomFile.ModelNo) ? "" : sDevBomFile.ModelNo.Trim()),
+                new SqlParameter("@MODELNAME",  String.IsNullOrEmpty(sDevBomFile.ModelName) ? "" : sDevBomFile.ModelName.Trim()),
+                new SqlParameter("@ARTICLE",  String.IsNullOrEmpty(sDevBomFile.Article) ? "" : sDevBomFile.Article.Trim()),
+                new SqlParameter("@DEVTEAMID",  String.IsNullOrEmpty(sDevBomFile.Team) ? "" : sDevBomFile.Team.Trim())
+            };
+            var data = await _context.GetDevBomFileDetailDto
+                   .FromSqlRaw("EXECUTE dbo.GetDevBomFileDetail @FACTORYID,@SEASON,@MODELNO,@MODELNAME,@ARTICLE,@DEVTEAMID", pc.ToArray())
+                   .ToListAsync();
+
+            return data;
+        }                 
     }
    
 }

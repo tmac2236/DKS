@@ -9,6 +9,9 @@ import { F340Schedule } from "../_models/f340-schedule.ts";
 import { PaginatedResult } from "../_models/pagination";
 import { SF340PpdSchedule } from "../_models/s_f340-ppd-schedule";
 import { SF340Schedule } from "../_models/s_f340-schedule";
+import { SDevBomFile } from "../_models/s-dev-bom-file";
+import { DevBomFile } from "../_models/dev-bom-file";
+import { DevBomFileDetailDto } from "../_models/dev-bom-file-detail-dto";
 
 @Injectable({
   providedIn: "root",
@@ -188,4 +191,62 @@ export class DksService {
       f340Ppd
     );
   }
+  getDevBomFile(
+    sDevBomFile: SDevBomFile
+  ): Observable<PaginatedResult<DevBomFileDetailDto[]>> {
+    const paginatedResult: PaginatedResult<DevBomFileDetailDto[]> =
+      new PaginatedResult<DevBomFileDetailDto[]>();
+
+    let params = new HttpParams();
+    params = params.append("IsPaging", sDevBomFile.isPaging.toString());
+    if (
+      sDevBomFile.currentPage != null &&
+      sDevBomFile.itemsPerPage != null
+    ) {
+      params = params.append(
+        "pageNumber",
+        sDevBomFile.currentPage.toString()
+      );
+      params = params.append(
+        "pageSize",
+        sDevBomFile.itemsPerPage.toString()
+      );
+
+    }
+    params = params.append("season", sDevBomFile.season.toString());
+    params = params.append("modelNo", sDevBomFile.modelNo.toString());
+    params = params.append("modelName", sDevBomFile.modelName.toString());
+    params = params.append("article", sDevBomFile.article.toString());
+    params = params.append("team", sDevBomFile.team.toString());
+    params = params.append("factoryId", sDevBomFile.factoryId.toString());
+    
+    return this.utility.http
+      .get<DevBomFileDetailDto[]>(
+        this.utility.baseUrl + "bom/getDevBomFileDetailDto",
+        {
+          observe: "response",
+          params,
+        }
+      )
+      .pipe(
+        map((response) => {
+          paginatedResult.result = response.body;
+          if (response.headers.get("Pagination") != null) {
+            paginatedResult.pagination = JSON.parse(
+              response.headers.get("Pagination")
+            );
+          }
+          return paginatedResult;
+        })
+      );
+  }
+
+  addBOMfile(bomFile: FormData) {
+    console.log("dks.service addBOMfile:", bomFile);
+    return this.utility.http.post<boolean>(
+      this.utility.baseUrl + "bom/addBOMfile",
+      bomFile
+    );
+  }
+
 }

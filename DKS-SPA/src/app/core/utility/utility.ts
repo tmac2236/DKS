@@ -158,6 +158,7 @@ export class Utility {
   //e.g  maxValue: 1128659 = 1MB
   checkFileMaxFormat(file: File, maxVal: number, type: string) {
     var isLegal = true;
+    alert(file.type);
     if (file.type != type) isLegal = false;
     if (file.size >= maxVal) isLegal = false; //最大上傳1MB
     return isLegal;
