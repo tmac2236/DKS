@@ -37,5 +37,6 @@ namespace DKS_API.Data.Interface
         Task<List<PrdRfidAlertDto>> GetPrdRfidAlertDto(string recordTimeS,string recordTimeE);
         Task<List<BarcodeByCodeDto>> GetBarcodeByCodeDto(string code,string SDate,string EDate);
         Task<List<DevBomFileDetailDto>> GetDevBomFileDto(SDevBomFile sDevBomFile);
+        Task<List<DevTeamByLoginDto>> GetDevTeamByLoginDto(string login);
     }
 }

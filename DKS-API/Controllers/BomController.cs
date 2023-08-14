@@ -101,6 +101,39 @@ namespace DKS_API.Controllers
 
             return Ok(model);
         }    
+        [HttpPost("applyBOMfile")]
+        public async Task<IActionResult> ApplyBOMfile()
+        {
+
+            _logger.LogInformation(String.Format(@"******DTRController ApplyBOMfile fired!! ******"));
+
+            var factoryId = HttpContext.Request.Form["factoryId"].ToString().Trim();
+            var article = HttpContext.Request.Form["article"].ToString().Trim();
+            var ver = HttpContext.Request.Form["ver"].ToShort();
+            var remark = HttpContext.Request.Form["remark"].ToString().Trim();
+            var loginUser = HttpContext.Request.Form["loginUser"].ToString().Trim();
+
+            DevBomFile model = _devBomFileDAO.FindSingle(
+                                 x => x.ARTICLE == article &&
+                                 x.FACTORY == factoryId &&
+                                 x.VER == ver );
+            model.APPLY = "Y";
+            model.REMARK = remark;
+            model.UPDAY = DateTime.Now;
+            model.UPUSR = loginUser;
+
+            _devBomFileDAO.Update(model);
+            await _devBomFileDAO.SaveAll();
+
+            return Ok(model);
+        }
+        [HttpGet("getDevTeamByLoginDto")]
+        public async Task<IActionResult> GetDevTeamByLoginDto(string login)
+        {
+            _logger.LogInformation(String.Format(@"****** BomController GetDevTeamByLoginDto fired!! ******"));
+            var data =  await _dksDAO.GetDevTeamByLoginDto(login);
+            return Ok(data);
+        }
 
     }
 

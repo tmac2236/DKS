@@ -149,10 +149,10 @@
                           <td>
                             <ng-container *ngIf="item.downloadButton === 'Y'; else emptyDownload">
                               <img
-                              src="../assets/systemImg/download-pdf.png"
+                              src="../assets/systemImg/xlsx.png"
                               class="mr-1"
                               width="40"
-                              height="40"
+                              height="45"
                               (click)="downloadBtn(item)"
                               />
                             </ng-container>
@@ -233,9 +233,9 @@
       <div class="row">
         <div class="col-8">
           <div class="form-inline">
-            <label class="col-form-label mr-4">Article : {{addAModel.article}}</label>
-            <label class="col-form-label mr-4">Stage : {{addAModel.stage}}</label> 
-            <label class="col-form-label mr-4">Ver# : {{addAModel.ver}}</label>                 
+            <label class="col-form-label mr-4" style="font-size: 26px;">Article : {{addAModel.article}}</label>
+            <label class="col-form-label mr-4" style="font-size: 26px;">Stage : {{addAModel.stage}}</label> 
+            <label class="col-form-label mr-4" style="font-size: 26px;">Ver# : {{addAModel.ver}}</label>                 
           </div>
         </div>
         <div class="col-4">
@@ -243,9 +243,11 @@
         </div>
       </div>    
       <div class="row">
-        <div class="col-12">
-          <div class="form-group">
+
+          <div class="col-12">
+            <span style="font-size: 26px;">Remark:</span>
             <textarea
+              style="font-size: 26px;"
               class="form-control"
               name="photoComment"
               rows="2"
@@ -254,15 +256,13 @@
               [hidden]="false"
               [(ngModel)]="addAModel.remark"
             ></textarea>
-
           </div>
-        </div>
       </div>
       <div class="row">
         <div class="col-8">
         </div>
         <div class="col-2 mt-4">
-          <span>BOM Name:  {{bufferFile?.name}}</span>
+          <span >{{bufferFile?.name || "Click + to Upload File"}}</span>
         </div>
         <div class="col-2">
           <label
@@ -283,7 +283,7 @@
             type="button"
             [hidden]="false"
             class="btn btn-primary btn-lg mt-2"
-            (click)="savePdfNComment()"
+            (click)="saveUploadBtn()"
           >
             Save
           </button>
@@ -294,3 +294,141 @@
 </div>
 </div>
 <!--Modal1-->
+<!--Modal2-->
+<div
+  bsModal
+  #Modal2="bs-modal"
+  class="modal hide fade in"
+  [config]="{backdrop: 'static'}"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+<div class="modal-dialog modal-info modal-xl" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Remark Detail</h4>
+      <button
+        type="button"
+        class="close"
+        (click)="closeModal('Modal2')"
+        aria-label="Close"
+      >
+        <!--右上角的 X 符號-->
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-8">
+          <div class="form-inline">
+            <label class="col-form-label mr-4" style="font-size: 26px;">Article : {{addAModel.article}}</label>
+            <label class="col-form-label mr-4" style="font-size: 26px;">Stage : {{addAModel.stage}}</label> 
+            <label class="col-form-label mr-4" style="font-size: 26px;">Ver# : {{addAModel.ver}}</label>                 
+          </div>
+        </div>
+        <div class="col-4">
+
+        </div>
+      </div>    
+      <div class="row">
+        <div class="col-12">
+          <div class="form-group">
+            <span style="font-size: 26px;">Remark:</span>
+            <textarea
+              style="font-size: 26px;"
+              class="form-control"
+              name="photoComment"
+              rows="2"
+              maxlength="300"
+              placeholder="Please type memo here!"
+              [hidden]="false"
+              [(ngModel)]="addAModel.remark"
+              [readOnly]="true"
+            ></textarea>
+
+          </div>
+        </div>
+      </div> 
+    </div>
+  </div>
+</div>
+</div>
+<!--Modal2-->
+<!--Modal3-->
+<div
+  bsModal
+  #Modal3="bs-modal"
+  class="modal hide fade in"
+  [config]="{backdrop: 'static'}"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+<div class="modal-dialog modal-info modal-xl" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Remark Detail</h4>
+      <button
+        type="button"
+        class="close"
+        (click)="closeModal('Modal3')"
+        aria-label="Close"
+      >
+        <!--右上角的 X 符號-->
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-8">
+          <div class="form-inline">
+            <label class="col-form-label mr-4" style="font-size: 26px;">Article : {{addAModel.article}}</label>
+            <label class="col-form-label mr-4" style="font-size: 26px;">BOM : {{addAModel.fileName}}</label>
+            <label class="col-form-label mr-4" style="font-size: 26px;">Stage : {{addAModel.stage}}</label> 
+            <label class="col-form-label mr-4" style="font-size: 26px;">Ver# : {{addAModel.ver}}</label>                 
+          </div>
+        </div>
+        <div class="col-4">
+
+        </div>
+      </div>    
+      <div class="row">
+        <div class="col-12">
+          <div class="form-group">
+            <span style="font-size: 26px;">Remark:</span>
+            <textarea
+              style="font-size: 26px;"
+              class="form-control"
+              name="photoComment"
+              rows="2"
+              maxlength="300"
+              placeholder="Please type memo here!"
+              [hidden]="false"
+              [(ngModel)]="addAModel.remark"
+            ></textarea>
+
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-10">
+        </div>
+        <div class="col-2">           
+          <button
+            type="button"
+            [hidden]="false"
+            class="btn btn-primary btn-lg mt-2"
+            (click)="saveApplyBtn()"
+          >
+            Apply
+          </button>
+        </div>
+      </div>         
+    </div>
+  </div>
+</div>
+</div>
+<!--Modal3-->

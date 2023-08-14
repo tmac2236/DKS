@@ -413,7 +413,19 @@ ON t1.PKBASEHID=t3.FKBASEHID and t3.LANGID='437' ");
                    .ToListAsync();
 
             return data;
-        }                 
+        }
+
+        public async Task<List<DevTeamByLoginDto>> GetDevTeamByLoginDto(string login)
+        {
+            List<SqlParameter> pc = new List<SqlParameter>{
+                new SqlParameter("@LOGIN",  String.IsNullOrEmpty(login) ? "" : login.Trim())
+            };
+            var data = await _context.GetDevTeamByLoginDto
+                   .FromSqlRaw("EXECUTE dbo.GetDevTeamByLogin @LOGIN", pc.ToArray())
+                   .ToListAsync();
+
+            return data;
+        }
     }
    
 }

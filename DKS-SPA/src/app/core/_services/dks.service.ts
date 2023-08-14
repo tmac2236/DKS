@@ -12,6 +12,7 @@ import { SF340Schedule } from "../_models/s_f340-schedule";
 import { SDevBomFile } from "../_models/s-dev-bom-file";
 import { DevBomFile } from "../_models/dev-bom-file";
 import { DevBomFileDetailDto } from "../_models/dev-bom-file-detail-dto";
+import { DevTeamByLoginDto } from "../_models/dev-team-by-login-dto";
 
 @Injectable({
   providedIn: "root",
@@ -248,5 +249,16 @@ export class DksService {
       bomFile
     );
   }
-
+  applyBOMfile(f: FormData) {
+    console.log("dks.service applyBOMfile:", f);
+    return this.utility.http.post<DevBomFile>(
+      this.utility.baseUrl + "bom/applyBOMfile",
+      f
+    );
+  }
+  getDevTeamByLoginDto(login: string) {
+    return this.utility.http.get<DevTeamByLoginDto[]>(
+      this.utility.baseUrl + 'bom/getDevTeamByLoginDto?login='+ login
+    );
+  }
 }

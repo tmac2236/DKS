@@ -78,7 +78,8 @@ namespace DKS_API.Data.Repository
         public DbSet<PrdRfidAlertDto> GetPrdRfidAlertDto { get; set; } 
         public DbSet<BarcodeByCodeDto> GetBarcodeByCodeDto { get; set; } 
         public DbSet<DevBomFileDetailDto> GetDevBomFileDetailDto { get; set; }
-
+        public DbSet<DevTeamByLoginDto> GetDevTeamByLoginDto { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Ordsumoh>().HasKey(x => new { x.PRSUMNO });
@@ -180,8 +181,10 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<BarcodeByCodeDto>()
             .HasNoKey(); 
             modelBuilder.Entity<DevBomFileDetailDto>()
-            .HasNoKey();             
-                                       
+            .HasNoKey(); 
+            modelBuilder.Entity<DevTeamByLoginDto>()
+            .HasNoKey(); 
+                                                
         }
     }
 }

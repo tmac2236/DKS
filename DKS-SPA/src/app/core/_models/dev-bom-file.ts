@@ -14,8 +14,6 @@ export class DevBomFile implements ModelInterface {
   apply: string;
   upDay: Date ;
   upUsr: string;
-
-  isMaxVer:boolean;
   
   constructor(){
     
