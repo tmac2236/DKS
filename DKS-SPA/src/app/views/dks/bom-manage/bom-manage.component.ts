@@ -41,7 +41,11 @@ export class BomManageComponent implements OnInit {
   loginTeam :string[] = [];
   ngOnInit() {
     this.utility.initUserRole(this.sDevBomFile);
-
+    /*
+    if(!this.utility.checkIsNullorEmpty(localStorage.getItem("sDevBomFile"))){
+      this.sDevBomFile=JSON.parse(localStorage.getItem("sDevBomFile"));
+    }
+    */
     if(!this.utility.checkIsNullorEmpty(this.sDevBomFile.loginUser)){
       this.dksService.getDevTeamByLoginDto(this.sDevBomFile.loginUser).subscribe(
         (res: DevTeamByLoginDto[]) => {
@@ -77,7 +81,7 @@ export class BomManageComponent implements OnInit {
     this.bufferFile = null;
   }
   //搜尋
-  async search() {
+   search() {
     //article modleNo modelName at least one field is required
     if (
       !this.utility.checkIsNullorEmpty(this.sDevBomFile.season) ||
@@ -110,7 +114,7 @@ export class BomManageComponent implements OnInit {
           );
         }
         this.result = res.result;
-        //this.sDevBomFile.setPagination(res.pagination);
+        this.sDevBomFile.setPagination(res.pagination);
         this.utility.spinner.hide();
       },
       (error) => {
@@ -217,6 +221,13 @@ export class BomManageComponent implements OnInit {
         formData.append("ver", this.addAModel.ver.toString());
         formData.append("remark", this.addAModel.remark);
         formData.append("loginUser", this.sDevBomFile.loginUser);
+
+        formData.append("season", this.addAModel.season);
+        formData.append("stage", this.addAModel.stage);
+        formData.append("modelName", this.addAModel.modelName);
+        formData.append("modelNo", this.addAModel.modelNo);
+        formData.append("file", this.bufferFile);
+
         this.utility.spinner.show();
         this.dksService.applyBOMfile(formData).subscribe(
           (res) => {
@@ -307,4 +318,36 @@ export class BomManageComponent implements OnInit {
     this.addAModel.apply = model.apply;
     this.addAModel.upUsr = this.sDevBomFile.loginUser;
   }
+  
+  pageChangeds(event: any): void {
+    this.sDevBomFile.currentPage = event.page;
+    //
+    this.utility.spinner.show();
+    this.dksService.getDevBomFile(this.sDevBomFile).subscribe(
+      (res: PaginatedResult<DevBomFileDetailDto[]>) => {
+        if (res.result.length < 1) {
+          this.utility.alertify.confirm(
+            "Sweet Alert",
+            "No Data in these conditions of search, please try again.",
+            () => {
+              this.utility.spinner.hide();
+              return;
+            }
+          );
+        }
+        this.result = res.result;
+        this.utility.spinner.hide();
+      },
+      (error) => {
+        this.utility.spinner.hide();
+        this.utility.alertify.confirm(
+          "System Notice",
+          "Syetem is busy, please try later.",
+          () => {}
+        );
+      }
+    );
+    //
+  }
+  
 }

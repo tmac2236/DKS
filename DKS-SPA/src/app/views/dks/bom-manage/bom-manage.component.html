@@ -186,6 +186,30 @@
                       </ng-container>
                     </tbody>
                   </table>
+                  <div class="d-flex justify-content-start">
+                    <select
+                      style="height: 35px; width: 45px"
+                      name="itemsPerPage"
+                      [(ngModel)]="sDevBomFile.itemsPerPage"
+                    >
+                      <option value="10" selected>10</option>
+
+                    </select>
+                    <pagination
+                      *ngIf="this.sDevBomFile.isPaging"
+                      [boundaryLinks]="true"
+                      [totalItems]="sDevBomFile.totalItems"
+                      [maxSize]="10"
+                      [itemsPerPage]="sDevBomFile.itemsPerPage"
+                      [(ngModel)]="sDevBomFile.currentPage"
+                      (pageChanged)="pageChangeds($event)"
+                      previousText="&lsaquo;"
+                      nextText="&rsaquo;"
+                      firstText="&laquo;"
+                      lastText="&raquo;"
+                    >
+                    </pagination>
+                  </div>                  
                 </div>
               </div>
             </div>
@@ -414,16 +438,33 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-10">
+        <div class="col-8">
         </div>
-        <div class="col-2">           
+        <div class="col-2 mt-4">
+          <span >{{bufferFile?.name || "Click + to Override File"}}</span>
+        </div>
+        <div class="col-2">
+          <label
+          class="btn btn-primary btn-lg mt-3 mr-4"
+          for="pdfUploadInAdd"
+          tooltip="{{ this.hintMsg.uploadPdf }}"
+          placement="right">+
+          </label>
+          <input
+          id="pdfUploadInAdd"
+          type="file"
+          accept=".xlsx"
+          style="display: none"
+          (click)="this.utility.reset($event)"
+          (change)="handleFileInput($event.target.files)"
+          />            
           <button
             type="button"
             [hidden]="false"
             class="btn btn-primary btn-lg mt-2"
             (click)="saveApplyBtn()"
           >
-            Apply
+          Apply
           </button>
         </div>
       </div>         

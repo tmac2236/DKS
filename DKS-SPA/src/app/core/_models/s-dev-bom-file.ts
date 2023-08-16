@@ -12,7 +12,7 @@ export class SDevBomFile extends Pagination {
   constructor() {
 
     super();
-    this.isPaging = false; //開分頁
+    this.isPaging = true; //開分頁
     
     this.factoryId = "";
     this.season = "";
@@ -22,7 +22,6 @@ export class SDevBomFile extends Pagination {
     this.team = "";
   }
   public setPagination(pagination: Pagination) {
-
     this.currentPage = pagination.currentPage;
     this.itemsPerPage = pagination.itemsPerPage;
     this.totalItems = pagination.totalItems;
