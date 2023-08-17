@@ -98,8 +98,11 @@
 
                         <th>Stage</th>
                         <th>ACT Date</th>
+                        <th>CWA DeadLine</th>
                         <th>BOM</th>
                         <th>Ver#</th>
+                        <th>PDM Apply</th>
+                        <th>ECR#</th>
                         <th>Remark</th>
 
                         <th>Apply</th>
@@ -130,8 +133,11 @@
 
                           <td>{{ item.stage }}</td>
                           <td>{{ item.actDate }}</td>
+                          <td>{{ item.cwaDeadLine }}</td>
                           <td>{{ item.fileName }}</td>
                           <td>{{ item.ver }}</td>
+                          <td>{{ item.pdmApply }}</td>
+                          <td>{{ item.ecrNo }}</td>
                           <td>
                             <ng-container *ngIf="item.remarkButton === 'Y'; else emptyRemarkButton">
                               <img

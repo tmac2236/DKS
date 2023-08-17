@@ -16,10 +16,15 @@ export class DevBomFileDetailDto implements ModelInterface{
      ver: number;
      remark: string;
      apply: string;
-     id: number;
+     //id: number;
 
      remarkButton: string;
      downloadButton: string;
      applyButton: string;
      uploadButton: string;
+
+     cwaDeadLine: string;
+     pdmApply: string;
+     ecrNo: string;
+
 }

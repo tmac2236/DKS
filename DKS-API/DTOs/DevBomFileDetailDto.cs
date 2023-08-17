@@ -22,11 +22,15 @@ namespace DKS.API.Models.DKS
     public short Ver { get; set; }
     public string Remark { get; set; }
     public string Apply { get; set; }
-    public long Id { get; set; }
+    //public long Id { get; set; }
     public string RemarkButton { get; set; }
     public string DownloadButton { get; set; }
     public string ApplyButton { get; set; }
     public string UploadButton { get; set; }
+
+    public string CwaDeadLine { get; set; }
+    public string PdmApply { get; set; }
+    public string EcrNo { get; set; }
 
     }
 }
