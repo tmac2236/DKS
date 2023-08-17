@@ -4,6 +4,7 @@ import { BsDropdownConfig } from "ngx-bootstrap/dropdown";
 import { NgxSpinnerService } from "ngx-spinner";
 import { AlertifyService } from "../../core/_services/alertify.service";
 import { AuthService } from "../../core/_services/auth.service";
+import { Utility } from "../../core/utility/utility";
 
 @Component({
   selector: "app-home-page",
@@ -22,13 +23,17 @@ export class HomePageComponent implements OnInit {
   param1: string; //userID or LOGIN
   param2: string; //Path
   param3: string; //Parameters
-
+  formList: { id: number, name: string,path: string }[] = [
+    { "id": 1, "name": "BOM Upload Manage","path":"/BOM-Manage" }
+  ];
+  formType:string;
   constructor(
     public authService: AuthService,
     private alertify: AlertifyService,
     private router: Router,
     private activeRouter: ActivatedRoute,
     private spinner: NgxSpinnerService,
+    public utility: Utility
   ) {
     this.activeRouter.queryParams.subscribe((params) => {
 
@@ -54,7 +59,12 @@ export class HomePageComponent implements OnInit {
       (next) => {
         this.spinner.hide();
         this.alertify.success("Logined in sucessed");
-        this.router.navigate(["excel/compare"]);
+        if(!this.utility.checkIsNullorEmpty(this.formType)){
+          this.router.navigate([this.formType]);
+        }else{
+          this.router.navigate([""]);
+        }
+
       },
       (error) => {
         this.spinner.hide();

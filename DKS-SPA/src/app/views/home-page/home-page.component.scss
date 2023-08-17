@@ -1,6 +1,6 @@
 .login-title {
-    margin-top: 20%;
-    margin-bottom: 10%;
+    margin-top: 0%;
+    margin-bottom: 5%;
     text-align: center;
 }
 
@@ -8,3 +8,18 @@
     font-size: 1.5rem;
     font-weight: 700;
 }
+.card {
+    background-color: #F3F3F3;
+}
+
+.bgr {
+    background: url('assets/loginBackground/mainbackground.jpg');
+    //background-position: center center;
+    //background-repeat: no-repeat;
+    //background-attachment: fixed;
+    -webkit-background-size:cover;
+    -moz-background-size: cover;
+    -o-background-size:cover ;
+    background-size: cover;
+    height: 100vh;
+  }

@@ -16,6 +16,8 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using DKS.API.Models.DKS;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace DKS_API.Controllers
 {
@@ -40,13 +42,27 @@ namespace DKS_API.Controllers
         public async Task<IActionResult> Login(UserDto userForLoginDto)
         {
             _logger.LogInformation(String.Format(@"******  AuthController Login fired!! ******"));
-            //var userFromRepo = await _dksDAO.SearchStaffByLOGIN(userForLoginDto.Account);
+            var httpClientHandler = new HttpClientHandler();
+            httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) =>
+            {
+                return true;
+            };
 
-            //if (userFromRepo == null)
-            //{
-            //改成只能用UserId登入
-            decimal userId = Decimal.Parse(userForLoginDto.Account);
-            var userFromRepo = await _dksDAO.GetRolesByUserId(userForLoginDto.Account);
+            using (var client = new HttpClient(httpClientHandler))
+            {
+
+                HttpResponseMessage res = client.GetAsync(String.Format(@"http://10.4.0.39:8080/ArcareAccount/Validate?account={0}&password={1}",userForLoginDto.Account,userForLoginDto.Password)).Result;
+                if (res.IsSuccessStatusCode)
+                {
+                    var value = res.Content.ReadAsStringAsync().Result;
+                    var jsonObj = JsonConvert.DeserializeAnonymousType(value, new { result = false, error = "" });
+                    if(!jsonObj.result) return Unauthorized();
+                }else{
+                    return Unauthorized();
+                }
+
+            }
+            var userFromRepo = await _dksDAO.GetRolesByAccount(userForLoginDto.Account);
             if (userFromRepo.Count < 1)
             {
                 return Unauthorized();
@@ -56,7 +72,6 @@ namespace DKS_API.Controllers
                                 select u.GROUPNO ;
             string roleArray = string.Join(".",onlyGroupNos);
 
-            var roles = _dksDAO.GetRolesByUserId(userFromRepo[0].USERID.ToString());
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, userFromRepo[0].USERID.ToString()),
