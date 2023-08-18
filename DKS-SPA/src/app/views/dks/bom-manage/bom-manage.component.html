@@ -264,14 +264,37 @@
         <div class="col-8">
           <div class="form-inline">
             <label class="col-form-label mr-4" style="font-size: 26px;">Article : {{addAModel.article}}</label>
-            <label class="col-form-label mr-4" style="font-size: 26px;">Stage : {{addAModel.stage}}</label> 
             <label class="col-form-label mr-4" style="font-size: 26px;">Ver# : {{addAModel.ver}}</label>                 
           </div>
         </div>
-        <div class="col-4">
-
+        <div class="col-4" >
         </div>
-      </div>    
+      </div>
+      <div class="row" *ngIf="addAModel.pdmApply === 'Y'">
+        <div class="col-12">
+          <label class="col-form-label mr-4" style="font-size: 26px;">ECR#:</label>
+          <input
+            class="col-form-label mr-4" style="font-size: 18px;"
+            type="text"
+            name="addAModelEcrno"
+            size ="10"
+            [(ngModel)]="addAModel.ecrno"
+          />
+        </div>
+      </div> 
+      <div class="row" >
+        <div class="col-12">
+          <label class="col-form-label mr-4" style="font-size: 26px;">Stage:</label>
+          <select
+          class="col-form-label"
+          name="addAModelStage"
+          [(ngModel)]="addAModel.stage">
+          <option *ngFor="let s of devbomStage" value="{{ s.stage }}">
+            {{ s.stage }}
+          </option>
+        </select>
+        </div>
+      </div>          
       <div class="row">
 
           <div class="col-12">
@@ -279,7 +302,7 @@
             <textarea
               style="font-size: 26px;"
               class="form-control"
-              name="photoComment"
+              name="addAModelRemark"
               rows="2"
               maxlength="300"
               placeholder="Please type memo here!"

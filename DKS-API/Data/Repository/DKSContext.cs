@@ -40,7 +40,7 @@ namespace DKS_API.Data.Repository
 
         public DbSet<DevGateLogDataLog> DEV_GATE_LOGDATA_LOG { get; set; }
         public DbSet<DevBomFile> DEV_BOM_FILE { get; set; }
-
+        public DbSet<DevBomStage> DEV_BOM_STAGE { get; set; }
 
         //DTO(Stored Procedure)
         public DbSet<F418_F420Dto> GetF420F418View { get; set; }
@@ -79,6 +79,7 @@ namespace DKS_API.Data.Repository
         public DbSet<BarcodeByCodeDto> GetBarcodeByCodeDto { get; set; } 
         public DbSet<DevBomFileDetailDto> GetDevBomFileDetailDto { get; set; }
         public DbSet<DevTeamByLoginDto> GetDevTeamByLoginDto { get; set; }
+        public DbSet<SsbGetHpSd138Dto> GetSsbGetHpSd138Dto { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -110,8 +111,8 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<SamDetlB>().HasKey(x => new { x.PKSAMDLID,x.SAMPLENO });
             modelBuilder.Entity<TempSamplQtb>().HasKey(x => new { x.SAMPLENO,x.PASSIDNAME });
             modelBuilder.Entity<DevGateLogDataLog>().HasKey(x => new { x.SEQ });
-            modelBuilder.Entity<DevBomFile>().HasKey(x => new { x.FACTORY,x.ARTICLE, x.VER });
-            
+            modelBuilder.Entity<DevBomFile>().HasKey(x => new { x.FACTORY,x.ARTICLE, x.STAGE,x.SORT });
+            modelBuilder.Entity<DevBomStage>().HasKey(x => new { x.FACTORY, x.STAGE });
 
             //DTO(Stored Procedure)
             modelBuilder.Entity<F418_F420Dto>()
@@ -184,6 +185,8 @@ namespace DKS_API.Data.Repository
             .HasNoKey(); 
             modelBuilder.Entity<DevTeamByLoginDto>()
             .HasNoKey(); 
+            modelBuilder.Entity<SsbGetHpSd138Dto>()
+            .HasNoKey();             
                                                 
         }
     }

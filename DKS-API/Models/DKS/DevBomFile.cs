@@ -19,11 +19,13 @@ namespace DKS.API.Models.DKS
 
         [Key]
         public string ARTICLE { get; set; }
-
+        [Key]
         public string STAGE { get; set; }
 
-        [Key]
         public short VER { get; set; }
+
+        [Key]
+        public short SORT { get; set; }
 
         public string FILENAME { get; set; }
 
@@ -31,8 +33,14 @@ namespace DKS.API.Models.DKS
 
         public string APPLY { get; set; }
 
+        public string ECRNO { get; set; }
+
         public DateTime? UPDAY { get; set; }
 
         public string UPUSR { get; set; }
+        public string PDM_APPLY { get; set; }
+        public string PDM_UPUSR { get; set; }
+        public string PDM_UPDAY { get; set; }
+        
     }
 }

@@ -97,6 +97,7 @@ namespace DKS_API
             services.AddScoped<ITempSamplQtbDAO,TempSamplQtbDAO>();
             services.AddScoped<IDevGateLogDataLogDAO,DevGateLogDataLogDAO>();
             services.AddScoped<IDevBomFileDAO,DevBomFileDAO>();
+            services.AddScoped<IDevBomStageDAO,DevBomStageDAO>();
 
             services.AddScoped<IMailUtility,MailUtility>();
             

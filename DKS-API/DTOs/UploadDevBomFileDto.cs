@@ -17,6 +17,11 @@ namespace DKS_API.DTOs
         public string UpdateUser { get; set; }
         public IFormFile File { get; set; }
 
+        public string Sort { get; set; }
+        public string Ecrno { get; set; }
+        public string PdmApply { get; set; }
+        public string PdmUpusr { get; set; }
+        public string PdmUpday { get; set; }
 
     }
 }

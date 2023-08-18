@@ -38,5 +38,6 @@ namespace DKS_API.Data.Interface
         Task<List<BarcodeByCodeDto>> GetBarcodeByCodeDto(string code,string SDate,string EDate);
         Task<List<DevBomFileDetailDto>> GetDevBomFileDto(SDevBomFile sDevBomFile);
         Task<List<DevTeamByLoginDto>> GetDevTeamByLoginDto(string login);
+        Task<List<SsbGetHpSd138Dto>> GetSsbGetHpSd138Dto(string ecrNo);
     }
 }

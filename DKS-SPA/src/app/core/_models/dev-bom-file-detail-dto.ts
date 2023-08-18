@@ -14,6 +14,7 @@ export class DevBomFileDetailDto implements ModelInterface{
      fileName: string;
 
      ver: number;
+     sort: number;
      remark: string;
      apply: string;
      //id: number;

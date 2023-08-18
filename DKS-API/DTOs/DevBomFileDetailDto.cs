@@ -20,6 +20,7 @@ namespace DKS.API.Models.DKS
     public string FileName { get; set; }
 
     public short Ver { get; set; }
+    public short Sort { get; set; }
     public string Remark { get; set; }
     public string Apply { get; set; }
     //public long Id { get; set; }

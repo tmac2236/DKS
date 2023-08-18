@@ -426,6 +426,17 @@ ON t1.PKBASEHID=t3.FKBASEHID and t3.LANGID='437' ");
 
             return data;
         }
+        public async Task<List<SsbGetHpSd138Dto>> GetSsbGetHpSd138Dto(string ecrNo)
+        {
+            List<SqlParameter> pc = new List<SqlParameter>{
+                new SqlParameter("@ECRNO",  String.IsNullOrEmpty(ecrNo) ? "" : ecrNo.Trim())
+            };
+            var data = await _context.GetSsbGetHpSd138Dto
+                   .FromSqlRaw("EXECUTE dbo.SSB_GET_HP_SD138_Q @ECRNO", pc.ToArray())
+                   .ToListAsync();
+
+            return data;
+        }
     }
    
 }

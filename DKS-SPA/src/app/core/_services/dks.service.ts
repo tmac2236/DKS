@@ -261,4 +261,9 @@ export class DksService {
       this.utility.baseUrl + 'bom/getDevTeamByLoginDto?login='+ login
     );
   }
+  checkHPSD138(article: string, ecrNo:string) {
+    return this.utility.http.get<object[]>(
+      this.utility.baseUrl + "bom/checkHPSD138?article=" + article +"&ecrNo=" + ecrNo
+    ).toPromise();
+  }  
 }

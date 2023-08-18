@@ -12,6 +12,7 @@ import { SDevBomFile } from "../../../core/_models/s-dev-bom-file";
 import { DksService } from "../../../core/_services/dks.service";
 import { ModalDirective } from "ngx-bootstrap/modal";
 import { DevTeamByLoginDto } from "../../../core/_models/dev-team-by-login-dto";
+import { DevBomStage } from "../../../core/_models/dev-bom-stage";
 
 @Component({
   selector: "app-bom-manage",
@@ -38,29 +39,28 @@ export class BomManageComponent implements OnInit {
   sDevBomFile: SDevBomFile = new SDevBomFile();
   result: DevBomFileDetailDto[] = [];
   code017: BasicCodeDto[] = [];
-  loginTeam :string[] = [];
-  ngOnInit() {
+  loginTeam: string[] = [];
+  devbomStage: DevBomStage[] =[];
+  async ngOnInit() {
     this.utility.initUserRole(this.sDevBomFile);
-    /*
-    if(!this.utility.checkIsNullorEmpty(localStorage.getItem("sDevBomFile"))){
-      this.sDevBomFile=JSON.parse(localStorage.getItem("sDevBomFile"));
-    }
-    */
-    if(!this.utility.checkIsNullorEmpty(this.sDevBomFile.loginUser)){
-      this.dksService.getDevTeamByLoginDto(this.sDevBomFile.loginUser).subscribe(
-        (res: DevTeamByLoginDto[]) => {
-          if (res) {
-            this.loginTeam = res.map(
-              (devTeam: DevTeamByLoginDto) => devTeam.devTeamNo
-            );
-            console.log("this.loginTeam");
-            console.log(this.loginTeam);
-          } 
-        },
-        (error) => {
-          console.log(error);
-        }
-      );      
+    await this.getDevBomStage();
+    if (!this.utility.checkIsNullorEmpty(this.sDevBomFile.loginUser)) {
+      this.dksService
+        .getDevTeamByLoginDto(this.sDevBomFile.loginUser)
+        .subscribe(
+          (res: DevTeamByLoginDto[]) => {
+            if (res) {
+              this.loginTeam = res.map(
+                (devTeam: DevTeamByLoginDto) => devTeam.devTeamNo
+              );
+              console.log("this.loginTeam");
+              console.log(this.loginTeam);
+            }
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
     }
 
     this.getBasicCodeDto();
@@ -81,7 +81,7 @@ export class BomManageComponent implements OnInit {
     this.bufferFile = null;
   }
   //搜尋
-   search() {
+  search() {
     //article modleNo modelName at least one field is required
     if (
       !this.utility.checkIsNullorEmpty(this.sDevBomFile.season) ||
@@ -168,13 +168,22 @@ export class BomManageComponent implements OnInit {
     this.bufferFile = files.item(0);
   }
 
-  saveUploadBtn() {
+  async saveUploadBtn() {
     /*
     if (this.utility.checkIsNullorEmpty(this.addAModel.remark)) {
       this.utility.alertify.error("You must type some remark !!!!");
       return;
     }
     */
+   if(this.addAModel.pdmApply === 'Y'){
+    let res = await this.checkEcrNo();
+    if(!res){
+      this.utility.alertify.error("This EcrNo can not use !!!");
+      return;
+    }
+   }
+
+   if(this.addAModel)
     if (!this.bufferFile) {
       this.utility.alertify.error("Please upload a bom file file !!!!");
       return;
@@ -193,6 +202,10 @@ export class BomManageComponent implements OnInit {
     formData.append("remark", this.addAModel.remark);
     formData.append("updateUser", this.addAModel.upUsr);
     formData.append("file", this.bufferFile);
+
+    if(this.addAModel.pdmApply === 'Y'){
+      formData.append("ecrno", this.addAModel.ecrno);
+    }
 
     this.utility.spinner.show();
 
@@ -228,6 +241,7 @@ export class BomManageComponent implements OnInit {
         formData.append("modelNo", this.addAModel.modelNo);
         formData.append("file", this.bufferFile);
 
+        formData.append("sort", this.addAModel.sort.toString());
         this.utility.spinner.show();
         this.dksService.applyBOMfile(formData).subscribe(
           (res) => {
@@ -244,64 +258,73 @@ export class BomManageComponent implements OnInit {
         );
       }
     );
-    
-
   }
 
   //開窗 Start
   applyBtn(model: DevBomFileDetailDto) {
-    if(this.loginTeam.includes('99')){
+    if (this.loginTeam.includes("99")) {
       this.utility.alertify.error(`Normal User can not operate it !!`);
       return;
     }
-    if(this.loginTeam.includes(model.devTeamId)){
+    if (this.loginTeam.includes(model.devTeamId)) {
       this.openModal("Modal3");
       this.copyToAddAModel(model);
-    }else{
-      this.utility.alertify.error(`You don't have permission to do ${model.teamName}!!`);
+    } else {
+      this.utility.alertify.error(
+        `You don't have permission to do ${model.teamName}!!`
+      );
       return;
     }
-
   }
   remarkBtn(model: DevBomFileDetailDto) {
     this.openModal("Modal2");
     this.copyToAddAModel(model);
-  }  
+  }
   uploadBtn(model: DevBomFileDetailDto) {
-    if(this.loginTeam.includes('99')){
+    if (this.loginTeam.includes("99")) {
       this.utility.alertify.error(`Normal User can not operate it !!`);
       return;
     }
     this.openModal("Modal1");
     this.copyToAddAModel(model);
-    this.addAModel.ver += 1;
+
   }
-  //開窗 End  
+  //開窗 End
 
   downloadBtn(model: DevBomFileDetailDto) {
     let theKey2Download = false;
-    if(this.loginTeam.includes('99')){
+    if (this.loginTeam.includes("99")) {
       console.log("the user is belong team 99.");
-      const gp = this.result
-      .filter(i => i.factoryId === model.factoryId && i.article === model.article && i.apply === 'Y' );
-      const maxVer = gp.reduce((max,curr)=>{
-        return curr.ver > max.ver ? curr: max
+      const gp = this.result.filter(
+        (i) =>
+          i.factoryId === model.factoryId &&
+          i.article === model.article &&
+          i.apply === "Y"
+      );
+      const maxVer = gp.reduce((max, curr) => {
+        return curr.ver > max.ver ? curr : max;
       });
-      if(maxVer.ver > model.ver){
-        this.utility.alertify.error(`Normal User only can download the newest BOM (Ver:${maxVer.ver}) !!`);
-      }else{
+      if (maxVer.ver > model.ver) {
+        this.utility.alertify.error(
+          `Normal User only can download the newest BOM (Ver:${maxVer.ver}) !!`
+        );
+      } else {
         theKey2Download = true;
       }
-    }else{
+    } else {
       theKey2Download = true;
     }
 
-    if(theKey2Download){
+    if (theKey2Download) {
       let dataUrl =
-      "../assets/F340PpdPic/ArticleBoms/" + model.season + "/" + model.article + "/" + model.fileName;
-        window.open(dataUrl);
+        "../assets/F340PpdPic/ArticleBoms/" +
+        model.season +
+        "/" +
+        model.article +
+        "/" +
+        model.fileName;
+      window.open(dataUrl);
     }
-    
   }
 
   copyToAddAModel(model: DevBomFileDetailDto) {
@@ -317,8 +340,15 @@ export class BomManageComponent implements OnInit {
     this.addAModel.remark = model.remark;
     this.addAModel.apply = model.apply;
     this.addAModel.upUsr = this.sDevBomFile.loginUser;
+
+    this.addAModel.ecrno = model.ecrNo;
+    this.addAModel.pdmApply = model.pdmApply;
+    this.addAModel.sort = model.sort;
+    //this.addAModel.remark = model.remark;
+    //this.addAModel.apply = model.apply;
+    //this.addAModel.upUsr = this.sDevBomFile.loginUser;
   }
-  
+
   pageChangeds(event: any): void {
     this.sDevBomFile.currentPage = event.page;
     //
@@ -347,7 +377,40 @@ export class BomManageComponent implements OnInit {
         );
       }
     );
-    //
   }
-  
+  //check ECR No
+  async checkEcrNo() {
+    let ecrRes;
+    await this.dksService
+      .checkHPSD138(this.addAModel.article, this.addAModel.ecrno)
+      .then(
+        (res) => {
+          ecrRes = res;
+        },
+        (error) => {
+          this.utility.alertify.confirm(
+            "System Notice",
+            "Syetem is busy, please try later.",
+            () => {}
+          );
+        }
+      );
+      return ecrRes;
+  }
+  async getDevBomStage() {
+    await this.commonService
+      .getDevBomStage()
+      .then(
+        (res) => {
+          this.devbomStage = res;
+        },
+        (error) => {
+          this.utility.alertify.confirm(
+            "System Notice",
+            "getDevBomStage API error.",
+            () => {}
+          );
+        }
+      );
+  }  
 }

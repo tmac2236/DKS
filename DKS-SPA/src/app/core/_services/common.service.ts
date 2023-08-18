@@ -3,6 +3,7 @@ import { Utility } from "../utility/utility";
 import { ArticleSeason } from "../_models/article-season";
 import { BasicCodeDto } from "../_models/basic-code-dto";
 import { TupleDto } from "../_models/tuple-dto";
+import { DevBomStage } from "../_models/dev-bom-stage";
 
 
 @Injectable({
@@ -56,4 +57,9 @@ export class CommonService {
       this.utility.baseUrl + "test/getSeasonNum"
     ).toPromise();
   }
+  getDevBomStage() {
+    return this.utility.http.get<DevBomStage[]>(
+      this.utility.baseUrl + "bom/getDevBomStage"
+    ).toPromise();
+  }  
 }

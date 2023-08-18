@@ -26,10 +26,11 @@ namespace DKS_API.Controllers
         private readonly ISendMailService _sendMailService;
         private readonly IFileService _fileService;
         private readonly IDevBomFileDAO _devBomFileDAO;
+        private readonly IDevBomStageDAO _devBomStageDAO;
         private readonly IDKSDAO _dksDAO;
 
         public BomController(IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<WareHouseController> logger,
-             IDevBomFileDAO devBomFileDAO,IDKSDAO dksDAO,
+             IDevBomFileDAO devBomFileDAO, IDKSDAO dksDAO,IDevBomStageDAO devBomStageDAO,
              IExcelService excelService, ISendMailService sendMailService, IFileService fileService)
         : base(config, webHostEnvironment, logger)
         {
@@ -37,6 +38,7 @@ namespace DKS_API.Controllers
             _sendMailService = sendMailService;
             _fileService = fileService;
             _devBomFileDAO = devBomFileDAO;
+            _devBomStageDAO = devBomStageDAO;
             _dksDAO = dksDAO;
 
         }
@@ -44,7 +46,7 @@ namespace DKS_API.Controllers
         public async Task<IActionResult> GetDevBomFileDetailDto([FromQuery] SDevBomFile sDevBomFile)
         {
             _logger.LogInformation(String.Format(@"****** BomController GetDevBomFile fired!! ******"));
-            var data =  await _dksDAO.GetDevBomFileDto(sDevBomFile);
+            var data = await _dksDAO.GetDevBomFileDto(sDevBomFile);
 
             PagedList<DevBomFileDetailDto> result = PagedList<DevBomFileDetailDto>.Create(data, sDevBomFile.PageNumber, sDevBomFile.PageSize, sDevBomFile.IsPaging);
             Response.AddPagination(result.CurrentPage, result.PageSize,
@@ -60,7 +62,7 @@ namespace DKS_API.Controllers
 
 
             // FactoryId + Season + Article + Id .pdf
-            var fileName = string.Format("{0}-{1}-{2}-{3}-{4}-{5}.xlsx", uploadDevBomFileDto.Season,uploadDevBomFileDto.Stage, uploadDevBomFileDto.Ver, uploadDevBomFileDto.ModelName,uploadDevBomFileDto.ModelNo,uploadDevBomFileDto.Article);
+            var fileName = string.Format("{0}-{1}-{2}-{3}-{4}-{5}.xlsx", uploadDevBomFileDto.Season, uploadDevBomFileDto.Stage, uploadDevBomFileDto.Ver, uploadDevBomFileDto.ModelName, uploadDevBomFileDto.ModelNo, uploadDevBomFileDto.Article);
 
             // save file to server
             List<string> nastFileName = new List<string>();
@@ -84,9 +86,27 @@ namespace DKS_API.Controllers
                     model.ARTICLE = uploadDevBomFileDto.Article;
 
                     model.STAGE = uploadDevBomFileDto.Stage;
-                    model.VER = uploadDevBomFileDto.Ver.ToShort();
                     model.FILENAME = fileName;
-
+                    model.ECRNO = uploadDevBomFileDto.Ecrno;
+                    //ver#
+                    DevBomFile md = _devBomFileDAO.FindAll(
+                                 x => x.ARTICLE == uploadDevBomFileDto.Article &&
+                                 x.FACTORY == uploadDevBomFileDto.FactoryId &&
+                                 x.STAGE == uploadDevBomFileDto.Stage).AsNoTracking().OrderByDescending(x=>x.VER).FirstOrDefault();
+                    if(md == null){
+                        model.VER = 1;
+                    }else{
+                        model.VER = md.VER ;
+                        model.VER += 1;
+                    }             
+                    //Sort
+                    DevBomStage mds = _devBomStageDAO.FindSingle(
+                                 x => x.FACTORY == uploadDevBomFileDto.FactoryId &&
+                                 x.STAGE == uploadDevBomFileDto.Stage);
+                    if(mds != null){
+                        model.SORT = (short)(mds.SORT*100);
+                        model.SORT += model.VER;
+                    }
                     if (String.IsNullOrEmpty(uploadDevBomFileDto.Remark))
                     {
                         model.REMARK = "";
@@ -104,7 +124,7 @@ namespace DKS_API.Controllers
             }
 
             return Ok(model);
-        }    
+        }
         [HttpPost("applyBOMfile")]
         public async Task<IActionResult> ApplyBOMfile()
         {
@@ -113,6 +133,7 @@ namespace DKS_API.Controllers
             var factoryId = HttpContext.Request.Form["factoryId"].ToString().Trim();
             var article = HttpContext.Request.Form["article"].ToString().Trim();
             var ver = HttpContext.Request.Form["ver"].ToShort();
+            var sort = HttpContext.Request.Form["sort"].ToShort();
             var remark = HttpContext.Request.Form["remark"].ToString().Trim();
             var loginUser = HttpContext.Request.Form["loginUser"].ToString().Trim();
 
@@ -124,7 +145,7 @@ namespace DKS_API.Controllers
 
             if (iFile != null)       //save to server
             {
-                var fileName = string.Format("{0}-{1}-{2}-{3}-{4}-{5}.xlsx", season,stage, ver, modelName,modelNo,article);
+                var fileName = string.Format("{0}-{1}-{2}-{3}-{4}-{5}.xlsx", season, stage, ver, modelName, modelNo, article);
 
                 // save file to server
                 List<string> nastFileName = new List<string>();
@@ -142,7 +163,8 @@ namespace DKS_API.Controllers
             DevBomFile model = _devBomFileDAO.FindSingle(
                                  x => x.ARTICLE == article &&
                                  x.FACTORY == factoryId &&
-                                 x.VER == ver );
+                                 x.STAGE == stage &&
+                                 x.SORT == sort);
             model.APPLY = "Y";
             model.REMARK = remark;
             model.UPDAY = DateTime.Now;
@@ -156,62 +178,62 @@ namespace DKS_API.Controllers
 
             var subject = $"New BOM file Apply";
 
-                StringBuilder sb = new StringBuilder();
-                sb.Append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\"><HTML><HEAD>");
-                sb.Append("<style type=\"text/css\">");
-                sb.Append(".OutBorder {");
-                sb.Append("border: double;");
-                sb.Append("}");
-                sb.Append("</style>");
-                sb.Append("</HEAD>");
-                sb.Append("<body>");
-                sb.Append("<table width='700' border='0' align='center' cellpadding='0' cellspacing='0' class='OutBorder' bgcolor='#CCCCCC'>");
-                sb.Append("<tr bgcolor='#003366'><td colspan='5'><strong><font color='#FFFFFF' size='4'>" + "New Bom file was apply" + "，Detail：</font></strong></td></tr>");
+            StringBuilder sb = new StringBuilder();
+            sb.Append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\"><HTML><HEAD>");
+            sb.Append("<style type=\"text/css\">");
+            sb.Append(".OutBorder {");
+            sb.Append("border: double;");
+            sb.Append("}");
+            sb.Append("</style>");
+            sb.Append("</HEAD>");
+            sb.Append("<body>");
+            sb.Append("<table width='700' border='0' align='center' cellpadding='0' cellspacing='0' class='OutBorder' bgcolor='#CCCCCC'>");
+            sb.Append("<tr bgcolor='#003366'><td colspan='5'><strong><font color='#FFFFFF' size='4'>" + "New Bom file was apply" + "，Detail：</font></strong></td></tr>");
 
-                sb.Append("<tr>");
-                sb.Append("<td width='35%'>&nbsp;</td>");
-                sb.Append("<td width='55%'>&nbsp;</td>");
-                //sb.Append("<td width='15%'>&nbsp;</td>");
-                //sb.Append("<td width='25%'>&nbsp;</td>");
-                //sb.Append("<td width='10%'>&nbsp;</td>");
-                sb.Append("</tr>");
-                sb.Append(String.Format(@"<tr><td><strong>Bom Version/ Bom 版本:</strong></td><td colspan='4'>[{0}][{1}][{2}]</td></tr>", season,article,modelNo));
-                //sb.Append(String.Format(@"<tr><td><strong>Bom Version/ Bom 版本:</strong></td><td colspan='4'>{0}{1}</td></tr>", stage,ver));
-                //sb.Append("<tr><td><strong>Bom Data/ Bom 資訊:</strong></td><td colspan='12'>" + "[SS24][NJQ56][#IF3509]" + "</td></tr>");
+            sb.Append("<tr>");
+            sb.Append("<td width='35%'>&nbsp;</td>");
+            sb.Append("<td width='55%'>&nbsp;</td>");
+            //sb.Append("<td width='15%'>&nbsp;</td>");
+            //sb.Append("<td width='25%'>&nbsp;</td>");
+            //sb.Append("<td width='10%'>&nbsp;</td>");
+            sb.Append("</tr>");
+            sb.Append(String.Format(@"<tr><td><strong>Bom Version/ Bom 版本:</strong></td><td colspan='4'>[{0}][{1}][{2}]</td></tr>", season, article, modelNo));
+            //sb.Append(String.Format(@"<tr><td><strong>Bom Version/ Bom 版本:</strong></td><td colspan='4'>{0}{1}</td></tr>", stage,ver));
+            //sb.Append("<tr><td><strong>Bom Data/ Bom 資訊:</strong></td><td colspan='12'>" + "[SS24][NJQ56][#IF3509]" + "</td></tr>");
 
 
-                sb.Append("</tr>");
-                sb.Append("<tr><td>&nbsp;</td></tr>"); //換行
+            sb.Append("</tr>");
+            sb.Append("<tr><td>&nbsp;</td></tr>"); //換行
 
-                sb.Append("<tr><td colspan='5'><strong><font color='#600000' size='4'>此郵件為系統自動發送，請勿回覆!!</td></tr>");
-                sb.Append("</table>");
-                sb.Append("</body>");
-                sb.Append("</HTML>");
-                var content = sb.ToString();
+            sb.Append("<tr><td colspan='5'><strong><font color='#600000' size='4'>此郵件為系統自動發送，請勿回覆!!</td></tr>");
+            sb.Append("</table>");
+            sb.Append("</body>");
+            sb.Append("</HTML>");
+            var content = sb.ToString();
 
-                
-                MailMessage mail = new MailMessage();
-                SmtpClient smtpServer = new SmtpClient(_config.GetSection("MailSettingServer:Server").Value);
-                mail.From = new MailAddress(_config.GetSection("MailSettingServer:FromEmail").Value, _config.GetSection("MailSettingServer:FromName").Value);
-                // Set the message body to HTML format
-                mail.IsBodyHtml = true;
-                foreach (var item in toMails)
-                {
-                    mail.To.Add(item);
-                }
-                mail.Subject = subject;
-                mail.Body = content;
 
-                //pending夾帶檔案
-                //System.Net.Mail.Attachment attachment = new System.Net.Mail.Attachment(new MemoryStream(result), "EmailDetailByBatch" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xlsx");
-                //mail.Attachments.Add(attachment);
+            MailMessage mail = new MailMessage();
+            SmtpClient smtpServer = new SmtpClient(_config.GetSection("MailSettingServer:Server").Value);
+            mail.From = new MailAddress(_config.GetSection("MailSettingServer:FromEmail").Value, _config.GetSection("MailSettingServer:FromName").Value);
+            // Set the message body to HTML format
+            mail.IsBodyHtml = true;
+            foreach (var item in toMails)
+            {
+                mail.To.Add(item);
+            }
+            mail.Subject = subject;
+            mail.Body = content;
 
-                smtpServer.Port = Convert.ToInt32(_config.GetSection("MailSettingServer:Port").Value);
-                smtpServer.Credentials = new NetworkCredential(_config.GetSection("MailSettingServer:UserName").Value, _config.GetSection("MailSettingServer:Password").Value);
-                smtpServer.EnableSsl = Convert.ToBoolean(_config.GetSection("MailSettingServer:EnableSsl").Value);
+            //pending夾帶檔案
+            //System.Net.Mail.Attachment attachment = new System.Net.Mail.Attachment(new MemoryStream(result), "EmailDetailByBatch" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xlsx");
+            //mail.Attachments.Add(attachment);
 
-                await smtpServer.SendMailAsync(mail);
-                 _logger.LogInformation($"======================SendMailAsync() 成功!======================");
+            smtpServer.Port = Convert.ToInt32(_config.GetSection("MailSettingServer:Port").Value);
+            smtpServer.Credentials = new NetworkCredential(_config.GetSection("MailSettingServer:UserName").Value, _config.GetSection("MailSettingServer:Password").Value);
+            smtpServer.EnableSsl = Convert.ToBoolean(_config.GetSection("MailSettingServer:EnableSsl").Value);
+
+            await smtpServer.SendMailAsync(mail);
+            _logger.LogInformation($"======================SendMailAsync() 成功!======================");
 
             return Ok(model);
         }
@@ -219,10 +241,54 @@ namespace DKS_API.Controllers
         public async Task<IActionResult> GetDevTeamByLoginDto(string login)
         {
             _logger.LogInformation(String.Format(@"****** BomController GetDevTeamByLoginDto fired!! ******"));
-            var data =  await _dksDAO.GetDevTeamByLoginDto(login);
+            var data = await _dksDAO.GetDevTeamByLoginDto(login);
             return Ok(data);
         }
 
+        [HttpGet("checkHPSD138")]
+        public async Task<IActionResult> CheckHPSD138(string article, string ecrNo)
+        {
+            _logger.LogInformation(String.Format(@"****** CommonController CheckHPSD138 fired!! ******"));
+            var data = await _dksDAO.GetSsbGetHpSd138Dto(ecrNo);
+            if (data.Count > 0)
+            {
+                List<string> rs = new List<string>();
+                foreach (SsbGetHpSd138Dto d in data)
+                {
+
+                    string d1 = d.article.Replace("ART#","");
+                    if(!String.IsNullOrEmpty(d1)) d1 = d1.Trim();
+                    if(d1.Contains("ALL")) return Ok(true);
+
+                    string[] arts = d1.Split('/');
+                    bool first = false;
+                    string artTem = "";
+                    foreach (string art in arts)
+                    {
+                        if(!first){
+                            if( article == art ) return Ok(true);
+                            artTem = art;
+                            first = true;
+                        }else{
+                            string artStr = artTem.Substring(0, artTem.Length - 2);
+                            artStr += art;
+                            if( article == artStr ) return Ok(true);
+                        }
+
+                    }
+
+                }
+
+            }
+            return Ok(false);
+        }
+        [HttpGet("getDevBomStage")]
+        public async Task<IActionResult> GetDevBomStage()
+        {
+            _logger.LogInformation(String.Format(@"****** BomController GetDevBomStage fired!! ******"));
+            var data = await _devBomStageDAO.FindAll().OrderBy(x=>x.SORT).ToListAsync();
+            return Ok(data);
+        }
     }
 
 }
