@@ -55,7 +55,7 @@ export class HomePageComponent implements OnInit {
 
   loginSystem() {
     this.spinner.show();
-    this.authService.login(this.loginModel).subscribe(
+    this.authService.loginByPage(this.loginModel).subscribe(
       (next) => {
         this.spinner.hide();
         this.alertify.success("Logined in sucessed");

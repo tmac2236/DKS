@@ -205,6 +205,8 @@ export class BomManageComponent implements OnInit {
 
     if(this.addAModel.pdmApply === 'Y'){
       formData.append("ecrno", this.addAModel.ecrno);
+    }else{
+      formData.append("ecrno", "");
     }
 
     this.utility.spinner.show();

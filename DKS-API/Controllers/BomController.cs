@@ -17,6 +17,8 @@ using Microsoft.AspNetCore.Http;
 using System.Net.Mail;
 using System.Net;
 using System.Text;
+using System.IO;
+using System.Reflection;
 
 namespace DKS_API.Controllers
 {
@@ -30,7 +32,7 @@ namespace DKS_API.Controllers
         private readonly IDKSDAO _dksDAO;
 
         public BomController(IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<WareHouseController> logger,
-             IDevBomFileDAO devBomFileDAO, IDKSDAO dksDAO,IDevBomStageDAO devBomStageDAO,
+             IDevBomFileDAO devBomFileDAO, IDKSDAO dksDAO, IDevBomStageDAO devBomStageDAO,
              IExcelService excelService, ISendMailService sendMailService, IFileService fileService)
         : base(config, webHostEnvironment, logger)
         {
@@ -59,10 +61,24 @@ namespace DKS_API.Controllers
         {
 
             _logger.LogInformation(String.Format(@"******BomController AddBOMfile fired!! ******"));
-
+            DevBomFile model = new DevBomFile();
+            //ver#
+            DevBomFile md = _devBomFileDAO.FindAll(
+                         x => x.ARTICLE == uploadDevBomFileDto.Article &&
+                         x.FACTORY == uploadDevBomFileDto.FactoryId &&
+                         x.STAGE == uploadDevBomFileDto.Stage).AsNoTracking().OrderByDescending(x => x.VER).FirstOrDefault();
+            if (md == null)
+            {
+                model.VER = 1;
+            }
+            else
+            {
+                model.VER = md.VER;
+                model.VER += 1;
+            }
 
             // FactoryId + Season + Article + Id .pdf
-            var fileName = string.Format("{0}-{1}-{2}-{3}-{4}-{5}.xlsx", uploadDevBomFileDto.Season, uploadDevBomFileDto.Stage, uploadDevBomFileDto.Ver, uploadDevBomFileDto.ModelName, uploadDevBomFileDto.ModelNo, uploadDevBomFileDto.Article);
+            var fileName = string.Format("{0}-{1}-V{2}-{3}-{4}-{5}.xlsx", uploadDevBomFileDto.Season, uploadDevBomFileDto.Stage, model.VER, uploadDevBomFileDto.ModelName, uploadDevBomFileDto.ModelNo, uploadDevBomFileDto.Article);
 
             // save file to server
             List<string> nastFileName = new List<string>();
@@ -71,7 +87,7 @@ namespace DKS_API.Controllers
             nastFileName.Add(uploadDevBomFileDto.Article);
             nastFileName.Add(fileName);
 
-            DevBomFile model = new DevBomFile();
+
             if (uploadDevBomFileDto.File.Length > 0)       //save to server
             {
                 if (await _fileService.SaveFiletoServer(uploadDevBomFileDto.File, "F340PpdPic", nastFileName))
@@ -80,31 +96,31 @@ namespace DKS_API.Controllers
                     //save to DAO
                     model.FACTORY = uploadDevBomFileDto.FactoryId;
                     model.DEVTEAMID = uploadDevBomFileDto.Team;
-                    model.SEASON = uploadDevBomFileDto.Season;                    
+                    model.SEASON = uploadDevBomFileDto.Season;
                     model.MODELNO = uploadDevBomFileDto.ModelNo;
                     model.MODELNAME = uploadDevBomFileDto.ModelName;
                     model.ARTICLE = uploadDevBomFileDto.Article;
 
                     model.STAGE = uploadDevBomFileDto.Stage;
                     model.FILENAME = fileName;
-                    model.ECRNO = uploadDevBomFileDto.Ecrno;
-                    //ver#
-                    DevBomFile md = _devBomFileDAO.FindAll(
-                                 x => x.ARTICLE == uploadDevBomFileDto.Article &&
-                                 x.FACTORY == uploadDevBomFileDto.FactoryId &&
-                                 x.STAGE == uploadDevBomFileDto.Stage).AsNoTracking().OrderByDescending(x=>x.VER).FirstOrDefault();
-                    if(md == null){
-                        model.VER = 1;
-                    }else{
-                        model.VER = md.VER ;
-                        model.VER += 1;
-                    }             
+                    if (String.IsNullOrEmpty(uploadDevBomFileDto.Ecrno))
+                    {
+                        model.ECRNO = "";
+                    }
+                    else
+                    {
+                        model.ECRNO = uploadDevBomFileDto.Ecrno;
+                    }
+
+                    model.PDM_APPLY = "N";
+
                     //Sort
                     DevBomStage mds = _devBomStageDAO.FindSingle(
                                  x => x.FACTORY == uploadDevBomFileDto.FactoryId &&
                                  x.STAGE == uploadDevBomFileDto.Stage);
-                    if(mds != null){
-                        model.SORT = (short)(mds.SORT*100);
+                    if (mds != null)
+                    {
+                        model.SORT = (short)(mds.SORT * 100);
                         model.SORT += model.VER;
                     }
                     if (String.IsNullOrEmpty(uploadDevBomFileDto.Remark))
@@ -145,7 +161,7 @@ namespace DKS_API.Controllers
 
             if (iFile != null)       //save to server
             {
-                var fileName = string.Format("{0}-{1}-{2}-{3}-{4}-{5}.xlsx", season, stage, ver, modelName, modelNo, article);
+                var fileName = string.Format("{0}-{1}-V{2}-{3}-{4}-{5}.xlsx", season, stage, ver, modelName, modelNo, article);
 
                 // save file to server
                 List<string> nastFileName = new List<string>();
@@ -173,9 +189,11 @@ namespace DKS_API.Controllers
             _devBomFileDAO.Update(model);
             await _devBomFileDAO.SaveAll();
 
+            var mailInformation = await _dksDAO.GetDevBomDetailMailDto(factoryId, article, stage, ver);
+            if (mailInformation.Count == 0) return Ok(model);
             var toMails = new List<string>();
             toMails.Add("stan.chen@ssbshoes.com");
-
+            toMails.Add("aven.yu@ssbshoes.com");
             var subject = $"New BOM file Apply";
 
             StringBuilder sb = new StringBuilder();
@@ -191,16 +209,21 @@ namespace DKS_API.Controllers
             sb.Append("<tr bgcolor='#003366'><td colspan='5'><strong><font color='#FFFFFF' size='4'>" + "New Bom file was apply" + "，Detail：</font></strong></td></tr>");
 
             sb.Append("<tr>");
-            sb.Append("<td width='35%'>&nbsp;</td>");
-            sb.Append("<td width='55%'>&nbsp;</td>");
+            sb.Append("<td width='100%'>&nbsp;</td>");
+            //sb.Append("<td width='55%'>&nbsp;</td>");
             //sb.Append("<td width='15%'>&nbsp;</td>");
             //sb.Append("<td width='25%'>&nbsp;</td>");
             //sb.Append("<td width='10%'>&nbsp;</td>");
             sb.Append("</tr>");
-            sb.Append(String.Format(@"<tr><td><strong>Bom Version/ Bom 版本:</strong></td><td colspan='4'>[{0}][{1}][{2}]</td></tr>", season, article, modelNo));
-            //sb.Append(String.Format(@"<tr><td><strong>Bom Version/ Bom 版本:</strong></td><td colspan='4'>{0}{1}</td></tr>", stage,ver));
-            //sb.Append("<tr><td><strong>Bom Data/ Bom 資訊:</strong></td><td colspan='12'>" + "[SS24][NJQ56][#IF3509]" + "</td></tr>");
-
+            //sb.Append(String.Format(@"<tr><td><strong>Bom Version/ Bom 版本:</strong></td><td colspan='4'>[{0}][{1}][{2}]</td></tr>", season, article, modelNo));
+            Type dtoType = typeof(DevBomDetailMailDto);
+            PropertyInfo[] properties = dtoType.GetProperties();
+            foreach (PropertyInfo property in properties)
+            {
+                //string propertyName = property.Name;
+                object propertyValue = property.GetValue(mailInformation[0]);
+                sb.Append(String.Format(@"<tr><td><strong>{0}</strong></td></tr>", propertyValue));
+            }
 
             sb.Append("</tr>");
             sb.Append("<tr><td>&nbsp;</td></tr>"); //換行
@@ -224,9 +247,21 @@ namespace DKS_API.Controllers
             mail.Subject = subject;
             mail.Body = content;
 
-            //pending夾帶檔案
-            //System.Net.Mail.Attachment attachment = new System.Net.Mail.Attachment(new MemoryStream(result), "EmailDetailByBatch" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xlsx");
-            //mail.Attachments.Add(attachment);
+            string rootdir = Directory.GetCurrentDirectory();
+            var localStr = _config.GetSection("AppSettings:ArticleBomsRoot").Value;
+            var path = rootdir + localStr;
+            path = path.Replace("DKS-API", "DKS-SPA");
+            string filePath = Path.Combine(path, season, article, model.FILENAME);
+            _logger.LogInformation(String.Format(@"準備讀取檔案{0}", filePath));
+            if (System.IO.File.Exists(filePath))
+            {
+                Attachment attachment = new Attachment(filePath);
+                mail.Attachments.Add(attachment);
+            }
+            else
+            {
+                _logger.LogInformation(String.Format(@"檔案{0}，不存在，請Debug !!!!!!!", filePath));
+            }
 
             smtpServer.Port = Convert.ToInt32(_config.GetSection("MailSettingServer:Port").Value);
             smtpServer.Credentials = new NetworkCredential(_config.GetSection("MailSettingServer:UserName").Value, _config.GetSection("MailSettingServer:Password").Value);
@@ -256,23 +291,26 @@ namespace DKS_API.Controllers
                 foreach (SsbGetHpSd138Dto d in data)
                 {
 
-                    string d1 = d.article.Replace("ART#","");
-                    if(!String.IsNullOrEmpty(d1)) d1 = d1.Trim();
-                    if(d1.Contains("ALL")) return Ok(true);
+                    string d1 = d.article.Replace("ART#", "");
+                    if (!String.IsNullOrEmpty(d1)) d1 = d1.Trim();
+                    if (d1.Contains("ALL")) return Ok(true);
 
                     string[] arts = d1.Split('/');
                     bool first = false;
                     string artTem = "";
                     foreach (string art in arts)
                     {
-                        if(!first){
-                            if( article == art ) return Ok(true);
+                        if (!first)
+                        {
+                            if (article == art) return Ok(true);
                             artTem = art;
                             first = true;
-                        }else{
+                        }
+                        else
+                        {
                             string artStr = artTem.Substring(0, artTem.Length - 2);
                             artStr += art;
-                            if( article == artStr ) return Ok(true);
+                            if (article == artStr) return Ok(true);
                         }
 
                     }
@@ -286,7 +324,7 @@ namespace DKS_API.Controllers
         public async Task<IActionResult> GetDevBomStage()
         {
             _logger.LogInformation(String.Format(@"****** BomController GetDevBomStage fired!! ******"));
-            var data = await _devBomStageDAO.FindAll().OrderBy(x=>x.SORT).ToListAsync();
+            var data = await _devBomStageDAO.FindAll().OrderBy(x => x.SORT).ToListAsync();
             return Ok(data);
         }
     }

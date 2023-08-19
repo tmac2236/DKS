@@ -437,6 +437,20 @@ ON t1.PKBASEHID=t3.FKBASEHID and t3.LANGID='437' ");
 
             return data;
         }
+        public async Task<List<DevBomDetailMailDto>> GetDevBomDetailMailDto(string factory,string article,string stage,short ver)
+        {
+            List<SqlParameter> pc = new List<SqlParameter>{
+                new SqlParameter("@FACTORYID",factory),
+                new SqlParameter("@ARTICLE",article),
+                new SqlParameter("@STAGE",stage),
+                new SqlParameter("@VER",ver.ToShort())
+            };
+            var data = await _context.GetDevBomDetailMailDto
+                   .FromSqlRaw("EXECUTE dbo.GetDevBomDetailMail @FACTORYID,@ARTICLE,@STAGE,@VER", pc.ToArray())
+                   .ToListAsync();
+
+            return data;
+        }        
     }
    
 }

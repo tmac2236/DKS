@@ -39,5 +39,6 @@ namespace DKS_API.Data.Interface
         Task<List<DevBomFileDetailDto>> GetDevBomFileDto(SDevBomFile sDevBomFile);
         Task<List<DevTeamByLoginDto>> GetDevTeamByLoginDto(string login);
         Task<List<SsbGetHpSd138Dto>> GetSsbGetHpSd138Dto(string ecrNo);
+        Task<List<DevBomDetailMailDto>> GetDevBomDetailMailDto(string factory,string article,string stage,short ver);
     }
 }

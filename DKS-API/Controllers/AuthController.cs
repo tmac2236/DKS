@@ -34,14 +34,10 @@ namespace DKS_API.Controllers
             _dtrLoginHistoryDAO = dtrLoginHistoryDAO;
         }
 
-        [HttpPost("login")]
-        [SwaggerOperation(
-            Summary = "DKS外掛Web用的API",
-            Description = "用UserId登入"
-        )]        
-        public async Task<IActionResult> Login(UserDto userForLoginDto)
+        [HttpPost("loginByPage")]    
+        public async Task<IActionResult> LoginByPage(UserDto userForLoginDto)
         {
-            _logger.LogInformation(String.Format(@"******  AuthController Login fired!! ******"));
+            _logger.LogInformation(String.Format(@"******  AuthController LoginByPage fired!! ******"));
             var httpClientHandler = new HttpClientHandler();
             httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) =>
             {
@@ -115,5 +111,61 @@ namespace DKS_API.Controllers
             await _dtrLoginHistoryDAO.SaveAll();
             return Ok();
         }
+        [HttpPost("login")]
+        [SwaggerOperation(
+            Summary = "DKS外掛Web用的API",
+            Description = "用UserId登入"
+        )]        
+        public async Task<IActionResult> Login(UserDto userForLoginDto)
+        {
+            _logger.LogInformation(String.Format(@"******  AuthController Login fired!! ******"));
+            //var userFromRepo = await _dksDAO.SearchStaffByLOGIN(userForLoginDto.Account);
+
+            //if (userFromRepo == null)
+            //{
+            //改成只能用UserId登入
+            decimal userId = Decimal.Parse(userForLoginDto.Account);
+            var userFromRepo = await _dksDAO.GetRolesByUserId(userForLoginDto.Account);
+            if (userFromRepo.Count < 1)
+            {
+                return Unauthorized();
+            }
+            //}
+            IEnumerable<string> onlyGroupNos = from u in userFromRepo 
+                                select u.GROUPNO ;
+            string roleArray = string.Join(".",onlyGroupNos);
+
+            var roles = _dksDAO.GetRolesByUserId(userFromRepo[0].USERID.ToString());
+
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, userFromRepo[0].USERID.ToString()),
+                new Claim(ClaimTypes.Name, userFromRepo[0].LOGIN),
+                new Claim(ClaimTypes.Role, roleArray),
+                new Claim(ClaimTypes.Actor, userFromRepo[0].FACTORYID),
+                };
+            var tokenName = _config.GetSection("AppSettings:Token").Value;
+            var key = new SymmetricSecurityKey(Encoding.UTF8
+                .GetBytes(tokenName));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.Now.AddDays(1),  // the expire time is one day.
+                SigningCredentials = creds
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            return Ok(new
+            {
+                token = tokenHandler.WriteToken(token)
+            });
+
+        }        
     }
 }
