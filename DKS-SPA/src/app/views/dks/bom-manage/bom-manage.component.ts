@@ -41,6 +41,8 @@ export class BomManageComponent implements OnInit {
   code017: BasicCodeDto[] = [];
   loginTeam: string[] = [];
   devbomStage: DevBomStage[] =[];
+  devbomStage1:DevBomStage[]=[];
+
   async ngOnInit() {
     this.utility.initUserRole(this.sDevBomFile);
     await this.getDevBomStage();
@@ -287,6 +289,7 @@ export class BomManageComponent implements OnInit {
       this.utility.alertify.error(`Normal User can not operate it !!`);
       return;
     }
+    this.devBomStageChanged(model);
     this.openModal("Modal1");
     this.copyToAddAModel(model);
 
@@ -414,5 +417,9 @@ export class BomManageComponent implements OnInit {
           );
         }
       );
-  }  
+  } 
+  devBomStageChanged(m: DevBomFileDetailDto){
+    let a = this.devbomStage.find( (x)=> x.stage == m.stage && x.factory == m.factoryId );
+    this.devbomStage1 = this.devbomStage.filter( (x)=> x.sort >= a.sort );
+  } 
 }

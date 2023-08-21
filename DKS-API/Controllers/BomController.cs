@@ -194,7 +194,7 @@ namespace DKS_API.Controllers
             var toMails = new List<string>();
             toMails.Add("stan.chen@ssbshoes.com");
             toMails.Add("aven.yu@ssbshoes.com");
-            var subject = $"New BOM file Apply";
+            var subject = $"New BOM file has been applied";
 
             StringBuilder sb = new StringBuilder();
             sb.Append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\"><HTML><HEAD>");
@@ -206,7 +206,7 @@ namespace DKS_API.Controllers
             sb.Append("</HEAD>");
             sb.Append("<body>");
             sb.Append("<table width='700' border='0' align='center' cellpadding='0' cellspacing='0' class='OutBorder' bgcolor='#CCCCCC'>");
-            sb.Append("<tr bgcolor='#003366'><td colspan='5'><strong><font color='#FFFFFF' size='4'>" + "New Bom file was apply" + "，Detail：</font></strong></td></tr>");
+            sb.Append("<tr bgcolor='#003366'><td colspan='5'><strong><font color='#FFFFFF' size='4'>" + "New Bom file has been applied" + "，Detail：</font></strong></td></tr>");
 
             sb.Append("<tr>");
             sb.Append("<td width='100%'>&nbsp;</td>");
@@ -227,7 +227,7 @@ namespace DKS_API.Controllers
 
             sb.Append("</tr>");
             sb.Append("<tr><td>&nbsp;</td></tr>"); //換行
-
+            sb.Append("<tr><td colspan='5'><strong><font color='#600000' size='4'>This letter is sent automatically. Please do not reply directly.!!</td></tr>");
             sb.Append("<tr><td colspan='5'><strong><font color='#600000' size='4'>此郵件為系統自動發送，請勿回覆!!</td></tr>");
             sb.Append("</table>");
             sb.Append("</body>");

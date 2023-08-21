@@ -90,7 +90,7 @@
                     <thead>
                       <tr class="table-info">
 
-                        <th>Dev Team Name</th>
+                        <th>Dev Team</th>
                         <th>Season</th>
                         <th>Model No</th>
                         <th>Model Name</th>
@@ -99,7 +99,6 @@
                         <th>Stage</th>
                         <th>ACT Date</th>
                         <th>CWA DeadLine</th>
-                        <th>BOM</th>
                         <th>Ver#</th>
                         <th>PDM Apply</th>
                         <th>ECR#</th>
@@ -134,7 +133,6 @@
                           <td>{{ item.stage }}</td>
                           <td>{{ item.actDate }}</td>
                           <td>{{ item.cwaDeadLine }}</td>
-                          <td>{{ item.fileName }}</td>
                           <td>{{ item.ver }}</td>
                           <td>{{ item.pdmApply }}</td>
                           <td>{{ item.ecrNo }}</td>
@@ -159,6 +157,7 @@
                               class="mr-1"
                               width="40"
                               height="45"
+                              tooltip="{{ this.item.fileName}}" placement="bottom"
                               (click)="downloadBtn(item)"
                               />
                             </ng-container>
@@ -278,6 +277,7 @@
             type="text"
             name="addAModelEcrno"
             size ="10"
+            maxlength="10"
             [(ngModel)]="addAModel.ecrno"
           />
         </div>
@@ -289,7 +289,7 @@
           class="col-form-label"
           name="addAModelStage"
           [(ngModel)]="addAModel.stage">
-          <option *ngFor="let s of devbomStage" value="{{ s.stage }}">
+          <option *ngFor="let s of devbomStage1" value="{{ s.stage }}">
             {{ s.stage }}
           </option>
         </select>
@@ -376,7 +376,7 @@
       <div class="row">
         <div class="col-8">
           <div class="form-inline">
-            <label class="col-form-label mr-4" style="font-size: 26px;">ECR# : {{addAModel.ecrno}}</label>
+            <label *ngIf="addAModel.pdmApply === 'Y'" class="col-form-label mr-4" style="font-size: 26px;">ECR# : {{addAModel.ecrno}}</label>
             <label class="col-form-label mr-4" style="font-size: 26px;">Article : {{addAModel.article}}</label>
             <label class="col-form-label mr-4" style="font-size: 26px;">Stage : {{addAModel.stage}}</label> 
             <label class="col-form-label mr-4" style="font-size: 26px;">Ver# : {{addAModel.ver}}</label>  
@@ -440,7 +440,7 @@
       <div class="row">
         <div class="col-8">
           <div class="form-inline">
-            <label class="col-form-label mr-4" style="font-size: 26px;">ECR# : {{addAModel.ecrno}}</label>
+            <label *ngIf="addAModel.pdmApply === 'Y'" class="col-form-label mr-4" style="font-size: 26px;">ECR# : {{addAModel.ecrno}}</label>
             <label class="col-form-label mr-4" style="font-size: 26px;">Article : {{addAModel.article}}</label>
             <label class="col-form-label mr-4" style="font-size: 26px;">Stage : {{addAModel.stage}}</label> 
             <label class="col-form-label mr-4" style="font-size: 26px;">Ver# : {{addAModel.ver}}</label>  
