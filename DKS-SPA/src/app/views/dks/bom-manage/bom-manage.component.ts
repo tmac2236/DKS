@@ -289,9 +289,16 @@ export class BomManageComponent implements OnInit {
       this.utility.alertify.error(`Normal User can not operate it !!`);
       return;
     }
-    this.devBomStageChanged(model);
-    this.openModal("Modal1");
-    this.copyToAddAModel(model);
+    if (this.loginTeam.includes(model.devTeamId)) {
+      this.devBomStageChanged(model);
+      this.openModal("Modal1");
+      this.copyToAddAModel(model);
+    } else {
+      this.utility.alertify.error(
+        `You don't have permission to do ${model.teamName}!!`
+      );
+      return;
+    }
 
   }
   //開窗 End
@@ -419,7 +426,14 @@ export class BomManageComponent implements OnInit {
       );
   } 
   devBomStageChanged(m: DevBomFileDetailDto){
-    let a = this.devbomStage.find( (x)=> x.stage == m.stage && x.factory == m.factoryId );
-    this.devbomStage1 = this.devbomStage.filter( (x)=> x.sort >= a.sort );
-  } 
+
+    if (this.utility.checkIsNullorEmpty(m.stage)) {
+      this.devbomStage1 = this.devbomStage;
+    }else{
+      let a = this.devbomStage.find( (x)=> x.stage == m.stage && x.factory == m.factoryId );
+      this.devbomStage1 = this.devbomStage.filter( (x)=> x.sort >= a.sort );      
+    }
+
+  }
+
 }
