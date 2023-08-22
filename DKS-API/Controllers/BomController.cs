@@ -19,6 +19,7 @@ using System.Net;
 using System.Text;
 using System.IO;
 using System.Reflection;
+using Aspose.Cells;
 
 namespace DKS_API.Controllers
 {
@@ -48,7 +49,13 @@ namespace DKS_API.Controllers
         public async Task<IActionResult> GetDevBomFileDetailDto([FromQuery] SDevBomFile sDevBomFile)
         {
             _logger.LogInformation(String.Format(@"****** BomController GetDevBomFile fired!! ******"));
-            var data = await _dksDAO.GetDevBomFileDto(sDevBomFile);
+            var data = new List<DevBomFileDetailDto>();
+            if(sDevBomFile.UserTeam == "Y"){
+                 data = await _dksDAO.GetDevBomFileDto(sDevBomFile);
+            }else if(sDevBomFile.UserTeam == "N"){
+                data = await _dksDAO.GetDevBomFileNormalDto(sDevBomFile);
+            }
+            
 
             PagedList<DevBomFileDetailDto> result = PagedList<DevBomFileDetailDto>.Create(data, sDevBomFile.PageNumber, sDevBomFile.PageSize, sDevBomFile.IsPaging);
             Response.AddPagination(result.CurrentPage, result.PageSize,
@@ -327,6 +334,78 @@ namespace DKS_API.Controllers
             var data = await _devBomStageDAO.FindAll().OrderBy(x => x.SORT).ToListAsync();
             return Ok(data);
         }
+        [HttpPost("compareTwoExcel")]
+        public IActionResult CompareTwoExcel()
+        {
+            _logger.LogInformation(String.Format(@"****** BomController CompareTwoExcel fired!! ******"));
+            IFormFile bufferFile1 = HttpContext.Request.Form.Files["bufferFile1"];
+            IFormFile bufferFile2 = HttpContext.Request.Form.Files["bufferFile2"];
+            List<CellDifferenceDto> differences = new List<CellDifferenceDto>();
+            byte[] result;
+            using (var workbook1 = new Workbook(bufferFile1.OpenReadStream()))
+            using (var workbook2 = new Workbook(bufferFile2.OpenReadStream()))
+            using (var resultStream = new MemoryStream())
+            {
+                var worksheet1 = workbook1.Worksheets[0];
+                var worksheet2 = workbook2.Worksheets[0];
+
+                Cells cells1 = worksheet1.Cells;
+                Cells cells2 = worksheet2.Cells;
+
+                int maxRow = Math.Max(cells1.MaxDataRow + 1, cells2.MaxDataRow + 1);
+                int maxColumn = Math.Max(cells1.MaxDataColumn + 1, cells2.MaxDataColumn + 1);
+
+                for (int row = 0; row < maxRow; row++)
+                {
+                    for (int col = 0; col < maxColumn; col++)
+                    {
+                        var cell1 = cells1[row, col];
+                        var cell2 = cells2[row, col];
+
+                        if (cell1 != null && cell2 != null)
+                        {
+                            string value1 = cell1.StringValue;
+                            string value2 = cell2.StringValue;
+
+                            if (value1 != value2)
+                            {
+                                differences.Add(new CellDifferenceDto
+                                {
+                                    CellName = CellsHelper.CellIndexToName(row, col),
+                                    NewValue = value1,
+                                    OldValue = value2
+                                });
+                            }
+                        }
+                    }
+                }
+
+                int newWorksheetIndex = workbook1.Worksheets.Add(); // Add a new worksheet
+                Worksheet newWorksheet = workbook1.Worksheets[newWorksheetIndex];
+                newWorksheet.Name = "Result";
+                // Write column headers
+                newWorksheet.Cells["A1"].PutValue("Cell");
+                newWorksheet.Cells["B1"].PutValue("New Value");
+                newWorksheet.Cells["C1"].PutValue("Old Value");
+                // Write differences data
+                for (int i = 0; i < differences.Count; i++)
+                {
+                    newWorksheet.Cells[$"A{i + 2}"].PutValue(differences[i].CellName);
+                    newWorksheet.Cells[$"B{i + 2}"].PutValue(differences[i].NewValue);
+                    newWorksheet.Cells[$"C{i + 2}"].PutValue(differences[i].OldValue);
+                }
+
+                workbook1.Save(resultStream, SaveFormat.Xlsx);
+
+                // Convert the result stream to a byte array
+                result = resultStream.ToArray();
+
+            }
+            return File(result, "application/xlsx");
+
+        }
+
+
     }
 
 }

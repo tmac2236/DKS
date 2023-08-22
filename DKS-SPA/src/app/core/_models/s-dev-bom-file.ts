@@ -9,6 +9,8 @@ export class SDevBomFile extends Pagination {
   article: string;
   team: string;
 
+  userTeam:string;
+
   constructor() {
 
     super();
@@ -20,6 +22,7 @@ export class SDevBomFile extends Pagination {
     this.modelName = "";
     this.article = "";
     this.team = "";
+    this.userTeam = "N";
   }
   public setPagination(pagination: Pagination) {
     this.currentPage = pagination.currentPage;

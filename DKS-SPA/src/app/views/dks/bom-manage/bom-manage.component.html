@@ -74,7 +74,13 @@
                 type="button"
                 (click)="search()">
                 Query
-                </button>                                                                  
+                </button>
+                <button
+                class="btn btn-primary ml-4 mr-1 mb-1"
+                type="button"
+                (click)="compareExcel()">
+                PDM Only
+                </button>                                                                                    
               </div>
             </div>
           </form>
@@ -90,7 +96,7 @@
                     <thead>
                       <tr class="table-info">
 
-                        <th>Dev Team</th>
+                        <th>Team</th>
                         <th>Season</th>
                         <th>Model No</th>
                         <th>Model Name</th>
@@ -328,7 +334,7 @@
           accept=".xlsx"
           style="display: none"
           (click)="this.utility.reset($event)"
-          (change)="handleFileInput($event.target.files)"
+          (change)="handleFileInput($event.target.files,0)"
           />            
           <button
             type="button"
@@ -480,7 +486,7 @@
           accept=".xlsx"
           style="display: none"
           (click)="this.utility.reset($event)"
-          (change)="handleFileInput($event.target.files)"
+          (change)="handleFileInput($event.target.files,0)"
           />            
           <button
             type="button"
@@ -497,3 +503,87 @@
 </div>
 </div>
 <!--Modal3-->
+<!--Modal4-->
+<div
+  bsModal
+  #Modal4="bs-modal"
+  class="modal hide fade in"
+  [config]="{backdrop: 'static'}"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+<div class="modal-dialog modal-info modal-xl" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Compare two Excel</h4>
+      <button
+        type="button"
+        class="close"
+        (click)="closeModal('Modal4')"
+        aria-label="Close"
+      >
+        <!--右上角的 X 符號-->
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+
+        <div class="col-2 mt-2">
+          <span >{{bufferFile1?.name || "Please upload the NEW one!"}}</span>
+        </div>
+        <div class="col-2">
+          <label
+          class="btn btn-primary btn-lg mt-3 mr-4"
+          for="pdfUploadInAdd1"
+          tooltip="{{ this.hintMsg.uploadPdf }}"
+          placement="right">+
+          </label>
+          <input
+          id="pdfUploadInAdd1"
+          type="file"
+          accept=".xlsx"
+          style="display: none"
+          (click)="this.utility.reset($event)"
+          (change)="handleFileInput($event.target.files,1)"
+          />            
+        </div>
+
+        <div class="col-2 mt-2">
+          <span >{{bufferFile2?.name || "Please upload the OLD one!"}}</span>
+        </div>
+        <div class="col-2">
+          <label
+          class="btn btn-primary btn-lg mt-3 mr-4"
+          for="pdfUploadInAdd2"
+          tooltip="{{ this.hintMsg.uploadPdf }}"
+          placement="right">+
+          </label>
+          <input
+          id="pdfUploadInAdd2"
+          type="file"
+          accept=".xlsx"
+          style="display: none"
+          (click)="this.utility.reset($event)"
+          (change)="handleFileInput($event.target.files,2)"
+          />            
+        </div>        
+
+        <div class="col-4">
+          <button
+            type="button"
+            [hidden]="false"
+            class="btn btn-primary btn-lg mt-2"
+            (click)="toCompareBtn()"
+          >
+          Compare
+          </button>
+        </div>
+      </div>         
+    </div>
+  </div>
+</div>
+</div>
+<!--Modal4-->

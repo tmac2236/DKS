@@ -13,6 +13,9 @@ import { DksService } from "../../../core/_services/dks.service";
 import { ModalDirective } from "ngx-bootstrap/modal";
 import { DevTeamByLoginDto } from "../../../core/_models/dev-team-by-login-dto";
 import { DevBomStage } from "../../../core/_models/dev-bom-stage";
+import { timeout } from "rxjs/operators";
+import { utilityConfig } from "../../../core/utility/utility-config";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: "app-bom-manage",
@@ -23,9 +26,10 @@ export class BomManageComponent implements OnInit {
   @ViewChild("Modal1") public Modal1: ModalDirective;
   @ViewChild("Modal2") public Modal2: ModalDirective;
   @ViewChild("Modal3") public Modal3: ModalDirective;
+  @ViewChild("Modal4") public Modal4: ModalDirective;
   constructor(
     public utility: Utility,
-    private route: Router,
+    public http: HttpClient,
     private dksService: DksService,
     private commonService: CommonService
   ) {}
@@ -35,6 +39,8 @@ export class BomManageComponent implements OnInit {
   };
   addAModel: DevBomFile = new DevBomFile();
   bufferFile: File | null = null; // upload
+  bufferFile1: File | null = null; // compare new
+  bufferFile2: File | null = null; // compare old
 
   sDevBomFile: SDevBomFile = new SDevBomFile();
   result: DevBomFileDetailDto[] = [];
@@ -55,8 +61,14 @@ export class BomManageComponent implements OnInit {
               this.loginTeam = res.map(
                 (devTeam: DevTeamByLoginDto) => devTeam.devTeamNo
               );
+              const devTeamList = ['01', '02', '03', '04', '05', '06', '07', '12'];
+              const isDevTeam = this.loginTeam.some(item => devTeamList.includes(item));
               console.log("this.loginTeam");
               console.log(this.loginTeam);
+              if(isDevTeam){
+                this.sDevBomFile.userTeam = "Y";
+              }
+
             }
           },
           (error) => {
@@ -72,11 +84,13 @@ export class BomManageComponent implements OnInit {
     if (type == "Modal1") this.Modal1.show();
     if (type == "Modal2") this.Modal2.show();
     if (type == "Modal3") this.Modal3.show();
+    if (type == "Modal4") this.Modal4.show();
   }
   closeModal(type: string) {
     if (type == "Modal1") this.Modal1.hide();
     if (type == "Modal2") this.Modal2.hide();
     if (type == "Modal3") this.Modal3.hide();
+    if (type == "Modal4") this.Modal4.hide();
   }
   cleanModel() {
     this.addAModel = new DevBomFile();
@@ -152,7 +166,7 @@ export class BomManageComponent implements OnInit {
     );
   }
   //save the file to memory
-  handleFileInput(files: FileList) {
+  handleFileInput(files: FileList,num:number) {
     //"application/pdf" "image/jpeg"
     if (
       !this.utility.checkFileMaxMultiFormat(files.item(0), 1128659 * 2, [
@@ -167,7 +181,14 @@ export class BomManageComponent implements OnInit {
       );
       return; //exit function
     }
-    this.bufferFile = files.item(0);
+    if(num == 0){
+      this.bufferFile = files.item(0);
+    }else if (num == 1){
+      this.bufferFile1= files.item(0);
+    }else if (num == 2){
+      this.bufferFile2 = files.item(0);
+    }
+
   }
 
   async saveUploadBtn() {
@@ -434,6 +455,61 @@ export class BomManageComponent implements OnInit {
       this.devbomStage1 = this.devbomStage.filter( (x)=> x.sort >= a.sort );      
     }
 
+  }
+  compareExcel(){
+    this.bufferFile1 = null;
+    this.bufferFile2 = null;
+    this.openModal("Modal4");
+  }
+  toCompareBtn(){
+    if (!this.bufferFile1) {
+      this.utility.alertify.error("Please upload the NEW one file !!!!");
+      return;
+    }
+    if (!this.bufferFile2) {
+      this.utility.alertify.error("Please upload the OLD one file !!!!");
+      return;
+    }
+    const url =this.utility.baseUrl +"bom/compareTwoExcel";
+    var formData = new FormData();
+
+    formData.append("bufferFile1", this.bufferFile1);
+    formData.append("bufferFile2", this.bufferFile2);
+
+    this.utility.spinner.show();
+    this.http
+      .post(url, formData, { responseType: "blob" })
+      .pipe(timeout(utilityConfig.httpTimeOut))
+      .subscribe((result: Blob) => {
+        if (result.type !== "application/xlsx") {
+          this.utility.alertify.confirm(
+            "System Alert",
+            "There are no data with these conditions !",
+            () => {}
+          );
+          this.utility.spinner.hide();
+          return;
+        }
+        const blob = new Blob([result]);
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        const currentTime = new Date();
+        const filename =
+          "CompareResult" +
+          currentTime.getFullYear().toString() +
+          (currentTime.getMonth() + 1) +
+          currentTime.getDate() +
+          currentTime
+            .toLocaleTimeString()
+            .replace(/[ ]|[,]|[:]/g, "")
+            .trim() +
+          ".xlsx";
+        link.href = url;
+        link.setAttribute("download", filename);
+        document.body.appendChild(link);
+        link.click();
+        this.utility.spinner.hide();
+      });     
   }
 
 }

@@ -220,7 +220,8 @@ export class DksService {
     params = params.append("article", sDevBomFile.article.toString());
     params = params.append("team", sDevBomFile.team.toString());
     params = params.append("factoryId", sDevBomFile.factoryId.toString());
-    
+    params = params.append("userTeam", sDevBomFile.userTeam.toString());
+
     return this.utility.http
       .get<DevBomFileDetailDto[]>(
         this.utility.baseUrl + "bom/getDevBomFileDetailDto",
