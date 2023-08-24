@@ -50,12 +50,15 @@ namespace DKS_API.Controllers
         {
             _logger.LogInformation(String.Format(@"****** BomController GetDevBomFile fired!! ******"));
             var data = new List<DevBomFileDetailDto>();
-            if(sDevBomFile.UserTeam == "Y"){
-                 data = await _dksDAO.GetDevBomFileDto(sDevBomFile);
-            }else if(sDevBomFile.UserTeam == "N"){
+            if (sDevBomFile.UserTeam == "Y")
+            {
+                data = await _dksDAO.GetDevBomFileDto(sDevBomFile);
+            }
+            else if (sDevBomFile.UserTeam == "N")
+            {
                 data = await _dksDAO.GetDevBomFileNormalDto(sDevBomFile);
             }
-            
+
 
             PagedList<DevBomFileDetailDto> result = PagedList<DevBomFileDetailDto>.Create(data, sDevBomFile.PageNumber, sDevBomFile.PageSize, sDevBomFile.IsPaging);
             Response.AddPagination(result.CurrentPage, result.PageSize,
@@ -367,34 +370,48 @@ namespace DKS_API.Controllers
                             string value1 = cell1.StringValue;
                             string value2 = cell2.StringValue;
 
+                            //if (cell1 != cell2)
                             if (value1 != value2)
                             {
                                 differences.Add(new CellDifferenceDto
                                 {
                                     CellName = CellsHelper.CellIndexToName(row, col),
-                                    NewValue = value1,
-                                    OldValue = value2
+                                    NewValue = cell1,
+                                    OldValue = cell2
                                 });
                             }
                         }
                     }
                 }
-
+                var newWSName = "Result";
+                if (workbook1.Worksheets.Cast<Worksheet>().Any(sheet => sheet.Name == newWSName))
+                {
+                    workbook1.Worksheets.RemoveAt(newWSName); 
+                }
                 int newWorksheetIndex = workbook1.Worksheets.Add(); // Add a new worksheet
                 Worksheet newWorksheet = workbook1.Worksheets[newWorksheetIndex];
-                newWorksheet.Name = "Result";
+                newWorksheet.Name = newWSName;
                 // Write column headers
                 newWorksheet.Cells["A1"].PutValue("Cell");
                 newWorksheet.Cells["B1"].PutValue("New Value");
                 newWorksheet.Cells["C1"].PutValue("Old Value");
+                
+                newWorksheet.Cells.SetColumnWidthPixel(0, 40);
+                newWorksheet.Cells.SetColumnWidthPixel(1, 500);
+                newWorksheet.Cells.SetColumnWidthPixel(2, 500);
+
                 // Write differences data
                 for (int i = 0; i < differences.Count; i++)
                 {
                     newWorksheet.Cells[$"A{i + 2}"].PutValue(differences[i].CellName);
-                    newWorksheet.Cells[$"B{i + 2}"].PutValue(differences[i].NewValue);
-                    newWorksheet.Cells[$"C{i + 2}"].PutValue(differences[i].OldValue);
-                }
+                    newWorksheet.Cells[$"B{i + 2}"].PutValue(differences[i].NewValue.Value);
+                    newWorksheet.Cells[$"B{i + 2}"].SetStyle(differences[i].NewValue.GetStyle());
 
+                    newWorksheet.Cells[$"C{i + 2}"].PutValue(differences[i].OldValue.Value);
+                    newWorksheet.Cells[$"C{i + 2}"].SetStyle(differences[i].OldValue.GetStyle());
+                }
+                      
+                newWorksheet.FreezePanes(1, 0, 1, 2); //frozen A1:C1
                 workbook1.Save(resultStream, SaveFormat.Xlsx);
 
                 // Convert the result stream to a byte array
