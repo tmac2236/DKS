@@ -81,6 +81,7 @@ namespace DKS_API.Data.Repository
         public DbSet<DevTeamByLoginDto> GetDevTeamByLoginDto { get; set; }
         public DbSet<SsbGetHpSd138Dto> GetSsbGetHpSd138Dto { get; set; }
         public DbSet<DevBomDetailMailDto> GetDevBomDetailMailDto { get; set; }
+        public DbSet<SendDevBomDetailMailListDto> SendDevBomDetailMailListDto { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Ordsumoh>().HasKey(x => new { x.PRSUMNO });
@@ -188,8 +189,10 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<SsbGetHpSd138Dto>()
             .HasNoKey();
             modelBuilder.Entity<DevBomDetailMailDto>()
-            .HasNoKey();                         
-                   
+            .HasNoKey();   
+            modelBuilder.Entity<SendDevBomDetailMailListDto>()
+            .HasNoKey(); 
+                                          
         }
     }
 }

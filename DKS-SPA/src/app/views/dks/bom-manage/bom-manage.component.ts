@@ -48,6 +48,7 @@ export class BomManageComponent implements OnInit {
   loginTeam: string[] = [];
   devbomStage: DevBomStage[] =[];
   devbomStage1:DevBomStage[]=[];
+  devTeamList = ['01', '02', '03', '04', '05', '06', '07', '12'];
 
   async ngOnInit() {
     this.utility.initUserRole(this.sDevBomFile);
@@ -61,8 +62,7 @@ export class BomManageComponent implements OnInit {
               this.loginTeam = res.map(
                 (devTeam: DevTeamByLoginDto) => devTeam.devTeamNo
               );
-              const devTeamList = ['01', '02', '03', '04', '05', '06', '07', '12'];
-              const isDevTeam = this.loginTeam.some(item => devTeamList.includes(item));
+              const isDevTeam = this.loginTeam.some(item => this.devTeamList.includes(item));
               console.log("this.loginTeam");
               console.log(this.loginTeam);
               if(isDevTeam){
@@ -287,7 +287,7 @@ export class BomManageComponent implements OnInit {
 
   //開窗 Start
   applyBtn(model: DevBomFileDetailDto) {
-    if (this.loginTeam.includes("99")) {
+    if (!this.loginTeam.some(item => this.devTeamList.includes(item))) {
       this.utility.alertify.error(`Normal User can not operate it !!`);
       return;
     }
@@ -306,7 +306,7 @@ export class BomManageComponent implements OnInit {
     this.copyToAddAModel(model);
   }
   uploadBtn(model: DevBomFileDetailDto) {
-    if (this.loginTeam.includes("99")) {
+    if (!this.loginTeam.some(item => this.devTeamList.includes(item))) {
       this.utility.alertify.error(`Normal User can not operate it !!`);
       return;
     }
@@ -326,7 +326,7 @@ export class BomManageComponent implements OnInit {
 
   downloadBtn(model: DevBomFileDetailDto) {
     let theKey2Download = false;
-    if (this.loginTeam.includes("99")) {
+    if (!this.loginTeam.some(item => this.devTeamList.includes(item))) {
       console.log("the user is belong team 99.");
       const gp = this.result.filter(
         (i) =>

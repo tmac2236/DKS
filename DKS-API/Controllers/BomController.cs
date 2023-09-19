@@ -201,10 +201,8 @@ namespace DKS_API.Controllers
 
             var mailInformation = await _dksDAO.GetDevBomDetailMailDto(factoryId, article, stage, ver);
             if (mailInformation.Count == 0) return Ok(model);
-            var toMails = new List<string>();
-            toMails.Add("stan.chen@ssbshoes.com");
-            toMails.Add("aven.yu@ssbshoes.com");
-            var subject = $"New BOM file has been applied";
+
+            var subject = $"[TEST] New BOM file has been applied";
 
             StringBuilder sb = new StringBuilder();
             sb.Append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\"><HTML><HEAD>");
@@ -250,9 +248,13 @@ namespace DKS_API.Controllers
             mail.From = new MailAddress(_config.GetSection("MailSettingServer:FromEmail").Value, _config.GetSection("MailSettingServer:FromName").Value);
             // Set the message body to HTML format
             mail.IsBodyHtml = true;
-            foreach (var item in toMails)
+            List<SendDevBomDetailMailListDto> stageMails = await _dksDAO.GetSendDevBomDetailMailListDto( stage );
+        
+            foreach (SendDevBomDetailMailListDto item in stageMails)
             {
-                mail.To.Add(item);
+                mail.To.Add(item.MailGroup);
+                mail.To.Add("stan.chen@ssbshoes.com");
+                mail.To.Add("aven.yu@ssbshoes.com");
             }
             mail.Subject = subject;
             mail.Body = content;
