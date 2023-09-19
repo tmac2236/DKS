@@ -154,7 +154,9 @@ export class BomManageComponent implements OnInit {
     if (!this.utility.checkIsNullorEmpty(this.code017)) return;
     await this.commonService.getBasicCodeDto("017").then(
       (res) => {
-        this.code017 = res;
+        this.code017 = res.filter(
+          (i) => i.param === "C"
+        );
       },
       (error) => {
         this.utility.alertify.confirm(
