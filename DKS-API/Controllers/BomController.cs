@@ -214,7 +214,7 @@ namespace DKS_API.Controllers
             sb.Append("</HEAD>");
             sb.Append("<body>");
             sb.Append("<table width='700' border='0' align='center' cellpadding='0' cellspacing='0' class='OutBorder' bgcolor='#CCCCCC'>");
-            sb.Append("<tr bgcolor='#003366'><td colspan='5'><strong><font color='#FFFFFF' size='4'>" + "New Bom file has been applied" + "，Detail：</font></strong></td></tr>");
+            sb.Append("<tr bgcolor='#003366'><td colspan='5'><strong><font color='#FFFFFF' size='4'>" + "[TEST]New Bom file has been applied" + "，Detail：</font></strong></td></tr>");
 
             sb.Append("<tr>");
             sb.Append("<td width='100%'>&nbsp;</td>");
@@ -252,9 +252,15 @@ namespace DKS_API.Controllers
         
             foreach (SendDevBomDetailMailListDto item in stageMails)
             {
-                mail.To.Add(item.MailGroup);
-                mail.To.Add("stan.chen@ssbshoes.com");
-                mail.To.Add("aven.yu@ssbshoes.com");
+                if(item.MailGroup.Contains(";")){
+                    var l = item.MailGroup.Split(";").ToList();
+                    foreach(string i in l){
+                        mail.To.Add(i);
+                    }
+                }else{
+                    mail.To.Add(item.MailGroup);
+                }
+
             }
             mail.Subject = subject;
             mail.Body = content;
