@@ -21,7 +21,7 @@ export class AuthGuard implements CanActivate {
       "Sweet Alert",
       "Please login in first ! System is going to redirect to DKS.",
       () => {
-        window.location.href ="http://10.4.0.39:8080/ArcareEng/login.jsp";
+        //window.location.href ="http://10.4.0.39:8080/ArcareEng/login.jsp";
       }
     );
     return false;

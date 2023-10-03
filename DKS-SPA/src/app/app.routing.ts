@@ -121,11 +121,7 @@ export const routes: Routes = [
   },
   {
     path: "BOM-Manage",
-    canActivate: [AuthGuardRole],
     component: BomManageComponent,
-    data: {
-      roles: [utilityConfig.RoleSysAdm],
-    },
   },  
   {
     path: "DTR-Login-History",

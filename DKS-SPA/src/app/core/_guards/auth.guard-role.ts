@@ -30,7 +30,7 @@ export class AuthGuardRole implements CanActivate {
       "Sweet Alert",
       "This account didn't have the auth ! System is going to redirect to DKS.",
       () => {
-        window.location.href ="http://10.4.0.39:8080/ArcareEng/login.jsp";
+        //window.location.href ="http://10.4.0.39:8080/ArcareEng/login.jsp";
       }
     );
     //this.router.navigate([""]); // redirect to login in
