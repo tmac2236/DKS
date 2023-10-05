@@ -42,7 +42,7 @@ export class Utility {
       "Are you sure you want to log out? System is going to redirect to DKS.",
       () => {
         localStorage.removeItem("token");
-        window.location.href ="http://10.4.0.39:6970/#/";
+        window.location.href = `${environment.spaUrl}/#/`;
       }
     );
   }
