@@ -31,6 +31,7 @@ import { P500Component } from "./views/error/500.component";
 import { HomePageComponent } from "./views/home-page/home-page.component";
 import { PictureComponent } from "./views/picture/picture.component";
 import { BomManageComponent } from "./views/dks/bom-manage/bom-manage.component";
+import { F203CopyComponent } from "./views/dks/F203/F203-copy/F203-copy.component";
 
 export const routes: Routes = [
   {
@@ -158,7 +159,11 @@ export const routes: Routes = [
   {
     path:"Maintain-RFID",
     component:MaintainRfidComponent,
-  },  
+  },
+  {
+    path: "F203-Copy",
+    component: F203CopyComponent,
+  },    
   {
     path: "",
     component: DefaultLayoutComponent,

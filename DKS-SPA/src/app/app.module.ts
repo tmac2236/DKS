@@ -81,6 +81,7 @@ import { F406IComponent } from "./views/dks/F406I/F406I.component";
 import { DtrF206BomComponent } from "./views/dks/dtr-f206-bom/dtr-f206-bom.component";
 import { MaintainRfidComponent } from "./views/dks/rfid/maintain-rfid/maintain-rfid.component";
 import { BomManageComponent } from "./views/dks/bom-manage/bom-manage.component";
+import { F203CopyComponent } from "./views/dks/F203/F203-copy/F203-copy.component";
 
 //載入 "/assets/i18n/[lang].json" 語系檔
 export function createTranslateLoader(http: HttpClient) {
@@ -147,7 +148,8 @@ export function createTranslateLoader(http: HttpClient) {
     F406IComponent,
     DtrF206BomComponent,
     MaintainRfidComponent,
-    BomManageComponent
+    BomManageComponent,
+    F203CopyComponent
   ],
   providers: [
     AuthService,

@@ -49,7 +49,10 @@ export class BomManageComponent implements OnInit {
   devbomStage: DevBomStage[] =[];
   devbomStage1:DevBomStage[]=[];
   devTeamList = ['01', '02', '03', '04', '05', '06', '07', '12'];
-
+  modeList: { id: number, name: string, code: string }[] = [
+    { "id": 1, "name": "Model No","code":"Model" },
+    { "id": 2, "name": "Article","code":"Article" }]; 
+  mode:string = "Article";
   async ngOnInit() {
     this.utility.initUserRole(this.sDevBomFile);
     await this.getDevBomStage();

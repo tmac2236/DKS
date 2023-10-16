@@ -13,6 +13,7 @@ import { SDevBomFile } from "../_models/s-dev-bom-file";
 import { DevBomFile } from "../_models/dev-bom-file";
 import { DevBomFileDetailDto } from "../_models/dev-bom-file-detail-dto";
 import { DevTeamByLoginDto } from "../_models/dev-team-by-login-dto";
+import { SrfArticleDto } from "../_models/srf-article-dto";
 
 @Injectable({
   providedIn: "root",
@@ -266,5 +267,16 @@ export class DksService {
     return this.utility.http.get<object[]>(
       this.utility.baseUrl + "bom/checkHPSD138?article=" + article +"&ecrNo=" + ecrNo
     ).toPromise();
-  }  
+  }
+  getSrfArticleDto(srfId: string) {
+    return this.utility.http.get<SrfArticleDto[]>(
+      this.utility.baseUrl + "bom/getSrfArticleDto?srfId=" + srfId 
+    );
+  }
+  copySrf(f: FormData) {
+    return this.utility.http.post<string>(
+      this.utility.baseUrl + "bom/copySrf",
+      f
+    );
+  }       
 }

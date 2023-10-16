@@ -20,6 +20,8 @@ using System.Text;
 using System.IO;
 using System.Reflection;
 using Aspose.Cells;
+using Newtonsoft.Json.Linq;
+using System.Text.Json;
 
 namespace DKS_API.Controllers
 {
@@ -30,10 +32,14 @@ namespace DKS_API.Controllers
         private readonly IFileService _fileService;
         private readonly IDevBomFileDAO _devBomFileDAO;
         private readonly IDevBomStageDAO _devBomStageDAO;
+        private readonly ISrfArtiBDAO _srfArtiBDAO;
+        private readonly ISrfhDAO _srfhDAO;
+        private readonly ISrfSizeBDAO _srfSizeBDAO;
         private readonly IDKSDAO _dksDAO;
 
         public BomController(IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<WareHouseController> logger,
-             IDevBomFileDAO devBomFileDAO, IDKSDAO dksDAO, IDevBomStageDAO devBomStageDAO,
+             IDevBomFileDAO devBomFileDAO, IDKSDAO dksDAO, IDevBomStageDAO devBomStageDAO, ISrfArtiBDAO srfArtiBDAO,
+             ISrfhDAO srfhDAO, ISrfSizeBDAO srfSizeBDAO,
              IExcelService excelService, ISendMailService sendMailService, IFileService fileService)
         : base(config, webHostEnvironment, logger)
         {
@@ -43,7 +49,9 @@ namespace DKS_API.Controllers
             _devBomFileDAO = devBomFileDAO;
             _devBomStageDAO = devBomStageDAO;
             _dksDAO = dksDAO;
-
+            _srfArtiBDAO = srfArtiBDAO;
+            _srfhDAO = srfhDAO;
+            _srfSizeBDAO = srfSizeBDAO;
         }
         [HttpGet("getDevBomFileDetailDto")]
         public async Task<IActionResult> GetDevBomFileDetailDto([FromQuery] SDevBomFile sDevBomFile)
@@ -429,7 +437,59 @@ namespace DKS_API.Controllers
             return File(result, "application/xlsx");
 
         }
+        [HttpGet("getSrfArticleDto")]
+        public  IActionResult GetSrfArticleDto(string srfId)
+        {
+            _logger.LogInformation(String.Format(@"****** BomController GetSrfArticleDto fired!! ******"));
+            var d =  _srfhDAO.GetSrfArticleDto(srfId)  ;
+            return Ok(d);
+        }        
+        [HttpPost("copySrf")]
+        public async Task<IActionResult> CopySrf()
+        {
+            _logger.LogInformation(String.Format(@"******BomController CopySrf fired!! ******"));
+            var f1 = HttpContext.Request.Form["f1"].ToString();
+            var f2 = HttpContext.Request.Form["f2"].ToString();
 
+            var j1 = Newtonsoft.Json.JsonConvert.DeserializeObject<JObject>(f1);
+            var j2 = Newtonsoft.Json.JsonConvert.DeserializeObject<List<SrfArticleDto>>(f2);
+                string srfIdF =j1.Value<string>("srfIdF");
+                string srfIdT =j1.Value<string>("srfIdT");
+                string stageT =j1.Value<string>("stageT");
+            
+            Srfh check = _srfhDAO.FindSingle( x => x.SRFID == srfIdT);
+            if( check != null) return Ok("SRFID is duplicate in System, please change a new Id.");
+            Srfh dbF = _srfhDAO.FindSingle( x => x.SRFID == srfIdF);
+            if( dbF != null){
+                string jsonStr = JsonSerializer.Serialize(dbF);
+                Srfh toAdd = JsonSerializer.Deserialize<Srfh>(jsonStr);
+
+                string last = _srfhDAO.FindAll().OrderByDescending(x => x.PKSRFBID).Take(1).Select(x => x.PKSRFBID).ToList().FirstOrDefault();              
+                int number = last.Replace("CAH","").ToInt();
+                number += 1;
+                toAdd.PKSRFBID = String.Format("{0:CAH000000000}",number);
+
+                toAdd.SRFID = srfIdT;
+                toAdd.SAMPURSRF = stageT;
+                toAdd.INSERDATE = DateTime.Now;
+                toAdd.MDUSERID = 0;
+                toAdd.CHANGDATE = null;
+                _srfhDAO.Add(toAdd);
+
+                List<SrfSizeB>sizes = _srfSizeBDAO.FindAll(x=>x.SRFID == srfIdF).AsNoTracking().ToList();
+                foreach(SrfSizeB s in sizes){
+                    s.SRFID = srfIdT;
+                    _srfSizeBDAO.Add(s);
+                }
+                List<SrfArtiB> artiles = _srfArtiBDAO.FindAll(x=>x.SRFID == srfIdF).AsNoTracking().ToList();
+                foreach(SrfArtiB a in artiles){
+                    a.SRFID = srfIdT;
+                    _srfArtiBDAO.Add(a);
+                }                
+            }
+            await _srfhDAO.SaveAll();
+            return Ok();
+        }
 
     }
 

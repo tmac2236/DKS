@@ -41,6 +41,9 @@ namespace DKS_API.Data.Repository
         public DbSet<DevGateLogDataLog> DEV_GATE_LOGDATA_LOG { get; set; }
         public DbSet<DevBomFile> DEV_BOM_FILE { get; set; }
         public DbSet<DevBomStage> DEV_BOM_STAGE { get; set; }
+        public DbSet<Srfh> SRFH { get; set; }
+        public DbSet<SrfArtiB> SRFARTIB { get; set; }
+        public DbSet<SrfSizeB> SRFSIZEB { get; set; }
 
         //DTO(Stored Procedure)
         public DbSet<F418_F420Dto> GetF420F418View { get; set; }
@@ -82,6 +85,8 @@ namespace DKS_API.Data.Repository
         public DbSet<SsbGetHpSd138Dto> GetSsbGetHpSd138Dto { get; set; }
         public DbSet<DevBomDetailMailDto> GetDevBomDetailMailDto { get; set; }
         public DbSet<SendDevBomDetailMailListDto> SendDevBomDetailMailListDto { get; set; }
+        public DbSet<SrfArticleDto> SrfArticleDto { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Ordsumoh>().HasKey(x => new { x.PRSUMNO });
@@ -114,6 +119,9 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<DevGateLogDataLog>().HasKey(x => new { x.SEQ });
             modelBuilder.Entity<DevBomFile>().HasKey(x => new { x.FACTORY,x.ARTICLE, x.STAGE,x.SORT });
             modelBuilder.Entity<DevBomStage>().HasKey(x => new { x.FACTORY, x.STAGE });
+            modelBuilder.Entity<Srfh>().HasKey(x => new { x.PKSRFBID });
+            modelBuilder.Entity<SrfArtiB>().HasKey(x => new { x.ARTICLE,x.SRFID });
+            modelBuilder.Entity<SrfSizeB>().HasKey(x => new { x.SHOESIZE,x.SRFID });
 
             //DTO(Stored Procedure)
             modelBuilder.Entity<F418_F420Dto>()
@@ -192,7 +200,9 @@ namespace DKS_API.Data.Repository
             .HasNoKey();   
             modelBuilder.Entity<SendDevBomDetailMailListDto>()
             .HasNoKey(); 
-                                          
+            modelBuilder.Entity<SrfArticleDto>()
+            .HasNoKey(); 
+                                  
         }
     }
 }
