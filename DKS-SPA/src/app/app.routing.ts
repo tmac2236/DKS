@@ -75,7 +75,7 @@ export const routes: Routes = [
     canActivate: [AuthGuardRole],
     component: F340PpdComponent,
     data: {
-      roles: [utilityConfig.RolePpdPic, utilityConfig.RolePpdLook],
+      roles: [utilityConfig.RolePpdPic, utilityConfig.RolePpdLook,utilityConfig.RoleSysAdm],
     },
   },
   {
@@ -105,7 +105,7 @@ export const routes: Routes = [
     canActivate: [AuthGuardRole],
     component: DtrFgtResultReportComponent,
     data: {
-      roles: [utilityConfig.RoleFgtLabReport,utilityConfig.DtrQcSup],
+      roles: [utilityConfig.RoleFgtLabReport,utilityConfig.DtrQcSup,utilityConfig.RoleSysAdm],
     },
   },
   {
@@ -137,7 +137,7 @@ export const routes: Routes = [
     canActivate: [AuthGuardRole],
     component: PlmPartComponent, 
     data: {
-      roles: [utilityConfig.PlmUpload],
+      roles: [utilityConfig.PlmUpload,utilityConfig.RoleSysAdm],
     },
   },
   {
@@ -162,7 +162,11 @@ export const routes: Routes = [
   },
   {
     path: "F203-Copy",
+    canActivate: [AuthGuardRole],
     component: F203CopyComponent,
+    data: {
+      roles: [utilityConfig.RoleSysAdm],
+    },
   },    
   {
     path: "",
