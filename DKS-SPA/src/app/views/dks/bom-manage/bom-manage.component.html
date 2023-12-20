@@ -104,6 +104,8 @@
                         <th>Model Name</th>
                         <th>Article</th>
 
+                        <th>DropDate</th>
+
                         <th>Stage</th>
                         <th>ACT Date</th>
                         <th>CWA DeadLine</th>
@@ -137,6 +139,8 @@
                           <td>{{ item.modelNo }}</td>
                           <td>{{ item.modelName }}</td>
                           <td>{{ item.article }}</td>
+
+                          <td>{{ item.dropDate }}</td>
 
                           <td>{{ item.stage }}</td>
                           <td>{{ item.actDate }}</td>
@@ -270,8 +274,8 @@
       <div class="row">
         <div class="col-12">
           <div class="form-inline">
-            <!--<label class="col-form-label mr-4" style="font-size: 26px;">Model : {{addAModel.modelNo}}</label>-->
-            <label class="col-form-label mr-4" style="font-size: 26px;">Article : {{addAModel.article}}</label>
+            <label class="col-form-label mr-4" style="font-size: 26px;">Model : {{addAModel.modelNo}}</label>
+            <label class="col-form-label mr-4" style="font-size: 26px;">Article : {{addAModel.articleList}}({{addAModel.article}})</label>
             <label class="col-form-label mr-4" style="font-size: 26px;">Ver# : {{addAModel.ver}}</label>                 
           </div>
         </div>
@@ -336,6 +340,24 @@
             ></textarea>
           </div>
       </div>
+      <div *ngIf="errorMsg != ''" class="row">
+        <div class="col-12">
+          <div class="form-group">
+            <span style="font-size: 26px;color:red;">Warning:</span>
+            <textarea
+              style="font-size: 26px;"
+              class="form-control"
+              name="noticeComment"
+              rows="4"
+              maxlength="600"
+              [hidden]="errorMsg === ''"
+              [(ngModel)]="errorMsg"
+              [readOnly]="true"
+            ></textarea>
+
+          </div>
+        </div>       
+      </div>      
       <div class="row">
         <div class="col-8">
         </div>
@@ -403,7 +425,8 @@
           <div class="form-inline">
             <label *ngIf="addAModel.pdmApply === 'Y'" class="col-form-label mr-4" style="font-size: 26px;">ECR# : {{addAModel.ecrno}}</label>
             <!--<label class="col-form-label mr-4" style="font-size: 26px;">Model : {{addAModel.modelNo}}</label>-->
-            <label class="col-form-label mr-4" style="font-size: 26px;">Article : {{addAModel.article}}</label>
+            <label class="col-form-label mr-4" style="font-size: 26px;">Model# : {{addAModel.modelNo}}</label>
+            <label class="col-form-label mr-4" style="font-size: 26px;">Article : {{addAModel.articleList}}({{addAModel.article}})</label>
             <label class="col-form-label mr-4" style="font-size: 26px;">Stage : {{addAModel.stage}}</label> 
             <label class="col-form-label mr-4" style="font-size: 26px;">Ver# : {{addAModel.ver}}</label>  
             <label class="col-form-label mr-4" style="font-size: 26px;">BOM : {{addAModel.fileName}}</label>                   
@@ -428,8 +451,7 @@
 
           </div>
         </div>
-      </div> 
-    </div>
+      </div>
   </div>
 </div>
 </div>
@@ -464,7 +486,8 @@
         <div class="col-12">
           <div class="form-inline">
             <label *ngIf="addAModel.pdmApply === 'Y'" class="col-form-label" style="font-size: 26px;">ECR# : {{addAModel.ecrno}}</label>
-            <label class="col-form-label mr-4" style="font-size: 26px;">Article : {{addAModel.article}}</label>
+            <label class="col-form-label mr-4" style="font-size: 26px;">Model# : {{addAModel.modelNo}}</label>
+            <label class="col-form-label mr-4" style="font-size: 26px;">Article : {{addAModel.articleList}}({{addAModel.article}})</label>
             <label class="col-form-label mr-4" style="font-size: 26px;">Stage : {{addAModel.stage}}</label> 
             <label class="col-form-label mr-4" style="font-size: 26px;">Ver# : {{addAModel.ver}}</label>  
             <label class="col-form-label mr-4" style="font-size: 26px;">BOM : {{addAModel.fileName}}</label>                   
@@ -510,12 +533,15 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-8">
+        <div class="col-6">
         </div>
         <div class="col-2 mt-4">
+                    <!-- 2023/12/16 cancel override file
           <span >{{bufferFile?.name || "Click + to Override File"}}</span>
+                    -->
         </div>
-        <div class="col-2">
+        <div class="col-4">
+          <!-- 2023/12/16 cancel override file
           <label
           class="btn btn-primary btn-lg mt-3 mr-4"
           for="pdfUploadInAdd"
@@ -529,7 +555,16 @@
           style="display: none"
           (click)="this.utility.reset($event)"
           (change)="handleFileInput($event.target.files,0)"
-          />            
+          /> 
+          -->
+          <button
+            type="button"
+            [hidden]="false"
+            class="btn btn-primary btn-lg mt-2"
+            (click)="returnBom()"
+          >
+          Return
+          </button>                     
           <button
             type="button"
             [hidden]="false"

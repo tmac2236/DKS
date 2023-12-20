@@ -32,6 +32,9 @@ namespace DKS.API.Models.DKS
     public string CwaDeadLine { get; set; }
     public string PdmApply { get; set; }
     public string EcrNo { get; set; }
-
+    public string ArticleList { get; set; }
+    public string DropDate { get; set; }
+    
+    
     }
 }

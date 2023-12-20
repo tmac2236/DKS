@@ -1,3 +1,4 @@
+using Aspose.Cells;
 using DFPS.API.Data.Repository;
 using DKS.API.Models.DKS;
 using DKS_API.Controllers;
@@ -79,7 +80,31 @@ namespace DFPS.API.Controllers
             }
             return Ok(content);
         }
-
+        [AllowAnonymous]
+        [HttpGet("detectPigLeg")]
+        public IActionResult DetectPigLeg()
+        {
+            string cYear = DateTime.Now.ToString("yyyy");
+            string cMonth = DateTime.Now.ToString("MM");
+            string filePath = string.Format(@"\\10.4.0.8\Apply_Form\General Affair-new\菜譜與圖書\{0}.{1}月菜單.xls",cYear,cMonth);
+            Workbook workbook = new Workbook(filePath);
+            foreach (Worksheet worksheet in workbook.Worksheets)
+            {
+                // 在这里处理每个工作表，例如获取单元格值
+                Cells cells = worksheet.Cells;
+                for (int row = 0; row < cells.MaxDataRow + 1; row++)
+                {
+                    for (int col = 0; col < cells.MaxDataColumn + 1; col++)
+                    {
+                        Cell cell = cells[row, col];
+                        string cellValue = cell.StringValue;
+                        Console.WriteLine($"工作表：{worksheet.Name}，行：{row}，列：{col}，值：{cellValue}");
+                    }
+                }
+            }
+            workbook.Dispose();
+            return Ok();
+        }
 
     }
 }

@@ -27,5 +27,6 @@ export class DevBomFileDetailDto implements ModelInterface{
      cwaDeadLine: string;
      pdmApply: string;
      ecrNo: string;
-
+     articleList: string;
+     dropDate: string;
 }

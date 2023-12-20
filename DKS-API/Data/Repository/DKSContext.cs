@@ -86,6 +86,7 @@ namespace DKS_API.Data.Repository
         public DbSet<DevBomDetailMailDto> GetDevBomDetailMailDto { get; set; }
         public DbSet<SendDevBomDetailMailListDto> SendDevBomDetailMailListDto { get; set; }
         public DbSet<SrfArticleDto> SrfArticleDto { get; set; }
+        public DbSet<OneStringDto> OneStringDto { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -201,7 +202,9 @@ namespace DKS_API.Data.Repository
             modelBuilder.Entity<SendDevBomDetailMailListDto>()
             .HasNoKey(); 
             modelBuilder.Entity<SrfArticleDto>()
-            .HasNoKey(); 
+            .HasNoKey();
+            modelBuilder.Entity<OneStringDto>()
+            .HasNoKey();              
                                   
         }
     }

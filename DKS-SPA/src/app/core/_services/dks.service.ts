@@ -278,5 +278,11 @@ export class DksService {
       this.utility.baseUrl + "bom/copySrf",
       f
     );
-  }       
+  }
+  returnBom(f: FormData) {
+    return this.utility.http.post<string>(
+      this.utility.baseUrl + "bom/returnBom",
+      f
+    );
+  } 
 }

@@ -53,6 +53,8 @@ export class BomManageComponent implements OnInit {
     { "id": 1, "name": "Model No","code":"Model" },
     { "id": 2, "name": "Article","code":"Article" }]; 
   mode:string = "Article";
+  errorMsg:string = "";
+
   async ngOnInit() {
     this.utility.initUserRole(this.sDevBomFile);
     await this.getDevBomStage();
@@ -90,7 +92,10 @@ export class BomManageComponent implements OnInit {
     if (type == "Modal4") this.Modal4.show();
   }
   closeModal(type: string) {
-    if (type == "Modal1") this.Modal1.hide();
+    if (type == "Modal1"){
+      this.Modal1.hide();
+      this.errorMsg ="";
+    } 
     if (type == "Modal2") this.Modal2.hide();
     if (type == "Modal3") this.Modal3.hide();
     if (type == "Modal4") this.Modal4.hide();
@@ -188,6 +193,37 @@ export class BomManageComponent implements OnInit {
     }
     if(num == 0){
       this.bufferFile = files.item(0);
+      //get ArticleList
+      var formData = new FormData();
+      formData.append("file", this.bufferFile);   
+      formData.append("modelNo", this.addAModel.modelNo);
+      formData.append("article", this.addAModel.article);
+      formData.append("factoryId", this.addAModel.factory);
+      const url =this.utility.baseUrl +"bom/getArticleList";
+      this.http
+      .post(url, formData, { responseType: "text" })
+      .pipe(timeout(utilityConfig.httpTimeOut))
+      .subscribe((result: string) => {
+        if(result.includes('Error')){
+          this.bufferFile = null;
+          this.errorMsg = result;        
+        }else if(result.includes('Alert')){
+          let strArray = result.split(',');
+          this.errorMsg = `These article didn't exist in F205, won't upload to systme! Article: ${strArray[1]} .`;;
+          this.addAModel.articleList = strArray[2];
+        }else{
+          if(result.includes(this.addAModel.article)){
+            this.addAModel.articleList = result;
+          }else{
+            this.utility.alertify.error("The article isn't exist in the File !!!!");  
+          }
+
+        }
+
+      },
+      (error) => {
+        this.utility.alertify.error("The Excel get Article Error !!!!");
+      });           
     }else if (num == 1){
       this.bufferFile1= files.item(0);
     }else if (num == 2){
@@ -211,7 +247,10 @@ export class BomManageComponent implements OnInit {
     }
    }
 
-   if(this.addAModel)
+    if (this.addAModel.articleList.length < 1) {
+      this.utility.alertify.error("This file don't have any Atricle List，Please check Cell B4 !!!!");
+      return;
+    }
     if (!this.bufferFile) {
       this.utility.alertify.error("Please upload a bom file file !!!!");
       return;
@@ -225,6 +264,7 @@ export class BomManageComponent implements OnInit {
     formData.append("modelName", this.addAModel.modelName);
 
     formData.append("article", this.addAModel.article);
+    formData.append("articleList", this.addAModel.articleList);
     formData.append("stage", this.addAModel.stage);
     formData.append("ver", this.addAModel.ver.toString());
     formData.append("remark", this.addAModel.remark);
@@ -269,7 +309,7 @@ export class BomManageComponent implements OnInit {
         formData.append("stage", this.addAModel.stage);
         formData.append("modelName", this.addAModel.modelName);
         formData.append("modelNo", this.addAModel.modelNo);
-        formData.append("file", this.bufferFile);
+        // 2023/12/16 cancel override file formData.append("file", this.bufferFile);
 
         formData.append("sort", this.addAModel.sort.toString());
         this.utility.spinner.show();
@@ -382,6 +422,7 @@ export class BomManageComponent implements OnInit {
     this.addAModel.ecrno = model.ecrNo;
     this.addAModel.pdmApply = model.pdmApply;
     this.addAModel.sort = model.sort;
+    this.addAModel.articleList = model.articleList;
     //this.addAModel.remark = model.remark;
     //this.addAModel.apply = model.apply;
     //this.addAModel.upUsr = this.sDevBomFile.loginUser;
@@ -515,6 +556,35 @@ export class BomManageComponent implements OnInit {
         link.click();
         this.utility.spinner.hide();
       });     
+  }
+  returnBom(){
+    this.utility.alertify.confirm(
+      "Sweet Alert",
+      "Are you sure you want to return the BOM",
+      () => {
+        var formData = new FormData();
+        formData.append("factoryId", this.addAModel.factory);
+        formData.append("modelNo", this.addAModel.modelNo);
+        formData.append("articleList", this.addAModel.articleList);
+        formData.append("stage", this.addAModel.stage);
+        formData.append("sort", this.addAModel.sort.toString());
+        formData.append("fileName", this.addAModel.fileName);
+        
+    
+        this.utility.spinner.show();
+        this.dksService.returnBom(formData).subscribe(
+          (res) => {
+            this.utility.spinner.hide();
+            this.utility.alertify.success("Return success!");
+          },
+          (error) => {
+            this.utility.spinner.hide();
+            this.utility.alertify.error(error.replace(/{|}/g, ''));
+          }
+        );
+      }
+    );
+
   }
 
 }

@@ -22,6 +22,7 @@ namespace DKS_API.DTOs
         public string PdmApply { get; set; }
         public string PdmUpusr { get; set; }
         public string PdmUpday { get; set; }
-
+        
+        public string ArticleList { get; set; }
     }
 }

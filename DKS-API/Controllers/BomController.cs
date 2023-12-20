@@ -36,10 +36,11 @@ namespace DKS_API.Controllers
         private readonly ISrfhDAO _srfhDAO;
         private readonly ISrfSizeBDAO _srfSizeBDAO;
         private readonly IDKSDAO _dksDAO;
+        private readonly IArticledDAO _articledDAO;
 
         public BomController(IConfiguration config, IWebHostEnvironment webHostEnvironment, ILogger<WareHouseController> logger,
              IDevBomFileDAO devBomFileDAO, IDKSDAO dksDAO, IDevBomStageDAO devBomStageDAO, ISrfArtiBDAO srfArtiBDAO,
-             ISrfhDAO srfhDAO, ISrfSizeBDAO srfSizeBDAO,
+             ISrfhDAO srfhDAO, ISrfSizeBDAO srfSizeBDAO, IArticledDAO articledDAO,
              IExcelService excelService, ISendMailService sendMailService, IFileService fileService)
         : base(config, webHostEnvironment, logger)
         {
@@ -52,6 +53,7 @@ namespace DKS_API.Controllers
             _srfArtiBDAO = srfArtiBDAO;
             _srfhDAO = srfhDAO;
             _srfSizeBDAO = srfSizeBDAO;
+            _articledDAO = articledDAO;
         }
         [HttpGet("getDevBomFileDetailDto")]
         public async Task<IActionResult> GetDevBomFileDetailDto([FromQuery] SDevBomFile sDevBomFile)
@@ -96,65 +98,73 @@ namespace DKS_API.Controllers
             }
 
             // FactoryId + Season + Article + Id .pdf
-            var fileName = string.Format("{0}-{1}-V{2}-{3}-{4}-{5}.xlsx", uploadDevBomFileDto.Season, uploadDevBomFileDto.Stage, model.VER, uploadDevBomFileDto.ModelName, uploadDevBomFileDto.ModelNo, uploadDevBomFileDto.Article);
+            var fileName = string.Format("{0}-{1}-V{2}.0-{3}-{4}-{5}.xlsx", 
+            uploadDevBomFileDto.Season, uploadDevBomFileDto.Stage, model.VER, uploadDevBomFileDto.ModelName, uploadDevBomFileDto.ModelNo, 
+            uploadDevBomFileDto.ArticleList.Replace(" ", ""));
+            List<string> articles = uploadDevBomFileDto.ArticleList.Replace(" ", "").Split(";").ToList();
 
-            // save file to server
-            List<string> nastFileName = new List<string>();
-            nastFileName.Add("ArticleBoms");
-            nastFileName.Add(uploadDevBomFileDto.Season);
-            nastFileName.Add(uploadDevBomFileDto.Article);
-            nastFileName.Add(fileName);
-
-
-            if (uploadDevBomFileDto.File.Length > 0)       //save to server
+            if (uploadDevBomFileDto.File.Length > 0 && articles.Count > 0 )       //save to server
             {
-                if (await _fileService.SaveFiletoServer(uploadDevBomFileDto.File, "F340PpdPic", nastFileName))
-                {
-                    _logger.LogInformation(String.Format(@"******BOMController AddBOMfile Add a xlsx: {0}!! ******", fileName));
-                    //save to DAO
-                    model.FACTORY = uploadDevBomFileDto.FactoryId;
-                    model.DEVTEAMID = uploadDevBomFileDto.Team;
-                    model.SEASON = uploadDevBomFileDto.Season;
-                    model.MODELNO = uploadDevBomFileDto.ModelNo;
-                    model.MODELNAME = uploadDevBomFileDto.ModelName;
-                    model.ARTICLE = uploadDevBomFileDto.Article;
+                foreach(string oneArticle in articles){
+                   // save file to server
+                    List<string> nastFileName = new List<string>();
+                    nastFileName.Add("ArticleBoms");
+                    nastFileName.Add(uploadDevBomFileDto.Season);
+                    nastFileName.Add(oneArticle);
+                    nastFileName.Add(fileName);
 
-                    model.STAGE = uploadDevBomFileDto.Stage;
-                    model.FILENAME = fileName;
-                    if (String.IsNullOrEmpty(uploadDevBomFileDto.Ecrno))
+                    if (await _fileService.SaveFiletoServer(uploadDevBomFileDto.File, "F340PpdPic", nastFileName))
                     {
-                        model.ECRNO = "";
-                    }
-                    else
-                    {
-                        model.ECRNO = uploadDevBomFileDto.Ecrno;
-                    }
+                        _logger.LogInformation(String.Format(@"******BOMController AddBOMfile Add a xlsx: {0}!! ******", fileName));
+                        
+                        //save to DAO (存N次)
+                        model.FACTORY = uploadDevBomFileDto.FactoryId;
+                        model.DEVTEAMID = uploadDevBomFileDto.Team;
+                        model.SEASON = uploadDevBomFileDto.Season;
+                        model.MODELNO = uploadDevBomFileDto.ModelNo;
+                        model.MODELNAME = uploadDevBomFileDto.ModelName;
+                        model.ARTICLE = oneArticle;
+                        model.ARTICLE_LIST = uploadDevBomFileDto.ArticleList.Replace(" ", "");
 
-                    model.PDM_APPLY = "N";
+                        model.STAGE = uploadDevBomFileDto.Stage;
+                        model.FILENAME = fileName;
+                        if (String.IsNullOrEmpty(uploadDevBomFileDto.Ecrno))
+                        {
+                            model.ECRNO = "";
+                        }
+                        else
+                        {
+                            model.ECRNO = uploadDevBomFileDto.Ecrno;
+                        }
 
-                    //Sort
-                    DevBomStage mds = _devBomStageDAO.FindSingle(
-                                 x => x.FACTORY == uploadDevBomFileDto.FactoryId &&
-                                 x.STAGE == uploadDevBomFileDto.Stage);
-                    if (mds != null)
-                    {
-                        model.SORT = (short)(mds.SORT * 100);
-                        model.SORT += model.VER;
-                    }
-                    if (String.IsNullOrEmpty(uploadDevBomFileDto.Remark))
-                    {
-                        model.REMARK = "";
-                    }
-                    else
-                    {
-                        model.REMARK = uploadDevBomFileDto.Remark.Trim();
-                    }
-                    model.APPLY = "N";
-                    model.UPUSR = uploadDevBomFileDto.UpdateUser;
-                    model.UPDAY = DateTime.Now;
-                    _devBomFileDAO.Add(model);
-                    await _devBomFileDAO.SaveAll();
+                        model.PDM_APPLY = "N";
+
+                        //Sort
+                        DevBomStage mds = _devBomStageDAO.FindSingle(
+                                    x => x.FACTORY == uploadDevBomFileDto.FactoryId &&
+                                    x.STAGE == uploadDevBomFileDto.Stage);
+                        if (mds != null)
+                        {
+                            model.SORT = (short)(mds.SORT * 100);
+                            model.SORT += model.VER;
+                        }
+                        if (String.IsNullOrEmpty(uploadDevBomFileDto.Remark))
+                        {
+                            model.REMARK = "";
+                        }
+                        else
+                        {
+                            model.REMARK = uploadDevBomFileDto.Remark.Trim();
+                        }
+                        model.APPLY = "N";
+                        model.UPUSR = uploadDevBomFileDto.UpdateUser;
+                        model.UPDAY = DateTime.Now;
+                        _devBomFileDAO.Add(model);
+                        await _devBomFileDAO.SaveAll();
+                    }                    
                 }
+
+ 
             }
 
             return Ok(model);
@@ -163,7 +173,7 @@ namespace DKS_API.Controllers
         public async Task<IActionResult> ApplyBOMfile()
         {
 
-            _logger.LogInformation(String.Format(@"******DTRController ApplyBOMfile fired!! ******"));
+            _logger.LogInformation(String.Format(@"******BOMController ApplyBOMfile fired!! ******"));
             var factoryId = HttpContext.Request.Form["factoryId"].ToString().Trim();
             var article = HttpContext.Request.Form["article"].ToString().Trim();
             var ver = HttpContext.Request.Form["ver"].ToShort();
@@ -175,6 +185,7 @@ namespace DKS_API.Controllers
             var stage = HttpContext.Request.Form["stage"].ToString().Trim();
             var modelName = HttpContext.Request.Form["modelName"].ToString().Trim();
             var modelNo = HttpContext.Request.Form["modelNo"].ToString().Trim();
+            /*2023/12/16 cancel override file
             IFormFile iFile = HttpContext.Request.Form.Files["file"];
 
             if (iFile != null)       //save to server
@@ -192,7 +203,7 @@ namespace DKS_API.Controllers
                     _logger.LogInformation(String.Format(@"******BOMController ApplyBOMfile Override a xlsx: {0}!! ******", fileName));
                 }
             }
-
+            */
 
             DevBomFile model = _devBomFileDAO.FindSingle(
                                  x => x.ARTICLE == article &&
@@ -256,16 +267,20 @@ namespace DKS_API.Controllers
             mail.From = new MailAddress(_config.GetSection("MailSettingServer:FromEmail").Value, _config.GetSection("MailSettingServer:FromName").Value);
             // Set the message body to HTML format
             mail.IsBodyHtml = true;
-            List<SendDevBomDetailMailListDto> stageMails = await _dksDAO.GetSendDevBomDetailMailListDto( stage );
-        
+            List<SendDevBomDetailMailListDto> stageMails = await _dksDAO.GetSendDevBomDetailMailListDto(stage);
+
             foreach (SendDevBomDetailMailListDto item in stageMails)
             {
-                if(item.MailGroup.Contains(";")){
+                if (item.MailGroup.Contains(";"))
+                {
                     var l = item.MailGroup.Split(";").ToList();
-                    foreach(string i in l){
+                    foreach (string i in l)
+                    {
                         mail.To.Add(i);
                     }
-                }else{
+                }
+                else
+                {
                     mail.To.Add(item.MailGroup);
                 }
 
@@ -309,7 +324,7 @@ namespace DKS_API.Controllers
         [HttpGet("checkHPSD138")]
         public async Task<IActionResult> CheckHPSD138(string article, string ecrNo)
         {
-            _logger.LogInformation(String.Format(@"****** CommonController CheckHPSD138 fired!! ******"));
+            _logger.LogInformation(String.Format(@"****** BOMController CheckHPSD138 fired!! ******"));
             var data = await _dksDAO.GetSsbGetHpSd138Dto(ecrNo);
             if (data.Count > 0)
             {
@@ -402,7 +417,7 @@ namespace DKS_API.Controllers
                 var newWSName = "Result";
                 if (workbook1.Worksheets.Cast<Worksheet>().Any(sheet => sheet.Name == newWSName))
                 {
-                    workbook1.Worksheets.RemoveAt(newWSName); 
+                    workbook1.Worksheets.RemoveAt(newWSName);
                 }
                 int newWorksheetIndex = workbook1.Worksheets.Add(); // Add a new worksheet
                 Worksheet newWorksheet = workbook1.Worksheets[newWorksheetIndex];
@@ -411,7 +426,7 @@ namespace DKS_API.Controllers
                 newWorksheet.Cells["A1"].PutValue("Cell");
                 newWorksheet.Cells["B1"].PutValue("New Value");
                 newWorksheet.Cells["C1"].PutValue("Old Value");
-                
+
                 newWorksheet.Cells.SetColumnWidthPixel(0, 40);
                 newWorksheet.Cells.SetColumnWidthPixel(1, 500);
                 newWorksheet.Cells.SetColumnWidthPixel(2, 500);
@@ -426,7 +441,7 @@ namespace DKS_API.Controllers
                     newWorksheet.Cells[$"C{i + 2}"].PutValue(differences[i].OldValue.Value);
                     newWorksheet.Cells[$"C{i + 2}"].SetStyle(differences[i].OldValue.GetStyle());
                 }
-                      
+
                 newWorksheet.FreezePanes(1, 0, 1, 2); //frozen A1:C1
                 workbook1.Save(resultStream, SaveFormat.Xlsx);
 
@@ -438,12 +453,12 @@ namespace DKS_API.Controllers
 
         }
         [HttpGet("getSrfArticleDto")]
-        public  IActionResult GetSrfArticleDto(string srfId)
+        public IActionResult GetSrfArticleDto(string srfId)
         {
             _logger.LogInformation(String.Format(@"****** BomController GetSrfArticleDto fired!! ******"));
-            var d =  _srfhDAO.GetSrfArticleDto(srfId)  ;
+            var d = _srfhDAO.GetSrfArticleDto(srfId);
             return Ok(d);
-        }        
+        }
         [HttpPost("copySrf")]
         public async Task<IActionResult> CopySrf()
         {
@@ -453,21 +468,22 @@ namespace DKS_API.Controllers
 
             var j1 = Newtonsoft.Json.JsonConvert.DeserializeObject<JObject>(f1);
             var j2 = Newtonsoft.Json.JsonConvert.DeserializeObject<List<SrfArticleDto>>(f2);
-                string srfIdF =j1.Value<string>("srfIdF");
-                string srfIdT =j1.Value<string>("srfIdT");
-                string stageT =j1.Value<string>("stageT");
-            
-            Srfh check = _srfhDAO.FindSingle( x => x.SRFID == srfIdT);
-            if( check != null) return Ok("SRFID is duplicate in System, please change a new Id.");
-            Srfh dbF = _srfhDAO.FindSingle( x => x.SRFID == srfIdF);
-            if( dbF != null){
+            string srfIdF = j1.Value<string>("srfIdF");
+            string srfIdT = j1.Value<string>("srfIdT");
+            string stageT = j1.Value<string>("stageT");
+
+            Srfh check = _srfhDAO.FindSingle(x => x.SRFID == srfIdT);
+            if (check != null) return Ok("SRFID is duplicate in System, please change a new Id.");
+            Srfh dbF = _srfhDAO.FindSingle(x => x.SRFID == srfIdF);
+            if (dbF != null)
+            {
                 string jsonStr = JsonSerializer.Serialize(dbF);
                 Srfh toAdd = JsonSerializer.Deserialize<Srfh>(jsonStr);
 
-                string last = _srfhDAO.FindAll().OrderByDescending(x => x.PKSRFBID).Take(1).Select(x => x.PKSRFBID).ToList().FirstOrDefault();              
-                int number = last.Replace("CAH","").ToInt();
+                string last = _srfhDAO.FindAll().OrderByDescending(x => x.PKSRFBID).Take(1).Select(x => x.PKSRFBID).ToList().FirstOrDefault();
+                int number = last.Replace("CAH", "").ToInt();
                 number += 1;
-                toAdd.PKSRFBID = String.Format("{0:CAH000000000}",number);
+                toAdd.PKSRFBID = String.Format("{0:CAH000000000}", number);
 
                 toAdd.SRFID = srfIdT;
                 toAdd.SAMPURSRF = stageT;
@@ -476,19 +492,101 @@ namespace DKS_API.Controllers
                 toAdd.CHANGDATE = null;
                 _srfhDAO.Add(toAdd);
 
-                List<SrfSizeB>sizes = _srfSizeBDAO.FindAll(x=>x.SRFID == srfIdF).AsNoTracking().ToList();
-                foreach(SrfSizeB s in sizes){
+                List<SrfSizeB> sizes = _srfSizeBDAO.FindAll(x => x.SRFID == srfIdF).AsNoTracking().ToList();
+                foreach (SrfSizeB s in sizes)
+                {
                     s.SRFID = srfIdT;
                     _srfSizeBDAO.Add(s);
                 }
-                List<SrfArtiB> artiles = _srfArtiBDAO.FindAll(x=>x.SRFID == srfIdF).AsNoTracking().ToList();
-                foreach(SrfArtiB a in artiles){
+                List<SrfArtiB> artiles = _srfArtiBDAO.FindAll(x => x.SRFID == srfIdF).AsNoTracking().ToList();
+                foreach (SrfArtiB a in artiles)
+                {
                     a.SRFID = srfIdT;
                     _srfArtiBDAO.Add(a);
-                }                
+                }
             }
             await _srfhDAO.SaveAll();
             return Ok();
+        }
+        [HttpPost("returnBom")]
+        public async Task<IActionResult> ReturnBom()
+        {
+
+            _logger.LogInformation(String.Format(@"******BOMController ReturnBom fired!! ******"));
+            var factoryId = HttpContext.Request.Form["factoryId"].ToString().Trim();
+            //須改 article List
+            var articleList = HttpContext.Request.Form["articleList"].ToString().Trim();
+            var sort = HttpContext.Request.Form["sort"].ToShort();
+
+            var stage = HttpContext.Request.Form["stage"].ToString().Trim();
+            var modelNo = HttpContext.Request.Form["modelNo"].ToString().Trim();
+            var fileName = HttpContext.Request.Form["fileName"].ToString().Trim();
+            string[] parts = fileName.Split('-');
+            List<string> articles = articleList.Replace(" ", "").Split(";").ToList();
+            foreach(string oneArticle in articles){
+                    List<string> nastFileName = new List<string>();
+                    nastFileName.Add("ArticleBoms");
+                    nastFileName.Add(parts[0]);                     //season
+                    nastFileName.Add(oneArticle);                   //article
+                    nastFileName.Add(fileName);                     //fileName
+
+                    if (await _fileService.SaveFiletoServer(null, "F340PpdPic", nastFileName)){
+                        DevBomFile model = _devBomFileDAO.FindSingle(
+                                            x => x.ARTICLE == oneArticle &&
+                                            x.FACTORY == factoryId &&
+                                            x.STAGE == stage &&
+                                            x.SORT == sort);
+                        _devBomFileDAO.Remove(model);
+                        await _devBomFileDAO.SaveAll(); 
+                    }
+
+            }
+
+
+
+
+            return Ok();
+        }
+        [HttpPost("getArticleList")]
+        public  async Task<IActionResult> GetArticleList()
+        {
+
+            _logger.LogInformation(String.Format(@"******BOMController GetArticleList fired!! ******"));
+            var modelNo = HttpContext.Request.Form["modelNo"].ToString().Trim();
+            var article = HttpContext.Request.Form["article"].ToString().Trim();
+            
+            IFormFile iFile = HttpContext.Request.Form.Files["file"];
+            var factoryId = HttpContext.Request.Form["factoryId"].ToString().Trim();
+            string cellValue = "";
+
+            using (Stream stream = iFile.OpenReadStream())
+            {
+                Workbook workbook = new Workbook(stream);
+                Worksheet worksheet = workbook.Worksheets[0];
+                Cell cell = worksheet.Cells["B4"];
+                cellValue = cell.StringValue;
+            }
+            List<string> aryExcel = cellValue.Replace(" ", "").Split(';').OrderBy(s => s).ToList();
+            List<string> dbArticleList = await _articledDAO.GetArticleListByModelNo(factoryId,modelNo);
+            if(!aryExcel.Contains(article))return Ok("Error: The Article didn't fix Article List in this Excel!"); 
+
+            //dbArticleList(主) 需 >= aryExcel                        
+            var isOk = dbArticleList.All( db => aryExcel.Contains(db));
+            if(!isOk){
+                var mis = dbArticleList.Except(aryExcel).ToList();
+                return Ok(string.Format(@"Error:The file miss article:{0}  ,F205={1}  ,excel={2}"
+                            ,string.Join(";", mis) , string.Join(";", dbArticleList) , string.Join(";", aryExcel)));
+            }else{
+                var surplus = aryExcel.Except(dbArticleList).ToList();
+                if( surplus.Count == 0 ){
+                    return Ok(cellValue); 
+                }else{
+                    //可上傳但須警示
+                    return Ok(string.Format(@"Alert,{0},{1}"
+                                ,string.Join(";", surplus),string.Join(";",dbArticleList) ));                 
+                }
+
+            } 
         }
 
     }

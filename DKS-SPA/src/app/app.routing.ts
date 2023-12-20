@@ -165,7 +165,7 @@ export const routes: Routes = [
     canActivate: [AuthGuardRole],
     component: F203CopyComponent,
     data: {
-      roles: [utilityConfig.RoleSysAdm],
+      roles: [utilityConfig.RoleSysAdm,utilityConfig.DevPreAssist],
     },
   },    
   {

@@ -40,7 +40,9 @@ namespace DKS.API.Models.DKS
         public string UPUSR { get; set; }
         public string PDM_APPLY { get; set; }
         public string PDM_UPUSR { get; set; }
-        public string PDM_UPDAY { get; set; }
+        public DateTime? PDM_UPDAY { get; set; }
+        public string ARTICLE_LIST { get; set; }
+        
         
     }
 }

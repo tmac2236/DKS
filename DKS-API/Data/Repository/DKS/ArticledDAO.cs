@@ -137,5 +137,18 @@ GROUP BY DevSeason ");
             var data = await _context.GetTupleDto.FromSqlRaw(strSQL).ToListAsync();
             return data;
         }
+
+        public async Task<List<string>> GetArticleListByModelNo(string factoryId, string modelNo)
+        {           
+            string strSQL = string.Format(@"
+select distinct t1.ARTICLE as OneString
+from  ARTICLED t1
+left join RDBOMDAH t2
+on t1.PKARTBID=t2.FKARTICID
+where t1.FACTORYID='{0}' and t1.MODELNO = '{1}' and t2.DROPDATE is null
+   ",factoryId,modelNo);
+            var data = await _context.OneStringDto.FromSqlRaw(strSQL).Select(x => x.OneString).OrderBy(x => x).ToListAsync();
+            return data;
+        }        
     }
 }

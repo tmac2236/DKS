@@ -18,8 +18,9 @@ export class DevBomFile implements ModelInterface {
   upUsr: string;
   pdmApply: string;  //0817
   pdmUpusr: string;  //0817
-  pdmUpday: string;  //0817
-
+  pdmUpday: Date;  //0817 1216
+  
+  articleList: string;  //1216
   
   constructor(){
     
