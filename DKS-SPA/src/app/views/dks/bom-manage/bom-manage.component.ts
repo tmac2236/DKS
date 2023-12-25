@@ -192,6 +192,7 @@ export class BomManageComponent implements OnInit {
       return; //exit function
     }
     if(num == 0){
+      this.utility.spinner.show();
       this.bufferFile = files.item(0);
       //get ArticleList
       var formData = new FormData();
@@ -209,7 +210,7 @@ export class BomManageComponent implements OnInit {
           this.errorMsg = result;        
         }else if(result.includes('Alert')){
           let strArray = result.split(',');
-          this.errorMsg = `These article didn't exist in F205, won't upload to systme! Article: ${strArray[1]} .`;;
+          this.errorMsg = `These article didn't exist in F205, won't upload to system! Article: ${strArray[1]} .`;;
           this.addAModel.articleList = strArray[2];
         }else{
           if(result.includes(this.addAModel.article)){
@@ -217,8 +218,8 @@ export class BomManageComponent implements OnInit {
           }else{
             this.utility.alertify.error("The article isn't exist in the File !!!!");  
           }
-
         }
+        this.utility.spinner.hide();
 
       },
       (error) => {
