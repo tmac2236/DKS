@@ -568,7 +568,7 @@ namespace DKS_API.Controllers
             }
             List<string> aryExcel = cellValue.Replace(" ", "").Split(';').OrderBy(s => s).ToList();
             List<string> dbArticleList = await _articledDAO.GetArticleListByModelNo(factoryId,modelNo);
-            if(!aryExcel.Contains(article))return Ok("Error: The Article didn't fix Article List in this Excel!"); 
+            if(!aryExcel.Contains(article))return Ok("Error: The Article didn't fit Article List in this Excel!"); 
 
             //dbArticleList(主) 需 >= aryExcel                        
             var isOk = dbArticleList.All( db => aryExcel.Contains(db));
