@@ -575,6 +575,9 @@ export class BomManageComponent implements OnInit {
         this.utility.spinner.show();
         this.dksService.returnBom(formData).subscribe(
           (res) => {
+            this.closeModal("Modal3");
+            //refresh the page
+            this.search();           
             this.utility.spinner.hide();
             this.utility.alertify.success("Return success!");
           },
