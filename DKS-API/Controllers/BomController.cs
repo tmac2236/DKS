@@ -185,6 +185,8 @@ namespace DKS_API.Controllers
             var stage = HttpContext.Request.Form["stage"].ToString().Trim();
             var modelName = HttpContext.Request.Form["modelName"].ToString().Trim();
             var modelNo = HttpContext.Request.Form["modelNo"].ToString().Trim();
+            var articleList = HttpContext.Request.Form["articleList"].ToString().Trim();
+            List<string> articles = articleList.Replace(" ", "").Split(";").ToList();
             /*2023/12/16 cancel override file
             IFormFile iFile = HttpContext.Request.Form.Files["file"];
 
@@ -204,22 +206,28 @@ namespace DKS_API.Controllers
                 }
             }
             */
+            string fileName =  "";
+            foreach(string oneArticle in articles){
+                DevBomFile model = _devBomFileDAO.FindSingle(
+                                    x => x.ARTICLE == oneArticle &&
+                                    x.FACTORY == factoryId &&
+                                    x.STAGE == stage &&
+                                    x.SORT == sort);
+                model.APPLY = "Y";
+                model.REMARK = remark;
+                model.UPDAY = DateTime.Now;
+                model.UPUSR = loginUser;
+                if(model!= null){
+                    fileName = model.FILENAME;
+                    _devBomFileDAO.Update(model);      
+                }
+         
+            }
 
-            DevBomFile model = _devBomFileDAO.FindSingle(
-                                 x => x.ARTICLE == article &&
-                                 x.FACTORY == factoryId &&
-                                 x.STAGE == stage &&
-                                 x.SORT == sort);
-            model.APPLY = "Y";
-            model.REMARK = remark;
-            model.UPDAY = DateTime.Now;
-            model.UPUSR = loginUser;
-
-            _devBomFileDAO.Update(model);
             await _devBomFileDAO.SaveAll();
 
             var mailInformation = await _dksDAO.GetDevBomDetailMailDto(factoryId, article, stage, ver);
-            if (mailInformation.Count == 0) return Ok(model);
+            if (mailInformation.Count == 0) return Ok();
 
             var subject = $"[TEST] New BOM file has been applied";
 
@@ -292,7 +300,7 @@ namespace DKS_API.Controllers
             var localStr = _config.GetSection("AppSettings:ArticleBomsRoot").Value;
             var path = rootdir + localStr;
             path = path.Replace("DKS-API", "DKS-SPA");
-            string filePath = Path.Combine(path, season, article, model.FILENAME);
+            string filePath = Path.Combine(path, season, article, fileName);
             _logger.LogInformation(String.Format(@"準備讀取檔案{0}", filePath));
             if (System.IO.File.Exists(filePath))
             {
@@ -311,7 +319,7 @@ namespace DKS_API.Controllers
             await smtpServer.SendMailAsync(mail);
             _logger.LogInformation($"======================SendMailAsync() 成功!======================");
 
-            return Ok(model);
+            return Ok();
         }
         [HttpGet("getDevTeamByLoginDto")]
         public async Task<IActionResult> GetDevTeamByLoginDto(string login)

@@ -310,6 +310,7 @@ export class BomManageComponent implements OnInit {
         formData.append("stage", this.addAModel.stage);
         formData.append("modelName", this.addAModel.modelName);
         formData.append("modelNo", this.addAModel.modelNo);
+        formData.append("articleList", this.addAModel.articleList);
         // 2023/12/16 cancel override file formData.append("file", this.bufferFile);
 
         formData.append("sort", this.addAModel.sort.toString());
