@@ -81,32 +81,32 @@ namespace DKS_API.Controllers
         {
 
             _logger.LogInformation(String.Format(@"******BomController AddBOMfile fired!! ******"));
-            DevBomFile model = new DevBomFile();
-            //ver#
-            DevBomFile md = _devBomFileDAO.FindAll(
-                         x => x.ARTICLE == uploadDevBomFileDto.Article &&
-                         x.FACTORY == uploadDevBomFileDto.FactoryId &&
-                         x.STAGE == uploadDevBomFileDto.Stage).AsNoTracking().OrderByDescending(x => x.VER).FirstOrDefault();
-            if (md == null)
-            {
-                model.VER = 1;
-            }
-            else
-            {
-                model.VER = md.VER;
-                model.VER += 1;
-            }
 
-            // FactoryId + Season + Article + Id .pdf
-            var fileName = string.Format("{0}-{1}-V{2}.0-{3}-{4}-{5}.xlsx", 
-            uploadDevBomFileDto.Season, uploadDevBomFileDto.Stage, model.VER, uploadDevBomFileDto.ModelName, uploadDevBomFileDto.ModelNo, 
-            uploadDevBomFileDto.ArticleList.Replace(" ", ""));
             List<string> articles = uploadDevBomFileDto.ArticleList.Replace(" ", "").Split(";").ToList();
 
             if (uploadDevBomFileDto.File.Length > 0 && articles.Count > 0 )       //save to server
             {
                 foreach(string oneArticle in articles){
+                    //Define Ver#
+                    DevBomFile model = new DevBomFile();
+                    //article list 的 article + stage最大ver# 20240106 Aven 確認
+                    DevBomFile md = _devBomFileDAO.FindAll(
+                                x => x.ARTICLE == oneArticle &&
+                                x.FACTORY == uploadDevBomFileDto.FactoryId &&
+                                x.STAGE == uploadDevBomFileDto.Stage).AsNoTracking().OrderByDescending(x => x.VER).FirstOrDefault();
+                    if (md == null)
+                    {
+                        model.VER = 1;
+                    }
+                    else
+                    {
+                        model.VER = md.VER;
+                        model.VER += 1;
+                    }                    
                    // save file to server
+                    var fileName = string.Format("{0}-{1}-V{2}.0-{3}-{4}-{5}.xlsx", 
+                    uploadDevBomFileDto.Season, uploadDevBomFileDto.Stage, model.VER, uploadDevBomFileDto.ModelName, uploadDevBomFileDto.ModelNo, 
+                    uploadDevBomFileDto.ArticleList.Replace(" ", ""));                   
                     List<string> nastFileName = new List<string>();
                     nastFileName.Add("ArticleBoms");
                     nastFileName.Add(uploadDevBomFileDto.Season);
@@ -167,7 +167,7 @@ namespace DKS_API.Controllers
  
             }
 
-            return Ok(model);
+            return Ok();
         }
         [HttpPost("applyBOMfile")]
         public async Task<IActionResult> ApplyBOMfile()
@@ -213,11 +213,12 @@ namespace DKS_API.Controllers
                                     x.FACTORY == factoryId &&
                                     x.STAGE == stage &&
                                     x.SORT == sort);
-                model.APPLY = "Y";
-                model.REMARK = remark;
-                model.UPDAY = DateTime.Now;
-                model.UPUSR = loginUser;
+
                 if(model!= null){
+                    model.APPLY = "Y";
+                    model.REMARK = remark;
+                    model.UPDAY = DateTime.Now;
+                    model.UPUSR = loginUser;                    
                     fileName = model.FILENAME;
                     _devBomFileDAO.Update(model);      
                 }
@@ -575,9 +576,10 @@ namespace DKS_API.Controllers
                 cellValue = cell.StringValue;
             }
             List<string> aryExcel = cellValue.Replace(" ", "").Split(';').OrderBy(s => s).ToList();
+            aryExcel.RemoveAll(s => s == "");
             List<string> dbArticleList = await _articledDAO.GetArticleListByModelNo(factoryId,modelNo);
             if(!aryExcel.Contains(article))return Ok("Error: The Article didn't fit Article List in this Excel!"); 
-
+            /* 取消F205 Article全部符合才能傳的卡控
             //dbArticleList(主) 需 >= aryExcel                        
             var isOk = dbArticleList.All( db => aryExcel.Contains(db));
             if(!isOk){
@@ -585,6 +587,7 @@ namespace DKS_API.Controllers
                 return Ok(string.Format(@"Error:The file miss article:{0}  ,F205={1}  ,excel={2}"
                             ,string.Join(";", mis) , string.Join(";", dbArticleList) , string.Join(";", aryExcel)));
             }else{
+            */    
                 var surplus = aryExcel.Except(dbArticleList).ToList();
                 if( surplus.Count == 0 ){
                     return Ok(cellValue); 
@@ -594,7 +597,7 @@ namespace DKS_API.Controllers
                                 ,string.Join(";", surplus),string.Join(";",dbArticleList) ));                 
                 }
 
-            } 
+            //} 
         }
 
     }

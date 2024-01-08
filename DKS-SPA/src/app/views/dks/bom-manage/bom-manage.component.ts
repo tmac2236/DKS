@@ -48,7 +48,7 @@ export class BomManageComponent implements OnInit {
   loginTeam: string[] = [];
   devbomStage: DevBomStage[] =[];
   devbomStage1:DevBomStage[]=[];
-  devTeamList = ['01', '02', '03', '04', '05', '06', '07', '12'];
+  devTeamList = ['01', '02', '03', '04', '05'];
   modeList: { id: number, name: string, code: string }[] = [
     { "id": 1, "name": "Model No","code":"Model" },
     { "id": 2, "name": "Article","code":"Article" }]; 
