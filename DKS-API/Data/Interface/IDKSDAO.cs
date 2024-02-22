@@ -41,7 +41,7 @@ namespace DKS_API.Data.Interface
         Task<List<DevTeamByLoginDto>> GetDevTeamByLoginDto(string login);
         Task<List<SsbGetHpSd138Dto>> GetSsbGetHpSd138Dto(string ecrNo);
         Task<List<DevBomDetailMailDto>> GetDevBomDetailMailDto(string factory,string article,string stage,short ver);
-        Task<List<SendDevBomDetailMailListDto>> GetSendDevBomDetailMailListDto(string stage);
+        Task<List<SendDevBomDetailMailListDto>> GetSendDevBomDetailMailListDto(string stage,string factory,string devTeamId);
         
     }
 }

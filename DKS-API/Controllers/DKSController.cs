@@ -693,6 +693,20 @@ namespace DKS_API.Controllers
             return Ok();
 
         }
+        [HttpPost("exportUploadBOMExcel")]
+        public IActionResult exportUploadBOMExcel(DevBomFileDetailDto model)
+        {
 
+            _logger.LogInformation(String.Format(@"****** DKSController exportUploadBOMExcel fired!! ******"));
+
+            string rootdir = Directory.GetCurrentDirectory();
+            var localStr = _config.GetSection("AppSettings:ArticleBomsRoot").Value;
+            var path = rootdir + localStr;
+            path = path.Replace("DKS-API", "DKS-SPA");
+            string filePath = Path.Combine(path, model.Season, model.Article, model.FileName); // season$article$fileName
+            byte[] result = System.IO.File.ReadAllBytes(filePath);
+
+            return File(result, "application/pdf");
+        }
     }
 }

@@ -466,13 +466,15 @@ ON t1.PKBASEHID=t3.FKBASEHID and t3.LANGID='437' ");
 
             return data;
         }
-        public async Task<List<SendDevBomDetailMailListDto>> GetSendDevBomDetailMailListDto(string stage)
+        public async Task<List<SendDevBomDetailMailListDto>> GetSendDevBomDetailMailListDto(string stage,string factory,string devTeamId)
         {
             List<SqlParameter> pc = new List<SqlParameter>{
-                new SqlParameter("@STAGE",stage)
+                new SqlParameter("@STAGE",stage),
+                new SqlParameter("@DEVTEAMID",devTeamId),
+                new SqlParameter("@FACTORY",factory)
             };
             var data = await _context.SendDevBomDetailMailListDto
-                   .FromSqlRaw("EXECUTE dbo.SendDevBomDetailMailList @STAGE", pc.ToArray())
+                   .FromSqlRaw("EXECUTE dbo.SendDevBomDetailMailList @STAGE,@DEVTEAMID,@FACTORY", pc.ToArray())
                    .ToListAsync();
 
             return data;

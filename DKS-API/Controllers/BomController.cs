@@ -84,9 +84,10 @@ namespace DKS_API.Controllers
 
             List<string> articles = uploadDevBomFileDto.ArticleList.Replace(" ", "").Split(";").ToList();
 
-            if (uploadDevBomFileDto.File.Length > 0 && articles.Count > 0 )       //save to server
+            if (uploadDevBomFileDto.File.Length > 0 && articles.Count > 0)       //save to server
             {
-                foreach(string oneArticle in articles){
+                foreach (string oneArticle in articles)
+                {
                     //Define Ver#
                     DevBomFile model = new DevBomFile();
                     //article list 的 article + stage最大ver# 20240106 Aven 確認
@@ -102,11 +103,11 @@ namespace DKS_API.Controllers
                     {
                         model.VER = md.VER;
                         model.VER += 1;
-                    }                    
-                   // save file to server
-                    var fileName = string.Format("{0}-{1}-V{2}.0-{3}-{4}-{5}.xlsx", 
-                    uploadDevBomFileDto.Season, uploadDevBomFileDto.Stage, model.VER, uploadDevBomFileDto.ModelName, uploadDevBomFileDto.ModelNo, 
-                    uploadDevBomFileDto.ArticleList.Replace(" ", ""));                   
+                    }
+                    // save file to server
+                    var fileName = string.Format("{0}-{1}-V{2}.0-{3}-{4}-{5}.xlsx",
+                    uploadDevBomFileDto.Season, uploadDevBomFileDto.Stage, model.VER, uploadDevBomFileDto.ModelName, uploadDevBomFileDto.ModelNo,
+                    uploadDevBomFileDto.ArticleList.Replace(" ", ""));
                     List<string> nastFileName = new List<string>();
                     nastFileName.Add("ArticleBoms");
                     nastFileName.Add(uploadDevBomFileDto.Season);
@@ -116,7 +117,7 @@ namespace DKS_API.Controllers
                     if (await _fileService.SaveFiletoServer(uploadDevBomFileDto.File, "F340PpdPic", nastFileName))
                     {
                         _logger.LogInformation(String.Format(@"******BOMController AddBOMfile Add a xlsx: {0}!! ******", fileName));
-                        
+
                         //save to DAO (存N次)
                         model.FACTORY = uploadDevBomFileDto.FactoryId;
                         model.DEVTEAMID = uploadDevBomFileDto.Team;
@@ -161,10 +162,10 @@ namespace DKS_API.Controllers
                         model.UPDAY = DateTime.Now;
                         _devBomFileDAO.Add(model);
                         await _devBomFileDAO.SaveAll();
-                    }                    
+                    }
                 }
 
- 
+
             }
 
             return Ok();
@@ -172,7 +173,30 @@ namespace DKS_API.Controllers
         [HttpPost("applyBOMfile")]
         public async Task<IActionResult> ApplyBOMfile()
         {
+            /*
+             //Debug
+            List<SendDevBomDetailMailListDto> mailss = await _dksDAO.GetSendDevBomDetailMailListDto("SMU","C","01");
+            MailMessage mailTo = new MailMessage();
+            foreach (SendDevBomDetailMailListDto item in mailss)
+            {
+                if (item.MailGroup.Contains(";"))
+                {
+                    var l = item.MailGroup.Split(";").ToList();
+                    foreach (string i in l)
+                    {
+                        _logger.LogInformation(i);
+                        mailTo.To.Add(i);
+                    }
+                }
+                else
+                {
+                    _logger.LogInformation(item.MailGroup);
+                    mailTo.To.Add(item.MailGroup);
+                }
 
+            }            
+            //Debug 
+            */
             _logger.LogInformation(String.Format(@"******BOMController ApplyBOMfile fired!! ******"));
             var factoryId = HttpContext.Request.Form["factoryId"].ToString().Trim();
             var article = HttpContext.Request.Form["article"].ToString().Trim();
@@ -186,7 +210,34 @@ namespace DKS_API.Controllers
             var modelName = HttpContext.Request.Form["modelName"].ToString().Trim();
             var modelNo = HttpContext.Request.Form["modelNo"].ToString().Trim();
             var articleList = HttpContext.Request.Form["articleList"].ToString().Trim();
+
+            var devTeamId = HttpContext.Request.Form["devTeamId"].ToString().Trim();
+            var factory = HttpContext.Request.Form["factory"].ToString().Trim();
+            var devTeamName = "";
+            if (factoryId.Contains(","))
+            {
+                factoryId = factoryId.Split(",")[0];
+            }
             List<string> articles = articleList.Replace(" ", "").Split(";").ToList();
+            // Team Name轉換 =>U廠的組別代號之後會是U1, U2, U3.....
+            if (devTeamId == "01")
+                devTeamName = "Team A";
+            else if (devTeamId == "02")
+                devTeamName = "Team B";
+            else if (devTeamId == "03")
+                devTeamName = "Team D";
+            else if (devTeamId == "04")
+                devTeamName = "Team E";
+            else if (devTeamId == "05")
+                devTeamName = "Team C";
+            else if (devTeamId == "06")
+                devTeamName = "Team 6";
+            else if (devTeamId == "07")
+                devTeamName = "Team 7";
+            else if (devTeamId == "12")
+                devTeamName = "Team 8";
+            else
+                devTeamName = "Unknown Team";
             /*2023/12/16 cancel override file
             IFormFile iFile = HttpContext.Request.Form.Files["file"];
 
@@ -206,23 +257,25 @@ namespace DKS_API.Controllers
                 }
             }
             */
-            string fileName =  "";
-            foreach(string oneArticle in articles){
+            string fileName = "";
+            foreach (string oneArticle in articles)
+            {
                 DevBomFile model = _devBomFileDAO.FindSingle(
                                     x => x.ARTICLE == oneArticle &&
                                     x.FACTORY == factoryId &&
                                     x.STAGE == stage &&
                                     x.SORT == sort);
 
-                if(model!= null){
+                if (model != null)
+                {
                     model.APPLY = "Y";
                     model.REMARK = remark;
                     model.UPDAY = DateTime.Now;
-                    model.UPUSR = loginUser;                    
+                    model.UPUSR = loginUser;
                     fileName = model.FILENAME;
-                    _devBomFileDAO.Update(model);      
+                    _devBomFileDAO.Update(model);
                 }
-         
+
             }
 
             await _devBomFileDAO.SaveAll();
@@ -230,8 +283,7 @@ namespace DKS_API.Controllers
             var mailInformation = await _dksDAO.GetDevBomDetailMailDto(factoryId, article, stage, ver);
             if (mailInformation.Count == 0) return Ok();
 
-            var subject = $"[TEST] New BOM file has been applied";
-
+            var subject = string.Format(@"{2}-{0}-{1}", "BOM", fileName.Replace(".xlsx", ""), devTeamName );
             StringBuilder sb = new StringBuilder();
             sb.Append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\"><HTML><HEAD>");
             sb.Append("<style type=\"text/css\">");
@@ -242,7 +294,7 @@ namespace DKS_API.Controllers
             sb.Append("</HEAD>");
             sb.Append("<body>");
             sb.Append("<table width='700' border='0' align='center' cellpadding='0' cellspacing='0' class='OutBorder' bgcolor='#CCCCCC'>");
-            sb.Append("<tr bgcolor='#003366'><td colspan='5'><strong><font color='#FFFFFF' size='4'>" + "[TEST]New Bom file has been applied" + "，Detail：</font></strong></td></tr>");
+            sb.Append("<tr bgcolor='#003366'><td colspan='5'><strong><font color='#FFFFFF' size='4'>" + "New Bom file has been applied" + "，Detail：</font></strong></td></tr>");
 
             sb.Append("<tr>");
             sb.Append("<td width='100%'>&nbsp;</td>");
@@ -276,7 +328,7 @@ namespace DKS_API.Controllers
             mail.From = new MailAddress(_config.GetSection("MailSettingServer:FromEmail").Value, _config.GetSection("MailSettingServer:FromName").Value);
             // Set the message body to HTML format
             mail.IsBodyHtml = true;
-            List<SendDevBomDetailMailListDto> stageMails = await _dksDAO.GetSendDevBomDetailMailListDto(stage);
+            List<SendDevBomDetailMailListDto> stageMails = await _dksDAO.GetSendDevBomDetailMailListDto(stage, factory, devTeamId);
 
             foreach (SendDevBomDetailMailListDto item in stageMails)
             {
@@ -532,22 +584,24 @@ namespace DKS_API.Controllers
             var fileName = HttpContext.Request.Form["fileName"].ToString().Trim();
             string[] parts = fileName.Split('-');
             List<string> articles = articleList.Replace(" ", "").Split(";").ToList();
-            foreach(string oneArticle in articles){
-                    List<string> nastFileName = new List<string>();
-                    nastFileName.Add("ArticleBoms");
-                    nastFileName.Add(parts[0]);                     //season
-                    nastFileName.Add(oneArticle);                   //article
-                    nastFileName.Add(fileName);                     //fileName
+            foreach (string oneArticle in articles)
+            {
+                List<string> nastFileName = new List<string>();
+                nastFileName.Add("ArticleBoms");
+                nastFileName.Add(parts[0]);                     //season
+                nastFileName.Add(oneArticle);                   //article
+                nastFileName.Add(fileName);                     //fileName
 
-                    if (await _fileService.SaveFiletoServer(null, "F340PpdPic", nastFileName)){
-                        DevBomFile model = _devBomFileDAO.FindSingle(
-                                            x => x.ARTICLE == oneArticle &&
-                                            x.FACTORY == factoryId &&
-                                            x.STAGE == stage &&
-                                            x.SORT == sort);
-                        _devBomFileDAO.Remove(model);
-                        await _devBomFileDAO.SaveAll(); 
-                    }
+                if (await _fileService.SaveFiletoServer(null, "F340PpdPic", nastFileName))
+                {
+                    DevBomFile model = _devBomFileDAO.FindSingle(
+                                        x => x.ARTICLE == oneArticle &&
+                                        x.FACTORY == factoryId &&
+                                        x.STAGE == stage &&
+                                        x.SORT == sort);
+                    _devBomFileDAO.Remove(model);
+                    await _devBomFileDAO.SaveAll();
+                }
 
             }
 
@@ -557,13 +611,13 @@ namespace DKS_API.Controllers
             return Ok();
         }
         [HttpPost("getArticleList")]
-        public  async Task<IActionResult> GetArticleList()
+        public async Task<IActionResult> GetArticleList()
         {
 
             _logger.LogInformation(String.Format(@"******BOMController GetArticleList fired!! ******"));
             var modelNo = HttpContext.Request.Form["modelNo"].ToString().Trim();
             var article = HttpContext.Request.Form["article"].ToString().Trim();
-            
+
             IFormFile iFile = HttpContext.Request.Form.Files["file"];
             var factoryId = HttpContext.Request.Form["factoryId"].ToString().Trim();
             string cellValue = "";
@@ -577,8 +631,8 @@ namespace DKS_API.Controllers
             }
             List<string> aryExcel = cellValue.Replace(" ", "").Split(';').OrderBy(s => s).ToList();
             aryExcel.RemoveAll(s => s == "");
-            List<string> dbArticleList = await _articledDAO.GetArticleListByModelNo(factoryId,modelNo);
-            if(!aryExcel.Contains(article))return Ok("Error: The Article didn't fit Article List in this Excel!"); 
+            List<string> dbArticleList = await _articledDAO.GetArticleListByModelNo(factoryId, modelNo);
+            if (!aryExcel.Contains(article)) return Ok("Error: The Article didn't fit Article List in this Excel!");
             /* 取消F205 Article全部符合才能傳的卡控
             //dbArticleList(主) 需 >= aryExcel                        
             var isOk = dbArticleList.All( db => aryExcel.Contains(db));
@@ -587,15 +641,18 @@ namespace DKS_API.Controllers
                 return Ok(string.Format(@"Error:The file miss article:{0}  ,F205={1}  ,excel={2}"
                             ,string.Join(";", mis) , string.Join(";", dbArticleList) , string.Join(";", aryExcel)));
             }else{
-            */    
-                var surplus = aryExcel.Except(dbArticleList).ToList();
-                if( surplus.Count == 0 ){
-                    return Ok(cellValue); 
-                }else{
-                    //可上傳但須警示
-                    return Ok(string.Format(@"Alert,{0},{1}"
-                                ,string.Join(";", surplus),string.Join(";",dbArticleList) ));                 
-                }
+            */
+            var surplus = aryExcel.Except(dbArticleList).ToList();
+            if (surplus.Count == 0)
+            {
+                return Ok(cellValue);
+            }
+            else
+            {
+                //可上傳但須警示
+                return Ok(string.Format(@"Alert,{0},{1}"
+                            , string.Join(";", surplus), string.Join(";", dbArticleList)));
+            }
 
             //} 
         }

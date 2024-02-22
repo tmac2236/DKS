@@ -16,6 +16,7 @@ import { DevBomStage } from "../../../core/_models/dev-bom-stage";
 import { timeout } from "rxjs/operators";
 import { utilityConfig } from "../../../core/utility/utility-config";
 import { HttpClient } from "@angular/common/http";
+import { TupleDto } from "../../../core/_models/tuple-dto";
 
 @Component({
   selector: "app-bom-manage",
@@ -312,6 +313,8 @@ export class BomManageComponent implements OnInit {
         formData.append("modelNo", this.addAModel.modelNo);
         formData.append("articleList", this.addAModel.articleList);
         // 2023/12/16 cancel override file formData.append("file", this.bufferFile);
+        formData.append("devTeamId", this.addAModel.devTeamId);
+        formData.append("factory", this.addAModel.factory);
 
         formData.append("sort", this.addAModel.sort.toString());
         this.utility.spinner.show();
@@ -396,6 +399,8 @@ export class BomManageComponent implements OnInit {
     }
 
     if (theKey2Download) {
+      this.exportUploadBOMExcel(model);
+      /*
       let dataUrl =
         "../assets/F340PpdPic/ArticleBoms/" +
         model.season +
@@ -403,7 +408,8 @@ export class BomManageComponent implements OnInit {
         model.article +
         "/" +
         model.fileName;
-      window.open(dataUrl);
+        window.open(dataUrl);
+      */
     }
   }
 
@@ -590,6 +596,10 @@ export class BomManageComponent implements OnInit {
       }
     );
 
+  }
+  exportUploadBOMExcel(model: DevBomFileDetailDto){
+    const url = this.utility.baseUrl + "dks/exportUploadBOMExcel";
+    this.utility.exportPdfFactory(url, model.fileName, model);
   }
 
 }
